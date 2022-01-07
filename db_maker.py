@@ -20,22 +20,15 @@
 # add all tokenizations... and other features
 ###########################################
 
-from itertools import zip_longest
-import sys
-import csv
 import re
-import pprint
+from tqdm import tqdm
+
 from camel_tools.utils.dediac import dediac_bw
 from camel_tools.utils.charmap import CharMapper
-from camel_tools.morphology.database import MorphologyDB
-from camel_tools.morphology.analyzer import Analyzer
-from camel_tools.morphology.generator import Generator
 from camel_tools.utils.normalize import normalize_alef_bw, normalize_alef_maksura_bw, normalize_teh_marbuta_bw
+
 import pandas as pd
 import numpy as np
-
-from time import time
-from tqdm import tqdm
 
 bw2ar = CharMapper.builtin_mapper('bw2ar')
 ar2bw = CharMapper.builtin_mapper('ar2bw')
@@ -79,62 +72,67 @@ comp_memoi = {}
 ###########################################
 
 def makeDB(inputfilename):
-    c0 = time()
     About, Header, Order, Morph, Lexicon, outputfilename = readMorphSpec(inputfilename)
-    c1 = time()
-    db = constructAlmorDB(About,Header,Order,Morph,Lexicon)
-    c2 = time()
-    print(c1 - c0, c2 - c1, sep='\n')
+    db = constructAlmorDB(About, Header, Order, Morph, Lexicon)
     printAlmorDB(outputfilename, db)
 
 ###########################################
 #Read Input file containing morphological specifications
 ###########################################
+
+
 def readMorphSpec(inputfilename):
-    
+
     #Read the full CamelDB xlsx file
-    FullSpec =  pd.ExcelFile(inputfilename)
-    
+    FullSpec = pd.ExcelFile(inputfilename)
+
     #Identify the Params sheet, which specifies which sheets to read in the xlsx spreadsheet
-    Params = pd.read_excel(FullSpec,'Params')
+    Params = pd.read_excel(FullSpec, 'Params')
 
     #Read all the components:
     #Issue - need to allow multiple Morph, lex sheets to be read.
-    About = pd.read_excel(FullSpec,Params[Params['Component']=='About'].Sheetname.values[0])
-    Header = pd.read_excel(FullSpec,Params[Params['Component']=='Header'].Sheetname.values[0])
-    Order = pd.read_excel(FullSpec,Params[Params['Component']=='Order'].Sheetname.values[0])
-    Morph = pd.read_excel(FullSpec,Params[Params['Component']=='Morph'].Sheetname.values[0])
-    Lexicon = pd.read_excel(FullSpec,Params[Params['Component']=='Lexicon'].Sheetname.values[0])
-    outputfilename = Params[Params['Component']=='Output'].Sheetname.values[0]
+    About = pd.read_excel(
+        FullSpec, Params[Params['Component'] == 'About'].Sheetname.values[0])
+    Header = pd.read_excel(
+        FullSpec, Params[Params['Component'] == 'Header'].Sheetname.values[0])
+    Order = pd.read_excel(
+        FullSpec, Params[Params['Component'] == 'Order'].Sheetname.values[0])
+    Morph = pd.read_excel(
+        FullSpec, Params[Params['Component'] == 'Morph'].Sheetname.values[0])
+    Lexicon = pd.read_excel(
+        FullSpec, Params[Params['Component'] == 'Lexicon'].Sheetname.values[0])
+    outputfilename = Params[Params['Component']
+                            == 'Output'].Sheetname.values[0]
 
     #Process all the components:
-    Order=Order[Order.DEFINE == 'ORDER'] #skip comments & empty lines
-    Order=Order.replace(np.nan, '', regex=True)
+    Order = Order[Order.DEFINE == 'ORDER']  # skip comments & empty lines
+    Order = Order.replace(np.nan, '', regex=True)
 
-  
-    Morph=Morph[Morph.DEFINE == 'MORPH'] #skip comments & empty lines
-    Morph=Morph.replace(np.nan, '', regex=True)
-    Morph=Morph.replace('^\s+', '', regex=True)
-    Morph=Morph.replace('\s+$', '', regex=True)
-    Morph=Morph.replace('\s+', ' ', regex=True)
-    
+    Morph = Morph[Morph.DEFINE == 'MORPH']  # skip comments & empty lines
+    Morph = Morph.replace(np.nan, '', regex=True)
+    Morph = Morph.replace('^\s+', '', regex=True)
+    Morph = Morph.replace('\s+$', '', regex=True)
+    Morph = Morph.replace('\s+', ' ', regex=True)
+
     # add FUNC and FEAT to COND-S
     Morph['COND-S'] = Morph['COND-S'] + ' ' + Morph['FUNC'] + ' ' + Morph['FEAT']
     Morph['COND-S'] = Morph['COND-S'].replace('[\[\]]', '', regex=True)
     #Expand-ElseConditions
     # Replace spaces in BW and GLOSS with '#'
-    Morph['BW']=Morph['BW'].replace('\s+', '#', regex=True)
-    Morph['GLOSS']=Morph['GLOSS'].replace('\s+', '#', regex=True)
+    Morph['BW'] = Morph['BW'].replace('\s+', '#', regex=True)
+    Morph['GLOSS'] = Morph['GLOSS'].replace('\s+', '#', regex=True)
 
     # Replace spaces in BW and GLOSS with '#'
-    Lexicon=Lexicon[Lexicon.DEFINE == 'LEXICON'] #skip comments & empty lines
-    Lexicon=Lexicon.replace(np.nan, '', regex=True)
-    Lexicon['BW']=Lexicon['BW'].replace('\s+', '#', regex=True)
-    Lexicon['GLOSS']=Lexicon['GLOSS'].replace('\s+', '#', regex=True)
-    Lexicon['COND-S']=Lexicon['COND-S'].replace(' +', ' ', regex=True)
-    Lexicon['COND-S']=Lexicon['COND-S'].replace(' $', '', regex=True)
-    Lexicon['COND-T']=Lexicon['COND-T'].replace(' +', ' ', regex=True)
-    Lexicon['COND-T']=Lexicon['COND-T'].replace(' $', '', regex=True)
+    # skip comments & empty lines
+    Lexicon = Lexicon[Lexicon.DEFINE == 'LEXICON']
+    Lexicon = Lexicon.replace(np.nan, '', regex=True)
+    Lexicon['BW'] = Lexicon['BW'].replace('\s+', '#', regex=True)
+    Lexicon['GLOSS'] = Lexicon['GLOSS'].replace('\s+', '#', regex=True)
+    Lexicon['COND-S'] = Lexicon['COND-S'].replace(' +', ' ', regex=True)
+    Lexicon['COND-S'] = Lexicon['COND-S'].replace(' $', '', regex=True)
+    Lexicon['COND-T'] = Lexicon['COND-T'].replace(' +', ' ', regex=True)
+    Lexicon['COND-T'] = Lexicon['COND-T'].replace(' $', '', regex=True)
+
     # ############SALAM##############
     ###########################################
     # Retroactively generate the condFalse by creating the complementry distribution
@@ -143,11 +141,11 @@ def readMorphSpec(inputfilename):
     ###########################################
     # Get all the CLASSes in Morph
     all_classes = Morph.CLASS.unique()
-    all_classes = all_classes[all_classes!= '_']
+    all_classes = all_classes[all_classes != '_']
 
     # Get all the morphemes in Morph
     all_morphemes = Morph.FUNC.unique()
-    all_morphemes = all_morphemes[all_morphemes!= '_']
+    all_morphemes = all_morphemes[all_morphemes != '_']
     # Go through each class
     # with open('test_morph.tsv', 'a') as f:
     #     for classs, cond in zip(Morph['FUNC'], Morph['COND-T']):
@@ -231,7 +229,6 @@ def readMorphSpec(inputfilename):
                 Morph.loc[idx, 'COND-F'] = ' '.join(almrph_condFalse)
             # if '||' in Morph.loc[idx, 'COND-F']:
             #     print(idx, morpheme, Morph.loc[idx, 'COND-T'])
-    Morph.to_excel(f"temp_sheet.xlsx")
     # with open('test_morph.tsv', 'a') as f:
     #     for classs, condt, condf in zip(Morph['FUNC'], Morph['COND-T'], Morph['COND-F']):
     #         print(classs, condt, condf, file=f, sep='\t')
@@ -243,15 +240,16 @@ def readMorphSpec(inputfilename):
 # This function creates the category for matching
 # using classes and conditions
 ###########################################
-def createCat(XMorphType, XClass, XSet, XTrue,  XFalse):
+def createCat(XMorphType, XClass, XSet, XTrue, XFalse):
 
     # cat=XMorphType+re.sub("[\s\_]+","#",XClass+" "+XSet+" T:"+XTrue+" F:"+XFalse)
-    cat=XMorphType+_SPACE_or_PLUS_MANY.sub("#",XClass+" "+XSet+" T:"+XTrue)
+    cat = XMorphType + _SPACE_or_PLUS_MANY.sub("#", XClass + " " + XSet + " T:" + XTrue)
     return cat
 
 ###########################################
 #Convert BW tag from BW2UTF8:
 ###########################################
+
 
 def __convert_BW_tag(BW_tag):
     if BW_tag == '':
@@ -266,50 +264,63 @@ def __convert_BW_tag(BW_tag):
             BW_lex = bw2ar(parts[0])
         #print(parts[1])
         BW_pos = parts[1]
-        utf8_BW_tag.append('/'.join([BW_lex,BW_pos]))
+        utf8_BW_tag.append('/'.join([BW_lex, BW_pos]))
     return '+'.join(utf8_BW_tag)
 
 
 ###########################################
 #Read Input file containing morphological specifications
 ###########################################
-def constructAlmorDB(About,Header,Order,Morph,Lexicon):
+def constructAlmorDB(About, Header, Order, Morph, Lexicon):
 
-    db={} #All DB components to be created
-     
-    db['OUT:###ABOUT###']=list(About['Content']) 
-    
-    db['OUT:###HEADER###']=list(Header['Content']) 
-    
+    db = {}  # All DB components to be created
+
+    db['OUT:###ABOUT###'] = list(About['Content'])
+
+    db['OUT:###HEADER###'] = list(Header['Content'])
+
     #initialize ALMORDB Components
-    db['OUT:###PREFIXES###']={}
-    db['OUT:###SUFFIXES###']={}
-    db['OUT:###STEMS###']={}
-    db['OUT:###TABLE AB###']={}
-    db['OUT:###TABLE BC###']={}
-    db['OUT:###TABLE AC###']={} 
+    db['OUT:###PREFIXES###'] = {}
+    db['OUT:###SUFFIXES###'] = {}
+    db['OUT:###STEMS###'] = {}
+    db['OUT:###TABLE AB###'] = {}
+    db['OUT:###TABLE BC###'] = {}
+    db['OUT:###TABLE AC###'] = {}
     
     for orderIndex, order in Order.iterrows():
-        cond=order['COND-T'] #no used currently > use to limit lexicon reading
+        # no used currently > use to limit lexicon reading
+        cond = order['COND-T']
+        print(order["VAR"], order["COND-T"],
+              order["PREFIX"], order["STEM"], order["SUFFIX"], sep=" ; ", end='\n')
 
         #TODO - Caching candidate (memoize after the application of code below)
-        preSet=expandMorphSeq(order['PREFIX'],Morph)
-        sufSet=expandMorphSeq(order['SUFFIX'],Morph)
+        preSet = expandMorphSeq(order['PREFIX'], Morph)
+        sufSet = expandMorphSeq(order['SUFFIX'], Morph)
         #stemSet= [stem.to_dict() for i,stem in Lexicon.iterrows()]
-        stemSet= [stem.to_dict() for i,stem in Lexicon[Lexicon.CLASS == order['STEM']].iterrows()]
+        stemSet = [stem.to_dict()
+                   for i, stem in Lexicon[Lexicon.CLASS == order['STEM']].iterrows()]
+
+        cond2combs = {}
         
         for k in tqdm(stemSet):  #LEXICON
-            xconds=k['COND-S']
-            xcondt=k['COND-T']
-            xcondf=k['COND-F']
+            xconds = k['COND-S']
+            xcondt = k['COND-T']
+            xcondf = k['COND-F']
+            xcond_cat = " && ".join([xconds, xcondt, xcondf])
+            stem_combinations = cond2combs.setdefault(xcond_cat, [])
+            if stem_combinations:
+                stem, _ = _generate_stem(k, xconds, xcondt, xcondf)
+                db['OUT:###STEMS###'][stem] = 1
+                continue
+
             for i in preSet:
                 # print("here", i)
-                pconds=' '.join([m['COND-S'] for m in i])
+                pconds = ' '.join([m['COND-S'] for m in i])
 
                 # pconds=' '.join([m['COND-S'] for m in i])
 
-                pcondt=' '.join([m['COND-T'] for m in i])
-                pcondf=' '.join([m['COND-F'] for m in i])
+                pcondt = ' '.join([m['COND-T'] for m in i])
+                pcondf = ' '.join([m['COND-F'] for m in i])
 
                 # pbw=re.sub("\+\_","",re.sub("^(\_\+)+","",pbw)) 
 
@@ -326,9 +337,9 @@ def constructAlmorDB(About,Header,Order,Morph,Lexicon):
                 #pcat="PrefCat:"+re.sub("[\s\_]+","#",pclass+pcondt+pconds+pcondf)
 
                 for j in sufSet:  
-                    sconds=' '.join([m['COND-S'] for m in j])
-                    scondt=' '.join([m['COND-T'] for m in j])
-                    scondf=' '.join([m['COND-F'] for m in j])
+                    sconds = ' '.join([m['COND-S'] for m in j])
+                    scondt = ' '.join([m['COND-T'] for m in j])
+                    scondf = ' '.join([m['COND-F'] for m in j])
 
                     # sbw=re.sub("\+\_","",re.sub("^(\_\+)+","",sbw))
 
@@ -340,12 +351,9 @@ def constructAlmorDB(About,Header,Order,Morph,Lexicon):
                     #scat="SuffCat:"+re.sub("[\s\_]+","#",sclass+scondt)
                     #scat="SuffCat:"+re.sub("[\s\_]+","#",sclass+scondt+sconds+scondf)
 
-    
-                    valid=checkCompatibility(' '.join([pconds,xconds,sconds]),
-                                            ' '.join([pcondt,xcondt,scondt]),
-                                            ' '.join([pcondf,xcondf,scondf]))
-
-
+                    valid = checkCompatibility(' '.join([pconds, xconds, sconds]),
+                                               ' '.join([pcondt, xcondt, scondt]),
+                                               ' '.join([pcondf, xcondf, scondf]))
                     if valid:
                         
                         if verbose:
@@ -356,104 +364,151 @@ def constructAlmorDB(About,Header,Order,Morph,Lexicon):
                             #print("\nCOND-S =",' '.join([pconds,xconds,sconds]), 
                             #  "\nCOND-T =",' '.join([pcondt,xcondt,scondt]),
                             #  "\nCOND-F =",' '.join([pcondf,xcondf,scondf]),"\n####")
-                            
-                        pclass='+'.join([m['CLASS'] for m in i])
-                        pbw='+'.join([m['BW'] for m in i])
-                        pform='+'.join([m['FORM'] for m in i])
-                        pgloss='+'.join([m['GLOSS'] for m in i])
-                        pfeat = ' '.join([m['FEAT'] for m in i])
-                        pbw =_PLUS_UNDERSCORE.sub("",_UNDERSCORE_PLUS_START.sub("",pbw))
-                        if pbw == '_': pbw = ''
-                        pgloss=_PLUS_UNDERSCORE.sub("",_UNDERSCORE_PLUS_START.sub("",pgloss))
-                        pdiac=_UNDERSCORE_or_PLUS.sub("",pform)
-                        pmatch = normalize_alef_bw(normalize_alef_maksura_bw(
-                            normalize_teh_marbuta_bw(dediac_bw(pdiac))))
                         
-                        sclass='+'.join([m['CLASS'] for m in j])
-                        sbw='+'.join([m['BW'] for m in j])
-                        sform='+'.join([m['FORM'] for m in j])
-                        sgloss='+'.join([m['GLOSS'] for m in j])
-                        sfeat = ' '.join([m['FEAT'] for m in j])
-                        sbw=_PLUS_UNDERSCORE.sub("",_UNDERSCORE_PLUS_START.sub("",sbw))
-                        if sbw == '_': sbw = ''
-                        sgloss=_PLUS_UNDERSCORE.sub("",_UNDERSCORE_PLUS_START.sub("",sgloss))
-                        sdiac=_UNDERSCORE_or_PLUS.sub("",sform)
-                        smatch = normalize_alef_bw(normalize_alef_maksura_bw(
-                            normalize_teh_marbuta_bw(dediac_bw(sdiac))))
-
-                        xbw=k['BW']
-                        xclass=k['CLASS']
-                        xform=k['FORM']
-                        xgloss=k['GLOSS']
-                        xlex = k['LEMMA'].split(':')[1]
-                        xfeat = k['FEAT'].strip()
-                        xbw=_PLUS_UNDERSCORE.sub("",_UNDERSCORE_PLUS_START.sub("",xbw))
-                        xdiac=_UNDERSCORE_or_PLUS.sub("",xform)
-                        xmatch = normalize_alef_bw(normalize_alef_maksura_bw(
-                            normalize_teh_marbuta_bw(dediac_bw(xdiac))))
-                        ###SALAM###
-                        ## in the current almor/BAMA db implementation basic verb 
-                        ##  stems have per:3 by default, so I'm adding it here and 
-                        ##  then we should decide if we need to add it inthe lexicon
-                        ##  table or change the db algo
-                        #if 'pos:verb' in xfeat:
-                        #    xfeat = xfeat+' per:3 enc0:0 vox:a mod:u'
-                        
-                        pcat=createCat("P:",pclass,pconds,pcondt,pcondf)
-                        scat=createCat("S:",sclass,sconds,scondt,scondf)
-                        xcat=createCat("X:",xclass,xconds,xcondt,xcondf)
-
-                        ar_pbw = __convert_BW_tag(pbw)
-                        ar_sbw = __convert_BW_tag(sbw)
-                        ar_xbw = __convert_BW_tag(xbw)
-                        db['OUT:###PREFIXES###'][bw2ar(pmatch)+'\t'+pcat+'\t'+'diac:'+bw2ar(pdiac)+
-                                                ' bw:'+ar_pbw+' gloss:'+pgloss.strip()+' '+pfeat.strip()]=1
-                        db['OUT:###SUFFIXES###'][bw2ar(smatch)+'\t'+scat+'\t'+'diac:'+bw2ar(sdiac)+
-                                                ' bw:'+ar_sbw+' gloss:'+sgloss.strip()+' '+sfeat.strip()]=1
-                        db['OUT:###STEMS###'][bw2ar(xmatch)+'\t'+xcat+'\t'+'diac:'+bw2ar(xdiac)+
-                                            ' bw:'+ar_xbw+' lex:'+bw2ar(xlex)+
-                                              ' gloss:'+xgloss.strip()+' '+xfeat.strip()]=1
-                        db['OUT:###TABLE AB###'][pcat+" "+xcat]=1
-                        db['OUT:###TABLE BC###'][xcat+" "+scat]=1
-                        db['OUT:###TABLE AC###'][pcat+" "+scat]=1
+                        combination = _read_combination(
+                            i, j, k, pconds, pcondt, pcondf, sconds, scondt, scondf, xconds, xcondt, xcondf)
+                        stem_combinations.append(combination)
+                        db = _update_db(combination, db)
 
     return(db)
+
+def _update_db(combination, db):
+    db['OUT:###PREFIXES###'][combination["prefix"]] = 1
+    db['OUT:###SUFFIXES###'][combination["suffix"]] = 1
+    db['OUT:###STEMS###'][combination["stem"]] = 1
+    db['OUT:###TABLE AB###'][combination["table_ab"]] = 1
+    db['OUT:###TABLE BC###'][combination["table_bc"]] = 1
+    db['OUT:###TABLE AC###'][combination["table_ac"]] = 1
+    return db
+
+def _read_combination(prefix, suffix, stem,
+                      pconds, pcondt, pcondf,
+                      sconds, scondt, scondf,
+                      xconds, xcondt, xcondf):
+    ###SALAM###
+    ## in the current almor/BAMA db implementation basic verb 
+    ##  stems have per:3 by default, so I'm adding it here and 
+    ##  then we should decide if we need to add it inthe lexicon
+    ##  table or change the db algo
+    #if 'pos:verb' in xfeat:
+    #    xfeat = xfeat+' per:3 enc0:0 vox:a mod:u'
+
+    prefix, pcat = _generate_prefix(prefix, pconds, pcondt, pcondf)
+    suffix, scat = _generate_suffix(suffix, sconds, scondt, scondf)
+    stem, xcat = _generate_stem(stem, xconds, xcondt, xcondf)
+    
+    combination = dict(prefix=prefix,
+                       suffix=suffix,
+                       stem=stem,
+                       table_ab=pcat+" "+xcat,
+                       table_bc=xcat+" "+scat,
+                       table_ac=pcat+" "+scat)
+    return combination
+
+def _generate_prefix(prefix, pconds, pcondt, pcondf):
+    pclass, pmatch, pdiac, pgloss, pfeat, pbw = _read_prefix(prefix)
+    pcat = createCat("P:", pclass, pconds, pcondt, pcondf)
+    ar_pbw = __convert_BW_tag(pbw)
+    prefix = bw2ar(pmatch) + '\t' + pcat + '\t' + 'diac:' + bw2ar(pdiac) + \
+        ' bw:' + ar_pbw + ' gloss:' + pgloss.strip() + ' ' + pfeat.strip()
+    return prefix, pcat
+
+def _generate_suffix(suffix, sconds, scondt, scondf):
+    sclass, smatch, sdiac, sgloss, sfeat, sbw = _read_suffix(suffix)
+    scat = createCat("S:", sclass, sconds, scondt, scondf)
+    ar_sbw = __convert_BW_tag(sbw)
+    suffix = bw2ar(smatch) + '\t' + scat + '\t' + 'diac:' + bw2ar(sdiac) + \
+                ' bw:' + ar_sbw + ' gloss:' + sgloss.strip() + ' ' + sfeat.strip()
+    return suffix, scat
+
+def _generate_stem(stem, xconds, xcondt, xcondf):
+    xclass, xmatch, xdiac, xlex, xgloss, xfeat, xbw = _read_stem(stem)
+    xcat = createCat("X:", xclass, xconds, xcondt, xcondf)
+    ar_xbw = __convert_BW_tag(xbw)
+    stem = bw2ar(xmatch) + '\t' + xcat + '\t' + 'diac:' + bw2ar(xdiac) + \
+            ' bw:' + ar_xbw + ' lex:' + bw2ar(xlex) + ' gloss:' + \
+            xgloss.strip() + ' ' + xfeat.strip()
+    return stem, xcat
+
+
+def _read_prefix(prefix):
+    pclass = '+'.join([m['CLASS'] for m in prefix])
+    pbw = '+'.join([m['BW'] for m in prefix])
+    pform = '+'.join([m['FORM'] for m in prefix])
+    pgloss = '+'.join([m['GLOSS'] for m in prefix])
+    pfeat = ' '.join([m['FEAT'] for m in prefix])
+    pbw = _PLUS_UNDERSCORE.sub("", _UNDERSCORE_PLUS_START.sub("", pbw))
+    if pbw == '_':
+        pbw = ''
+    pgloss = _PLUS_UNDERSCORE.sub("", _UNDERSCORE_PLUS_START.sub("", pgloss))
+    pdiac = _UNDERSCORE_or_PLUS.sub("", pform)
+    pmatch = normalize_alef_bw(normalize_alef_maksura_bw(
+        normalize_teh_marbuta_bw(dediac_bw(pdiac))))
+    return pclass, pmatch, pdiac, pgloss, pfeat, pbw
+
+def _read_suffix(suffix):
+    sclass = '+'.join([m['CLASS'] for m in suffix])
+    sbw = '+'.join([m['BW'] for m in suffix])
+    sform = '+'.join([m['FORM'] for m in suffix])
+    sgloss = '+'.join([m['GLOSS'] for m in suffix])
+    sfeat = ' '.join([m['FEAT'] for m in suffix])
+    sbw = _PLUS_UNDERSCORE.sub("", _UNDERSCORE_PLUS_START.sub("", sbw))
+    if sbw == '_':
+        sbw = ''
+    sgloss = _PLUS_UNDERSCORE.sub("", _UNDERSCORE_PLUS_START.sub("", sgloss))
+    sdiac = _UNDERSCORE_or_PLUS.sub("", sform)
+    smatch = normalize_alef_bw(normalize_alef_maksura_bw(
+        normalize_teh_marbuta_bw(dediac_bw(sdiac))))
+    return sclass, smatch, sdiac, sgloss, sfeat, sbw
+
+def _read_stem(stem):
+    xbw = stem['BW']
+    xclass = stem['CLASS']
+    xform = stem['FORM']
+    xgloss = stem['GLOSS']
+    xlex = stem['LEMMA'].split(':')[1]
+    xfeat = stem['FEAT'].strip()
+    xbw = _PLUS_UNDERSCORE.sub("", _UNDERSCORE_PLUS_START.sub("", xbw))
+    xdiac = _UNDERSCORE_or_PLUS.sub("", xform)
+    xmatch = normalize_alef_bw(normalize_alef_maksura_bw(
+        normalize_teh_marbuta_bw(dediac_bw(xdiac))))
+    return xclass, xmatch, xdiac, xlex, xgloss, xfeat, xbw
 
 ###########################################
 #Create output file in ALMOR DB format
 ###########################################
-def printAlmorDB(outputfilename,db):
+def printAlmorDB(outputfilename, db):
     fout = open(outputfilename, "w")
     
     # for x in db['OUT:###ABOUT###']:
     #     fout.write(x+"\n")
     
     for x in db['OUT:###HEADER###']:
-        fout.write(x+"\n")
+        fout.write(x + "\n")
 
     fout.write("###PREFIXES###\n")
     for x in db['OUT:###PREFIXES###'].keys():
-        fout.write(x+"\n")
+        fout.write(x + "\n")
         
     fout.write("###SUFFIXES###\n")
     for x in db['OUT:###SUFFIXES###'].keys():
-        fout.write(x+"\n")
+        fout.write(x + "\n")
         
     fout.write("###STEMS###\n")
     for x in db['OUT:###STEMS###'].keys():
-        fout.write(x+"\n")
+        fout.write(x + "\n")
         
     fout.write("###TABLE AB###\n")
     for x in db['OUT:###TABLE AB###'].keys():
-        fout.write(x+"\n")
+        fout.write(x + "\n")
         
     fout.write("###TABLE BC###\n")
     for x in db['OUT:###TABLE BC###'].keys():
-        fout.write(x+"\n")
+        fout.write(x + "\n")
         
     fout.write("###TABLE AC###\n")
     for x in db['OUT:###TABLE AC###'].keys():
-        fout.write(x+"\n")
+        fout.write(x + "\n")
         
     fout.close()
 
@@ -476,26 +531,27 @@ def printAlmorDB(outputfilename,db):
 ###########################################
 
 def expandMorphSeq(MorphClass, Morph):
-    MorphSeqs=[]
-    
+    MorphSeqs = []
+
     for c in MorphClass.split():
         # print('c='+c)
-        if MorphSeqs==[]:
-            MorphSeqs=[[m.to_dict()] for i,m in Morph[Morph.CLASS == c].iterrows()]
+        if MorphSeqs == []:
+            MorphSeqs = [[m.to_dict()]
+                         for i, m in Morph[Morph.CLASS == c].iterrows()]
             # print(MorphSeqs)
         else:
-            TEMP=[]
-            for morph in [m.to_dict() for i,m in Morph[Morph.CLASS == c].iterrows()]:
+            TEMP = []
+            for morph in [m.to_dict() for i, m in Morph[Morph.CLASS == c].iterrows()]:
                 for mseq in MorphSeqs:
-                    x=mseq.copy()
+                    x = mseq.copy()
                     x.extend([morph])
                     TEMP.append(x)
             ###SALAM###
             # if TEMP remains empty it will overrite everything
             if TEMP:
-              MorphSeqs=TEMP
+              MorphSeqs = TEMP
             # print(MorphSeqs)
-            
+
     return MorphSeqs
 ###########################################
 
@@ -532,9 +588,12 @@ def checkCompatibility (condSet,condTrue,condFalse):
     # cs=re.sub("^\_","",re.sub(" \_","",re.sub("\_ ","",condSet))).split()
     # ct=re.sub("^\_","",re.sub(" \_","",re.sub("\_ ","",condTrue))).split()
     # cf=re.sub("^\_","",re.sub(" \_","",re.sub("\_ ","",condFalse))).split()
-    cs=_INIT_UNDERSCORE.sub("",_SPACE_UNDERSCORE.sub("",_UNDERSCORE_SPACE.sub("",condSet))).split()
-    ct=_INIT_UNDERSCORE.sub("",_SPACE_UNDERSCORE.sub("",_UNDERSCORE_SPACE.sub("",condTrue))).split()
-    cf=_INIT_UNDERSCORE.sub("",_SPACE_UNDERSCORE.sub("",_UNDERSCORE_SPACE.sub("",condFalse))).split()
+    cs = _INIT_UNDERSCORE.sub("", _SPACE_UNDERSCORE.sub(
+        "", _UNDERSCORE_SPACE.sub("", condSet))).split()
+    ct = _INIT_UNDERSCORE.sub("", _SPACE_UNDERSCORE.sub(
+        "", _UNDERSCORE_SPACE.sub("", condTrue))).split()
+    cf = _INIT_UNDERSCORE.sub("", _SPACE_UNDERSCORE.sub(
+        "", _UNDERSCORE_SPACE.sub("", condFalse))).split()
 
     cs.sort()
     ct.sort()
@@ -543,20 +602,20 @@ def checkCompatibility (condSet,condTrue,condFalse):
     #print("Set="+str(cs)) 
    # print("NeedTrue="+str(ct)) 
    # print("NeedFalse="+str(cf)) 
-    valid=True
-    
+    valid = True
+
     # Things that need to be true
     for t in ct:
         #print("NEED TRUE " + t)
-        
+
         #OR condition check
-        validor=False
+        validor = False
         for ort in t.split('||'):
-            validor=validor or ort in cs
-            
+            validor = validor or ort in cs
+
         #AND Check
-        valid=valid and validor
-        if not valid: # abort if we hit an invalid condition
+        valid = valid and validor
+        if not valid:  # abort if we hit an invalid condition
             comp_memoi[key] = valid
             return valid
         #print(valid)
@@ -565,12 +624,12 @@ def checkCompatibility (condSet,condTrue,condFalse):
     for f in cf:
         #print("NEED False " + f)
         for orf in f.split('||'):
-            valid=valid and orf not in cs
+            valid = valid and orf not in cs
         #print(valid)
-        if not valid: # abort if we hit an invalid condition
+        if not valid:  # abort if we hit an invalid condition
             comp_memoi[key] = valid
             return valid
-          
+
     #print("===")
 
     comp_memoi[key] = valid
@@ -617,7 +676,8 @@ def __get_morph_condFalse(morph_condTrue, current_condTrue_set, Morph):
       continue
     elif entry != 'else':
       #TODO: create condFalse for the morpheme by c_T - entry
-      almrph_condFalse, almrph_condTrue = __get_condFalse(current_condTrue_set, [entry])
+      almrph_condFalse, almrph_condTrue = __get_condFalse(
+          current_condTrue_set, [entry])
 
     elif entry == 'else':
       # TODO: condFalse = c_T
@@ -625,7 +685,8 @@ def __get_morph_condFalse(morph_condTrue, current_condTrue_set, Morph):
       almrph_condTrue = ['_']
     
     # Finally, populate the 'COND-F' cell with the false conditions
-    Morph.loc[idx, 'COND-F'] = Morph.loc[idx, 'COND-F'] + ' '+ ' '.join(almrph_condFalse)
+    Morph.loc[idx, 'COND-F'] = Morph.loc[idx, 'COND-F'] + \
+        ' ' + ' '.join(almrph_condFalse)
     Morph.loc[idx, 'COND-F'] = Morph.loc[idx, 'COND-F'].replace('_', '')
     # Morph.loc[idx, 'COND-T'] = ' '.join(almrph_condTrue)
   pass
