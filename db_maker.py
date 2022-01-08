@@ -22,6 +22,7 @@
 
 import re
 from tqdm import tqdm
+import itertools
 
 from camel_tools.utils.dediac import dediac_bw
 from camel_tools.utils.charmap import CharMapper
@@ -418,27 +419,11 @@ def expandMorphSeq(MorphClass, Morph):
     Ouput is a list of lists of dictionaries; where each dictionary
     specifies a morpheme; the list order of the dictionaries indicate 
     order of morphemes.
-    The function not only retrieves the morphemes but generates
-    a Cartesian product of their combinations as specified by the 
-    allowed Morph Classes"""
-
-    MorphSeqs = []
-
-    for c in MorphClass.split():
-        if MorphSeqs == []:
-            MorphSeqs = [[m.to_dict()]
-                         for i, m in Morph[Morph.CLASS == c].iterrows()]
-        else:
-            TEMP = []
-            for morph in [m.to_dict() for i, m in Morph[Morph.CLASS == c].iterrows()]:
-                for mseq in MorphSeqs:
-                    x = mseq.copy()
-                    x.extend([morph])
-                    TEMP.append(x)
-            # if TEMP remains empty it will overrite everything
-            if TEMP:
-              MorphSeqs = TEMP
-
+    In other words, it generates a Cartesian product of their combinations
+    as specified by the allowed Morph Classes"""
+    MorphClasses = [[m.to_dict() for i, m in Morph[Morph.CLASS == c].iterrows()]
+                        for c in MorphClass.split()]
+    MorphSeqs = [list(t) for t in itertools.product(*MorphClasses)]
     return MorphSeqs
 
 #Remember to eliminate all non match affixes/stems
