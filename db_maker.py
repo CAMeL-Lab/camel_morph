@@ -420,7 +420,7 @@ def printAlmorDB(outputfilename, db):
         
     fout.close()
 
-def expandSeq(MorphClass, Morph):
+def expandSeq(MorphClass, Morph, pruning=True):
     """This function exands the specification of Morph Classes
     into all possible combinations of specific Morphemes.
     Input is space separated class name: e.g., '[QUES] [CONJ] [PREP]'
@@ -437,6 +437,19 @@ def expandSeq(MorphClass, Morph):
         seq_conds_cat = [(position['COND-S'], position['COND-T'], position['COND-F'])
                             for position in seq]
         MorphSeqsCategorized.setdefault(tuple(seq_conds_cat), []).append(seq)
+    
+    if pruning:
+        # Prune out incoherent classes
+        MorphSeqsCategorized_ = {}
+        for seq_class, seq_instances in MorphSeqsCategorized.items():
+            cond_s_seq = {
+                cond for part in seq_class for cond in part[0].split() if cond}
+            cond_f_seq = {
+                cond for part in seq_class for cond in part[2].split() if cond}
+            if cond_s_seq.intersection(cond_f_seq) == set():
+                MorphSeqsCategorized_[seq_class] = seq_instances
+        MorphSeqsCategorized = MorphSeqsCategorized_
+    
     return MorphSeqsCategorized
 
 #Remember to eliminate all non match affixes/stems
