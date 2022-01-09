@@ -49,6 +49,8 @@ _SPACE_or_PLUS_MANY = re.compile("[\s\_]+")
 
 #Memoization dictionary for compatibilities for chaching
 comp_memoi = {}
+# Parsed sheets
+About, Header, Order, Morph, Lexicon = None, None, None, None, None
 
 ###########################################
 #Input File: XLSX containing specific worksheets: About, Header, Order, Morph, Lexicon
@@ -59,18 +61,17 @@ comp_memoi = {}
 
 def makeDB(inputfilename):
     About, Header, Order, Morph, Lexicon, outputfilename = readMorphSpec(inputfilename)
-    db = constructAlmorDB(About, Header, Order, Morph, Lexicon)
+    db = constructAlmorDB()
     printAlmorDB(outputfilename, db)
 
 
 def readMorphSpec(inputfilename):
     """Read Input file containing morphological specifications"""
+    global About, Header, Order, Morph, Lexicon
     #Read the full CamelDB xlsx file
     FullSpec = pd.ExcelFile(inputfilename)
-
     #Identify the Params sheet, which specifies which sheets to read in the xlsx spreadsheet
     Params = pd.read_excel(FullSpec, 'Params')
-
     #Read all the components:
     #Issue - need to allow multiple Morph, lex sheets to be read.
     About = pd.read_excel(
@@ -97,7 +98,7 @@ def readMorphSpec(inputfilename):
     Morph = Morph.replace('\s+', ' ', regex=True)
 
     # add FUNC and FEAT to COND-S
-    Morph['COND-S'] = Morph['COND-S'] + ' ' + Morph['FUNC'] + ' ' + Morph['FEAT']
+    Morph['COND-S'] = Morph['COND-S']
     Morph['COND-S'] = Morph['COND-S'].replace('[\[\]]', '', regex=True)
     # Replace spaces in BW and GLOSS with '#'
     Morph['BW'] = Morph['BW'].replace('\s+', '#', regex=True)
@@ -219,9 +220,14 @@ def __convert_BW_tag(BW_tag):
         utf8_BW_tag.append('/'.join([BW_lex, BW_pos]))
     return '+'.join(utf8_BW_tag)
 
-def constructAlmorDB(About, Header, Order, Morph, Lexicon):
-    """Read Input file containing morphological specifications"""
+def constructAlmorDB():
+    db = {}
+    for orderIndex, order in Order.iterrows():
+        db_ = _populate_db(order)
+        db.update(db_)
+    return db
 
+def _populate_db(order):
     db = {}
     db['OUT:###ABOUT###'] = list(About['Content'])
     db['OUT:###HEADER###'] = list(Header['Content'])
@@ -231,54 +237,56 @@ def constructAlmorDB(About, Header, Order, Morph, Lexicon):
     db['OUT:###TABLE AB###'] = {}
     db['OUT:###TABLE BC###'] = {}
     db['OUT:###TABLE AC###'] = {}
-    
-    for orderIndex, order in Order.iterrows():
-        print(order["VAR"], order["COND-T"],
+
+    print(order["VAR"], order["COND-T"],
               order["PREFIX"], order["STEM"], order["SUFFIX"], sep=" ; ", end='\n')
 
-        preSet = expandMorphSeq(order['PREFIX'], Morph)
-        sufSet = expandMorphSeq(order['SUFFIX'], Morph)
-        stemSet = [stem.to_dict()
-                   for i, stem in Lexicon[Lexicon.CLASS == order['STEM']].iterrows()]
+    prefix_classes = expandSeq(order['PREFIX'], Morph)
+    suffix_classes = expandSeq(order['SUFFIX'], Morph)
+    stem_classes = expandSeq(order['STEM'], Lexicon)
 
-        # `cond2combs` stores valid suffix/prefix combinations (i.e., combs) for each 
-        # stem class (about 40) which is based on the stem conditions (i.e., conds).
-        # This allows us to avoid checking compatibility for all suffix/prefix/stem
-        # combinations as prefix/suffix combinations will be the same for verbs within
-        # each stem class
-        cond2combs = {}
-        for k in tqdm(stemSet):  #LEXICON
-            xconds = k['COND-S']
-            xcondt = k['COND-T']
-            xcondf = k['COND-F']
-            xcond_cat = (xconds, xcondt, xcondf)
-            stem_combinations = cond2combs.setdefault(xcond_cat, [])
-            if stem_combinations:
-                stem, _ = _generate_stem(k, xconds, xcondt, xcondf)
-                db['OUT:###STEMS###'][stem] = 1
-                continue
+    # pbar = tqdm(total=sum(1 for _, stems in stem_classes.items() for _ in stems))
+    for stem_class, stem_combs in tqdm(stem_classes.items()):  # LEXICON
+        #`stem_class` = (stem['COND-S'], stem['COND-T'], stem['COND-F'])
+        # len(stem_comb) = 1 always
+        xconds = stem_combs[0][0]['COND-S']
+        xcondt = stem_combs[0][0]['COND-T']
+        xcondf = stem_combs[0][0]['COND-F']
 
-            for i in preSet:
-                pconds = ' '.join([m['COND-S'] for m in i])
-                pcondt = ' '.join([m['COND-T'] for m in i])
-                pcondf = ' '.join([m['COND-F'] for m in i])
-                for j in sufSet:  
-                    sconds = ' '.join([m['COND-S'] for m in j])
-                    scondt = ' '.join([m['COND-T'] for m in j])
-                    scondf = ' '.join([m['COND-F'] for m in j])
+        for prefix_class, prefix_combs in prefix_classes.items():
+            pconds = ' '.join([f['COND-S'] for f in prefix_combs[0]])
+            pcondt = ' '.join([f['COND-T'] for f in prefix_combs[0]])
+            pcondf = ' '.join([f['COND-F'] for f in prefix_combs[0]])
 
-                    valid = checkCompatibility(' '.join([pconds, xconds, sconds]),
-                                               ' '.join([pcondt, xcondt, scondt]),
-                                               ' '.join([pcondf, xcondf, scondf]))
-                    if valid:
-                        if verbose:
-                            print(valid,":", '+'.join([m['FORM'] for m in i])+k['FORM']+'+'.join([m['FORM'] for m in j]))
-                        combination = _read_combination(
-                            i, j, k, pconds, pcondt, pcondf, sconds, scondt, scondf, xconds, xcondt, xcondf)
-                        stem_combinations.append(combination)
-                        db = _update_db(combination, db)
+            for suffix_class, suffix_combs in suffix_classes.items():
+                sconds = ' '.join([f['COND-S'] for f in suffix_combs[0]])
+                scondt = ' '.join([f['COND-T'] for f in suffix_combs[0]])
+                scondf = ' '.join([f['COND-F'] for f in suffix_combs[0]])
 
-    return(db)
+                valid = checkCompatibility(' '.join([pconds, xconds, sconds]),
+                                        ' '.join([pcondt, xcondt, scondt]),
+                                        ' '.join([pcondf, xcondf, scondf]))
+                if valid:
+                    if verbose:
+                        print(valid, ":", '+'.join([m['FORM']
+                            for m in prefix_combs[0]]) + stem_combs[0][0]['FORM'] + '+'.join(
+                            [m['FORM'] for m in suffix_combs[0]]))
+                    
+                    combination = _read_combination(
+                        prefix_combs[0], suffix_combs[0], stem_combs[0][0],
+                        pconds, pcondt, pcondf, sconds, scondt, scondf, xconds, xcondt, xcondf)
+                    db = _update_db(combination, db)
+
+                    for stem in stem_combs[1:]:
+                        stem_entry, _ = _generate_stem(stem[0], xconds, xcondt, xcondf)
+                        db['OUT:###STEMS###'][stem_entry] = 1
+                    for prefix in prefix_combs[1:]:
+                        prefix_entry, _ = _generate_prefix(prefix, pconds, pcondt, pcondf)
+                        db['OUT:###PREFIXES###'][prefix_entry] = 1
+                    for suffix in suffix_combs[1:]:
+                        suffix_entry, _ = _generate_suffix(suffix, sconds, scondt, scondf)
+                        db['OUT:###SUFFIXES###'][suffix_entry] = 1
+    return db
 
 def _update_db(combination, db):
     db['OUT:###PREFIXES###'][combination["prefix"]] = 1
@@ -412,7 +420,7 @@ def printAlmorDB(outputfilename, db):
         
     fout.close()
 
-def expandMorphSeq(MorphClass, Morph):
+def expandSeq(MorphClass, Morph):
     """This function exands the specification of Morph Classes
     into all possible combinations of specific Morphemes.
     Input is space separated class name: e.g., '[QUES] [CONJ] [PREP]'
@@ -424,7 +432,12 @@ def expandMorphSeq(MorphClass, Morph):
     MorphClasses = [[m.to_dict() for i, m in Morph[Morph.CLASS == c].iterrows()]
                         for c in MorphClass.split()]
     MorphSeqs = [list(t) for t in itertools.product(*MorphClasses)]
-    return MorphSeqs
+    MorphSeqsCategorized = {}
+    for seq in MorphSeqs:
+        seq_conds_cat = [(position['COND-S'], position['COND-T'], position['COND-F'])
+                            for position in seq]
+        MorphSeqsCategorized.setdefault(tuple(seq_conds_cat), []).append(seq)
+    return MorphSeqsCategorized
 
 #Remember to eliminate all non match affixes/stems
 def checkCompatibility (condSet,condTrue,condFalse):
