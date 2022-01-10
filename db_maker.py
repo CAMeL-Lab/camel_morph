@@ -11,6 +11,7 @@
 import re
 from tqdm import tqdm
 import itertools
+from time import strftime, gmtime, time
 
 from camel_tools.utils.dediac import dediac_bw
 from camel_tools.utils.charmap import CharMapper
@@ -49,9 +50,12 @@ cond2class = None
 
 def make_db(input_filename):
     # Initializes `ABOUT`, `HEADER`, `ORDER`, `MORPH`, and `LEXICON`
+    c0 = time()
     output_filename = read_morph_specs(input_filename)
     db = construct_almor_db()
     print_almor_db(output_filename, db)
+    c1 = time()
+    print('\n', f"Total time required: {strftime('%M:%S', gmtime(c1 - c0))}")
 
 
 def read_morph_specs(input_filename):
