@@ -21,6 +21,7 @@
 ###########################################
 
 import re
+from unicodedata import is_normalized
 from tqdm import tqdm
 import itertools
 
@@ -51,7 +52,7 @@ _SPACE_or_PLUS_MANY = re.compile("[\s\_]+")
 comp_memoi = {}
 # Parsed sheets
 About, Header, Order, Morph, Lexicon = None, None, None, None, None
-
+cond2class = None
 ###########################################
 #Input File: XLSX containing specific worksheets: About, Header, Order, Morph, Lexicon
 #inputfilename="CamelMorphDB-Nov-2021.xlsx"
@@ -67,7 +68,7 @@ def makeDB(inputfilename):
 
 def readMorphSpec(inputfilename):
     """Read Input file containing morphological specifications"""
-    global About, Header, Order, Morph, Lexicon
+    global About, Header, Order, Morph, Lexicon, cond2class
     #Read the full CamelDB xlsx file
     FullSpec = pd.ExcelFile(inputfilename)
     #Identify the Params sheet, which specifies which sheets to read in the xlsx spreadsheet
@@ -90,6 +91,26 @@ def readMorphSpec(inputfilename):
     #Process all the components:
     Order = Order[Order.DEFINE == 'ORDER']  # skip comments & empty lines
     Order = Order.replace(np.nan, '', regex=True)
+
+    # Dictionary which groups conditions into classes (used later to
+    # do partial compatibility which is useful from pruning out incoherent
+    # suffix/prefix/stem combinations before performing full compatibility
+    # in which (prefix, stem, suffix) instances are tried out individually).
+    class2cond = Morph[Morph.DEFINE == 'CONDITIONS']
+    class2cond = {cond_class["CLASS"]:
+                            [cond for cond in cond_class["FUNC"].split() if cond]
+                        for _, cond_class in class2cond.iterrows()}
+    # Reverses the dictionary (k -> v and v -> k) so that individual conditions
+    # which belonged to a class are now keys with that class as a value. In addition,
+    # each condition gets its corresponding one-hot vector (actually stored as an int
+    # because bitwise operations can only be performed on ints) computed based on the
+    # other conditions within the same class (useful for pruning later).
+    cond2class = {
+        cond: (cond_class, 
+               int(''.join(['1' if i == index else '0' for index in range (len(conds))]), 2)
+        )
+        for cond_class, conds in class2cond.items()
+            for i, cond in enumerate(conds)}
 
     Morph = Morph[Morph.DEFINE == 'MORPH']  # skip comments & empty lines
     Morph = Morph.replace(np.nan, '', regex=True)
@@ -221,16 +242,19 @@ def __convert_BW_tag(BW_tag):
     return '+'.join(utf8_BW_tag)
 
 def constructAlmorDB():
+    global Order
     db = {}
-    for orderIndex, order in Order.iterrows():
+    db['OUT:###ABOUT###'] = list(About['Content'])
+    db['OUT:###HEADER###'] = list(Header['Content'])
+    for _, order in Order.iterrows():
         db_ = _populate_db(order)
-        db.update(db_)
+        for section, contents in db_.items():
+            db.setdefault(section, {}).update(contents)
+
     return db
 
 def _populate_db(order):
     db = {}
-    db['OUT:###ABOUT###'] = list(About['Content'])
-    db['OUT:###HEADER###'] = list(Header['Content'])
     db['OUT:###PREFIXES###'] = {}
     db['OUT:###SUFFIXES###'] = {}
     db['OUT:###STEMS###'] = {}
@@ -238,6 +262,7 @@ def _populate_db(order):
     db['OUT:###TABLE BC###'] = {}
     db['OUT:###TABLE AC###'] = {}
 
+    print()
     print(order["VAR"], order["COND-T"],
               order["PREFIX"], order["STEM"], order["SUFFIX"], sep=" ; ", end='\n')
 
@@ -420,7 +445,9 @@ def printAlmorDB(outputfilename, db):
         
     fout.close()
 
-def expandSeq(MorphClass, Morph, pruning=True):
+def expandSeq(MorphClass, Morph,
+              pruning_cond_s_f=True,
+              pruning_same_class_incompat=True):
     """This function exands the specification of Morph Classes
     into all possible combinations of specific Morphemes.
     Input is space separated class name: e.g., '[QUES] [CONJ] [PREP]'
@@ -438,22 +465,64 @@ def expandSeq(MorphClass, Morph, pruning=True):
                             for position in seq]
         MorphSeqsCategorized.setdefault(tuple(seq_conds_cat), []).append(seq)
     
-    if pruning:
+    if pruning_cond_s_f or pruning_same_class_incompat:
+        global cond2class
         # Prune out incoherent classes
         MorphSeqsCategorized_ = {}
         for seq_class, seq_instances in MorphSeqsCategorized.items():
             cond_s_seq = {
                 cond for part in seq_class for cond in part[0].split() if cond}
+            cond_t_seq = {
+                cond for part in seq_class for cond in part[1].split() if cond}
             cond_f_seq = {
                 cond for part in seq_class for cond in part[2].split() if cond}
-            if cond_s_seq.intersection(cond_f_seq) == set():
-                MorphSeqsCategorized_[seq_class] = seq_instances
+            # If any condition appears in COND-S and COND-F of the combination sequence,
+            # then the sequence should be pruned out since it is incoherent.
+            if pruning_cond_s_f and cond_s_seq.intersection(cond_f_seq) != set():
+                continue
+            # If any two conditions belonging to the same condition class appear in COND-T
+            # of the combination sequence, then the sequence should be pruned out since it
+            # is incoherent.
+            if pruning_same_class_incompat:
+                # If or-ed (||) COND-T conds did not exist, this would be as simple as checking
+                # whether two conditions of the same class are present in COND-T of the combination
+                # sequence, and disqualifying the latter based on that since two morphemes cannot
+                # coherently require some condition to be true if they are of the same class 
+                # (e.g., a combination sequence (suffix/prefix/stem) cannot both require #t and #-a>
+                # since these conditions are contradictory). But or-ed conditions require us to follow
+                # a different approach implemented below.
+                coherence = {}
+                is_not_coherent = False
+                for cond in cond_t_seq:
+                    # Disregard if default condition
+                    if cond == '_':
+                        continue
+                    elif '||' in cond:
+                        conds = cond.split('||')
+                        or_terms = [cond2class[cond][1] for cond in conds]
+                        # Based on the assumption that all terms belong to the same class
+                        cond_onehot_or = int('0' * or_terms[0], 2)
+                        for or_term in or_terms:
+                            cond_onehot_or = cond_onehot_or | or_term
+                        cond_class = cond2class[conds[0]]
+                        cond_onehot = cond_onehot_or
+                    else:
+                        cond_class, cond_onehot = cond2class[cond]
+                    cond_onehot_and = coherence.setdefault(cond_class, cond_onehot)
+                    coherence[cond_class] = cond_onehot_and & cond_onehot
+                for c in coherence.values():
+                    if c == 0:
+                        is_not_coherent = True
+                        continue
+                if is_not_coherent:
+                    continue
+            MorphSeqsCategorized_[seq_class] = seq_instances
         MorphSeqsCategorized = MorphSeqsCategorized_
     
     return MorphSeqsCategorized
 
 #Remember to eliminate all non match affixes/stems
-def checkCompatibility (condSet,condTrue,condFalse):
+def checkCompatibility (condSet, condTrue, condFalse):
     #order cond: order-lexicon pairing? pos
     #Cond True is an anded list of ORs (||) 
 
