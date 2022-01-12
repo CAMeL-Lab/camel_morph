@@ -353,3 +353,4 @@ MigrationBackup/
 test_debugging.py
 .DS_Store
 *.db
+process_sheets.py
