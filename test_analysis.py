@@ -7,7 +7,7 @@ from camel_tools.morphology.database import MorphologyDB
 from camel_tools.morphology.analyzer import Analyzer
 from camel_tools.utils.charmap import CharMapper
 from camel_tools.utils.transliterate import Transliterator
-from camel_tools.utils.dediac import dediac_ar
+from camel_tools.utils.dediac import dediac_bw
 
 from nltk import edit_distance
 
@@ -23,7 +23,7 @@ analyzer_calima = Analyzer(db_calima)
 
 output_inspection = {}
 
-def _preprocess_gold(gold):
+def _postprocess_gold(gold):
     gold = tuple([':'.join(f.split(':')[1:]) for f in gold])
     diac = re.sub(r'o', '', gold[0])
     # Remove -[uai] and _[12]
@@ -36,7 +36,7 @@ def _preprocess_gold(gold):
 
     return gold
 
-def _preprocess_pred(pred):
+def _postprocess_pred(pred):
     pred_ = []
     for analysis in pred:
         diac = ar2bw_translit.transliterate(analysis['diac'])
@@ -48,30 +48,39 @@ def _preprocess_pred(pred):
         bw = '+'.join([morph.split('/')[1]
                        for morph in bw.split('+') if 'STEM' not in morph])
         bw = re.sub(r'XV', asp, bw)
+        if bw.startswith('CONJ') and diac.startswith(('wa', 'sa', 'fa')):
+            diac = diac[:2] + re.sub(r'aA', 'A', diac[2:])
+        else:
+            diac = re.sub(r'aA', 'A', diac)
         pos = analysis['pos']
         pred_.append((diac, lex, bw, pos))
     pred = set(pred_)
 
     return pred
 
-def recall_stats(preds, gold, func_name):
+def recall_stats(preds, gold, func_name, inspection='all'):
     total = len(preds)
     correct = 0
     assert len(preds) == len(gold)
     for pred, gold_inst in tqdm(zip(preds, gold), total=len(preds), desc=func_name):
-        analyzer = pred[2]
-        pred_inst = pred[1]
+        form_dediac, pred_inst, analyzer = pred
         if {gold_inst}.intersection(pred_inst):
             correct += 1
         else:
             # Adds pred which is most similar to gold to `output_inspection`
             oov_failed = output_inspection.setdefault('recall', dict())
-            most_similar = [None, 1000]
-            for analysis in pred_inst:
-                ed = edit_distance(' '.join(analysis), ' '.join(gold_inst))
-                if ed < most_similar[1]:
-                    most_similar = [analysis, ed]
-            oov_failed.setdefault(analyzer, []).append((most_similar[0], gold_inst))
+            form_dediac = ar2bw_translit.transliterate(form_dediac)
+            if inspection == 'all':
+                output = pred_inst
+            elif inspection == 'most_similar':
+                most_similar = [None, 1000]
+                for analysis in pred_inst:
+                    ed = edit_distance(' '.join(analysis), ' '.join(gold_inst))
+                    if ed < most_similar[1]:
+                        most_similar = [analysis, ed]
+                output = most_similar[0]
+            oov_failed.setdefault(analyzer, []).append(
+                {'input': form_dediac, 'output': output, 'gold': gold_inst})
     
     report = ""
 
@@ -81,11 +90,13 @@ def oov_stats(preds, gold, func_name):
     total = len(preds)
     oov = 0
     for i, pred in enumerate(tqdm(preds, desc=func_name)):
-        if len(pred[1]) == 0:
+        form_dediac, pred_inst, _ = pred
+        if len(pred_inst) == 0:
             oov += 1
         else:
             oov_failed = output_inspection.setdefault('oov', dict())
-            oov_failed.setdefault(pred[2], []).append((pred, gold[i]))
+            form_dediac = ar2bw_translit.transliterate(form_dediac)
+            oov_failed.setdefault(pred[2], []).append((form_dediac, gold[i]))
 
     report = ""
 
@@ -97,24 +108,23 @@ def predict(test_pv_uniq):
     for ex in test_pv_uniq:
         # Simulate real-world inference setting
         form_diac = ex[0].split(':')[1]
-        form_dediac = dediac_ar(form_diac)
-        form_dediac = bw2ar_translit.transliterate(form_diac)
+        form_dediac = dediac_bw(form_diac)
+        form_dediac = bw2ar_translit.transliterate(form_dediac)
         # Generate analyses
         pred_camel = analyzer_camel.analyze(form_dediac)
         pred_calima = analyzer_calima.analyze(form_dediac)
-        pred_camel = _preprocess_pred(pred_camel)
-        pred_calima = _preprocess_pred(pred_calima)
+        pred_camel = _postprocess_pred(pred_camel)
+        pred_calima = _postprocess_pred(pred_calima)
         preds_camel.append((form_dediac, pred_camel, 'camel'))
         preds_calima.append((form_dediac, pred_calima, 'calima'))
         # join is to deal with bw tags which have ':' in the tag
-        gold_inst = _preprocess_gold(ex)
+        gold_inst = _postprocess_gold(ex)
         gold.append(gold_inst)
     
     return preds_camel, preds_calima, gold
 
 if __name__ == "__main__":
     with open(sys.argv[1]) as f:
-        #TODO: add POS
         test_set = f.read().split('\n--------------\n')
         test_set = [ex.split('\n') for ex in test_set if ex.startswith(";;WORD")]
         test_set = [tuple([field for i, field in enumerate(
