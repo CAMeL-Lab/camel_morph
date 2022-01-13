@@ -75,8 +75,8 @@ def read_morph_specs(input_filename):
         FULL_SPEC, PARAMS[PARAMS['Component'] == 'Order'].Sheetname.values[0])
     MORPH = pd.read_excel(
         FULL_SPEC, PARAMS[PARAMS['Component'] == 'Morph'].Sheetname.values[0])
-    LEXICON = pd.read_excel(
-        FULL_SPEC, PARAMS[PARAMS['Component'] == 'Lexicon'].Sheetname.values[0])
+    LEXICON = pd.concat([FULL_SPEC.parse(name)
+                         for name in PARAMS[PARAMS['Component'] == 'Lexicon'].Sheetname.values])
     outputfilename = PARAMS[PARAMS['Component']
                             == 'Output'].Sheetname.values[0]
 
