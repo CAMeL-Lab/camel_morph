@@ -259,31 +259,19 @@ def _populate_db(order):
                                             ' '.join([pcondt, xcondt, scondt]),
                                             ' '.join([pcondf, xcondf, scondf]))
                 if valid:
-                    prefix, pcat = _generate_prefix(
-                        prefix_combs[0], pconds, pcondt, pcondf)
-                    suffix, scat = _generate_suffix(
-                        suffix_combs[0], sconds, scondt, scondf)
-                    stem, xcat = _generate_stem(
-                        stem_combs[0][0], xconds, xcondt, xcondf)
-                    table_ab = pcat + " " + xcat
-                    table_bc = xcat + " " + scat
-                    table_ac = pcat + " " + scat
-                    db['OUT:###PREFIXES###'][prefix] = 1
-                    db['OUT:###SUFFIXES###'][suffix] = 1
-                    db['OUT:###STEMS###'][stem] = 1
-                    db['OUT:###TABLE AB###'][table_ab] = 1
-                    db['OUT:###TABLE BC###'][table_bc] = 1
-                    db['OUT:###TABLE AC###'][table_ac] = 1
-
-                    for stem in stem_combs[1:]:
-                        stem_entry, _ = _generate_stem(stem[0], xconds, xcondt, xcondf)
+                    for stem in stem_combs:
+                        stem_entry, xcat = _generate_stem(stem, xconds, xcondt, xcondf)
                         db['OUT:###STEMS###'][stem_entry] = 1
-                    for prefix in prefix_combs[1:]:
-                        prefix_entry, _ = _generate_prefix(prefix, pconds, pcondt, pcondf)
+                    for prefix in prefix_combs:
+                        prefix_entry, pcat = _generate_affix(prefix, pconds, pcondt, pcondf)
                         db['OUT:###PREFIXES###'][prefix_entry] = 1
-                    for suffix in suffix_combs[1:]:
-                        suffix_entry, _ = _generate_suffix(suffix, sconds, scondt, scondf)
+                    for suffix in suffix_combs:
+                        suffix_entry, scat = _generate_affix(suffix, sconds, scondt, scondf)
                         db['OUT:###SUFFIXES###'][suffix_entry] = 1
+
+                    db['OUT:###TABLE AB###'][pcat + " " + xcat] = 1
+                    db['OUT:###TABLE BC###'][xcat + " " + scat] = 1
+                    db['OUT:###TABLE AC###'][pcat + " " + scat] = 1
     return db
 
 
@@ -309,21 +297,13 @@ def _convert_bw_tag(bw_tag):
         utf8_bw_tag.append('/'.join([bw_lex, bw_pos]))
     return '+'.join(utf8_bw_tag)
 
-def _generate_prefix(prefix, pconds, pcondt, pcondf):
-    pclass, pmatch, pdiac, pgloss, pfeat, pbw = _read_prefix(prefix)
-    pcat = _create_cat("P:", pclass, pconds, pcondt, pcondf)
-    ar_pbw = _convert_bw_tag(pbw)
-    prefix = bw2ar(pmatch) + '\t' + pcat + '\t' + 'diac:' + bw2ar(pdiac) + \
-        ' bw:' + ar_pbw + ' gloss:' + pgloss.strip() + ' ' + pfeat.strip()
-    return prefix, pcat
-
-def _generate_suffix(suffix, sconds, scondt, scondf):
-    sclass, smatch, sdiac, sgloss, sfeat, sbw = _read_suffix(suffix)
-    scat = _create_cat("S:", sclass, sconds, scondt, scondf)
-    ar_sbw = _convert_bw_tag(sbw)
-    suffix = bw2ar(smatch) + '\t' + scat + '\t' + 'diac:' + bw2ar(sdiac) + \
-                ' bw:' + ar_sbw + ' gloss:' + sgloss.strip() + ' ' + sfeat.strip()
-    return suffix, scat
+def _generate_affix(affix, aconds, acondt, acondf):
+    aclass, amatch, adiac, agloss, afeat, abw = _read_affix(affix)
+    acat = _create_cat("P:", aclass, aconds, acondt, acondf)
+    ar_pbw = _convert_bw_tag(abw)
+    affix = bw2ar(amatch) + '\t' + acat + '\t' + 'diac:' + bw2ar(adiac) + \
+        ' bw:' + ar_pbw + ' gloss:' + agloss.strip() + ' ' + afeat.strip()
+    return affix, acat
 
 def _generate_stem(stem, xconds, xcondt, xcondf):
     xclass, xmatch, xdiac, xlex, xgloss, xfeat, xbw = _read_stem(stem)
@@ -334,43 +314,28 @@ def _generate_stem(stem, xconds, xcondt, xcondf):
             xgloss.strip() + ' ' + xfeat.strip()
     return stem, xcat
 
-def _read_prefix(prefix):
-    pclass = '+'.join([m['CLASS'] for m in prefix])
-    pbw = '+'.join([m['BW'] for m in prefix])
-    pform = '+'.join([m['FORM'] for m in prefix])
-    pgloss = '+'.join([m['GLOSS'] for m in prefix])
-    pfeat = ' '.join([m['FEAT'] for m in prefix])
-    pbw = _PLUS_UNDERSCORE.sub("", _UNDERSCORE_PLUS_START.sub("", pbw))
-    if pbw == '_':
-        pbw = ''
-    pgloss = _PLUS_UNDERSCORE.sub("", _UNDERSCORE_PLUS_START.sub("", pgloss))
-    pdiac = _UNDERSCORE_or_PLUS.sub("", pform)
-    pmatch = normalize_alef_bw(normalize_alef_maksura_bw(
-        normalize_teh_marbuta_bw(dediac_bw(pdiac))))
-    return pclass, pmatch, pdiac, pgloss, pfeat, pbw
-
-def _read_suffix(suffix):
-    sclass = '+'.join([m['CLASS'] for m in suffix])
-    sbw = '+'.join([m['BW'] for m in suffix])
-    sform = '+'.join([m['FORM'] for m in suffix])
-    sgloss = '+'.join([m['GLOSS'] for m in suffix])
-    sfeat = ' '.join([m['FEAT'] for m in suffix])
-    sbw = _PLUS_UNDERSCORE.sub("", _UNDERSCORE_PLUS_START.sub("", sbw))
-    if sbw == '_':
-        sbw = ''
-    sgloss = _PLUS_UNDERSCORE.sub("", _UNDERSCORE_PLUS_START.sub("", sgloss))
-    sdiac = _UNDERSCORE_or_PLUS.sub("", sform)
-    smatch = normalize_alef_bw(normalize_alef_maksura_bw(
-        normalize_teh_marbuta_bw(dediac_bw(sdiac))))
-    return sclass, smatch, sdiac, sgloss, sfeat, sbw
+def _read_affix(affix):
+    aclass = '+'.join([m['CLASS'] for m in affix])
+    abw = '+'.join([m['BW'] for m in affix])
+    aform = '+'.join([m['FORM'] for m in affix])
+    agloss = '+'.join([m['GLOSS'] for m in affix])
+    afeat = ' '.join([m['FEAT'] for m in affix])
+    abw = _PLUS_UNDERSCORE.sub("", _UNDERSCORE_PLUS_START.sub("", abw))
+    if abw == '_':
+        abw = ''
+    agloss = _PLUS_UNDERSCORE.sub("", _UNDERSCORE_PLUS_START.sub("", agloss))
+    adiac = _UNDERSCORE_or_PLUS.sub("", aform)
+    amatch = normalize_alef_bw(normalize_alef_maksura_bw(
+        normalize_teh_marbuta_bw(dediac_bw(adiac))))
+    return aclass, amatch, adiac, agloss, afeat, abw
 
 def _read_stem(stem):
-    xbw = stem['BW']
-    xclass = stem['CLASS']
-    xform = stem['FORM']
-    xgloss = stem['GLOSS']
-    xlex = stem['LEMMA'].split(':')[1]
-    xfeat = stem['FEAT'].strip()
+    xbw = '+'.join([s['BW'] for s in stem])
+    xclass = '+'.join([s['CLASS'] for s in stem])
+    xform = '+'.join([s['FORM'] for s in stem])
+    xgloss = '+'.join([s['GLOSS'] for s in stem])
+    xlex = '+'.join([s['LEMMA'].split(':')[1] for s in stem])
+    xfeat = '+'.join([s['FEAT'].strip() for s in stem])
     xbw = _PLUS_UNDERSCORE.sub("", _UNDERSCORE_PLUS_START.sub("", xbw))
     xdiac = _UNDERSCORE_or_PLUS.sub("", xform)
     xmatch = normalize_alef_bw(normalize_alef_maksura_bw(
