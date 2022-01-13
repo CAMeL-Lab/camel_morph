@@ -260,7 +260,10 @@ def _populate_db(order):
                                             ' '.join([pcondf, xcondf, scondf]))
                 if valid:
                     for stem in stem_combs:
-                        stem_entry, xcat = _generate_stem(stem, xconds, xcondt, xcondf)
+                        not_missing = all([True if s['FORM'] and s['FORM'] != "DROP" else False
+                                           for s in stem if s['DEFINE'] == 'LEXICON'])
+                        if not_missing:
+                            stem_entry, xcat = _generate_stem(stem, xconds, xcondt, xcondf)
                         db['OUT:###STEMS###'][stem_entry] = 1
                     for prefix in prefix_combs:
                         prefix_entry, pcat = _generate_affix(prefix, pconds, pcondt, pcondf)
