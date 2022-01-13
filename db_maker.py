@@ -23,7 +23,6 @@ import numpy as np
 bw2ar = CharMapper.builtin_mapper('bw2ar')
 ar2bw = CharMapper.builtin_mapper('ar2bw')
 
-verbose = False
 # Pre-compiled regex statements for efficiency
 # Statements in checkCompatibility
 _INIT_UNDERSCORE = re.compile("^\_")
@@ -260,15 +259,21 @@ def _populate_db(order):
                                             ' '.join([pcondt, xcondt, scondt]),
                                             ' '.join([pcondf, xcondf, scondf]))
                 if valid:
-                    if verbose:
-                        print(valid, ":", '+'.join([m['FORM']
-                            for m in prefix_combs[0]]) + stem_combs[0][0]['FORM'] + '+'.join(
-                            [m['FORM'] for m in suffix_combs[0]]))
-                    
-                    combination = write_combination(
-                        prefix_combs[0], suffix_combs[0], stem_combs[0][0],
-                        pconds, pcondt, pcondf, sconds, scondt, scondf, xconds, xcondt, xcondf)
-                    db = update_db(combination, db)
+                    prefix, pcat = _generate_prefix(
+                        prefix_combs[0], pconds, pcondt, pcondf)
+                    suffix, scat = _generate_suffix(
+                        suffix_combs[0], sconds, scondt, scondf)
+                    stem, xcat = _generate_stem(
+                        stem_combs[0][0], xconds, xcondt, xcondf)
+                    table_ab = pcat + " " + xcat
+                    table_bc = xcat + " " + scat
+                    table_ac = pcat + " " + scat
+                    db['OUT:###PREFIXES###'][prefix] = 1
+                    db['OUT:###SUFFIXES###'][suffix] = 1
+                    db['OUT:###STEMS###'][stem] = 1
+                    db['OUT:###TABLE AB###'][table_ab] = 1
+                    db['OUT:###TABLE BC###'][table_bc] = 1
+                    db['OUT:###TABLE AC###'][table_ac] = 1
 
                     for stem in stem_combs[1:]:
                         stem_entry, _ = _generate_stem(stem[0], xconds, xcondt, xcondf)
@@ -280,31 +285,6 @@ def _populate_db(order):
                         suffix_entry, _ = _generate_suffix(suffix, sconds, scondt, scondf)
                         db['OUT:###SUFFIXES###'][suffix_entry] = 1
     return db
-
-def update_db(combination, db):
-    db['OUT:###PREFIXES###'][combination["prefix"]] = 1
-    db['OUT:###SUFFIXES###'][combination["suffix"]] = 1
-    db['OUT:###STEMS###'][combination["stem"]] = 1
-    db['OUT:###TABLE AB###'][combination["table_ab"]] = 1
-    db['OUT:###TABLE BC###'][combination["table_bc"]] = 1
-    db['OUT:###TABLE AC###'][combination["table_ac"]] = 1
-    return db
-
-def write_combination(prefix, suffix, stem,
-                      pconds, pcondt, pcondf,
-                      sconds, scondt, scondf,
-                      xconds, xcondt, xcondf):
-    prefix, pcat = _generate_prefix(prefix, pconds, pcondt, pcondf)
-    suffix, scat = _generate_suffix(suffix, sconds, scondt, scondf)
-    stem, xcat = _generate_stem(stem, xconds, xcondt, xcondf)
-    
-    combination = dict(prefix=prefix,
-                       suffix=suffix,
-                       stem=stem,
-                       table_ab=pcat + " " + xcat,
-                       table_bc=xcat + " " + scat,
-                       table_ac=pcat + " " + scat)
-    return combination
 
 
 def _create_cat(x_morph_type, x_class, x_set, x_t, x_f):
