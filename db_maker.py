@@ -12,6 +12,7 @@ import re
 from tqdm import tqdm
 import itertools
 from time import strftime, gmtime, time
+import cProfile
 
 from camel_tools.utils.dediac import dediac_bw
 from camel_tools.utils.charmap import CharMapper
@@ -238,7 +239,7 @@ def _populate_db(order):
     stem_classes = expand_seq(order['STEM'])
 
     # pbar = tqdm(total=sum(1 for _, stems in stem_classes.items() for _ in stems))
-    for _, stem_combs in tqdm(stem_classes.items()):  # LEXICON
+    for _, stem_combs in stem_classes.items():  # LEXICON
         #`stem_class` = (stem['COND-S'], stem['COND-T'], stem['COND-F'])
         # len(stem_comb) = 1 always
         xconds = stem_combs[0][0]['COND-S']
@@ -266,10 +267,10 @@ def _populate_db(order):
                             stem_entry, xcat = _generate_stem(stem, xconds, xcondt, xcondf)
                         db['OUT:###STEMS###'][stem_entry] = 1
                     for prefix in prefix_combs:
-                        prefix_entry, pcat = _generate_affix(prefix, pconds, pcondt, pcondf)
+                        prefix_entry, pcat = _generate_affix(prefix, pconds, pcondt, pcondf, 'p')
                         db['OUT:###PREFIXES###'][prefix_entry] = 1
                     for suffix in suffix_combs:
-                        suffix_entry, scat = _generate_affix(suffix, sconds, scondt, scondf)
+                        suffix_entry, scat = _generate_affix(suffix, sconds, scondt, scondf, 's')
                         db['OUT:###SUFFIXES###'][suffix_entry] = 1
 
                     db['OUT:###TABLE AB###'][pcat + " " + xcat] = 1
@@ -300,9 +301,10 @@ def _convert_bw_tag(bw_tag):
         utf8_bw_tag.append('/'.join([bw_lex, bw_pos]))
     return '+'.join(utf8_bw_tag)
 
-def _generate_affix(affix, aconds, acondt, acondf):
+def _generate_affix(affix, aconds, acondt, acondf, affix_type):
     aclass, amatch, adiac, agloss, afeat, abw = _read_affix(affix)
-    acat = _create_cat("P:", aclass, aconds, acondt, acondf)
+    affix_type = "P:" if affix_type == 'p' else 'S:'
+    acat = _create_cat(affix_type, aclass, aconds, acondt, acondf)
     ar_pbw = _convert_bw_tag(abw)
     affix = bw2ar(amatch) + '\t' + acat + '\t' + 'diac:' + bw2ar(adiac) + \
         ' bw:' + ar_pbw + ' gloss:' + agloss.strip() + ' ' + afeat.strip()
