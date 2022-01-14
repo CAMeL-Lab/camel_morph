@@ -12,6 +12,7 @@ import re
 from tqdm import tqdm
 import itertools
 from time import strftime, gmtime, time
+from functools import partial
 import cProfile
 
 from camel_tools.utils.dediac import dediac_bw
@@ -131,7 +132,6 @@ def read_morph_specs(input_filename):
     MORPH_MORPHEMES = MORPH.FUNC.unique()
     MORPH_MORPHEMES = MORPH_MORPHEMES[MORPH_MORPHEMES != '_']
     # Go through each class
-        
     for CLASS in MORPH_CLASSES:
         # Go through each morpheme
         for MORPHEME in MORPH_MORPHEMES: 
@@ -228,29 +228,29 @@ def _populate_db(order):
     print(order["VAR"], order["COND-T"],
               order["PREFIX"], order["STEM"], order["SUFFIX"], sep=" ; ", end='\n')
 
-    prefix_classes = create_complex_morph_combinations(order['PREFIX'])
-    suffix_classes = create_complex_morph_combinations(order['SUFFIX'])
-    stem_classes = create_complex_morph_combinations(order['STEM'])
+    cmplx_prefix_classes = create_complex_morph_combinations(order['PREFIX'])
+    cmplx_suffix_classes = create_complex_morph_combinations(order['SUFFIX'])
+    cmplx_stem_classes = create_complex_morph_combinations(order['STEM'])
 
     cat_memoize = {'stem': {}, 'suffix': {}, 'prefix': {}}
     compatibility_memoize = {}
     early_stop = {'stem': {}, 'suffix': {}, 'prefix': {}}
-    for stem_class, stem_combs in tqdm(stem_classes.items()):  # LEXICON
+    for cmplx_stem_cls, cmplx_stems in tqdm(cmplx_stem_classes.items()):  # LEXICON
         # `stem_class` = (stem['COND-S'], stem['COND-T'], stem['COND-F'])
         # All `stem_comb` in `stem_combs` have the same cat 
-        xconds = stem_combs[0][0]['COND-S']
-        xcondt = stem_combs[0][0]['COND-T']
-        xcondf = stem_combs[0][0]['COND-F']
+        xconds = cmplx_stems[0][0]['COND-S']
+        xcondt = cmplx_stems[0][0]['COND-T']
+        xcondf = cmplx_stems[0][0]['COND-F']
 
-        for prefix_class, prefix_combs in prefix_classes.items():
-            pconds = ' '.join([f['COND-S'] for f in prefix_combs[0]])
-            pcondt = ' '.join([f['COND-T'] for f in prefix_combs[0]])
-            pcondf = ' '.join([f['COND-F'] for f in prefix_combs[0]])
+        for cmplx_prefix_cls, cmplx_prefixes in cmplx_prefix_classes.items():
+            pconds = ' '.join([f['COND-S'] for f in cmplx_prefixes[0]])
+            pcondt = ' '.join([f['COND-T'] for f in cmplx_prefixes[0]])
+            pcondf = ' '.join([f['COND-F'] for f in cmplx_prefixes[0]])
 
-            for suffix_class, suffix_combs in suffix_classes.items():
-                sconds = ' '.join([f['COND-S'] for f in suffix_combs[0]])
-                scondt = ' '.join([f['COND-T'] for f in suffix_combs[0]])
-                scondf = ' '.join([f['COND-F'] for f in suffix_combs[0]])
+            for cmplx_suffix_cls, cmplx_suffixes in cmplx_suffix_classes.items():
+                sconds = ' '.join([f['COND-S'] for f in cmplx_suffixes[0]])
+                scondt = ' '.join([f['COND-T'] for f in cmplx_suffixes[0]])
+                scondf = ' '.join([f['COND-F'] for f in cmplx_suffixes[0]])
 
                 valid = check_compatibility(' '.join([pconds, xconds, sconds]),
                                             ' '.join([pcondt, xcondt, scondt]),
@@ -258,47 +258,71 @@ def _populate_db(order):
                                             compatibility_memoize)
                 if valid:
                     xcat, pcat, scat = None, None, None
-                    if early_stop['stem'].get(stem_class) is None:
-                        for stem in stem_combs:
-                            stem_entry, xcat = _generate_stem(stem, xconds, xcondt, xcondf)
-                            db['OUT:###STEMS###'].setdefault('\t'.join(stem_entry.values()), 0)
-                            db['OUT:###STEMS###']['\t'.join(stem_entry.values())] += 1
-                        cat_memoize['stem'][stem_class] = xcat
+                    update_info_stem = dict(early_stop=early_stop['stem'],
+                                            cmplx_morph_cls=cmplx_stem_cls,
+                                            cmplx_morph_type='stem',
+                                            cmplx_morphs=cmplx_stems,
+                                            conds=xconds, condt=xcondt, condf=xcondf,
+                                            db_section='OUT:###STEMS###')
+                    update_info_prefix = dict(early_stop=early_stop['prefix'],
+                                              cmplx_morph_cls=cmplx_prefix_cls,
+                                              cmplx_morph_type='prefix',
+                                              cmplx_morphs=cmplx_prefixes,
+                                              conds=pconds, condt=pcondt, condf=pcondf,
+                                              db_section='OUT:###PREFIXES###')
+                    update_info_suffix = dict(early_stop=early_stop['suffix'],
+                                              cmplx_morph_cls=cmplx_suffix_cls,
+                                              cmplx_morph_type='suffix',
+                                              cmplx_morphs=cmplx_suffixes,
+                                              conds=sconds, condt=scondt, condf=scondf,
+                                              db_section='OUT:###SUFFIXES###')
                     
-                    if early_stop['prefix'].get(prefix_class) is None:
-                        for prefix in prefix_combs:
-                            prefix_entry, pcat = _generate_affix(prefix, pconds, pcondt, pcondf, 'p')
-                            db['OUT:###PREFIXES###'].setdefault('\t'.join(prefix_entry.values()), 0)
-                            db['OUT:###PREFIXES###']['\t'.join(prefix_entry.values())] += 1
-                        cat_memoize['prefix'][prefix_class] = pcat
-                    
-                    if early_stop['suffix'].get(suffix_class) is None:
-                        for suffix in suffix_combs:
-                            suffix_entry, scat = _generate_affix(suffix, sconds, scondt, scondf, 's')
-                            db['OUT:###SUFFIXES###'].setdefault('\t'.join(suffix_entry.values()), 0)
-                            db['OUT:###SUFFIXES###']['\t'.join(suffix_entry.values())] += 1
-                        cat_memoize['suffix'][suffix_class] = scat
-
+                    for update_info in [update_info_stem, update_info_prefix, update_info_suffix]:
+                        update_db(db, update_info, cat_memoize)
                     # If morph class cat has already been computed previously, then cat is still `None`
                     # (because we will not go again in the morph for loop) and we need to retrieve the
                     # computed value. 
-                    xcat = xcat if xcat else cat_memoize['stem'][stem_class]
-                    pcat = pcat if pcat else cat_memoize['prefix'][prefix_class]
-                    scat = scat if scat else cat_memoize['suffix'][suffix_class]
+                    xcat = xcat if xcat else cat_memoize['stem'][cmplx_stem_cls]
+                    pcat = pcat if pcat else cat_memoize['prefix'][cmplx_prefix_cls]
+                    scat = scat if scat else cat_memoize['suffix'][cmplx_suffix_cls]
 
                     db['OUT:###TABLE AB###'][pcat + " " + xcat] = 1
                     db['OUT:###TABLE BC###'][xcat + " " + scat] = 1
                     db['OUT:###TABLE AC###'][pcat + " " + scat] = 1
                     
-                    early_stop['stem'][stem_class] = True
-                    early_stop['prefix'][prefix_class] = True
-                    early_stop['suffix'][suffix_class] = True
+                    early_stop['stem'][cmplx_stem_cls] = True
+                    early_stop['prefix'][cmplx_prefix_cls] = True
+                    early_stop['suffix'][cmplx_suffix_cls] = True
+    # Turn this on to make sure that every entry is only set once (can also be used to catch
+    # double entries in the lexicon sheets)
+    # assert [1 for items in db.values() for item in items if item != 1] == []
     return db
 
-def _create_cat(x_morph_type, x_class, x_set, x_t, x_f):
+def update_db(db, update_info, cat_memoize):
+    early_stop = update_info['early_stop']
+    cmplx_morph_cls = update_info['cmplx_morph_cls']
+    cmplx_morph_type = update_info['cmplx_morph_type']
+    cmplx_morphs = update_info['cmplx_morphs']
+    conds, condt, condf = update_info['conds'], update_info['condt'], update_info['condf']
+    db_section = update_info['db_section']
+    if cmplx_morph_type == 'stem':
+        _generate = _generate_stem
+    elif cmplx_morph_type in ['prefix', 'suffix']:
+        _generate = partial(_generate_affix, cmplx_morph_type)
+
+    if early_stop.get(cmplx_morph_cls) is None:
+        for cmplx_morph in cmplx_morphs:
+            morph_entry, mcat = _generate(cmplx_morph, conds, condt, condf)
+            db[db_section].setdefault('\t'.join(morph_entry.values()), 0)
+            db[db_section]['\t'.join(morph_entry.values())] += 1
+        cat_memoize[cmplx_morph_type][cmplx_morph_cls] = mcat
+
+
+def _create_cat(cmplx_morph_type, cmplx_morph_class,
+                cmplx_morph_conds, cmplx_morph_condt, cmplx_morph_condf):
     """This function creates the category for matching using classes and conditions"""
-    cat = x_morph_type + \
-        _SPACE_or_PLUS_MANY.sub("#", x_class + " " + x_set + " T:" + x_t)
+    cat = cmplx_morph_type + \
+        _SPACE_or_PLUS_MANY.sub("#", f"{cmplx_morph_class} {cmplx_morph_conds} T:{cmplx_morph_condt}")
     return cat
 
 def _convert_bw_tag(bw_tag):
@@ -317,9 +341,9 @@ def _convert_bw_tag(bw_tag):
         utf8_bw_tag.append('/'.join([bw_lex, bw_pos]))
     return '+'.join(utf8_bw_tag)
 
-def _generate_affix(affix, aconds, acondt, acondf, affix_type):
+def _generate_affix(affix_type, affix, aconds, acondt, acondf):
     aclass, amatch, adiac, agloss, afeat, abw = _read_affix(affix)
-    affix_type = "P:" if affix_type == 'p' else 'S:'
+    affix_type = "P:" if affix_type == 'prefix' else 'S:'
     acat = _create_cat(affix_type, aclass, aconds, acondt, acondf)
     ar_pbw = _convert_bw_tag(abw)
     affix = {
@@ -402,7 +426,7 @@ def print_almor_db(output_filename, db):
     fout.close()
 
 
-def create_complex_morph_combinations(complex_morph_seq,
+def create_complex_morph_combinations(cmplx_morph_seq,
                                       pruning_cond_s_f=True,
                                       pruning_same_class_incompat=True):
     """This function exands the specification of morph classes
@@ -414,29 +438,29 @@ def create_complex_morph_combinations(complex_morph_seq,
     In other words, it generates a Cartesian product of their combinations
     as specified by the allowed morph classes"""
     global MORPH, LEXICON
-    complex_morph_classes = []
-    for morph_class in complex_morph_seq.split():
-        sheet = LEXICON if 'STEM' in morph_class else MORPH
+    cmplx_morph_classes = []
+    for cmplx_morph_cls in cmplx_morph_seq.split():
+        sheet = LEXICON if 'STEM' in cmplx_morph_cls else MORPH
         instances = []
-        for _, row in sheet[sheet.CLASS == morph_class].iterrows():
-            if 'STEM' in morph_class and (row['FORM'] == '' or row['FORM'] == "DROP"):
+        for _, row in sheet[sheet.CLASS == cmplx_morph_cls].iterrows():
+            if 'STEM' in cmplx_morph_cls and (row['FORM'] == '' or row['FORM'] == "DROP"):
                 continue
             instances.append(row.to_dict())
-        complex_morph_classes.append(instances)
+        cmplx_morph_classes.append(instances)
     
-    complex_morph_instances = [list(t) for t in itertools.product(*complex_morph_classes)]
-    complex_morph_categorized = {}
-    for seq in complex_morph_instances:
+    cmplx_morphs = [list(t) for t in itertools.product(*cmplx_morph_classes)]
+    cmplx_morph_categorized = {}
+    for seq in cmplx_morphs:
         seq_conds_cat = [(position['COND-S'], position['COND-T'], position['COND-F'])
                             for position in seq]
-        complex_morph_categorized.setdefault(tuple(seq_conds_cat), []).append(seq)
+        cmplx_morph_categorized.setdefault(tuple(seq_conds_cat), []).append(seq)
     
     # Performing partial compatibility tests to prune out incoherent combinations
     if pruning_cond_s_f or pruning_same_class_incompat:
         global cond2class
         # Prune out incoherent classes
         complex_morph_categorized_ = {}
-        for seq_class, seq_instances in complex_morph_categorized.items():
+        for seq_class, seq_instances in cmplx_morph_categorized.items():
             cond_s_seq = {
                 cond for part in seq_class for cond in part[0].split() if cond}
             cond_t_seq = {
@@ -485,9 +509,9 @@ def create_complex_morph_combinations(complex_morph_seq,
                     continue
             complex_morph_categorized_[seq_class] = seq_instances
         
-        complex_morph_categorized = complex_morph_categorized_
+        cmplx_morph_categorized = complex_morph_categorized_
     
-    return complex_morph_categorized
+    return cmplx_morph_categorized
 
 #Remember to eliminate all non match affixes/stems
 def check_compatibility (cond_s, cond_t, cond_f, compatibility_memoize):
