@@ -9,6 +9,7 @@
 ###########################################
 
 import re
+import os
 from tqdm import tqdm
 import itertools
 from time import strftime, gmtime, process_time
@@ -72,7 +73,7 @@ def read_morph_specs(input_filename):
         FULL_SPEC, PARAMS[PARAMS['Component'] == 'Morph'].Sheetname.values[0])
     LEXICON = pd.concat([FULL_SPEC.parse(name)
                          for name in PARAMS[PARAMS['Component'] == 'Lexicon'].Sheetname.values])
-    outputfilename = PARAMS[PARAMS['Component']
+    output_filename = PARAMS[PARAMS['Component']
                             == 'Output'].Sheetname.values[0]
 
     #Process all the components:
@@ -99,19 +100,6 @@ def read_morph_specs(input_filename):
         for cond_class, conds in class2cond.items()
             for i, cond in enumerate(conds)}
 
-    MORPH = MORPH[MORPH.DEFINE == 'MORPH']  # skip comments & empty lines
-    MORPH = MORPH.replace(np.nan, '', regex=True)
-    MORPH = MORPH.replace('^\s+', '', regex=True)
-    MORPH = MORPH.replace('\s+$', '', regex=True)
-    MORPH = MORPH.replace('\s+', ' ', regex=True)
-
-    # add FUNC and FEAT to COND-S
-    MORPH['COND-S'] = MORPH['COND-S']
-    MORPH['COND-S'] = MORPH['COND-S'].replace('[\[\]]', '', regex=True)
-    # Replace spaces in BW and GLOSS with '#'
-    MORPH['BW'] = MORPH['BW'].replace('\s+', '#', regex=True)
-    MORPH['GLOSS'] = MORPH['GLOSS'].replace('\s+', '#', regex=True)
-
     # Replace spaces in BW and GLOSS with '#' skip comments & empty lines
     LEXICON = LEXICON[LEXICON.DEFINE == 'LEXICON']
     LEXICON = LEXICON.replace(np.nan, '', regex=True)
@@ -122,6 +110,25 @@ def read_morph_specs(input_filename):
     LEXICON['COND-T'] = LEXICON['COND-T'].replace(' +', ' ', regex=True)
     LEXICON['COND-T'] = LEXICON['COND-T'].replace(' $', '', regex=True)
 
+    if os.path.exists('morph_sheet_prev.pkl'):
+        MORPH_prev = pd.read_pickle('morph_sheet_prev.pkl')
+        if MORPH.equals(MORPH_prev):
+            MORPH = pd.read_pickle('morph_sheet_processed.pkl')
+            return output_filename
+    else:
+        MORPH.to_pickle('morph_sheet_prev.pkl')
+    
+    MORPH = MORPH[MORPH.DEFINE == 'MORPH']  # skip comments & empty lines
+    MORPH = MORPH.replace(np.nan, '', regex=True)
+    MORPH = MORPH.replace('^\s+', '', regex=True)
+    MORPH = MORPH.replace('\s+$', '', regex=True)
+    MORPH = MORPH.replace('\s+', ' ', regex=True)
+    # add FUNC and FEAT to COND-S
+    MORPH['COND-S'] = MORPH['COND-S']
+    MORPH['COND-S'] = MORPH['COND-S'].replace('[\[\]]', '', regex=True)
+    # Replace spaces in BW and GLOSS with '#'
+    MORPH['BW'] = MORPH['BW'].replace('\s+', '#', regex=True)
+    MORPH['GLOSS'] = MORPH['GLOSS'].replace('\s+', '#', regex=True)
     # Retroactively generate the condFalse by creating the complementry distribution
     # of all the conditions within a single morpheme (all the allomorphs)
     # This is perfomed here once instead of on the fly.
@@ -200,7 +207,8 @@ def read_morph_specs(input_filename):
                 MORPH.loc[idx, 'COND-T'] = ' '.join(cond_t_almrph)
                 MORPH.loc[idx, 'COND-F'] = ' '.join(cond_f_almrph)
 
-    return outputfilename
+    MORPH.to_pickle('morph_sheet_processed.pkl')
+    return output_filename
    
 
 def construct_almor_db():
@@ -208,14 +216,33 @@ def construct_almor_db():
     db = {}
     db['OUT:###ABOUT###'] = list(ABOUT['Content'])
     db['OUT:###HEADER###'] = list(HEADER['Content'])
+    
+    # compatibility_memoize = {}
+    cmplx_morph_memoize = {'stem': {}, 'suffix': {}, 'prefix': {}}
+    stem_pattern = re.compile(r'\[(STEM-\w{2})\]')
+    prefix_pattern = re.compile(r'(\[(IVPref)\.\d\w{1,2}\])')
+    suffix_pattern = re.compile(r'(\[(IVSuff)\.\w\.\d\w{1,2}\])')
+    
     for _, order in ORDER.iterrows():
-        db_ = _populate_db(order)
+        cmplx_prefix_classes = gen_cmplx_morph_combs(
+            order['PREFIX'], cmplx_morph_memoize['prefix'], prefix_pattern)
+        cmplx_suffix_classes = gen_cmplx_morph_combs(
+            order['SUFFIX'], cmplx_morph_memoize['suffix'], suffix_pattern)
+        cmplx_stem_classes = gen_cmplx_morph_combs(
+            order['STEM'], cmplx_morph_memoize['stem'], stem_pattern)
+        
+        cmplx_morph_classes = dict(
+            cmplx_prefix_classes=cmplx_prefix_classes,
+            cmplx_suffix_classes=cmplx_suffix_classes,
+            cmplx_stem_classes=cmplx_stem_classes)
+        
+        db_ = populate_db(order, cmplx_morph_classes)
         for section, contents in db_.items():
             db.setdefault(section, {}).update(contents)
 
     return db
 
-def _populate_db(order):
+def populate_db(order, cmplx_morph_classes):
     db = {}
     db['OUT:###PREFIXES###'] = {}
     db['OUT:###SUFFIXES###'] = {}
@@ -228,9 +255,9 @@ def _populate_db(order):
     print(order["VAR"], order["COND-T"],
               order["PREFIX"], order["STEM"], order["SUFFIX"], sep=" ; ", end='\n')
 
-    cmplx_prefix_classes = create_complex_morph_combinations(order['PREFIX'])
-    cmplx_suffix_classes = create_complex_morph_combinations(order['SUFFIX'])
-    cmplx_stem_classes = create_complex_morph_combinations(order['STEM'])
+    cmplx_prefix_classes = cmplx_morph_classes['cmplx_prefix_classes']
+    cmplx_suffix_classes = cmplx_morph_classes['cmplx_suffix_classes']
+    cmplx_stem_classes = cmplx_morph_classes['cmplx_stem_classes']
 
     cat_memoize = {'stem': {}, 'suffix': {}, 'prefix': {}}
     compatibility_memoize = {}
@@ -426,9 +453,11 @@ def print_almor_db(output_filename, db):
     fout.close()
 
 
-def create_complex_morph_combinations(cmplx_morph_seq,
-                                      pruning_cond_s_f=True,
-                                      pruning_same_class_incompat=True):
+def gen_cmplx_morph_combs(cmplx_morph_seq,
+                          cmplx_morph_memoize,
+                          morph_pattern,
+                          pruning_cond_s_f=True,
+                          pruning_same_class_incompat=True):
     """This function exands the specification of morph classes
     into all possible combinations of specific morphemes.
     Input is space separated class name: e.g., '[QUES] [CONJ] [PREP]'
@@ -437,6 +466,15 @@ def create_complex_morph_combinations(cmplx_morph_seq,
     order of morphemes.
     In other words, it generates a Cartesian product of their combinations
     as specified by the allowed morph classes"""
+    pattern_match = morph_pattern.search(cmplx_morph_seq)
+    if pattern_match:
+        seq_key = pattern_match.group(1)
+    else:
+        seq_key = cmplx_morph_seq
+    
+    if 'STEM' in cmplx_morph_seq and cmplx_morph_memoize.get(seq_key) != None:
+        return cmplx_morph_memoize[seq_key]
+
     global MORPH, LEXICON
     cmplx_morph_classes = []
     for cmplx_morph_cls in cmplx_morph_seq.split():
@@ -511,6 +549,7 @@ def create_complex_morph_combinations(cmplx_morph_seq,
         
         cmplx_morph_categorized = complex_morph_categorized_
     
+    cmplx_morph_memoize[seq_key] = cmplx_morph_categorized
     return cmplx_morph_categorized
 
 #Remember to eliminate all non match affixes/stems
@@ -518,14 +557,6 @@ def check_compatibility (cond_s, cond_t, cond_f, compatibility_memoize):
     #order cond: order-lexicon pairing? pos
     #Cond True is an anded list of ORs (||) 
 
-    #Truth conditions:
-    # AND : A B C
-    # OR  : A||B||C
-    # combined: A B||C
-
-    #some limitations here.
-    
-    #TODO: optimize by caching; by breaking when no point of continuing.
     key = f'{cond_s}\t{cond_t}\t{cond_f}'
     if key in compatibility_memoize:
       return compatibility_memoize[key]
@@ -544,20 +575,17 @@ def check_compatibility (cond_s, cond_t, cond_f, compatibility_memoize):
     cf.sort()
 
     valid = True
-
     # Things that need to be true
     for t in ct:
         #OR condition check
         validor = False
         for ort in t.split('||'):
             validor = validor or ort in cs
-
         #AND Check
         valid = valid and validor
         if not valid:  # abort if we hit an invalid condition
             compatibility_memoize[key] = valid
             return valid
-
     # Things that need to be false
     for f in cf:
         for orf in f.split('||'):
