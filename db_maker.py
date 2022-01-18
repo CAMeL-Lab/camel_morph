@@ -218,6 +218,7 @@ def construct_almor_db():
     prefix_pattern = re.compile(r'(\[(IVPref)\.\d\w{1,2}\])')
     suffix_pattern = re.compile(r'(\[(IVSuff)\.\w\.\d\w{1,2}\])')
     
+    pbar = tqdm(total=len(list(ORDER.iterrows())))
     for _, order in ORDER.iterrows():
         cmplx_prefix_classes = gen_cmplx_morph_combs(
             order['PREFIX'], cmplx_morph_memoize['prefix'], prefix_pattern)
@@ -234,6 +235,8 @@ def construct_almor_db():
         db_ = populate_db(order, cmplx_morph_classes, compatibility_memoize)
         for section, contents in db_.items():
             db.setdefault(section, {}).update(contents)
+        pbar.update(1)
+    pbar.close()
 
     return db
 
@@ -255,12 +258,12 @@ def populate_db(order, cmplx_morph_classes, compatibility_memoize):
     cmplx_stem_classes = cmplx_morph_classes['cmplx_stem_classes']
 
     cat_memoize = {'stem': {}, 'suffix': {}, 'prefix': {}}
-    for cmplx_stem_cls, cmplx_stems in tqdm(cmplx_stem_classes.items()):  # LEXICON
+    for cmplx_stem_cls, cmplx_stems in cmplx_stem_classes.items():
         # `stem_class` = (stem['COND-S'], stem['COND-T'], stem['COND-F'])
         # All `stem_comb` in `stem_combs` have the same cat 
-        xconds = cmplx_stems[0][0]['COND-S']
-        xcondt = cmplx_stems[0][0]['COND-T']
-        xcondf = cmplx_stems[0][0]['COND-F']
+        xconds = ' '.join([f['COND-S'] for f in cmplx_stems[0]])
+        xcondt = ' '.join([f['COND-T'] for f in cmplx_stems[0]])
+        xcondf = ' '.join([f['COND-F'] for f in cmplx_stems[0]])
 
         for cmplx_prefix_cls, cmplx_prefixes in cmplx_prefix_classes.items():
             pconds = ' '.join([f['COND-S'] for f in cmplx_prefixes[0]])
@@ -393,10 +396,10 @@ def _read_stem(stem):
     xbw = '+'.join([s['BW'] for s in stem if s['BW'] != '_'])
     xclass = '+'.join([s['CLASS'] for s in stem])
     xdiac = ''.join([s['FORM'] for s in stem if s['FORM'] != '_'])
-    xgloss = '+'.join([s['GLOSS'] for s in stem])
+    xgloss = '+'.join([s['GLOSS'] for s in stem if 'LEMMA' in s])
     xgloss = xgloss if xgloss else '_'
-    xlex = '+'.join([s['LEMMA'].split(':')[1] for s in stem])
-    xfeat = '+'.join([s['FEAT'].strip() for s in stem])
+    xlex = '+'.join([s['LEMMA'].split(':')[1] for s in stem if 'LEMMA' in s])
+    xfeat = ' '.join([s['FEAT'].strip() for s in stem])
     xmatch = normalize_alef_bw(normalize_alef_maksura_bw(
         normalize_teh_marbuta_bw(dediac_bw(xdiac))))
     return xclass, xmatch, xdiac, xlex, xgloss, xfeat, xbw
