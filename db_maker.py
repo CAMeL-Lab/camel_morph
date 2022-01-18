@@ -26,11 +26,6 @@ import numpy as np
 bw2ar = CharMapper.builtin_mapper('bw2ar')
 ar2bw = CharMapper.builtin_mapper('ar2bw')
 
-# Pre-compiled regex statements for efficiency
-# Statements in checkCompatibility
-_INIT_UNDERSCORE = re.compile("^\_")
-_SPACE_UNDERSCORE = re.compile(" \_")
-_UNDERSCORE_SPACE = re.compile("\_ ")
 # Statements in createCat
 _SPACE_or_PLUS_MANY = re.compile("[\s\_]+")
 
@@ -217,7 +212,7 @@ def construct_almor_db():
     db['OUT:###ABOUT###'] = list(ABOUT['Content'])
     db['OUT:###HEADER###'] = list(HEADER['Content'])
     
-    # compatibility_memoize = {}
+    compatibility_memoize = {}
     cmplx_morph_memoize = {'stem': {}, 'suffix': {}, 'prefix': {}}
     stem_pattern = re.compile(r'\[(STEM-\w{2})\]')
     prefix_pattern = re.compile(r'(\[(IVPref)\.\d\w{1,2}\])')
@@ -236,13 +231,13 @@ def construct_almor_db():
             cmplx_suffix_classes=cmplx_suffix_classes,
             cmplx_stem_classes=cmplx_stem_classes)
         
-        db_ = populate_db(order, cmplx_morph_classes)
+        db_ = populate_db(order, cmplx_morph_classes, compatibility_memoize)
         for section, contents in db_.items():
             db.setdefault(section, {}).update(contents)
 
     return db
 
-def populate_db(order, cmplx_morph_classes):
+def populate_db(order, cmplx_morph_classes, compatibility_memoize):
     db = {}
     db['OUT:###PREFIXES###'] = {}
     db['OUT:###SUFFIXES###'] = {}
@@ -260,8 +255,6 @@ def populate_db(order, cmplx_morph_classes):
     cmplx_stem_classes = cmplx_morph_classes['cmplx_stem_classes']
 
     cat_memoize = {'stem': {}, 'suffix': {}, 'prefix': {}}
-    compatibility_memoize = {}
-    early_stop = {'stem': {}, 'suffix': {}, 'prefix': {}}
     for cmplx_stem_cls, cmplx_stems in tqdm(cmplx_stem_classes.items()):  # LEXICON
         # `stem_class` = (stem['COND-S'], stem['COND-T'], stem['COND-F'])
         # All `stem_comb` in `stem_combs` have the same cat 
@@ -285,20 +278,17 @@ def populate_db(order, cmplx_morph_classes):
                                             compatibility_memoize)
                 if valid:
                     xcat, pcat, scat = None, None, None
-                    update_info_stem = dict(early_stop=early_stop['stem'],
-                                            cmplx_morph_cls=cmplx_stem_cls,
+                    update_info_stem = dict(cmplx_morph_cls=cmplx_stem_cls,
                                             cmplx_morph_type='stem',
                                             cmplx_morphs=cmplx_stems,
                                             conds=xconds, condt=xcondt, condf=xcondf,
                                             db_section='OUT:###STEMS###')
-                    update_info_prefix = dict(early_stop=early_stop['prefix'],
-                                              cmplx_morph_cls=cmplx_prefix_cls,
+                    update_info_prefix = dict(cmplx_morph_cls=cmplx_prefix_cls,
                                               cmplx_morph_type='prefix',
                                               cmplx_morphs=cmplx_prefixes,
                                               conds=pconds, condt=pcondt, condf=pcondf,
                                               db_section='OUT:###PREFIXES###')
-                    update_info_suffix = dict(early_stop=early_stop['suffix'],
-                                              cmplx_morph_cls=cmplx_suffix_cls,
+                    update_info_suffix = dict(cmplx_morph_cls=cmplx_suffix_cls,
                                               cmplx_morph_type='suffix',
                                               cmplx_morphs=cmplx_suffixes,
                                               conds=sconds, condt=scondt, condf=scondf,
@@ -316,17 +306,12 @@ def populate_db(order, cmplx_morph_classes):
                     db['OUT:###TABLE AB###'][pcat + " " + xcat] = 1
                     db['OUT:###TABLE BC###'][xcat + " " + scat] = 1
                     db['OUT:###TABLE AC###'][pcat + " " + scat] = 1
-                    
-                    early_stop['stem'][cmplx_stem_cls] = True
-                    early_stop['prefix'][cmplx_prefix_cls] = True
-                    early_stop['suffix'][cmplx_suffix_cls] = True
     # Turn this on to make sure that every entry is only set once (can also be used to catch
     # double entries in the lexicon sheets)
     # assert [1 for items in db.values() for item in items if item != 1] == []
     return db
 
 def update_db(db, update_info, cat_memoize):
-    early_stop = update_info['early_stop']
     cmplx_morph_cls = update_info['cmplx_morph_cls']
     cmplx_morph_type = update_info['cmplx_morph_type']
     cmplx_morphs = update_info['cmplx_morphs']
@@ -336,8 +321,10 @@ def update_db(db, update_info, cat_memoize):
         _generate = _generate_stem
     elif cmplx_morph_type in ['prefix', 'suffix']:
         _generate = partial(_generate_affix, cmplx_morph_type)
-
-    if early_stop.get(cmplx_morph_cls) is None:
+    # This if statement implements early stopping which entails that if we have already 
+    # logged a specific prefix/stem/suffix entry, we do not need to do it again. Entry
+    # generation (and more specifically `dediac()`) is costly.
+    if cat_memoize[cmplx_morph_type].get(cmplx_morph_cls) is None:
         for cmplx_morph in cmplx_morphs:
             morph_entry, mcat = _generate(cmplx_morph, conds, condt, condf)
             db[db_section].setdefault('\t'.join(morph_entry.values()), 0)
@@ -500,11 +487,11 @@ def gen_cmplx_morph_combs(cmplx_morph_seq,
         complex_morph_categorized_ = {}
         for seq_class, seq_instances in cmplx_morph_categorized.items():
             cond_s_seq = {
-                cond for part in seq_class for cond in part[0].split() if cond}
+                cond for part in seq_class for cond in part[0].split()}
             cond_t_seq = {
-                cond for part in seq_class for cond in part[1].split() if cond}
+                cond for part in seq_class for cond in part[1].split()}
             cond_f_seq = {
-                cond for part in seq_class for cond in part[2].split() if cond}
+                cond for part in seq_class for cond in part[2].split()}
             # If any condition appears in COND-S and COND-F of the combination sequence,
             # then the sequence should be pruned out since it is incoherent.
             if pruning_cond_s_f and cond_s_seq.intersection(cond_f_seq) != set():
@@ -554,25 +541,15 @@ def gen_cmplx_morph_combs(cmplx_morph_seq,
 
 #Remember to eliminate all non match affixes/stems
 def check_compatibility (cond_s, cond_t, cond_f, compatibility_memoize):
-    #order cond: order-lexicon pairing? pos
-    #Cond True is an anded list of ORs (||) 
-
     key = f'{cond_s}\t{cond_t}\t{cond_f}'
     if key in compatibility_memoize:
       return compatibility_memoize[key]
     else:
       compatibility_memoize[key] = ''
     # Remove all nil items (indicated as "_")
-    cs = _INIT_UNDERSCORE.sub("", _SPACE_UNDERSCORE.sub(
-        "", _UNDERSCORE_SPACE.sub("", cond_s))).split()
-    ct = _INIT_UNDERSCORE.sub("", _SPACE_UNDERSCORE.sub(
-        "", _UNDERSCORE_SPACE.sub("", cond_t))).split()
-    cf = _INIT_UNDERSCORE.sub("", _SPACE_UNDERSCORE.sub(
-        "", _UNDERSCORE_SPACE.sub("", cond_f))).split()
-
-    cs.sort()
-    ct.sort()
-    cf.sort()
+    cs = [cond for cond in cond_s.split()]
+    ct = [cond for cond in cond_t.split()]
+    cf = [cond for cond in cond_f.split()]
 
     valid = True
     # Things that need to be true
