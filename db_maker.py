@@ -11,7 +11,7 @@
 import re
 from tqdm import tqdm
 import itertools
-from time import strftime, gmtime, time
+from time import strftime, gmtime, process_time
 from functools import partial
 import cProfile
 
@@ -45,11 +45,11 @@ cond2class = None
 
 def make_db(input_filename):
     # Initializes `ABOUT`, `HEADER`, `ORDER`, `MORPH`, and `LEXICON`
-    c0 = time()
+    c0 = process_time()
     output_filename = read_morph_specs(input_filename)
     db = construct_almor_db()
     print_almor_db(output_filename, db)
-    c1 = time()
+    c1 = process_time()
     print('\n', f"Total time required: {strftime('%M:%S', gmtime(c1 - c0))}")
 
 
