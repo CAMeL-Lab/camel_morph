@@ -29,9 +29,6 @@ ar2bw = CharMapper.builtin_mapper('ar2bw')
 # Statements in createCat
 _SPACE_or_PLUS_MANY = re.compile("[\s\_]+")
 
-# Parsed sheets
-ABOUT, HEADER, ORDER, MORPH, LEXICON = None, None, None, None, None
-cond2class = None
 ###########################################
 #Input File: XLSX containing specific worksheets: About, Header, Order, Morph, Lexicon
 #inputfilename="CamelMorphDB-Nov-2021.xlsx"
@@ -42,8 +39,8 @@ cond2class = None
 def make_db(input_filename):
     # Initializes `ABOUT`, `HEADER`, `ORDER`, `MORPH`, and `LEXICON`
     c0 = process_time()
-    output_filename = read_morph_specs(input_filename)
-    db = construct_almor_db()
+    SHEETS, cond2class, output_filename = read_morph_specs(input_filename)
+    db = construct_almor_db(SHEETS, cond2class)
     print_almor_db(output_filename, db)
     c1 = process_time()
     print('\n', f"Total time required: {strftime('%M:%S', gmtime(c1 - c0))}")
@@ -51,7 +48,6 @@ def make_db(input_filename):
 
 def read_morph_specs(input_filename):
     """Read Input file containing morphological specifications"""
-    global ABOUT, HEADER, ORDER, MORPH, LEXICON, cond2class
     #Read the full CamelDB xlsx file
     FULL_SPEC = pd.ExcelFile(input_filename)
     #Identify the Params sheet, which specifies which sheets to read in the xlsx spreadsheet
@@ -109,7 +105,9 @@ def read_morph_specs(input_filename):
         MORPH_prev = pd.read_pickle('morph_sheet_prev.pkl')
         if MORPH.equals(MORPH_prev):
             MORPH = pd.read_pickle('morph_sheet_processed.pkl')
-            return output_filename
+            SHEETS = dict(about=ABOUT, header=HEADER,
+                          order=ORDER, morph=MORPH, lexicon=LEXICON)
+            return SHEETS, cond2class, output_filename
     else:
         MORPH.to_pickle('morph_sheet_prev.pkl')
     
@@ -203,11 +201,14 @@ def read_morph_specs(input_filename):
                 MORPH.loc[idx, 'COND-F'] = ' '.join(cond_f_almrph)
 
     MORPH.to_pickle('morph_sheet_processed.pkl')
-    return output_filename
+    SHEETS = dict(about=ABOUT, header=HEADER, order=ORDER, morph=MORPH, lexicon=LEXICON)
+    return SHEETS, cond2class, output_filename
    
 
-def construct_almor_db():
-    global ORDER
+def construct_almor_db(SHEETS, cond2class):
+    ORDER, MORPH, LEXICON = SHEETS['order'], SHEETS['morph'], SHEETS['lexicon']
+    ABOUT, HEADER = SHEETS['about'], SHEETS['header']
+
     db = {}
     db['OUT:###ABOUT###'] = list(ABOUT['Content'])
     db['OUT:###HEADER###'] = list(HEADER['Content'])
@@ -221,18 +222,21 @@ def construct_almor_db():
     pbar = tqdm(total=len(list(ORDER.iterrows())))
     for _, order in ORDER.iterrows():
         cmplx_prefix_classes = gen_cmplx_morph_combs(
-            order['PREFIX'], cmplx_morph_memoize['prefix'], prefix_pattern)
+            order['PREFIX'], cmplx_morph_memoize['prefix'],
+            prefix_pattern, MORPH, LEXICON, cond2class)
         cmplx_suffix_classes = gen_cmplx_morph_combs(
-            order['SUFFIX'], cmplx_morph_memoize['suffix'], suffix_pattern)
+            order['SUFFIX'], cmplx_morph_memoize['suffix'],
+            suffix_pattern, MORPH, LEXICON, cond2class)
         cmplx_stem_classes = gen_cmplx_morph_combs(
-            order['STEM'], cmplx_morph_memoize['stem'], stem_pattern)
+            order['STEM'], cmplx_morph_memoize['stem'],
+            stem_pattern, MORPH, LEXICON, cond2class)
         
         cmplx_morph_classes = dict(
             cmplx_prefix_classes=cmplx_prefix_classes,
             cmplx_suffix_classes=cmplx_suffix_classes,
             cmplx_stem_classes=cmplx_stem_classes)
         
-        db_ = populate_db(order, cmplx_morph_classes, compatibility_memoize)
+        db_ = populate_db(cmplx_morph_classes, compatibility_memoize)
         for section, contents in db_.items():
             db.setdefault(section, {}).update(contents)
         pbar.update(1)
@@ -240,7 +244,7 @@ def construct_almor_db():
 
     return db
 
-def populate_db(order, cmplx_morph_classes, compatibility_memoize):
+def populate_db(cmplx_morph_classes, compatibility_memoize):
     db = {}
     db['OUT:###PREFIXES###'] = {}
     db['OUT:###SUFFIXES###'] = {}
@@ -248,10 +252,6 @@ def populate_db(order, cmplx_morph_classes, compatibility_memoize):
     db['OUT:###TABLE AB###'] = {}
     db['OUT:###TABLE BC###'] = {}
     db['OUT:###TABLE AC###'] = {}
-
-    print()
-    print(order["VAR"], order["COND-T"],
-              order["PREFIX"], order["STEM"], order["SUFFIX"], sep=" ; ", end='\n')
 
     cmplx_prefix_classes = cmplx_morph_classes['cmplx_prefix_classes']
     cmplx_suffix_classes = cmplx_morph_classes['cmplx_suffix_classes']
@@ -446,6 +446,8 @@ def print_almor_db(output_filename, db):
 def gen_cmplx_morph_combs(cmplx_morph_seq,
                           cmplx_morph_memoize,
                           morph_pattern,
+                          MORPH, LEXICON,
+                          cond2class,
                           pruning_cond_s_f=True,
                           pruning_same_class_incompat=True):
     """This function exands the specification of morph classes
@@ -465,7 +467,6 @@ def gen_cmplx_morph_combs(cmplx_morph_seq,
     if 'STEM' in cmplx_morph_seq and cmplx_morph_memoize.get(seq_key) != None:
         return cmplx_morph_memoize[seq_key]
 
-    global MORPH, LEXICON
     cmplx_morph_classes = []
     for cmplx_morph_cls in cmplx_morph_seq.split():
         sheet = LEXICON if 'STEM' in cmplx_morph_cls else MORPH
@@ -485,7 +486,6 @@ def gen_cmplx_morph_combs(cmplx_morph_seq,
     
     # Performing partial compatibility tests to prune out incoherent combinations
     if pruning_cond_s_f or pruning_same_class_incompat:
-        global cond2class
         # Prune out incoherent classes
         complex_morph_categorized_ = {}
         for seq_class, seq_instances in cmplx_morph_categorized.items():
