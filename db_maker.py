@@ -222,14 +222,14 @@ def construct_almor_db(SHEETS, cond2class):
     pbar = tqdm(total=len(list(ORDER.iterrows())))
     for _, order in ORDER.iterrows():
         cmplx_prefix_classes = gen_cmplx_morph_combs(
-            order['PREFIX'], cmplx_morph_memoize['prefix'],
-            prefix_pattern, MORPH, LEXICON, cond2class)
+            order['PREFIX'], MORPH, LEXICON, cond2class, prefix_pattern,
+            cmplx_morph_memoize=cmplx_morph_memoize['prefix'])
         cmplx_suffix_classes = gen_cmplx_morph_combs(
-            order['SUFFIX'], cmplx_morph_memoize['suffix'],
-            suffix_pattern, MORPH, LEXICON, cond2class)
+            order['SUFFIX'], MORPH, LEXICON, cond2class, suffix_pattern,
+            cmplx_morph_memoize=cmplx_morph_memoize['suffix'])
         cmplx_stem_classes = gen_cmplx_morph_combs(
-            order['STEM'], cmplx_morph_memoize['stem'],
-            stem_pattern, MORPH, LEXICON, cond2class)
+            order['STEM'], MORPH, LEXICON, cond2class, stem_pattern,
+            cmplx_morph_memoize=cmplx_morph_memoize['stem'])
         
         cmplx_morph_classes = dict(
             cmplx_prefix_classes=cmplx_prefix_classes,
@@ -444,10 +444,10 @@ def print_almor_db(output_filename, db):
 
 
 def gen_cmplx_morph_combs(cmplx_morph_seq,
-                          cmplx_morph_memoize,
-                          morph_pattern,
                           MORPH, LEXICON,
-                          cond2class,
+                          cond2class=None,
+                          morph_pattern=None,
+                          cmplx_morph_memoize=None,
                           pruning_cond_s_f=True,
                           pruning_same_class_incompat=True):
     """This function exands the specification of morph classes
@@ -458,14 +458,15 @@ def gen_cmplx_morph_combs(cmplx_morph_seq,
     order of morphemes.
     In other words, it generates a Cartesian product of their combinations
     as specified by the allowed morph classes"""
-    pattern_match = morph_pattern.search(cmplx_morph_seq)
-    if pattern_match:
-        seq_key = pattern_match.group(1)
-    else:
-        seq_key = cmplx_morph_seq
-    
-    if 'STEM' in cmplx_morph_seq and cmplx_morph_memoize.get(seq_key) != None:
-        return cmplx_morph_memoize[seq_key]
+    if cmplx_morph_memoize:
+        pattern_match = morph_pattern.search(cmplx_morph_seq)
+        if pattern_match:
+            seq_key = pattern_match.group(1)
+        else:
+            seq_key = cmplx_morph_seq
+        
+        if 'STEM' in cmplx_morph_seq and cmplx_morph_memoize.get(seq_key) != None:
+            return cmplx_morph_memoize[seq_key]
 
     cmplx_morph_classes = []
     for cmplx_morph_cls in cmplx_morph_seq.split():
@@ -539,7 +540,9 @@ def gen_cmplx_morph_combs(cmplx_morph_seq,
         
         cmplx_morph_categorized = complex_morph_categorized_
     
-    cmplx_morph_memoize[seq_key] = cmplx_morph_categorized
+    if cmplx_morph_memoize:
+        cmplx_morph_memoize[seq_key] = cmplx_morph_categorized
+    
     return cmplx_morph_categorized
 
 #Remember to eliminate all non match affixes/stems
