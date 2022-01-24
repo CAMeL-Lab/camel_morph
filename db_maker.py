@@ -11,10 +11,12 @@
 import re
 import os
 from tqdm import tqdm
+import json
+import argparse
 import itertools
 from time import strftime, gmtime, process_time
 from functools import partial
-import cProfile
+import cProfile, pstats
 
 from camel_tools.utils.dediac import dediac_bw
 from camel_tools.utils.charmap import CharMapper
@@ -26,46 +28,44 @@ import numpy as np
 bw2ar = CharMapper.builtin_mapper('bw2ar')
 ar2bw = CharMapper.builtin_mapper('ar2bw')
 
-# Statements in createCat
-_SPACE_or_PLUS_MANY = re.compile("[\s\_]+")
+_required_stem_feats = ['pos', 'asp', 'per', 'gen', 'num', 'vox', 'mod']
+_clitic_feats = ['enc0', 'prc0', 'prc1', 'prc2', 'prc3']
 
 ###########################################
 #Input File: XLSX containing specific worksheets: About, Header, Order, Morph, Lexicon
 #inputfilename="CamelMorphDB-Nov-2021.xlsx"
 # Primary function 
-# e.g. make_db("CamelMorphDB-Nov-2021.xlsx")
+# e.g. make_db("CamelMorphDB-Nov-2021.xlsx", "config_pv_msa_order-v4")
 ###########################################
 
-def make_db(input_filename):
+def make_db(input_filename, config_file, config_name):
     # Initializes `ABOUT`, `HEADER`, `ORDER`, `MORPH`, and `LEXICON`
     c0 = process_time()
-    SHEETS, cond2class, output_filename = read_morph_specs(input_filename)
+    print("\nLoading and processing sheets... [1/3]")
+    SHEETS, cond2class, output_filename = read_morph_specs(input_filename, config_file, config_name)
+    print("\nValidating combinations... [2/3]")
     db = construct_almor_db(SHEETS, cond2class)
+    print("\nGenerating DB file... [3/3]")
     print_almor_db(output_filename, db)
     c1 = process_time()
-    print('\n', f"Total time required: {strftime('%M:%S', gmtime(c1 - c0))}")
+    print(f"\nTotal time required: {strftime('%M:%S', gmtime(c1 - c0))}")
 
 
-def read_morph_specs(input_filename):
+def read_morph_specs(input_filename, config_file, config_name):
     """Read Input file containing morphological specifications"""
     #Read the full CamelDB xlsx file
     FULL_SPEC = pd.ExcelFile(input_filename)
-    #Identify the Params sheet, which specifies which sheets to read in the xlsx spreadsheet
-    PARAMS = pd.read_excel(FULL_SPEC, 'Params')
+    #Config file pecifies which sheets to read in the xlsx spreadsheet
+    with open(config_file) as config:
+        PARAMS = json.load(config)[config_name]
     #Read all the components:
     #Issue - need to allow multiple Morph, lex sheets to be read.
-    ABOUT = pd.read_excel(
-        FULL_SPEC, PARAMS[PARAMS['Component'] == 'About'].Sheetname.values[0])
-    HEADER = pd.read_excel(
-        FULL_SPEC, PARAMS[PARAMS['Component'] == 'Header'].Sheetname.values[0])
-    ORDER = pd.read_excel(
-        FULL_SPEC, PARAMS[PARAMS['Component'] == 'Order'].Sheetname.values[0])
-    MORPH = pd.read_excel(
-        FULL_SPEC, PARAMS[PARAMS['Component'] == 'Morph'].Sheetname.values[0])
-    LEXICON = pd.concat([FULL_SPEC.parse(name)
-                         for name in PARAMS[PARAMS['Component'] == 'Lexicon'].Sheetname.values])
-    output_filename = PARAMS[PARAMS['Component']
-                            == 'Output'].Sheetname.values[0]
+    ABOUT = pd.read_excel(FULL_SPEC, PARAMS['about'])
+    HEADER = pd.read_excel(FULL_SPEC, PARAMS['header'])
+    ORDER = pd.read_excel(FULL_SPEC, PARAMS['order'])
+    MORPH = pd.read_excel(FULL_SPEC, PARAMS['morph'])
+    LEXICON = pd.concat([FULL_SPEC.parse(name) for name in PARAMS['lexicon']])
+    output_filename = PARAMS['output']
 
     #Process all the components:
     ORDER = ORDER[ORDER.DEFINE == 'ORDER']  # skip comments & empty lines
@@ -101,15 +101,14 @@ def read_morph_specs(input_filename):
     LEXICON['COND-T'] = LEXICON['COND-T'].replace(' +', ' ', regex=True)
     LEXICON['COND-T'] = LEXICON['COND-T'].replace(' $', '', regex=True)
 
-    if os.path.exists('morph_sheet_prev.pkl'):
-        MORPH_prev = pd.read_pickle('morph_sheet_prev.pkl')
+    if os.path.exists('morph_cache/morph_sheet_prev.pkl'):
+        MORPH_prev = pd.read_pickle('morph_cache/morph_sheet_prev.pkl')
         if MORPH.equals(MORPH_prev):
-            MORPH = pd.read_pickle('morph_sheet_processed.pkl')
+            MORPH = pd.read_pickle('morph_cache/morph_sheet_processed.pkl')
             SHEETS = dict(about=ABOUT, header=HEADER,
                           order=ORDER, morph=MORPH, lexicon=LEXICON)
             return SHEETS, cond2class, output_filename
-    else:
-        MORPH.to_pickle('morph_sheet_prev.pkl')
+    MORPH.to_pickle('morph_cache/morph_sheet_prev.pkl')
     
     MORPH = MORPH[MORPH.DEFINE == 'MORPH']  # skip comments & empty lines
     MORPH = MORPH.replace(np.nan, '', regex=True)
@@ -199,8 +198,7 @@ def read_morph_specs(input_filename):
                 cond_f_almrph = [y for y in cond_f_almrph if y not in ['', '_', 'else', None]]
                 MORPH.loc[idx, 'COND-T'] = ' '.join(cond_t_almrph)
                 MORPH.loc[idx, 'COND-F'] = ' '.join(cond_f_almrph)
-
-    MORPH.to_pickle('morph_sheet_processed.pkl')
+    MORPH.to_pickle('morph_cache/morph_sheet_processed.pkl')
     SHEETS = dict(about=ABOUT, header=HEADER, order=ORDER, morph=MORPH, lexicon=LEXICON)
     return SHEETS, cond2class, output_filename
    
@@ -209,9 +207,17 @@ def construct_almor_db(SHEETS, cond2class):
     ORDER, MORPH, LEXICON = SHEETS['order'], SHEETS['morph'], SHEETS['lexicon']
     ABOUT, HEADER = SHEETS['about'], SHEETS['header']
 
+    short_cat_maps = _get_short_cat_name_maps(ORDER)
+
     db = {}
     db['OUT:###ABOUT###'] = list(ABOUT['Content'])
     db['OUT:###HEADER###'] = list(HEADER['Content'])
+    _order = [line.split()[1:] for line in db['OUT:###HEADER###']
+              if line.startswith('ORDER')][0]
+    _defaults = [{f: d for f, d in [f.split(':') for f in line.split()[1:]]}
+        for line in db['OUT:###HEADER###'] if line.startswith('DEFAULT')]
+    _defaults = {d['pos'] :d for d in _defaults}
+    defaults = {'defaults': _defaults, 'order': _order}
     
     compatibility_memoize = {}
     cmplx_morph_memoize = {'stem': {}, 'suffix': {}, 'prefix': {}}
@@ -232,19 +238,21 @@ def construct_almor_db(SHEETS, cond2class):
             cmplx_morph_memoize=cmplx_morph_memoize['stem'])
         
         cmplx_morph_classes = dict(
-            cmplx_prefix_classes=cmplx_prefix_classes,
-            cmplx_suffix_classes=cmplx_suffix_classes,
-            cmplx_stem_classes=cmplx_stem_classes)
+            cmplx_prefix_classes=(cmplx_prefix_classes, order['PREFIX']),
+            cmplx_suffix_classes=(cmplx_suffix_classes, order['SUFFIX']),
+            cmplx_stem_classes=(cmplx_stem_classes, order['STEM']))
         
-        db_ = populate_db(cmplx_morph_classes, compatibility_memoize)
+        db_ = populate_db(
+            cmplx_morph_classes, compatibility_memoize, short_cat_maps, defaults)
         for section, contents in db_.items():
             db.setdefault(section, {}).update(contents)
+        
         pbar.update(1)
     pbar.close()
 
     return db
 
-def populate_db(cmplx_morph_classes, compatibility_memoize):
+def populate_db(cmplx_morph_classes, compatibility_memoize, short_cat_maps, defaults):
     db = {}
     db['OUT:###PREFIXES###'] = {}
     db['OUT:###SUFFIXES###'] = {}
@@ -253,9 +261,9 @@ def populate_db(cmplx_morph_classes, compatibility_memoize):
     db['OUT:###TABLE BC###'] = {}
     db['OUT:###TABLE AC###'] = {}
 
-    cmplx_prefix_classes = cmplx_morph_classes['cmplx_prefix_classes']
-    cmplx_suffix_classes = cmplx_morph_classes['cmplx_suffix_classes']
-    cmplx_stem_classes = cmplx_morph_classes['cmplx_stem_classes']
+    cmplx_prefix_classes, cmplx_prefix_seq = cmplx_morph_classes['cmplx_prefix_classes']
+    cmplx_suffix_classes, cmplx_suffix_seq = cmplx_morph_classes['cmplx_suffix_classes']
+    cmplx_stem_classes, cmplx_stem_seq = cmplx_morph_classes['cmplx_stem_classes']
 
     cat_memoize = {'stem': {}, 'suffix': {}, 'prefix': {}}
     for cmplx_stem_cls, cmplx_stems in cmplx_stem_classes.items():
@@ -281,24 +289,27 @@ def populate_db(cmplx_morph_classes, compatibility_memoize):
                                             compatibility_memoize)
                 if valid:
                     xcat, pcat, scat = None, None, None
-                    update_info_stem = dict(cmplx_morph_cls=cmplx_stem_cls,
+                    update_info_stem = dict(cmplx_morph_seq=cmplx_stem_seq,
+                                            cmplx_morph_cls=cmplx_stem_cls,
                                             cmplx_morph_type='stem',
                                             cmplx_morphs=cmplx_stems,
                                             conds=xconds, condt=xcondt, condf=xcondf,
                                             db_section='OUT:###STEMS###')
-                    update_info_prefix = dict(cmplx_morph_cls=cmplx_prefix_cls,
+                    update_info_prefix = dict(cmplx_morph_seq=cmplx_prefix_seq,
+                                              cmplx_morph_cls=cmplx_prefix_cls,
                                               cmplx_morph_type='prefix',
                                               cmplx_morphs=cmplx_prefixes,
                                               conds=pconds, condt=pcondt, condf=pcondf,
                                               db_section='OUT:###PREFIXES###')
-                    update_info_suffix = dict(cmplx_morph_cls=cmplx_suffix_cls,
+                    update_info_suffix = dict(cmplx_morph_seq=cmplx_suffix_seq,
+                                              cmplx_morph_cls=cmplx_suffix_cls,
                                               cmplx_morph_type='suffix',
                                               cmplx_morphs=cmplx_suffixes,
                                               conds=sconds, condt=scondt, condf=scondf,
                                               db_section='OUT:###SUFFIXES###')
                     
                     for update_info in [update_info_stem, update_info_prefix, update_info_suffix]:
-                        update_db(db, update_info, cat_memoize)
+                        update_db(db, update_info, cat_memoize, short_cat_maps, defaults)
                     # If morph class cat has already been computed previously, then cat is still `None`
                     # (because we will not go again in the morph for loop) and we need to retrieve the
                     # computed value. 
@@ -314,32 +325,47 @@ def populate_db(cmplx_morph_classes, compatibility_memoize):
     # assert [1 for items in db.values() for item in items if item != 1] == []
     return db
 
-def update_db(db, update_info, cat_memoize):
+def update_db(db, update_info, cat_memoize, short_cat_maps, defaults):
+    cmplx_morph_seq = update_info['cmplx_morph_seq']
     cmplx_morph_cls = update_info['cmplx_morph_cls']
     cmplx_morph_type = update_info['cmplx_morph_type']
     cmplx_morphs = update_info['cmplx_morphs']
     conds, condt, condf = update_info['conds'], update_info['condt'], update_info['condf']
     db_section = update_info['db_section']
+    defaults_ = defaults['defaults']['verb']
+    defaults_['enc1'] = defaults_['enc0']
+    
     if cmplx_morph_type == 'stem':
+        short_cat_map = short_cat_maps['stem']
         _generate = _generate_stem
     elif cmplx_morph_type in ['prefix', 'suffix']:
+        short_cat_map = short_cat_maps['prefix' if cmplx_morph_type == 'prefix' else 'suffix']
         _generate = partial(_generate_affix, cmplx_morph_type)
     # This if statement implements early stopping which entails that if we have already 
     # logged a specific prefix/stem/suffix entry, we do not need to do it again. Entry
     # generation (and more specifically `dediac()`) is costly.
     if cat_memoize[cmplx_morph_type].get(cmplx_morph_cls) is None:
         for cmplx_morph in cmplx_morphs:
-            morph_entry, mcat = _generate(cmplx_morph, conds, condt, condf)
+            morph_entry, mcat = _generate(cmplx_morph_seq,
+                                          cmplx_morph,
+                                          conds, condt, condf,
+                                          short_cat_map,
+                                          defaults_)
             db[db_section].setdefault('\t'.join(morph_entry.values()), 0)
             db[db_section]['\t'.join(morph_entry.values())] += 1
         cat_memoize[cmplx_morph_type][cmplx_morph_cls] = mcat
 
 
 def _create_cat(cmplx_morph_type, cmplx_morph_class,
-                cmplx_morph_conds, cmplx_morph_condt, cmplx_morph_condf):
+                cmplx_morph_conds, cmplx_morph_condt, cmplx_morph_condf,
+                short_cat_map):
     """This function creates the category for matching using classes and conditions"""
-    cat = cmplx_morph_type + \
-        _SPACE_or_PLUS_MANY.sub("#", f"{cmplx_morph_class} {cmplx_morph_conds} T:{cmplx_morph_condt}")
+    cmplx_morph_class = short_cat_map[cmplx_morph_class]
+    cmplx_morph_conds = '+'.join([cond for cond in cmplx_morph_conds.split() if cond != '_'])
+    cmplx_morph_conds = cmplx_morph_conds if cmplx_morph_conds else '-'
+    cmplx_morph_condt = '+'.join([cond for cond in cmplx_morph_condt.split() if cond != '_'])
+    cmplx_morph_condt = cmplx_morph_condt if cmplx_morph_condt else '-'
+    cat = f"{cmplx_morph_type}:{cmplx_morph_class}__C-S:{cmplx_morph_conds}__C-T:{cmplx_morph_condt}"
     return cat
 
 def _convert_bw_tag(bw_tag):
@@ -358,89 +384,115 @@ def _convert_bw_tag(bw_tag):
         utf8_bw_tag.append('/'.join([bw_lex, bw_pos]))
     return '+'.join(utf8_bw_tag)
 
-def _generate_affix(affix_type, affix, aconds, acondt, acondf):
-    aclass, amatch, adiac, agloss, afeat, abw = _read_affix(affix)
-    affix_type = "P:" if affix_type == 'prefix' else 'S:'
-    acat = _create_cat(affix_type, aclass, aconds, acondt, acondf)
+def _generate_affix(affix_type,
+                    cmplx_morph_seq,
+                    affix,
+                    aconds, acondt, acondf,
+                    short_cat_map,
+                    defaults):
+    amatch, adiac, agloss, afeat, abw = _read_affix(affix)
+    affix_type = "P" if affix_type == 'prefix' else 'S'
+    acat = _create_cat(
+        affix_type, cmplx_morph_seq, aconds, acondt, acondf, short_cat_map)
     ar_pbw = _convert_bw_tag(abw)
+    afeat = ' '.join([f"{feat}:{val}" for feat, val in afeat.items()])
     affix = {
         'match': bw2ar(amatch),
         'cat': acat,
-        'feats': f"diac:{bw2ar(adiac)} bw:{ar_pbw} gloss:{agloss.strip()} {afeat.strip()}"
+        'feats': f"diac:{bw2ar(adiac)} bw:{ar_pbw} gloss:{agloss.strip()} {afeat}"
     }
     return affix, acat
 
-def _generate_stem(stem, xconds, xcondt, xcondf):
-    xclass, xmatch, xdiac, xlex, xgloss, xfeat, xbw = _read_stem(stem)
-    xcat = _create_cat("X:", xclass, xconds, xcondt, xcondf)
+
+def _generate_stem(cmplx_morph_seq,
+                   stem,
+                   xconds, xcondt, xcondf,
+                   short_cat_map,
+                   defaults):
+    xmatch, xdiac, xlex, xgloss, xfeat, xbw = _read_stem(stem)
+    xcat = _create_cat(
+        "X", cmplx_morph_seq, xconds, xcondt, xcondf, short_cat_map)
     ar_xbw = _convert_bw_tag(xbw)
+    xfeat = ' '.join([f"{feat}:{xfeat[feat]}" if feat in xfeat and xfeat[feat] != '_'
+                else f"{feat}:{defaults[feat]}" for feat in _required_stem_feats + _clitic_feats])
+    #TODO: strip lex before transliteration (else underscore will be handled wrong)
     stem = {
         'match': bw2ar(xmatch),
         'cat': xcat,
-        'feats': f"diac:{bw2ar(xdiac)} bw:{ar_xbw} lex:{bw2ar(xlex)} gloss:{xgloss.strip()} {xfeat.strip()}"
+        'feats': (f"diac:{bw2ar(xdiac)} bw:{ar_xbw} lex:{bw2ar(xlex)} "
+                  f"gloss:{xgloss.strip()} {xfeat} ")
     }
     return stem, xcat
 
 def _read_affix(affix):
-    aclass = '+'.join([m['CLASS'] for m in affix])
     abw = '+'.join([m['BW'] for m in affix if m['BW'] != '_'])
     adiac = ''.join([m['FORM'] for m in affix if m['FORM'] != '_'])
     agloss = '+'.join([m['GLOSS'] for m in affix if m['GLOSS'] != '_'])
     agloss = agloss if agloss else '_'
-    afeat = ' '.join([m['FEAT'] for m in affix])
+    afeat = {feat.split(':')[0]: feat.split(':')[1]
+             for m in affix for feat in m['FEAT'].split()}
     amatch = normalize_alef_bw(normalize_alef_maksura_bw(
         normalize_teh_marbuta_bw(dediac_bw(adiac))))
-    return aclass, amatch, adiac, agloss, afeat, abw
+    return amatch, adiac, agloss, afeat, abw
 
 def _read_stem(stem):
     xbw = '+'.join([s['BW'] for s in stem if s['BW'] != '_'])
-    xclass = '+'.join([s['CLASS'] for s in stem])
     xdiac = ''.join([s['FORM'] for s in stem if s['FORM'] != '_'])
     xgloss = '+'.join([s['GLOSS'] for s in stem if 'LEMMA' in s])
     xgloss = xgloss if xgloss else '_'
     xlex = '+'.join([s['LEMMA'].split(':')[1] for s in stem if 'LEMMA' in s])
-    xfeat = ' '.join([s['FEAT'].strip() for s in stem])
+    xfeat = {feat.split(':')[0]: feat.split(':')[1]
+                for s in stem for feat in s['FEAT'].split()}
     xmatch = normalize_alef_bw(normalize_alef_maksura_bw(
         normalize_teh_marbuta_bw(dediac_bw(xdiac))))
-    return xclass, xmatch, xdiac, xlex, xgloss, xfeat, xbw
-
+    return xmatch, xdiac, xlex, xgloss, xfeat, xbw
 
 def print_almor_db(output_filename, db):
     """Create output file in ALMOR DB format"""
+    with open(output_filename, "w") as f:
+        for x in db['OUT:###HEADER###']:
+            print(x, file=f)
 
-    fout = open(output_filename, "w")
-    
-    # for x in db['OUT:###ABOUT###']:
-    #     fout.write(x+"\n")
-    
-    for x in db['OUT:###HEADER###']:
-        fout.write(x + "\n")
+        print("###PREFIXES###", file=f)
+        for x in db['OUT:###PREFIXES###']:
+            print(x, file=f)
+            
+        print("###SUFFIXES###", file=f)
+        for x in db['OUT:###SUFFIXES###']:
+            print(x, file=f)
+            
+        print("###STEMS###", file=f)
+        for x in db['OUT:###STEMS###']:
+            # Fixes weird underscore generated by bw2ar()
+            x = re.sub('ـ', '_', x)
+            print(x, file=f)
+            
+        print("###TABLE AB###", file=f)
+        for x in db['OUT:###TABLE AB###']:
+            print(x, file=f)
+            
+        print("###TABLE BC###", file=f)
+        for x in db['OUT:###TABLE BC###']:
+            print(x, file=f)
+            
+        print("###TABLE AC###", file=f)
+        for x in db['OUT:###TABLE AC###']:
+            print(x, file=f)
 
-    fout.write("###PREFIXES###\n")
-    for x in db['OUT:###PREFIXES###'].keys():
-        fout.write(x + "\n")
-        
-    fout.write("###SUFFIXES###\n")
-    for x in db['OUT:###SUFFIXES###'].keys():
-        fout.write(x + "\n")
-        
-    fout.write("###STEMS###\n")
-    for x in db['OUT:###STEMS###'].keys():
-        fout.write(x + "\n")
-        
-    fout.write("###TABLE AB###\n")
-    for x in db['OUT:###TABLE AB###'].keys():
-        fout.write(x + "\n")
-        
-    fout.write("###TABLE BC###\n")
-    for x in db['OUT:###TABLE BC###'].keys():
-        fout.write(x + "\n")
-        
-    fout.write("###TABLE AC###\n")
-    for x in db['OUT:###TABLE AC###'].keys():
-        fout.write(x + "\n")
-        
-    fout.close()
+
+def _get_short_cat_name_maps(ORDER):
+    map_p, map_x, map_s = {}, {}, {}
+    map_word = {}
+    for _, row in ORDER.iterrows():
+        p, x, s = row['PREFIX'], row['STEM'], row['SUFFIX']
+        p_short, x_short, s_short = row['PREFIX-SHORT'], row['STEM-SHORT'], row['SUFFIX-SHORT']
+        map_p[p], map_x[x], map_s[s] = p_short, x_short, s_short
+        map_word.setdefault((p_short, x_short, s_short), 0)
+        map_word[(p_short, x_short, s_short)] += 1
+    short_cat_maps = dict(prefix=map_p, stem=map_x, suffix=map_s)
+    # Make sure that the short order names are unique
+    assert sum(map_word.values()) == len(map_word), "Short order names are not unique."
+    return short_cat_maps
 
 
 def gen_cmplx_morph_combs(cmplx_morph_seq,
@@ -478,12 +530,11 @@ def gen_cmplx_morph_combs(cmplx_morph_seq,
             instances.append(row.to_dict())
         cmplx_morph_classes.append(instances)
     
-    cmplx_morphs = [list(t) for t in itertools.product(*cmplx_morph_classes)]
+    cmplx_morphs = [list(t) for t in itertools.product(*[mc for mc in cmplx_morph_classes if mc])]
     cmplx_morph_categorized = {}
     for seq in cmplx_morphs:
-        seq_conds_cat = [(position['COND-S'], position['COND-T'], position['COND-F'])
-                            for position in seq]
-        cmplx_morph_categorized.setdefault(tuple(seq_conds_cat), []).append(seq)
+        seq_cond_cat = [(morph['COND-S'], morph['COND-T'], morph['COND-F']) for morph in seq]
+        cmplx_morph_categorized.setdefault(tuple(seq_cond_cat), []).append(seq)
     
     # Performing partial compatibility tests to prune out incoherent combinations
     if pruning_cond_s_f or pruning_same_class_incompat:
@@ -633,3 +684,28 @@ def _get_cond_false(cond_t_all, cond_t_almrph):
         cond_t_almrph = ['_']
 
     return cond_f_almrph, cond_t_almrph
+
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-specs_sheets", required=True,
+                        type=str, help="Excel spreadsheet containing all lexicon, morph, etc. sheets.")
+    parser.add_argument("-config_file", required=True,
+                        type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
+    parser.add_argument("-config_name", required=True,
+                        type=str, help="Name of the configuration to load from the config file.")
+    parser.add_argument("-run_profiling", default=False,
+                        action='store_true', help="Run execution time profiling for the make_db().")
+    args = parser.parse_args()
+    
+    if args.run_profiling:
+        profiler = cProfile.Profile()
+        profiler.enable()
+    
+    make_db(args.specs_sheets, args.config_file, args.config_name)
+    
+    if args.run_profiling:
+        profiler.disable()
+        stats = pstats.Stats(profiler).sort_stats('cumtime')
+        stats.print_stats()
