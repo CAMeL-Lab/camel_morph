@@ -116,10 +116,13 @@ def read_morph_specs(input_filename, config_file, config_name):
     MORPH = MORPH.replace('\s+$', '', regex=True)
     MORPH = MORPH.replace('\s+', ' ', regex=True)
     # add FUNC and FEAT to COND-S
-    MORPH['COND-S'] = MORPH['COND-S']
     MORPH['COND-S'] = MORPH['COND-S'].replace('[\[\]]', '', regex=True)
+    MORPH.loc[MORPH['COND-S'] == '', 'COND-S'] = '_'
+    MORPH.loc[MORPH['COND-T'] == '', 'COND-T'] = '_'
     # Replace spaces in BW and GLOSS with '#'
     MORPH['BW'] = MORPH['BW'].replace('\s+', '#', regex=True)
+    MORPH.loc[MORPH['BW'] == '', 'BW'] = '_'
+    MORPH.loc[MORPH['FORM'] == '', 'FORM'] = '_'
     MORPH['GLOSS'] = MORPH['GLOSS'].replace('\s+', '#', regex=True)
     # Retroactively generate the condFalse by creating the complementry distribution
     # of all the conditions within a single morpheme (all the allomorphs)
@@ -252,7 +255,10 @@ def construct_almor_db(SHEETS, cond2class):
 
     return db
 
-def populate_db(cmplx_morph_classes, compatibility_memoize, short_cat_maps, defaults):
+def populate_db(cmplx_morph_classes,
+                compatibility_memoize,
+                short_cat_maps=None,
+                defaults=None):
     db = {}
     db['OUT:###PREFIXES###'] = {}
     db['OUT:###SUFFIXES###'] = {}
@@ -325,15 +331,17 @@ def populate_db(cmplx_morph_classes, compatibility_memoize, short_cat_maps, defa
     # assert [1 for items in db.values() for item in items if item != 1] == []
     return db
 
-def update_db(db, update_info, cat_memoize, short_cat_maps, defaults):
+def update_db(db, update_info, cat_memoize, short_cat_maps=None, defaults=None):
     cmplx_morph_seq = update_info['cmplx_morph_seq']
     cmplx_morph_cls = update_info['cmplx_morph_cls']
     cmplx_morph_type = update_info['cmplx_morph_type']
     cmplx_morphs = update_info['cmplx_morphs']
     conds, condt, condf = update_info['conds'], update_info['condt'], update_info['condf']
     db_section = update_info['db_section']
-    defaults_ = defaults['defaults']['verb']
-    defaults_['enc1'] = defaults_['enc0']
+    defaults_ = None
+    if defaults:
+        defaults_ = defaults['defaults']['verb']
+        defaults_['enc1'] = defaults_['enc0']
     
     if cmplx_morph_type == 'stem':
         short_cat_map = short_cat_maps['stem']
@@ -358,14 +366,15 @@ def update_db(db, update_info, cat_memoize, short_cat_maps, defaults):
 
 def _create_cat(cmplx_morph_type, cmplx_morph_class,
                 cmplx_morph_conds, cmplx_morph_condt, cmplx_morph_condf,
-                short_cat_map):
+                short_cat_map=None):
     """This function creates the category for matching using classes and conditions"""
-    cmplx_morph_class = short_cat_map[cmplx_morph_class]
+    if short_cat_map:
+        cmplx_morph_class = short_cat_map[cmplx_morph_class]
     cmplx_morph_conds = '+'.join([cond for cond in cmplx_morph_conds.split() if cond != '_'])
     cmplx_morph_conds = cmplx_morph_conds if cmplx_morph_conds else '-'
     cmplx_morph_condt = '+'.join([cond for cond in cmplx_morph_condt.split() if cond != '_'])
     cmplx_morph_condt = cmplx_morph_condt if cmplx_morph_condt else '-'
-    cat = f"{cmplx_morph_type}:{cmplx_morph_class}__C-S:{cmplx_morph_conds}__C-T:{cmplx_morph_condt}"
+    cat = f"{cmplx_morph_type}:{cmplx_morph_class}_[CS:{cmplx_morph_conds}]_[CT:{cmplx_morph_condt}]"
     return cat
 
 def _convert_bw_tag(bw_tag):
@@ -388,8 +397,8 @@ def _generate_affix(affix_type,
                     cmplx_morph_seq,
                     affix,
                     aconds, acondt, acondf,
-                    short_cat_map,
-                    defaults):
+                    short_cat_map=None,
+                    defaults=None):
     amatch, adiac, agloss, afeat, abw = _read_affix(affix)
     affix_type = "P" if affix_type == 'prefix' else 'S'
     acat = _create_cat(
@@ -407,14 +416,18 @@ def _generate_affix(affix_type,
 def _generate_stem(cmplx_morph_seq,
                    stem,
                    xconds, xcondt, xcondf,
-                   short_cat_map,
-                   defaults):
+                   short_cat_map=None,
+                   defaults=None):
     xmatch, xdiac, xlex, xgloss, xfeat, xbw = _read_stem(stem)
     xcat = _create_cat(
         "X", cmplx_morph_seq, xconds, xcondt, xcondf, short_cat_map)
     ar_xbw = _convert_bw_tag(xbw)
-    xfeat = ' '.join([f"{feat}:{xfeat[feat]}" if feat in xfeat and xfeat[feat] != '_'
-                else f"{feat}:{defaults[feat]}" for feat in _required_stem_feats + _clitic_feats])
+    if defaults:
+        xfeat = [f"{feat}:{xfeat[feat]}" if feat in xfeat and xfeat[feat] != '_'
+                    else f"{feat}:{defaults[feat]}" for feat in _required_stem_feats + _clitic_feats]
+    else:
+        xfeat = [f"{feat}:{val}" for feat, val in xfeat.items()]
+    xfeat = ' '.join(xfeat)
     #TODO: strip lex before transliteration (else underscore will be handled wrong)
     stem = {
         'match': bw2ar(xmatch),
