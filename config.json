@@ -1,0 +1,127 @@
+{
+    "config_pv_msa_order-v4": {
+        "about": "About",
+        "header": "Header",
+        "order": "ORDER-v4-PV",
+        "morph": "MSA-MORPH-Verbs-v4",
+        "lexicon": [
+            "MSA-LEX-PV",
+            "MSA-LEX-PV-Pass-No-Edit"
+        ],
+        "output": "db_iterations/XYZ_pv_v1.6_add_defaults.db"
+    },
+    "config_pv_msa_order-v4_restricted": {
+        "about": "About",
+        "header": "Header",
+        "order": "ORDER-v4-PV",
+        "morph": "MSA-MORPH-Verbs-v4-Restr",
+        "lexicon": [
+            "MSA-LEX-PV",
+            "MSA-LEX-PV-Pass-No-Edit"
+        ],
+        "output": "db_iterations/XYZ_pv_msa_v2.0.db"
+    },
+    "config_iv_msa_order-v3": {
+        "about": "About",
+        "header": "Header",
+        "order": "ORDER-v3-IV",
+        "morph": "MSA-MORPH-Verbs-v4",
+        "lexicon": [
+            "MSA-LEX-IV",
+            "MSA-LEX-IV-Pass-No-Edit"
+        ],
+        "output": "db_iterations/XYZ_iv_v1.4.db"
+    },
+    "config_iv_msa_order-v4": {
+        "about": "About",
+        "header": "Header",
+        "order": "ORDER-v4-IV",
+        "morph": "MSA-MORPH-Verbs-v4",
+        "lexicon": [
+            "MSA-LEX-IV",
+            "MSA-LEX-IV-Pass-No-Edit"
+        ],
+        "output": "db_iterations/XYZ_iv_v1.4_order-v4.db"
+    },
+    "config_iv_msa_order-v4_restricted": {
+        "about": "About",
+        "header": "Header",
+        "order": "ORDER-v4-IV",
+        "morph": "MSA-MORPH-Verbs-v4-Restr",
+        "lexicon": [
+            "MSA-LEX-IV",
+            "MSA-LEX-IV-Pass-No-Edit"
+        ],
+        "output": "db_iterations/XYZ_iv_v2.0_restricted.db"
+    },
+    "config_cv_msa_order-v4_restricted": {
+        "about": "About",
+        "header": "Header",
+        "order": "ORDER-v4-CV",
+        "morph": "MSA-MORPH-Verbs-v4-Restr",
+        "lexicon": [
+            "MSA-LEX-CV"
+        ],
+        "output": "db_iterations/XYZ_cv_v1.0_order-v4_restricted.db"
+    },
+    "config_pv_glf_order-v4_restricted": {
+        "about": "About",
+        "header": "Header",
+        "order": "ORDER-v4-GLF-PV",
+        "morph": "GLF-MORPH-Verbs-v4-Restr",
+        "lexicon": [
+            "GLF-LEX-PV"
+        ],
+        "output": "db_iterations/XYZ_glf_pv_v1.0.db"
+    },
+    "config_iv_glf_order-v4_restricted": {
+        "about": "About",
+        "header": "Header",
+        "order": "ORDER-v4-GLF-IV",
+        "morph": "GLF-MORPH-Verbs-v4-Restr",
+        "lexicon": [
+            "GLF-LEX-IV"
+        ],
+        "output": "db_iterations/XYZ_glf_iv_v1.0.db"
+    },
+    "config_cv_glf_order-v4_restricted": {
+        "about": "About",
+        "header": "Header",
+        "order": "ORDER-v4-GLF-CV",
+        "morph": "GLF-MORPH-Verbs-v4-Restr",
+        "lexicon": [
+            "GLF-LEX-CV"
+        ],
+        "output": "db_iterations/XYZ_glf_cv_v1.0.db"
+    },
+    "config_pv_egy_order-v4_restricted": {
+        "about": "About",
+        "header": "Header",
+        "order": "ORDER-v4-EGY-PV",
+        "morph": "EGY-MORPH-Verbs-v4-Restr",
+        "lexicon": [
+            "EGY-LEX-PV"
+        ],
+        "output": "db_iterations/XYZ_egy_pv_v1.0.db"
+    },
+    "config_iv_egy_order-v4_restricted": {
+        "about": "About",
+        "header": "Header",
+        "order": "ORDER-v4-EGY-IV",
+        "morph": "EGY-MORPH-Verbs-v4-Restr",
+        "lexicon": [
+            "EGY-LEX-IV"
+        ],
+        "output": "db_iterations/XYZ_egy_iv_v1.0.db"
+    },
+    "config_cv_egy_order-v4_restricted": {
+        "about": "About",
+        "header": "Header",
+        "order": "ORDER-v4-EGY-CV",
+        "morph": "EGY-MORPH-Verbs-v4-Restr",
+        "lexicon": [
+            "EGY-LEX-CV"
+        ],
+        "output": "db_iterations/XYZ_egy_cv_v1.0.db"
+    }
+}
