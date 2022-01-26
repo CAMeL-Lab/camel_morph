@@ -15,7 +15,7 @@ _test_features = ['pos', 'asp', 'vox', 'per', 'gen', 'num',
                  'mod', 'cas', 'enc0', 'prc0', 'prc1', 'prc2', 'prc3']
 # <POS>.<A><P><G><N>.<S><C><V><M>
 SIGNATURE_PATTERN = re.compile(
-    r'([^\.]+)\.([^\.]{,4})\.([^\.]{,4})\.?P?(\d{,2})?\.?E?(\d{,2})?')
+    r'([^\.]+)\.([^\.]{,4})\.?([^\.]{,4})\.?P?(\d{,2})?\.?E?(\d{,2})?')
 ASPECT_PATTERN = re.compile(r'CV|IV|PV')
 
 sig2feat = {
@@ -80,7 +80,7 @@ def expand_paradigm(paradigms, aspect):
             p_.append(signature)
         paradigm_ += p_
     else:
-        paradigm_ = paradigms[aspect]['paradigm']
+        paradigm_ = paradigms[aspect]['paradigm'][:]
     
     if paradigms[aspect]['enclitics']:
         p_ = []
@@ -145,7 +145,9 @@ if __name__ == "__main__":
                         type=str, help="DB file which will be used with the generation module.")
     parser.add_argument("-asp", required=True, choices=['p', 'i', 'c'],
                         type=str, help="Aspect to generate the conjugation tables for.")
-    parser.add_argument("-mod", choices=['i', 's', 'j'],
+    parser.add_argument("-mod", choices=['i', 's', 'j'], default='',
+                        type=str, help="Aspect to generate the conjugation tables for.")
+    parser.add_argument("-dialect", choices=['msa', 'glf', 'egy'], required=True,
                         type=str, help="Aspect to generate the conjugation tables for.")
     parser.add_argument("-repr_lemmas", required=True,
                         type=str, help="Name of the file from which to load the representative lemmas from.")
@@ -157,9 +159,9 @@ if __name__ == "__main__":
     generator = Generator(db)
 
     with open(args.paradigms) as f:
-        paradigms = json.load(f)
+        paradigms = json.load(f)[args.dialect]
     asp = f"asp:{args.asp}"
-    mod = f" mod:{args.mod}" if args.asp == 'i' else ''
+    mod = f" mod:{args.mod}" if args.asp == 'i' and args.mod else ''
     create_conjugation_tables(lemmas_file_name=args.repr_lemmas,
                               paradigm_key=asp + mod,
                               paradigms=paradigms,

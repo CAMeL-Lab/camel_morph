@@ -27,7 +27,11 @@ def create_representative_verbs_list(specs_sheets, config_file, config_name, cmp
         xconds = ' '.join([f['COND-S'] for f in cmplx_stems[0]])
         xcondt = ' '.join([f['COND-T'] for f in cmplx_stems[0]])
         xcondf = ' '.join([f['COND-F'] for f in cmplx_stems[0]])
-        info = _generate_stem(cmplx_stems[0], xconds, xcondt, xcondf, defaults_)
+        info = _generate_stem(cmplx_morph,
+                              cmplx_stems[0],
+                              xconds, xcondt, xcondf,
+                              short_cat_map=None,
+                              defaults=defaults_)
         info = [feat.split(':')[1] for feat in info[0]['feats'].split() if feat.split(':')[0] in ['lex', 'diac']]
         representative_verbs.append((ar2bw(info[1]), ar2bw(info[0]), xconds, xcondt))
     with open(output_name, 'w') as f:

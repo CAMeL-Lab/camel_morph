@@ -53,6 +53,11 @@ def _postprocess_pred(pred):
         else:
             diac = re.sub(r'aA', 'A', diac)
         pos = analysis['pos']
+        # IV-specific pre-processing
+        bw = re.sub(r"IVSUFF_SUBJ:\dMP_MOOD:I", "IVSUFF_SUBJ:MP_MOOD:I", bw)
+        bw = re.sub(r"IVSUFF_SUBJ:\d\w+_MOOD:([ISJ]+)", r"IVSUFF_MOOD:\1", bw)
+        bw = bw.replace("SUB_CONJ", "PREP")
+        
         pred_.append((diac, lex, bw, pos))
     pred = set(pred_)
 
@@ -70,17 +75,15 @@ def recall_stats(preds, gold, func_name, inspection='all'):
             # Adds pred which is most similar to gold to `output_inspection`
             oov_failed = output_inspection.setdefault('recall', dict())
             form_dediac = ar2bw_translit.transliterate(form_dediac)
-            if inspection == 'all':
-                output = pred_inst
-            elif inspection == 'most_similar':
-                most_similar = [None, 1000]
+            most_similar = [None, 1000]
+            if inspection == 'most_similar':
                 for analysis in pred_inst:
                     ed = edit_distance(' '.join(analysis), ' '.join(gold_inst))
                     if ed < most_similar[1]:
                         most_similar = [analysis, ed]
-                output = most_similar[0]
             oov_failed.setdefault(analyzer, []).append(
-                {'input': form_dediac, 'output': output, 'gold': gold_inst})
+                {'input': form_dediac, 'most_similar': most_similar[0],
+                'output': pred_inst, 'gold': gold_inst})
     
     report = ""
 
@@ -129,7 +132,7 @@ if __name__ == "__main__":
         test_set = [ex.split('\n') for ex in test_set if ex.startswith(";;WORD")]
         test_set = [tuple([field for i, field in enumerate(
             ex[4].split()) if 1 <= i <= 3 or i == 5]) for ex in test_set]
-        test_pv = [ex for ex in test_set if "PV" in ex[2]]
+        test_pv = [ex for ex in test_set if "IV" in ex[2]]
         test_pv_uniq = Counter(test_pv)
     
     preds_camel, preds_calima, gold =  predict(test_pv_uniq)
