@@ -255,7 +255,8 @@ def construct_almor_db(SHEETS, pruning, cond2class):
             cmplx_stem_classes=(cmplx_stem_classes, order['STEM']))
         
         db_ = populate_db(
-            cmplx_morph_classes, compatibility_memoize, short_cat_maps, defaults)
+            cmplx_morph_classes, order['CLASS'].lower(), compatibility_memoize,
+            short_cat_maps, defaults)
         for section, contents in db_.items():
             db.setdefault(section, {}).update(contents)
         
@@ -265,6 +266,7 @@ def construct_almor_db(SHEETS, pruning, cond2class):
     return db
 
 def populate_db(cmplx_morph_classes,
+                pos_type,
                 compatibility_memoize,
                 short_cat_maps=None,
                 defaults=None):
@@ -304,19 +306,22 @@ def populate_db(cmplx_morph_classes,
                                             compatibility_memoize)
                 if valid:
                     stem_cat, prefix_cat, suffix_cat = None, None, None
-                    update_info_stem = dict(cmplx_morph_seq=cmplx_stem_seq,
+                    update_info_stem = dict(pos_type=pos_type,
+                                            cmplx_morph_seq=cmplx_stem_seq,
                                             cmplx_morph_cls=cmplx_stem_cls,
                                             cmplx_morph_type='stem',
                                             cmplx_morphs=cmplx_stems,
                                             conditions=(stem_cond_s, stem_cond_t, stem_cond_f),
                                             db_section='OUT:###STEMS###')
-                    update_info_prefix = dict(cmplx_morph_seq=cmplx_prefix_seq,
+                    update_info_prefix = dict(pos_type=pos_type,
+                                              cmplx_morph_seq=cmplx_prefix_seq,
                                               cmplx_morph_cls=cmplx_prefix_cls,
                                               cmplx_morph_type='prefix',
                                               cmplx_morphs=cmplx_prefixes,
                                               conditions=(prefix_cond_s, prefix_cond_t, prefix_cond_f),
                                               db_section='OUT:###PREFIXES###')
-                    update_info_suffix = dict(cmplx_morph_seq=cmplx_suffix_seq,
+                    update_info_suffix = dict(pos_type=pos_type,
+                                              cmplx_morph_seq=cmplx_suffix_seq,
                                               cmplx_morph_cls=cmplx_suffix_cls,
                                               cmplx_morph_type='suffix',
                                               cmplx_morphs=cmplx_suffixes,
@@ -361,12 +366,22 @@ def update_db(db,
     elif cmplx_morph_type in ['prefix', 'suffix']:
         short_cat_map = short_cat_maps['prefix' if cmplx_morph_type == 'prefix' else 'suffix']
         _generate = partial(_generate_affix, cmplx_morph_type)
+    else:
+        raise NotImplementedError
+
+    if update_info['pos_type'] == 'verbal':
+        required_feats = _required_verb_stem_feats
+    elif update_info['pos_type'] == 'nominal':
+        required_feats = _required_nom_stem_feats
+    else:
+        raise NotImplementedError
     # This if statement implements early stopping which entails that if we have already 
     # logged a specific prefix/stem/suffix entry, we do not need to do it again. Entry
     # generation (and more specifically `dediac()`) is costly.
     if cat_memoize[cmplx_morph_type].get(cmplx_morph_cls) is None:
         for cmplx_morph in cmplx_morphs:
             morph_entry, mcat = _generate(cmplx_morph_seq,
+                                          required_feats,
                                           cmplx_morph,
                                           cond_s, cond_t, cond_f,
                                           short_cat_map,
@@ -409,6 +424,7 @@ def _convert_bw_tag(bw_tag):
 
 def _generate_affix(affix_type,
                     cmplx_morph_seq,
+                    required_feats,
                     affix,
                     affix_cond_s, affix_cond_t, affix_cond_f,
                     short_cat_map=None,
@@ -428,6 +444,7 @@ def _generate_affix(affix_type,
 
 
 def _generate_stem(cmplx_morph_seq,
+                   required_feats,
                    stem,
                    stem_cond_s, stem_cond_t, stem_cond_f,
                    short_cat_map=None,
@@ -439,7 +456,7 @@ def _generate_stem(cmplx_morph_seq,
     if defaults:
         stem_feat = [f"{feat}:{stem_feat[feat]}" if feat in stem_feat and stem_feat[feat] != '_'
                     else f"{feat}:{defaults[stem_feat['pos']][feat]}" 
-                    for feat in _required_verb_stem_feats + _clitic_feats]
+                     for feat in required_feats + _clitic_feats]
     else:
         stem_feat = [f"{feat}:{val}" for feat, val in stem_feat.items()]
     stem_feat = ' '.join(stem_feat)
