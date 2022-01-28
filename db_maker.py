@@ -216,14 +216,8 @@ def construct_almor_db(SHEETS, pruning, cond2class):
     db = {}
     db['OUT:###ABOUT###'] = list(ABOUT['Content'])
     db['OUT:###HEADER###'] = list(HEADER['Content'])
-    _order = [line.split()[1:] for line in db['OUT:###HEADER###']
-              if line.startswith('ORDER')][0]
-    _defaults = [{f: d for f, d in [f.split(':') for f in line.split()[1:]]}
-        for line in db['OUT:###HEADER###'] if line.startswith('DEFAULT')]
-    _defaults = {d['pos']: d for d in _defaults}
-    for pos in _defaults:
-        _defaults[pos]['enc1'] = _defaults[pos]['enc0']
-    defaults = {'defaults': _defaults, 'order': _order}
+    
+    defaults = _process_defaults(db['OUT:###HEADER###'])
     
     compatibility_memoize = {}
     cmplx_morph_memoize = {'stem': {}, 'suffix': {}, 'prefix': {}}
@@ -369,12 +363,7 @@ def update_db(db,
     else:
         raise NotImplementedError
 
-    if update_info['pos_type'] == 'verbal':
-        required_feats = _required_verb_stem_feats
-    elif update_info['pos_type'] == 'nominal':
-        required_feats = _required_nom_stem_feats
-    else:
-        raise NotImplementedError
+    required_feats = _choose_required_feats(update_info['pos_type'])
     # This if statement implements early stopping which entails that if we have already 
     # logged a specific prefix/stem/suffix entry, we do not need to do it again. Entry
     # generation (and more specifically `dediac()`) is costly.
@@ -454,9 +443,10 @@ def _generate_stem(cmplx_morph_seq,
         "X", cmplx_morph_seq, stem_cond_s, stem_cond_t, stem_cond_f, short_cat_map)
     ar_xbw = _convert_bw_tag(stem_bw)
     if defaults:
-        stem_feat = [f"{feat}:{stem_feat[feat]}" if feat in stem_feat and stem_feat[feat] != '_'
-                    else f"{feat}:{defaults[stem_feat['pos']][feat]}" 
-                     for feat in required_feats + _clitic_feats]
+        stem_feat = [f"{feat}:{stem_feat[feat]}"
+                        if feat in stem_feat and stem_feat[feat] != '_'
+                        else f"{feat}:{defaults[stem_feat['pos']][feat]}" 
+                        for feat in required_feats + _clitic_feats]
     else:
         stem_feat = [f"{feat}:{val}" for feat, val in stem_feat.items()]
     stem_feat = ' '.join(stem_feat)
@@ -731,6 +721,25 @@ def _get_cond_false(cond_t_all, cond_t_almrph):
     return cond_f_almrph, cond_t_almrph
 
 
+def _process_defaults(header):
+    _order = [line.split()[1:] for line in header
+                if line.startswith('ORDER')][0]
+    _defaults = [{f: d for f, d in [f.split(':') for f in line.split()[1:]]}
+                    for line in header if line.startswith('DEFAULT')]
+    _defaults = {d['pos']: d for d in _defaults}
+    for pos in _defaults:
+        _defaults[pos]['enc1'] = _defaults[pos]['enc0']
+    defaults = {'defaults': _defaults, 'order': _order}
+    return defaults
+
+def _choose_required_feats(pos_type):
+    if pos_type == 'verbal':
+        required_feats = _required_verb_stem_feats
+    elif pos_type == 'nominal':
+        required_feats = _required_nom_stem_feats
+    else:
+        raise NotImplementedError
+    return required_feats
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
