@@ -9,7 +9,7 @@
             "MSA-LEX-PV",
             "MSA-LEX-PV-Pass-No-Edit"
         ],
-        "output": "db_iterations/XYZ_msa_pv_v1.0.db"
+        "output": "XYZ_msa_pv_v1.0.db"
     },
     "pv_msa_order-v4_red": {
         "about": "About",
@@ -21,7 +21,7 @@
             "MSA-LEX-PV",
             "MSA-LEX-PV-Pass-No-Edit"
         ],
-        "output": "db_iterations/XYZ_msa_pv_v1.0_red.db"
+        "output": "XYZ_msa_pv_v1.0_red.db"
     },
     "iv_msa_order-v3": {
         "about": "About",
@@ -33,7 +33,7 @@
             "MSA-LEX-IV",
             "MSA-LEX-IV-Pass-No-Edit"
         ],
-        "output": "db_iterations/XYZ_msa_iv_v1.0_order-v3.db"
+        "output": "XYZ_msa_iv_v1.0_order-v3.db"
     },
     "iv_msa_order-v4": {
         "about": "About",
@@ -45,7 +45,7 @@
             "MSA-LEX-IV",
             "MSA-LEX-IV-Pass-No-Edit"
         ],
-        "output": "db_iterations/XYZ_msa_iv_v1.0.db"
+        "output": "XYZ_msa_iv_v1.0.db"
     },
     "iv_msa_order-v4_red": {
         "about": "About",
@@ -57,7 +57,7 @@
             "MSA-LEX-IV",
             "MSA-LEX-IV-Pass-No-Edit"
         ],
-        "output": "db_iterations/XYZ_iv_msa_v1.0_red.db"
+        "output": "XYZ_msa_iv_v1.0_red.db"
     },
     "cv_msa_order-v4_red": {
         "about": "About",
@@ -68,7 +68,7 @@
         "lexicon": [
             "MSA-LEX-CV"
         ],
-        "output": "db_iterations/XYZ_msa_cv_v1.0_red.db"
+        "output": "XYZ_msa_cv_v1.0_red.db"
     },
     "pv_glf_order-v4_red": {
         "about": "About",
@@ -79,7 +79,7 @@
         "lexicon": [
             "GLF-LEX-PV"
         ],
-        "output": "db_iterations/XYZ_glf_pv_v1.0_red.db"
+        "output": "XYZ_glf_pv_v1.0_red.db"
     },
     "iv_glf_order-v4_red": {
         "about": "About",
@@ -90,7 +90,7 @@
         "lexicon": [
             "GLF-LEX-IV"
         ],
-        "output": "db_iterations/XYZ_glf_iv_v1.0_red.db"
+        "output": "XYZ_glf_iv_v1.0_red.db"
     },
     "cv_glf_order-v4_red": {
         "about": "About",
@@ -101,7 +101,7 @@
         "lexicon": [
             "GLF-LEX-CV"
         ],
-        "output": "db_iterations/XYZ_glf_cv_v1.0_red.db"
+        "output": "XYZ_glf_cv_v1.0_red.db"
     },
     "pv_egy_order-v4_red": {
         "about": "About",
@@ -112,7 +112,7 @@
         "lexicon": [
             "EGY-LEX-PV"
         ],
-        "output": "db_iterations/XYZ_egy_pv_v1.0_red.db"
+        "output": "XYZ_egy_pv_v1.0_red.db"
     },
     "iv_egy_order-v4_red": {
         "about": "About",
@@ -123,7 +123,7 @@
         "lexicon": [
             "EGY-LEX-IV"
         ],
-        "output": "db_iterations/XYZ_egy_iv_v1.0_red.db"
+        "output": "XYZ_egy_iv_v1.0_red.db"
     },
     "cv_egy_order-v4_red": {
         "about": "About",
@@ -134,9 +134,9 @@
         "lexicon": [
             "EGY-LEX-CV"
         ],
-        "output": "db_iterations/XYZ_egy_cv_v1.0_red.db"
+        "output": "XYZ_egy_cv_v1.0_red.db"
     },
-    "msa_nom_red": {
+    "nom_msa_red": {
         "about": "About",
         "header": "Header",
         "order": "ORDER-MSA-Nom",
@@ -145,6 +145,6 @@
         "lexicon": [
             "MSA-LEX-Nom"
         ],
-        "output": "db_iterations/XYZ_msa_nom_v1.0_red.db"
+        "output": "XYZ_msa_nom_v1.0_red.db"
     }
 }

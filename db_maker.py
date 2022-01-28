@@ -29,7 +29,7 @@ bw2ar = CharMapper.builtin_mapper('bw2ar')
 ar2bw = CharMapper.builtin_mapper('ar2bw')
 
 _required_verb_stem_feats = ['pos', 'asp', 'per', 'gen', 'num', 'vox', 'mod']
-_required_nom_stem_feats = ['pos', 'gen', 'num', 'stt', 'cas']
+_required_nom_stem_feats = ['pos', 'form_gen', 'form_num', 'gen', 'num', 'stt', 'cas']
 _clitic_feats = ['enc0', 'prc0', 'prc1', 'prc2', 'prc3']
 
 ###########################################
@@ -484,7 +484,7 @@ def _read_stem(stem):
 
 def print_almor_db(output_filename, db):
     """Create output file in ALMOR DB format"""
-    with open(output_filename, "w") as f:
+    with open(os.path.join('db_iterations', output_filename), "w") as f:
         for x in db['OUT:###HEADER###']:
             print(x, file=f)
 
@@ -757,6 +757,9 @@ if __name__ == "__main__":
         profiler = cProfile.Profile()
         profiler.enable()
     
+    if not os.path.exists('db_iterations'):
+        os.mkdir('db_iterations')
+
     make_db(args.specs_sheets, args.config_file, args.config_name)
     
     if args.run_profiling:

@@ -1,5 +1,6 @@
 import argparse
 import json
+import os
 
 from camel_tools.utils.charmap import CharMapper
 
@@ -7,7 +8,7 @@ import db_maker
 
 ar2bw = CharMapper.builtin_mapper('ar2bw')
 
-def create_representative_verbs_list(input_filename,
+def create_repr_lemmas_list(input_filename,
                                      config_file,
                                      config_name,
                                      cmplx_morph_seq,
@@ -25,7 +26,7 @@ def create_representative_verbs_list(input_filename,
         cmplx_morph_seq, MORPH, LEXICON, cond2class,
         pruning_cond_s_f=False, pruning_same_class_incompat=False)
     
-    representative_verbs = []
+    repr_lemmas = []
     for cmplx_stems in cmplx_stem_classes.values():
         stem_cond_s = ' '.join([f['COND-S'] for f in cmplx_stems[0]])
         stem_cond_t = ' '.join([f['COND-T'] for f in cmplx_stems[0]])
@@ -37,10 +38,11 @@ def create_representative_verbs_list(input_filename,
                                        short_cat_map=None,
                                        defaults=defaults['defaults'])
         info = [feat.split(':')[1] for feat in info[0]['feats'].split()
-                if feat.split(':')[0] in ['lex', 'diac']]
-        representative_verbs.append((ar2bw(info[1]), ar2bw(info[0]), stem_cond_s, stem_cond_t))
-    with open(output_name, 'w') as f:
-        for info in representative_verbs:
+                if feat.split(':')[0] in ['lex', 'diac', 'pos', 'gen', 'num']]
+        repr_lemmas.append((ar2bw(info[1]), ar2bw(info[0]), info[2], info[3],
+                            info[4], stem_cond_s, stem_cond_t))
+    with open(os.path.join('conjugation/repr_lemmas', output_name), 'w') as f:
+        for info in repr_lemmas:
             print(*info, file=f, sep=',')
 
 
@@ -60,9 +62,15 @@ if __name__ == "__main__":
                         type=str, help="Name of the file to output the representative lemmas to.")
     args = parser.parse_args([] if "__file__" not in globals() else None)
 
-    create_representative_verbs_list(input_filename=args.specs_sheets,
-                                     config_file=args.config_file,
-                                     config_name=args.config_name,
-                                     cmplx_morph_seq=args.cmplx_morph,
-                                     pos_type=args.pos_type,
-                                     output_name=args.output_name)
+    if not os.path.exists('conjugation'):
+        os.mkdir('conjugation')
+        os.mkdir('conjugation/repr_lemmas')
+    elif not os.path.exists('conjugation/repr_lemmas'):
+        os.mkdir('conjugation/repr_lemmas')
+
+    create_repr_lemmas_list(input_filename=args.specs_sheets,
+                            config_file=args.config_file,
+                            config_name=args.config_name,
+                            cmplx_morph_seq=args.cmplx_morph,
+                            pos_type=args.pos_type,
+                            output_name=args.output_name)
