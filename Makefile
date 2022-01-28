@@ -10,15 +10,15 @@ make_dbs:
 	python db_maker.py -specs_sheets specs_sheets/CamelMorphDB-v1.0.xlsx -config_file config.json -config_name cv_egy_order-v4_red
 
 repr_lemmas:
-	python create_repr_verb_list.py -specs_sheets specs_sheets/CamelMorphDB-v1.0.xlsx -config_file config.json -config_name pv_msa_order-v4_red -cmplx_morph "[STEM-PV]" -output_name conjugation/repr_lemmas/repr_lemmas_pv_msa.csv
-	python create_repr_verb_list.py -specs_sheets specs_sheets/CamelMorphDB-v1.0.xlsx -config_file config.json -config_name iv_msa_order-v3 -cmplx_morph "[STEM-IV]" -output_name conjugation/repr_lemmas/repr_lemmas_iv_msa.csv
-	python create_repr_verb_list.py -specs_sheets specs_sheets/CamelMorphDB-v1.0.xlsx -config_file config.json -config_name cv_msa_order-v4_red -cmplx_morph "[STEM-CV]" -output_name conjugation/repr_lemmas/repr_lemmas_cv_msa.csv
-	python create_repr_verb_list.py -specs_sheets specs_sheets/CamelMorphDB-v1.0.xlsx -config_file config.json -config_name pv_glf_order-v4_red -cmplx_morph "[STEM-PV]" -output_name conjugation/repr_lemmas/repr_lemmas_pv_glf.csv
-	python create_repr_verb_list.py -specs_sheets specs_sheets/CamelMorphDB-v1.0.xlsx -config_file config.json -config_name iv_glf_order-v4_red -cmplx_morph "[STEM-IV]" -output_name conjugation/repr_lemmas/repr_lemmas_iv_glf.csv
-	python create_repr_verb_list.py -specs_sheets specs_sheets/CamelMorphDB-v1.0.xlsx -config_file config.json -config_name cv_glf_order-v4_red -cmplx_morph "[STEM-CV]" -output_name conjugation/repr_lemmas/repr_lemmas_cv_glf.csv
-	python create_repr_verb_list.py -specs_sheets specs_sheets/CamelMorphDB-v1.0.xlsx -config_file config.json -config_name pv_egy_order-v4_red -cmplx_morph "[STEM-PV]" -output_name conjugation/repr_lemmas/repr_lemmas_pv_egy.csv
-	python create_repr_verb_list.py -specs_sheets specs_sheets/CamelMorphDB-v1.0.xlsx -config_file config.json -config_name iv_egy_order-v4_red -cmplx_morph "[STEM-IV]" -output_name conjugation/repr_lemmas/repr_lemmas_iv_egy.csv
-	python create_repr_verb_list.py -specs_sheets specs_sheets/CamelMorphDB-v1.0.xlsx -config_file config.json -config_name cv_egy_order-v4_red -cmplx_morph "[STEM-CV]" -output_name conjugation/repr_lemmas/repr_lemmas_cv_egy.csv
+	python create_repr_lemmas_list.py -specs_sheets specs_sheets/CamelMorphDB-v1.0.xlsx -config_file config.json -config_name pv_msa_order-v4_red -cmplx_morph "[STEM-PV]" -output_name conjugation/repr_lemmas/repr_lemmas_pv_msa.csv
+	python create_repr_lemmas_list.py -specs_sheets specs_sheets/CamelMorphDB-v1.0.xlsx -config_file config.json -config_name iv_msa_order-v3 -cmplx_morph "[STEM-IV]" -output_name conjugation/repr_lemmas/repr_lemmas_iv_msa.csv
+	python create_repr_lemmas_list.py -specs_sheets specs_sheets/CamelMorphDB-v1.0.xlsx -config_file config.json -config_name cv_msa_order-v4_red -cmplx_morph "[STEM-CV]" -output_name conjugation/repr_lemmas/repr_lemmas_cv_msa.csv
+	python create_repr_lemmas_list.py -specs_sheets specs_sheets/CamelMorphDB-v1.0.xlsx -config_file config.json -config_name pv_glf_order-v4_red -cmplx_morph "[STEM-PV]" -output_name conjugation/repr_lemmas/repr_lemmas_pv_glf.csv
+	python create_repr_lemmas_list.py -specs_sheets specs_sheets/CamelMorphDB-v1.0.xlsx -config_file config.json -config_name iv_glf_order-v4_red -cmplx_morph "[STEM-IV]" -output_name conjugation/repr_lemmas/repr_lemmas_iv_glf.csv
+	python create_repr_lemmas_list.py -specs_sheets specs_sheets/CamelMorphDB-v1.0.xlsx -config_file config.json -config_name cv_glf_order-v4_red -cmplx_morph "[STEM-CV]" -output_name conjugation/repr_lemmas/repr_lemmas_cv_glf.csv
+	python create_repr_lemmas_list.py -specs_sheets specs_sheets/CamelMorphDB-v1.0.xlsx -config_file config.json -config_name pv_egy_order-v4_red -cmplx_morph "[STEM-PV]" -output_name conjugation/repr_lemmas/repr_lemmas_pv_egy.csv
+	python create_repr_lemmas_list.py -specs_sheets specs_sheets/CamelMorphDB-v1.0.xlsx -config_file config.json -config_name iv_egy_order-v4_red -cmplx_morph "[STEM-IV]" -output_name conjugation/repr_lemmas/repr_lemmas_iv_egy.csv
+	python create_repr_lemmas_list.py -specs_sheets specs_sheets/CamelMorphDB-v1.0.xlsx -config_file config.json -config_name cv_egy_order-v4_red -cmplx_morph "[STEM-CV]" -output_name conjugation/repr_lemmas/repr_lemmas_cv_egy.csv
 
 conj_tables_msa:
 	python generate_conj_table.py -paradigms conjugation/config_paradigms.json -repr_lemmas conjugation/repr_lemmas/repr_lemmas_pv_msa.csv -db db_iterations/XYZ_pv_v2.0_red.db -asp p -dialect msa -output_name conjugation/tables/conj_pv_msa_v1.0.tsv
