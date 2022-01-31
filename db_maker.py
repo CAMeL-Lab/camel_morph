@@ -413,7 +413,10 @@ def _create_cat(cmplx_morph_type, cmplx_morph_class,
     cmplx_morph_cond_t = '+'.join(
         [cond for cond in cmplx_morph_cond_t.split() if cond != '_'])
     cmplx_morph_cond_t = cmplx_morph_cond_t if cmplx_morph_cond_t else '-'
-    cat = f"{cmplx_morph_type}:{cmplx_morph_class}_[CS:{cmplx_morph_cond_s}]_[CT:{cmplx_morph_cond_t}]"
+    cmplx_morph_cond_f = '+'.join(
+        [cond for cond in cmplx_morph_cond_f.split() if cond != '_'])
+    cmplx_morph_cond_f = cmplx_morph_cond_f if cmplx_morph_cond_f else '-'
+    cat = f"{cmplx_morph_type}:{cmplx_morph_class}_[CS:{cmplx_morph_cond_s}]_[CT:{cmplx_morph_cond_t}]_[CF:{cmplx_morph_cond_f}]"
     return cat
 
 def _convert_bw_tag(bw_tag):
