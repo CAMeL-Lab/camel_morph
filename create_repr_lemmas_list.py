@@ -59,7 +59,7 @@ if __name__ == "__main__":
     parser.add_argument("-config_name", required=True,
                         type=str, help="Name of the configuration to load from the config file.")
     parser.add_argument("-output_name", required=True,
-                        type=str, help="Name of the file to output the representative lemmas to.")
+                        type=str, help="Name of the file to output the representative lemmas to. File will be placed in a directory called conjugation/repr_lemmas/")
     args = parser.parse_args([] if "__file__" not in globals() else None)
 
     if not os.path.exists('conjugation'):

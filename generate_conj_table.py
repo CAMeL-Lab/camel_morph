@@ -181,9 +181,9 @@ if __name__ == "__main__":
     parser.add_argument("-dialect", choices=['msa', 'glf', 'egy'], required=True,
                         type=str, help="Aspect to generate the conjugation tables for.")
     parser.add_argument("-repr_lemmas", required=True,
-                        type=str, help="Name of the file from which to load the representative lemmas from.")
+                        type=str, help="Name of the file in conjugation/repr_lemmas/ from which to load the representative lemmas from.")
     parser.add_argument("-output_name", required=True,
-                        type=str, help="Name of the file to output the conjugation tables to.")
+                        type=str, help="Name of the file to output the conjugation tables to in conjugation/tables/ directory.")
     args = parser.parse_args([] if "__file__" not in globals() else None)
 
     if not os.path.exists('conjugation'):
