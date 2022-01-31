@@ -112,7 +112,7 @@ def create_conjugation_tables(lemmas_file_name,
                               pos_type,
                               paradigm_key,
                               paradigms,
-                              output_file_name,
+                              output_path,
                               generator):
     with open(lemmas_file_name) as f:
         lemmas = f.readlines()
@@ -161,7 +161,7 @@ def create_conjugation_tables(lemmas_file_name,
                 conjugations.append(output)
 
 
-    with open(os.path.join('conjugation/tables/', output_file_name), 'w') as f:
+    with open(output_path, 'w') as f:
         print(*header, sep='\t', file=f)
         for output in conjugations:
             print(*output, sep='\t', file=f)
@@ -171,7 +171,7 @@ if __name__ == "__main__":
     parser.add_argument("-paradigms", required=True,
                         type=str, help="Configuration file containing the sets of paradigms from which we generate conjugation tables.")
     parser.add_argument("-db", required=True,
-                        type=str, help="DB file which will be used with the generation module.")
+                        type=str, help="Name of the DB file which will be used with the generation module.")
     parser.add_argument("-pos_type", required=True, choices=['verbal', 'nominal'],
                         type=str, help="POS type of the lemmas for which we want to generate a representative sample.")
     parser.add_argument("-asp", choices=['p', 'i', 'c'],
@@ -184,15 +184,22 @@ if __name__ == "__main__":
                         type=str, help="Name of the file in conjugation/repr_lemmas/ from which to load the representative lemmas from.")
     parser.add_argument("-output_name", required=True,
                         type=str, help="Name of the file to output the conjugation tables to in conjugation/tables/ directory.")
+    parser.add_argument("-output_dir", default='conjugation/tables',
+                        type=str, help="Path of the directory to output the tables to.")
+    parser.add_argument("-lemmas_dir", default='conjugation/repr_lemmas',
+                        type=str, help="Path of the directory to output the tables to.")
+    parser.add_argument("-db_dir", default='db_iterations',
+                        type=str, help="Path of the directory to load the DB from.")
     args = parser.parse_args([] if "__file__" not in globals() else None)
 
-    if not os.path.exists('conjugation'):
-        os.mkdir('conjugation')
-        os.mkdir('conjugation/tables')
-    elif not os.path.exists('conjugation/tables'):
-        os.mkdir('conjugation/tables')
+    conj_dir = args.output_dir.split('/')[0]
+    if not os.path.exists(conj_dir):
+        os.mkdir(conj_dir)
+        os.mkdir(args.output_dir)
+    elif not os.path.exists(args.output_dir):
+        os.mkdir(args.output_dir)
 
-    db = MorphologyDB(os.path.join('db_iterations', args.db), flags='g')
+    db = MorphologyDB(os.path.join(args.db_dir, args.db), flags='g')
     generator = Generator(db)
     
     with open(args.paradigms) as f:
@@ -206,9 +213,9 @@ if __name__ == "__main__":
     else:
         raise NotImplementedError
 
-    create_conjugation_tables(lemmas_file_name=os.path.join('conjugation/repr_lemmas', args.repr_lemmas),
+    create_conjugation_tables(lemmas_file_name=os.path.join(args.lemmas_dir, args.repr_lemmas),
                               pos_type=args.pos_type,
                               paradigm_key=paradigm_key,
                               paradigms=paradigms,
-                              output_file_name=args.output_name,
+                              output_path=os.path.join(args.output_dir, args.output_name),
                               generator=generator)

@@ -39,7 +39,7 @@ _clitic_feats = ['enc0', 'prc0', 'prc1', 'prc2', 'prc3']
 # e.g. make_db("CamelMorphDB-Nov-2021.xlsx", "config_pv_msa_order-v4")
 ###########################################
 
-def make_db(input_filename, config_file, config_name):
+def make_db(input_filename, config_file, config_name, output_dir):
     """Initializes `ABOUT`, `HEADER`, `ORDER`, `MORPH`, and `LEXICON`"""
     c0 = process_time()
     
@@ -53,7 +53,7 @@ def make_db(input_filename, config_file, config_name):
     db = construct_almor_db(SHEETS, config['pruning'], cond2class)
     
     print("\nGenerating DB file... [3/3]")
-    print_almor_db(config['output'], db)
+    print_almor_db(os.path.join(output_dir, config['output']), db)
     
     c1 = process_time()
     print(f"\nTotal time required: {strftime('%M:%S', gmtime(c1 - c0))}")
@@ -484,7 +484,7 @@ def _read_stem(stem):
 
 def print_almor_db(output_filename, db):
     """Create output file in ALMOR DB format"""
-    with open(os.path.join('db_iterations', output_filename), "w") as f:
+    with open(output_filename, "w") as f:
         for x in db['OUT:###HEADER###']:
             print(x, file=f)
 
@@ -749,6 +749,8 @@ if __name__ == "__main__":
                         type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
     parser.add_argument("-config_name", required=True,
                         type=str, help="Name of the configuration to load from the config file.")
+    parser.add_argument("-output_dir", default='db_iterations',
+                        type=str, help="Path of the directory to output the DBs to.")
     parser.add_argument("-run_profiling", default=False,
                         action='store_true', help="Run execution time profiling for the make_db().")
     args = parser.parse_args()
@@ -757,10 +759,10 @@ if __name__ == "__main__":
         profiler = cProfile.Profile()
         profiler.enable()
     
-    if not os.path.exists('db_iterations'):
-        os.mkdir('db_iterations')
+    if not os.path.exists(args.output_dir):
+        os.mkdir(args.output_dir)
 
-    make_db(args.specs_sheets, args.config_file, args.config_name)
+    make_db(args.specs_sheets, args.config_file, args.config_name, args.output_dir)
     
     if args.run_profiling:
         profiler.disable()

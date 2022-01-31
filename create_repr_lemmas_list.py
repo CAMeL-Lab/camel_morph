@@ -9,11 +9,11 @@ import db_maker
 ar2bw = CharMapper.builtin_mapper('ar2bw')
 
 def create_repr_lemmas_list(input_filename,
-                                     config_file,
-                                     config_name,
-                                     cmplx_morph_seq,
-                                     pos_type,
-                                     output_name):
+                            config_file,
+                            config_name,
+                            cmplx_morph_seq,
+                            pos_type,
+                            output_path):
     with open(config_file) as f:
         config = json.load(f)[config_name]
     SHEETS, cond2class = db_maker.read_morph_specs(input_filename, config)
@@ -41,7 +41,7 @@ def create_repr_lemmas_list(input_filename,
                 if feat.split(':')[0] in ['lex', 'diac', 'pos', 'gen', 'num']]
         repr_lemmas.append((ar2bw(info[1]), ar2bw(info[0]), info[2], info[3],
                             info[4], stem_cond_s, stem_cond_t))
-    with open(os.path.join('conjugation/repr_lemmas', output_name), 'w') as f:
+    with open(output_path, 'w') as f:
         for info in repr_lemmas:
             print(*info, file=f, sep=',')
 
@@ -58,19 +58,22 @@ if __name__ == "__main__":
                         type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
     parser.add_argument("-config_name", required=True,
                         type=str, help="Name of the configuration to load from the config file.")
+    parser.add_argument("-output_dir", default='conjugation/repr_lemmas',
+                        type=str, help="Path of the directory to output the lemmas to.")
     parser.add_argument("-output_name", required=True,
                         type=str, help="Name of the file to output the representative lemmas to. File will be placed in a directory called conjugation/repr_lemmas/")
     args = parser.parse_args([] if "__file__" not in globals() else None)
 
-    if not os.path.exists('conjugation'):
-        os.mkdir('conjugation')
-        os.mkdir('conjugation/repr_lemmas')
-    elif not os.path.exists('conjugation/repr_lemmas'):
-        os.mkdir('conjugation/repr_lemmas')
+    conj_dir = args.output_dir.split('/')[0]
+    if not os.path.exists(conj_dir):
+        os.mkdir(conj_dir)
+        os.mkdir(args.output_dir)
+    elif not os.path.exists(args.output_dir):
+        os.mkdir(args.output_dir)
 
     create_repr_lemmas_list(input_filename=args.specs_sheets,
                             config_file=args.config_file,
                             config_name=args.config_name,
                             cmplx_morph_seq=args.cmplx_morph,
                             pos_type=args.pos_type,
-                            output_name=args.output_name)
+                            output_path=os.path.join(args.output_dir, args.output_name))
