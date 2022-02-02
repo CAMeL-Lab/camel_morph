@@ -21,6 +21,7 @@ import cProfile, pstats
 from camel_tools.utils.dediac import dediac_bw
 from camel_tools.utils.charmap import CharMapper
 from camel_tools.utils.normalize import normalize_alef_bw, normalize_alef_maksura_bw, normalize_teh_marbuta_bw
+from generate_passive import generate_passive
 
 import pandas as pd
 import numpy as np
@@ -39,34 +40,63 @@ _clitic_feats = ['enc0', 'prc0', 'prc1', 'prc2', 'prc3']
 # e.g. make_db("CamelMorphDB-Nov-2021.xlsx", "config_pv_msa_order-v4")
 ###########################################
 
-def make_db(input_filename, config_file, config_name, output_dir):
+def make_db(config_file, config_name, output_dir):
     """Initializes `ABOUT`, `HEADER`, `ORDER`, `MORPH`, and `LEXICON`"""
     c0 = process_time()
     
     print("\nLoading and processing sheets... [1/3]")
     #Config file specifies which sheets to read in the xlsx spreadsheet
     with open(config_file) as f:
-        config = json.load(f)[config_name]
-    SHEETS, cond2class = read_morph_specs(input_filename, config)
+        config = json.load(f)
+    SHEETS, cond2class = read_morph_specs(config, config_name)
     
     print("\nValidating combinations... [2/3]")
-    db = construct_almor_db(SHEETS, config['pruning'], cond2class)
+    db = construct_almor_db(
+        SHEETS, config['local'][config_name]['pruning'], cond2class)
     
     print("\nGenerating DB file... [3/3]")
-    print_almor_db(os.path.join(output_dir, config['output']), db)
+    print_almor_db(
+        os.path.join(output_dir, config['local'][config_name]['output']), db)
     
     c1 = process_time()
     print(f"\nTotal time required: {strftime('%M:%S', gmtime(c1 - c0))}")
 
 
-def read_morph_specs(input_filename, config):
+def read_morph_specs(config, config_name):
     """Read Input file containing morphological specifications"""
-    FULL_SPEC = pd.ExcelFile(input_filename)
-    ABOUT = pd.read_excel(FULL_SPEC, config['about'])
-    HEADER = pd.read_excel(FULL_SPEC, config['header'])
-    ORDER = pd.read_excel(FULL_SPEC, config['order'])
-    MORPH = pd.read_excel(FULL_SPEC, config['morph'])
-    LEXICON = pd.concat([FULL_SPEC.parse(name) for name in config['lexicon']])
+    data_dir = config['global']['data-dir']
+    local_specs = config['local'][config_name]
+    global_specs = config['global']
+    ABOUT = pd.read_csv(os.path.join(data_dir, 'About.csv'))
+    HEADER = pd.read_csv(os.path.join(data_dir, 'Header.csv'))
+    order_filename = f"{local_specs['specs']['order']}.csv"
+    ORDER = pd.read_csv(os.path.join(data_dir, order_filename))
+    morph_filename = f"{local_specs['specs']['morph']}.csv"
+    MORPH = pd.read_csv(os.path.join(data_dir, morph_filename))
+    lexicon_sheets = local_specs['lexicon']['sheets']
+    LEXICON = pd.concat([pd.read_csv(os.path.join(data_dir, f"{name}.csv"))
+                         for name in lexicon_sheets])
+    # Replace spaces in BW and GLOSS with '#'; skip commented rows and empty lines
+    LEXICON = LEXICON[LEXICON.DEFINE == 'LEXICON']
+    LEXICON = LEXICON.replace(np.nan, '', regex=True)
+    LEXICON['GLOSS'] = LEXICON['GLOSS'].replace('\s+', '#', regex=True)
+    LEXICON['COND-S'] = LEXICON['COND-S'].replace(' +', ' ', regex=True)
+    LEXICON['COND-S'] = LEXICON['COND-S'].replace(' $', '', regex=True)
+    LEXICON['COND-T'] = LEXICON['COND-T'].replace(' +', ' ', regex=True)
+    LEXICON['COND-T'] = LEXICON['COND-T'].replace(' $', '', regex=True)
+
+    LEXICON_PASS = None
+    for name in lexicon_sheets:
+        match = re.search(r'MSA-LEX-([IP]V)', name)
+        if match:
+            patterns_path = os.path.join(data_dir, f"{match.group(1)}-Patterns.csv")
+            LEXICON_PASS = pd.concat(
+                [LEXICON_PASS, generate_passive(LEXICON, patterns_path)])
+    if LEXICON_PASS is not None:
+        LEXICON = pd.concat([LEXICON, LEXICON_PASS])
+
+    LEXICON['BW'] = LEXICON['FORM'] + '/' + LEXICON['BW']
+    LEXICON['LEMMA'] = 'lex:' + LEXICON['LEMMA']
 
     #Process all the components:
     ORDER = ORDER[ORDER.DEFINE == 'ORDER']  # skip comments & empty lines
@@ -92,16 +122,6 @@ def read_morph_specs(input_filename, config):
         for cond_class, cond_s in class2cond.items()
             for i, cond in enumerate(cond_s)}
 
-    # Replace spaces in BW and GLOSS with '#' skip comments & empty lines
-    LEXICON = LEXICON[LEXICON.DEFINE == 'LEXICON']
-    LEXICON = LEXICON.replace(np.nan, '', regex=True)
-    LEXICON['BW'] = LEXICON['BW'].replace('\s+', '#', regex=True)
-    LEXICON['GLOSS'] = LEXICON['GLOSS'].replace('\s+', '#', regex=True)
-    LEXICON['COND-S'] = LEXICON['COND-S'].replace(' +', ' ', regex=True)
-    LEXICON['COND-S'] = LEXICON['COND-S'].replace(' $', '', regex=True)
-    LEXICON['COND-T'] = LEXICON['COND-T'].replace(' +', ' ', regex=True)
-    LEXICON['COND-T'] = LEXICON['COND-T'].replace(' $', '', regex=True)
-
     if os.path.exists('morph_cache/morph_sheet_prev.pkl'):
         MORPH_prev = pd.read_pickle('morph_cache/morph_sheet_prev.pkl')
         if MORPH.equals(MORPH_prev):
@@ -111,7 +131,8 @@ def read_morph_specs(input_filename, config):
             return SHEETS, cond2class
     MORPH.to_pickle('morph_cache/morph_sheet_prev.pkl')
     
-    MORPH = MORPH[MORPH.DEFINE == 'MORPH']  # skip comments & empty lines
+    # Skip commented rows and empty lines
+    MORPH = MORPH[MORPH.DEFINE == 'MORPH']
     MORPH = MORPH.replace(np.nan, '', regex=True)
     MORPH = MORPH.replace('^\s+', '', regex=True)
     MORPH = MORPH.replace('\s+$', '', regex=True)
@@ -743,8 +764,6 @@ def _choose_required_feats(pos_type):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-specs_sheets", required=True,
-                        type=str, help="Excel spreadsheet containing all lexicon, morph, etc. sheets.")
     parser.add_argument("-config_file", required=True,
                         type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
     parser.add_argument("-config_name", required=True,
@@ -762,7 +781,7 @@ if __name__ == "__main__":
     if not os.path.exists(args.output_dir):
         os.mkdir(args.output_dir)
 
-    make_db(args.specs_sheets, args.config_file, args.config_name, args.output_dir)
+    make_db(args.config_file, args.config_name, args.output_dir)
     
     if args.run_profiling:
         profiler.disable()
