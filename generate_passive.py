@@ -21,8 +21,9 @@ def generate_passive(LEXICON, patterns_path):
         patterns_map[(row['Pattern'], row['COND-ST'])] = info
 
     cond_t_pattern = re.compile(r'([cv]-suff)')
-    cond_s_pattern = re.compile(r'.* \+ (.*)')
+    cond_s_pattern = re.compile(r'(?:.* \+ )?(.*)')
     one_or_more_pluses = re.compile(r' +')
+    trans_pattern = re.compile(r'(intrans|trans)')
 
     def assign_pattern_wrapper(row):
         pattern, _, _, _ = assign_pattern(strip_lex(row['LEMMA']))
@@ -44,6 +45,9 @@ def generate_passive(LEXICON, patterns_path):
         match = cond_s_pattern.search(row['COND-TS'])
         return match.group(1) if match else ''
 
+    def get_trans(row):
+        match = trans_pattern.search(row['COND-S'])
+        return match.group(1) if match else ''
     
     LEXICON_PASS = LEXICON.copy()
     LEXICON_PASS['PATTERN-DEF'] = LEXICON_PASS.apply(assign_pattern_wrapper, axis=1)
@@ -66,16 +70,17 @@ def generate_passive(LEXICON, patterns_path):
                            row['PATTERN-MAP']['regex_sub'],
                            row['FORM']), axis=1)
     LEXICON_PASS['COND-S'] = LEXICON_PASS['COND-S'].str.strip()
-    LEXICON_PASS['TRANS'] = LEXICON_PASS.apply(
-        lambda row: re.sub(r"\S+ +(intrans|trans)", r' \1', row['COND-S']), axis=1)
+    LEXICON_PASS['TRANS'] = LEXICON_PASS.apply(get_trans, axis=1)
     LEXICON_PASS['COND-TS'] = LEXICON_PASS.apply(
-        lambda row: row['PATTERN-MAP']['cond_map'] + row['TRANS'], axis=1)
+        lambda row: row['PATTERN-MAP']['cond_map'] + (' ' if row['TRANS'] else '') + row['TRANS'], axis=1)
     LEXICON_PASS['COND-T'] = LEXICON_PASS.apply(get_cond_t_pass, axis=1)
     LEXICON_PASS['COND-S'] = LEXICON_PASS.apply(get_cond_s_pass, axis=1)
+    LEXICON_PASS['COND-S'] = LEXICON_PASS['COND-S'].str.strip()
+    
     LEXICON_PASS['BW'] = LEXICON_PASS.apply(
         lambda row: re.sub(r'(.V)', r'\1_PASS', row['BW']), axis=1)
     LEXICON_PASS['FEAT'] = LEXICON_PASS.apply(
-        lambda row: re.sub(r'asp:a', r'asp:p', row['FEAT']), axis=1)
+        lambda row: re.sub(r'vox:a', r'vox:p', row['FEAT']), axis=1)
 
     LEXICON_PASS.drop('PATTERN-DEF', axis=1, inplace=True)
     LEXICON_PASS.drop('COND-S-NO-TRANS', axis=1, inplace=True)
