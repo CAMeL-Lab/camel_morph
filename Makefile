@@ -42,3 +42,26 @@ conj_tables_egy:
 
 conj_all: conj_tables_msa conj_tables_glf conj_tables_egy
 all: make_dbs repr_lemmas conj_all
+
+get_msa_pv:	
+	python download_sheets.py -config_file config.json -config_name pv_msa_order-v4_red
+get_msa_iv:
+	python download_sheets.py -config_file config.json -config_name iv_msa_order-v4_red
+get_msa_cv:	
+	python download_sheets.py -config_file config.json -config_name cv_msa_order-v4_red
+get_glf_pv:	
+	python download_sheets.py -config_file config.json -config_name pv_glf_order-v4_red
+get_glf_iv:	
+	python download_sheets.py -config_file config.json -config_name iv_glf_order-v4_red
+get_glf_cv:	
+	python download_sheets.py -config_file config.json -config_name cv_glf_order-v4_red
+get_egy_pv:	
+	python download_sheets.py -config_file config.json -config_name pv_egy_order-v4_red
+get_egy_iv:	
+	python download_sheets.py -config_file config.json -config_name iv_egy_order-v4_red
+get_egy_cv:	
+	python download_sheets.py -config_file config.json -config_name cv_egy_order-v4_red
+get_msa_nom:	
+	python download_sheets.py -config_file config.json -config_name nom_msa_red
+
+get_all: get_msa_pv get_msa_iv get_msa_cv get_glf_pv get_glf_iv get
