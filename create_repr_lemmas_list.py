@@ -2,14 +2,12 @@ import argparse
 import json
 import os
 import pickle
-from tqdm import tqdm
 import numpy as np
 
 from camel_tools.utils.charmap import CharMapper
 from camel_tools.morphology.utils import strip_lex
 from camel_tools.morphology.database import MorphologyDB
 from camel_tools.morphology.analyzer import Analyzer
-from camel_tools.utils.dediac import dediac_bw
 
 import db_maker
 
@@ -68,7 +66,7 @@ def create_repr_lemmas_list(config_file,
         uniq_lemma_classes.setdefault(lemmas_cond_sig, []).append(info)
     
     lemma2prob = {}
-    for lemmas_cond_sig, lemmas_info in tqdm(uniq_lemma_classes.items()):
+    for lemmas_cond_sig, lemmas_info in uniq_lemma_classes.items():
         for info in lemmas_info:
             lemma_ar = bw2ar(strip_lex(info['lemma']))
             analyses = analyzer.analyze(lemma_ar)
@@ -101,10 +99,10 @@ def create_repr_lemmas_list(config_file,
         for lemmas_info in uniq_lemma_classes.values()]), \
             'Some classes do not contain any representative after filtering'
     
-    for lemmas_cond_sig, lemmas_info in tqdm(uniq_lemma_classes.items()):
+    for lemmas_cond_sig, lemmas_info in uniq_lemma_classes.items():
         lemmas = [info['lemma'] for info in lemmas_info]
         best_index = int(np.array([lemma2prob[lemma] for lemma in lemmas]).argmax())
-        uniq_lemma_classes[lemmas_cond_sig] = lemmas[best_index]
+        uniq_lemma_classes[lemmas_cond_sig] = lemmas_info[best_index]
         
     return uniq_lemma_classes
 
