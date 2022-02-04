@@ -1,59 +1,74 @@
 import argparse
 import json
 import os
+import pickle
 
 from camel_tools.utils.charmap import CharMapper
+from camel_tools.morphology.utils import strip_lex
 
 import db_maker
 
 ar2bw = CharMapper.builtin_mapper('ar2bw')
 
-def create_repr_lemmas_list(input_filename,
-                            config_file,
-                            config_name,
-                            cmplx_morph_seq,
-                            pos_type,
-                            output_path):
+def create_repr_lemmas_list(config_file,
+                            config_name):
     with open(config_file) as f:
-        config = json.load(f)[config_name]
-    SHEETS, cond2class = db_maker.read_morph_specs(input_filename, config)
-    MORPH, LEXICON, HEADER = SHEETS['morph'], SHEETS['lexicon'], SHEETS['header']
-    
-    defaults = db_maker._process_defaults(list(HEADER['Content']))
-    required_feats = db_maker._choose_required_feats(pos_type)
+        config = json.load(f)
+    SHEETS, _ = db_maker.read_morph_specs(config, config_name)
 
-    cmplx_stem_classes = db_maker.gen_cmplx_morph_combs(
-        cmplx_morph_seq, MORPH, LEXICON, cond2class,
-        pruning_cond_s_f=False, pruning_same_class_incompat=False)
+    lemmas_uniq = {}
+    for _, row in SHEETS['lexicon'].iterrows():
+        feats = tuple(row['FEAT'].split())
+        if 'vox:p' in feats:
+            continue
+        lemmas_uniq.setdefault(row['LEMMA'], []).append(
+            (row['COND-T'], row['COND-S'], feats, row['FORM']))
+    uniq_lemma_classes = {}
+    for lemma, stems in lemmas_uniq.items():
+        lemmas_cond_sig = tuple([stem[:3] for stem in stems])
+        feats = {}
+        for stem in stems:
+            stem_feats = {
+                feat.split(':')[0]: feat.split(':')[1] for feat in stem[2]}
+            for feat, value in stem_feats.items():
+                if feats.get(feat) != None and value != feats[feat]:
+                    feats[feat] += f'+{value}'
+                else:
+                    feats[feat] = value
+        form = '+'.join(set([stem[3] for stem in stems]))
+        cond_t = '+'.join(set([stem[0] if stem[0] else '_' for stem in stems]))
+        cond_t = cond_t if cond_t != '+' else ''
+        cond_s = '+'.join(set([stem[1] if stem[1] else '_' for stem in stems]))
+        cond_s = cond_s if cond_s != '+' else ''
+        info = dict(form=form,
+                    lemma=lemma.split(':')[1],
+                    cond_t=cond_t,
+                    cond_s=cond_s,
+                    pos=feats['pos'],
+                    gen=feats['gen'],
+                    num=feats['num'])
+        uniq_lemma_classes.setdefault(lemmas_cond_sig, []).append(info)
     
-    repr_lemmas = []
-    for cmplx_stems in cmplx_stem_classes.values():
-        stem_cond_s = ' '.join([f['COND-S'] for f in cmplx_stems[0]])
-        stem_cond_t = ' '.join([f['COND-T'] for f in cmplx_stems[0]])
-        stem_cond_f = ' '.join([f['COND-F'] for f in cmplx_stems[0]])
-        info = db_maker._generate_stem(cmplx_morph_seq,
-                                       required_feats,
-                                       cmplx_stems[0],
-                                       stem_cond_s, stem_cond_t, stem_cond_f,
-                                       short_cat_map=None,
-                                       defaults=defaults['defaults'])
-        info = [feat.split(':')[1] for feat in info[0]['feats'].split()
-                if feat.split(':')[0] in ['lex', 'diac', 'pos', 'gen', 'num']]
-        repr_lemmas.append((ar2bw(info[1]), ar2bw(info[0]), info[2], info[3],
-                            info[4], stem_cond_s, stem_cond_t))
-    with open(output_path, 'w') as f:
-        for info in repr_lemmas:
-            print(*info, file=f, sep=',')
+    # Get rid of multi-gloss lemmas (to avoid duplicates in conjugation table debugging)
+    lemmas_info_dict = {}
+    for lemmas_cond_sig, lemmas_info in uniq_lemma_classes.items():
+        for info in lemmas_info:
+            lemmas_info_dict.setdefault(strip_lex(info['lemma']), []).append(info)
+    
+    for lemmas_cond_sig, lemmas_info in uniq_lemma_classes.items():
+        lemmas_info_ = []
+        for info in lemmas_info:
+            if len(lemmas_info_dict[strip_lex(info['lemma'])]) == 1:
+                lemmas_info_.append(info)
+        if lemmas_info_ == []:
+            lemmas_info_.append(lemmas_info[0])
+        uniq_lemma_classes[lemmas_cond_sig] = lemmas_info_
+
+    return {k: v[0] for k, v in uniq_lemma_classes.items()}
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-specs_sheets", required=True,
-                        type=str, help="Path of Excel spreadsheet containing all lexicon, morph, etc. sheets.")
-    parser.add_argument("-cmplx_morph", required=True,
-                        type=str, help="Complex stem/prefix/suffix class combination to generate the instances for.")
-    parser.add_argument("-pos_type", required=True, choices=['verbal', 'nominal'],
-                        type=str, help="POS type of the lemmas for which we want to generate a representative sample.")
     parser.add_argument("-config_file", required=True,
                         type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
     parser.add_argument("-config_name", required=True,
@@ -71,9 +86,10 @@ if __name__ == "__main__":
     elif not os.path.exists(args.output_dir):
         os.mkdir(args.output_dir)
 
-    create_repr_lemmas_list(input_filename=args.specs_sheets,
-                            config_file=args.config_file,
-                            config_name=args.config_name,
-                            cmplx_morph_seq=args.cmplx_morph,
-                            pos_type=args.pos_type,
-                            output_path=os.path.join(args.output_dir, args.output_name))
+    uniq_lemma_classes = create_repr_lemmas_list(config_file=args.config_file,
+                                                 config_name=args.config_name)
+
+    output_path = os.path.join(args.output_dir, args.output_name)
+    with open(output_path, 'wb') as f:
+        pickle.dump(uniq_lemma_classes, f)
+        

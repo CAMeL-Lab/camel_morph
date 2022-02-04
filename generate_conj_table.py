@@ -1,8 +1,10 @@
 import json
 import re
+from collections import OrderedDict
 from tqdm import tqdm
 import argparse
 import os
+import pickle
 
 from camel_tools.morphology.database import MorphologyDB
 from camel_tools.morphology.generator import Generator
@@ -114,51 +116,67 @@ def create_conjugation_tables(lemmas_file_name,
                               paradigms,
                               output_path,
                               generator):
-    with open(lemmas_file_name) as f:
-        lemmas = f.readlines()
-        lemmas_conj = []
-        for info in tqdm(lemmas):
-            lemma, form, pos, gen, num, cond_s, cond_t = info.strip().split(',')
-            lemma = bw2ar(strip_lex(lemma))
-            form = bw2ar(form)
-            if pos_type == 'nominal' and paradigm_key == None:
-                paradigm_key = f"gen:{gen} num:{num}"
+    with open(lemmas_file_name, 'rb') as f:
+        lemmas = pickle.load(f)
 
-            paradigm = expand_paradigm(paradigms, pos_type, paradigm_key)
-            paradigm_ = {}
-            for signature in paradigm:
-                features = parse_signature(signature, pos)
-                # Using altered local copy of generator.py in camel_tools
-                analyses = generator.generate(lemma, features, debug=True)
-                prefix_cats = [a[1] for a in analyses]
-                stem_cats = [a[2] for a in analyses]
-                suffix_cats = [a[3] for a in analyses]
-                analyses = [a[0] for a in analyses]
-                paradigm_[signature] = {
-                    'analyses': analyses,
-                    'debug': (ar2bw(form), cond_s, cond_t, prefix_cats, stem_cats, suffix_cats)}
-            lemmas_conj.append(paradigm_)
+    lemmas_conj = []
+    lemmas = list(lemmas.values())
+    for info in tqdm(lemmas):
+        lemma, form = info['lemma'], info['form']
+        pos, gen, num = info['pos'], info['gen'], info['num']
+        cond_s, cond_t = info['cond_s'], info['cond_t']
+        lemma = bw2ar(strip_lex(lemma))
+        form = bw2ar(form)
+        if pos_type == 'nominal' and paradigm_key == None:
+            paradigm_key = f"gen:{gen} num:{num}"
+
+        paradigm = expand_paradigm(paradigms, pos_type, paradigm_key)
+        signatures = {}
+        for signature in paradigm:
+            features = parse_signature(signature, pos)
+            # Using altered local copy of generator.py in camel_tools
+            analyses = generator.generate(lemma, features, debug=True)
+            prefix_cats = [a[1] for a in analyses]
+            stem_cats = [a[2] for a in analyses]
+            suffix_cats = [a[3] for a in analyses]
+            analyses = [a[0] for a in analyses]
+            signatures[signature] = {
+                'analyses': analyses,
+                'debug': (ar2bw(form), cond_s, cond_t, prefix_cats, stem_cats, suffix_cats)}
+        lemmas_conj.append(signatures)
 
     conjugations = []
-    header = ["SIGNATURE", "LEMMA", "STEM", "COND-S", "COND-T",
-              "PREFIX-CAT", "STEM-CAT", "SUFFIX-CAT", "FEATURES", "DIAC", "BW", "COUNT"]
+    header = ["SIGNATURE", "LEMMA", "STEM", "DIAC", "BW", "COUNT", "COND-S", "COND-T",
+              "PREFIX-CAT", "STEM-CAT", "SUFFIX-CAT", "FEATURES"]
 
     for lemma_i, paradigm in enumerate(lemmas_conj):
         for signature, info in paradigm.items():
             if info['analyses']:
+                count = 0
+                signatures = OrderedDict()
                 for i, analysis in enumerate(info['analyses']):
                     signature = re.sub('Q', 'P', signature)
-                    output = [signature, ar2bw(analysis['lex']), *info['debug'][:3]]
-                    output += [info['debug'][3][i], info['debug'][4][i], info['debug'][5][i]]
+                    output = [signature, ar2bw(analysis['lex']), info['debug'][0]]
+                    output += [ar2bw(analysis['diac']), ar2bw(analysis['bw'])]
+                    output += [*info['debug'][1:3], info['debug'][3][i], info['debug'][4][i], info['debug'][5][i]]
                     output.append(' '.join(
                         [f"{feat}:{analysis[feat]}" for feat in _test_features if feat in analysis]))
-                    output += [ar2bw(analysis['diac']), ar2bw(analysis['bw']), str(len(info['analyses']))]
-                    conjugations.append(output)
+                    output = tuple(output)
+                    if output not in signatures:
+                        count += 1
+                        signatures[output] = 1
+                signatures_list = []
+                for s in signatures:
+                    s = list(s)
+                    s.insert(5, count)
+                    signatures_list.append(s)
+                conjugations += signatures_list
             else:
                 signature = re.sub('Q', 'P', signature)
-                output = [signature, strip_lex(lemmas[lemma_i].strip().split(',')[0]), *info['debug'][:3]]
-                output += ['', '', '', '', '', '', str(len(info['analyses']))]
+                output = [signature, strip_lex(lemmas[lemma_i]['lemma']), info['debug'][0]]
+                output += ['', '', '0', *info['debug'][1:3], '', '', '', '']
                 conjugations.append(output)
+        
 
 
     with open(output_path, 'w') as f:
