@@ -11,16 +11,16 @@ make_dbs:
 	python db_maker.py -config_file config.json -config_name nom_msa_red -output_dir db_iterations_local
 
 repr_lemmas:
-	python create_repr_lemmas_list.py -config_file config.json -config_name pv_msa_order-v4_red -output_name repr_lemmas_pv_msa.pkl -output_dir conjugation_local/repr_lemmas
-	python create_repr_lemmas_list.py -config_file config.json -config_name iv_msa_order-v3 -output_name repr_lemmas_iv_msa.pkl -output_dir conjugation_local/repr_lemmas
-	python create_repr_lemmas_list.py -config_file config.json -config_name cv_msa_order-v4_red -output_name repr_lemmas_cv_msa.pkl -output_dir conjugation_local/repr_lemmas
-	python create_repr_lemmas_list.py -config_file config.json -config_name pv_glf_order-v4_red -output_name repr_lemmas_pv_glf.pkl -output_dir conjugation_local/repr_lemmas
-	python create_repr_lemmas_list.py -config_file config.json -config_name iv_glf_order-v4_red -output_name repr_lemmas_iv_glf.pkl -output_dir conjugation_local/repr_lemmas
-	python create_repr_lemmas_list.py -config_file config.json -config_name cv_glf_order-v4_red -output_name repr_lemmas_cv_glf.pkl -output_dir conjugation_local/repr_lemmas
-	python create_repr_lemmas_list.py -config_file config.json -config_name pv_egy_order-v4_red -output_name repr_lemmas_pv_egy.pkl -output_dir conjugation_local/repr_lemmas
-	python create_repr_lemmas_list.py -config_file config.json -config_name iv_egy_order-v4_red -output_name repr_lemmas_iv_egy.pkl -output_dir conjugation_local/repr_lemmas
-	python create_repr_lemmas_list.py -config_file config.json -config_name cv_egy_order-v4_red -output_name repr_lemmas_cv_egy.pkl -output_dir conjugation_local/repr_lemmas
-	python create_repr_lemmas_list.py -config_file config.json -config_name nom_msa_red -output_name repr_lemmas_nom_msa.pkl -output_dir conjugation_local/repr_lemmas
+	python create_repr_lemmas_list.py -config_file config.json -config_name pv_msa_order-v4_red -output_name repr_lemmas_pv_msa.pkl -output_dir conjugation_local/repr_lemmas -pos_type verbal
+	python create_repr_lemmas_list.py -config_file config.json -config_name iv_msa_order-v3 -output_name repr_lemmas_iv_msa.pkl -output_dir conjugation_local/repr_lemmas -pos_type verbal
+	python create_repr_lemmas_list.py -config_file config.json -config_name cv_msa_order-v4_red -output_name repr_lemmas_cv_msa.pkl -output_dir conjugation_local/repr_lemmas -pos_type verbal
+	python create_repr_lemmas_list.py -config_file config.json -config_name pv_glf_order-v4_red -output_name repr_lemmas_pv_glf.pkl -output_dir conjugation_local/repr_lemmas -pos_type verbal
+	python create_repr_lemmas_list.py -config_file config.json -config_name iv_glf_order-v4_red -output_name repr_lemmas_iv_glf.pkl -output_dir conjugation_local/repr_lemmas -pos_type verbal
+	python create_repr_lemmas_list.py -config_file config.json -config_name cv_glf_order-v4_red -output_name repr_lemmas_cv_glf.pkl -output_dir conjugation_local/repr_lemmas -pos_type verbal
+	python create_repr_lemmas_list.py -config_file config.json -config_name pv_egy_order-v4_red -output_name repr_lemmas_pv_egy.pkl -output_dir conjugation_local/repr_lemmas -pos_type verbal
+	python create_repr_lemmas_list.py -config_file config.json -config_name iv_egy_order-v4_red -output_name repr_lemmas_iv_egy.pkl -output_dir conjugation_local/repr_lemmas -pos_type verbal
+	python create_repr_lemmas_list.py -config_file config.json -config_name cv_egy_order-v4_red -output_name repr_lemmas_cv_egy.pkl -output_dir conjugation_local/repr_lemmas -pos_type verbal
+	python create_repr_lemmas_list.py -config_file config.json -config_name nom_msa_red -output_name repr_lemmas_nom_msa.pkl -output_dir conjugation_local/repr_lemmas -pos_type nominal
 
 conj_tables_msa:
 	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_pv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_pv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp p -dialect msa -output_name conj_pv_msa_v1.0.tsv -output_dir conjugation_local/tables

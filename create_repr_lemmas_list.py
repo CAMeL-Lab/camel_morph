@@ -2,16 +2,33 @@ import argparse
 import json
 import os
 import pickle
+from tqdm import tqdm
+import numpy as np
 
 from camel_tools.utils.charmap import CharMapper
 from camel_tools.morphology.utils import strip_lex
+from camel_tools.morphology.database import MorphologyDB
+from camel_tools.morphology.analyzer import Analyzer
+from camel_tools.utils.dediac import dediac_bw
 
 import db_maker
 
+nominals = ["ABBREV", "ADJ", "ADJ_COMP", "ADJ_NUM", "ADV",
+            "ADV_INTERROG", "ADV_REL",
+            "FORIEGN", "INTERJ", "NOUN", "NOUN_NUM",
+            "NOUN_PROP", "NOUN_QUANT",
+            "PRON", "PRON_DEM", "PRON_EXCLAM", "PRON_INTERROG",
+            "PRON_REL", "VERB_NOM", "VERB_PSEUDO"]
+nominals = [n.lower() for n in nominals]
+
 ar2bw = CharMapper.builtin_mapper('ar2bw')
+bw2ar = CharMapper.builtin_mapper('bw2ar')
+db = MorphologyDB.builtin_db()
+analyzer = Analyzer(db)
 
 def create_repr_lemmas_list(config_file,
-                            config_name):
+                            config_name,
+                            pos_type):
     with open(config_file) as f:
         config = json.load(f)
     SHEETS, _ = db_maker.read_morph_specs(config, config_name)
@@ -22,7 +39,7 @@ def create_repr_lemmas_list(config_file,
         if 'vox:p' in feats:
             continue
         lemmas_uniq.setdefault(row['LEMMA'], []).append(
-            (row['COND-T'], row['COND-S'], feats, row['FORM']))
+            (row['COND-T'], row['COND-S'], feats, row['FORM'], row['GLOSS']))
     uniq_lemma_classes = {}
     for lemma, stems in lemmas_uniq.items():
         lemmas_cond_sig = tuple([stem[:3] for stem in stems])
@@ -46,25 +63,50 @@ def create_repr_lemmas_list(config_file,
                     cond_s=cond_s,
                     pos=feats['pos'],
                     gen=feats['gen'],
-                    num=feats['num'])
+                    num=feats['num'],
+                    gloss=stem[4])
         uniq_lemma_classes.setdefault(lemmas_cond_sig, []).append(info)
     
-    # Get rid of multi-gloss lemmas (to avoid duplicates in conjugation table debugging)
-    lemmas_info_dict = {}
-    for lemmas_cond_sig, lemmas_info in uniq_lemma_classes.items():
+    lemma2prob = {}
+    for lemmas_cond_sig, lemmas_info in tqdm(uniq_lemma_classes.items()):
         for info in lemmas_info:
-            lemmas_info_dict.setdefault(strip_lex(info['lemma']), []).append(info)
-    
-    for lemmas_cond_sig, lemmas_info in uniq_lemma_classes.items():
-        lemmas_info_ = []
-        for info in lemmas_info:
-            if len(lemmas_info_dict[strip_lex(info['lemma'])]) == 1:
-                lemmas_info_.append(info)
-        if lemmas_info_ == []:
-            lemmas_info_.append(lemmas_info[0])
-        uniq_lemma_classes[lemmas_cond_sig] = lemmas_info_
+            lemma_ar = bw2ar(strip_lex(info['lemma']))
+            analyses = analyzer.analyze(lemma_ar)
+            if pos_type == 'verbal':
+                analyses_filtered = [a  for a in analyses
+                    if a['lex'] == lemma_ar and a['pos'] == 'verb' and
+                    a['per'] == '3' and a['num'] == 's' and a['gen'] == 'm' and
+                    a['stemgloss'] == info['gloss']]
+            #TODO: update this before generating for nouns
+            elif pos_type == 'nominal':
+                analyses_filtered = [a  for a in analyses
+                    if a['pos'] in nominals and
+                    a['stemgloss'] == info['gloss']]
+            lemma2prob[info['lemma']] = analyses_filtered
 
-    return {k: v[0] for k, v in uniq_lemma_classes.items()}
+    for lemma, analyses in lemma2prob.items():
+        if len(analyses) > 1:
+            assert len(set([a['lex'] for a in analyses])) == 1, 'Cannot discard analysis'
+            lemma2prob[lemma] = [analyses[0]]
+    for lemma, analyses in lemma2prob.items():
+        if len(analyses) <= 1:
+            if len(analyses) == 1:
+                lemma2prob[lemma] = analyses[0]['pos_lex_logprob']
+            else:
+                lemma2prob[lemma] = -99.0
+        else:
+            raise 'Still more than one analysis after filtering and discarding'
+    
+    assert all([any([True if info['lemma'] in lemma2prob else False for info in lemmas_info])
+        for lemmas_info in uniq_lemma_classes.values()]), \
+            'Some classes do not contain any representative after filtering'
+    
+    for lemmas_cond_sig, lemmas_info in tqdm(uniq_lemma_classes.items()):
+        lemmas = [info['lemma'] for info in lemmas_info]
+        best_index = int(np.array([lemma2prob[lemma] for lemma in lemmas]).argmax())
+        uniq_lemma_classes[lemmas_cond_sig] = lemmas[best_index]
+        
+    return uniq_lemma_classes
 
 
 if __name__ == "__main__":
@@ -77,6 +119,8 @@ if __name__ == "__main__":
                         type=str, help="Path of the directory to output the lemmas to.")
     parser.add_argument("-output_name", required=True,
                         type=str, help="Name of the file to output the representative lemmas to. File will be placed in a directory called conjugation/repr_lemmas/")
+    parser.add_argument("-pos_type", required=True, choices=['verbal', 'nominal'],
+                        type=str, help="POS type of the lemmas.")
     args = parser.parse_args([] if "__file__" not in globals() else None)
 
     conj_dir = args.output_dir.split('/')[0]
@@ -87,7 +131,8 @@ if __name__ == "__main__":
         os.mkdir(args.output_dir)
 
     uniq_lemma_classes = create_repr_lemmas_list(config_file=args.config_file,
-                                                 config_name=args.config_name)
+                                                 config_name=args.config_name,
+                                                 pos_type=args.pos_type)
 
     output_path = os.path.join(args.output_dir, args.output_name)
     with open(output_path, 'wb') as f:
