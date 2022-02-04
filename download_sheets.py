@@ -22,6 +22,8 @@ if __name__ == "__main__":
                         type=str, help="Name of the configuration to load from the config file.")
     args = parser.parse_args()
 
+    if not os.path.exists(args.save_dir):
+        os.mkdir(args.save_dir)
     
     if args.lex != None or args.specs != None:
         lex = {'spreadsheets': [ss[0] for ss in args.lex],

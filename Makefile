@@ -91,8 +91,6 @@ conj_nom_msa: conj_nom_msa
 conj_verb: conj_verb_msa conj_verb_glf conj_verb_egy
 conj_all: conj_verb_msa conj_verb_glf conj_verb_egy conj_nom_msa
 
-all: make_db_all repr_lemmas_all conj_all
-
 download_msa_pv:	
 	python download_sheets.py -config_file config.json -config_name pv_msa_order-v4_red
 download_msa_iv:
@@ -117,3 +115,5 @@ download_msa_nom:
 	python download_sheets.py -config_file config.json -config_name nom_msa_red
 
 download_all: download_msa_pv download_msa_iv download_msa_cv download_glf_pv download_glf_iv download
+
+all: download_all make_db_all repr_lemmas_all conj_all
