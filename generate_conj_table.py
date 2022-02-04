@@ -131,7 +131,7 @@ def create_conjugation_tables(lemmas_file_name,
             paradigm_key = f"gen:{gen} num:{num}"
 
         paradigm = expand_paradigm(paradigms, pos_type, paradigm_key)
-        signatures = {}
+        outputs = {}
         for signature in paradigm:
             features = parse_signature(signature, pos)
             # Using altered local copy of generator.py in camel_tools
@@ -140,20 +140,20 @@ def create_conjugation_tables(lemmas_file_name,
             stem_cats = [a[2] for a in analyses]
             suffix_cats = [a[3] for a in analyses]
             analyses = [a[0] for a in analyses]
-            signatures[signature] = {
+            outputs[signature] = {
                 'analyses': analyses,
                 'debug': (ar2bw(form), cond_s, cond_t, prefix_cats, stem_cats, suffix_cats)}
-        lemmas_conj.append(signatures)
+        lemmas_conj.append(outputs)
 
     conjugations = []
-    header = ["SIGNATURE", "LEMMA", "STEM", "DIAC", "BW", "COUNT", "COND-S", "COND-T",
+    header = ["STATUS", "SIGNATURE", "COLOR", "LEMMA", "STEM", "DIAC", "BW", "GLOSS", "COUNT", "COND-S", "COND-T",
               "PREFIX-CAT", "STEM-CAT", "SUFFIX-CAT", "FEATURES"]
 
     for lemma_i, paradigm in enumerate(lemmas_conj):
+        color = 0
         for signature, info in paradigm.items():
             if info['analyses']:
-                count = 0
-                signatures = OrderedDict()
+                outputs = OrderedDict()
                 for i, analysis in enumerate(info['analyses']):
                     signature = re.sub('Q', 'P', signature)
                     output = [signature, ar2bw(analysis['lex']), info['debug'][0]]
@@ -161,21 +161,39 @@ def create_conjugation_tables(lemmas_file_name,
                     output += [*info['debug'][1:3], info['debug'][3][i], info['debug'][4][i], info['debug'][5][i]]
                     output.append(' '.join(
                         [f"{feat}:{analysis[feat]}" for feat in _test_features if feat in analysis]))
+                    output.append(analysis['stemgloss'])
                     output = tuple(output)
-                    if output not in signatures:
-                        count += 1
-                        signatures[output] = 1
-                signatures_list = []
-                for s in signatures:
-                    s = list(s)
-                    s.insert(5, count)
-                    signatures_list.append(s)
-                conjugations += signatures_list
+                    outputs.setdefault(output[:-1], []).append(output)
+                # If analysis is the same except for stemgloss, filter out (as duplicate)
+                signature_outputs = []
+                for output_no_gloss, outputs_same_gloss in outputs.items():
+                    output = list(outputs_same_gloss[0])
+                    output.insert(1, color)
+                    output.insert(6, len(outputs))
+                    signature_outputs.append(output)
+                # From the remaining, keep only one of each same-stemgloss outputs
+                gloss2outputs = {}
+                for so in signature_outputs:
+                    gloss2outputs.setdefault(so[-1], []).append(so)
+                signature_outputs_ = []
+                for outputs in gloss2outputs.values():
+                    outputs[0][6] = len(gloss2outputs)
+                    gloss = outputs[0][-1]
+                    output = outputs[0][:-1]
+                    output.insert(6, gloss)
+                    output.insert(0, 'OK' if len(gloss2outputs) == 1 else 'CHECK')
+                    signature_outputs_.append(output)
+                
+                conjugations += signature_outputs_
+                color = abs(color - 1)
+                
             else:
                 signature = re.sub('Q', 'P', signature)
-                output = [signature, strip_lex(lemmas[lemma_i]['lemma']), info['debug'][0]]
-                output += ['', '', '0', *info['debug'][1:3], '', '', '', '']
+                output = [signature, color, strip_lex(lemmas[lemma_i]['lemma']), info['debug'][0]]
+                output += ['', '', '', 0, *info['debug'][1:3], '', '', '', '']
+                output.insert(0, 'OK' if 'E0' in output[0] and 'intrans' in output[9] else 'CHECK')
                 conjugations.append(output)
+                color = abs(color - 1)
         
 
 
