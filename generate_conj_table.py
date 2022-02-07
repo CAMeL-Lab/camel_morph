@@ -110,12 +110,12 @@ def expand_paradigm(paradigms, pos_type, paradigm_key):
             
     return paradigm_
 
-def filter_and_status(outputs, color):
+def filter_and_status(outputs, info):
     # If analysis is the same except for stemgloss, filter out (as duplicate)
     signature_outputs = []
     for output_no_gloss, outputs_same_gloss in outputs.items():
         output = list(outputs_same_gloss[0])
-        output.insert(1, color)
+        output.insert(1, str(info['color']))
         output.insert(6, len(outputs))
         signature_outputs.append(output)
     # From the remaining, keep only one of each same-stemgloss outputs
@@ -128,13 +128,13 @@ def filter_and_status(outputs, color):
         gloss = outputs[0][-1]
         output = outputs[0][:-1]
         output.insert(6, gloss)
-        output.insert(0, 'OK' if len(gloss2outputs) == 1 else 'CHECK')
+        output.insert(0, 'OK-ONE' if len(gloss2outputs) == 1 else 'CHECK-GT-ONE')
         signature_outputs_.append(output)
 
     if len(signature_outputs_) > 1:
         if len(set([tuple(signature_output[5:7]) for signature_output in signature_outputs_])) == 1:
             for signature_output in signature_outputs_:
-                signature_output[0] = 'OK'
+                signature_output[0] = 'OK-GT-ONE'
     
     return signature_outputs_
 
@@ -163,44 +163,59 @@ def create_conjugation_tables(lemmas,
             stem_cats = [a[2] for a in analyses]
             suffix_cats = [a[3] for a in analyses]
             analyses = [a[0] for a in analyses]
-            outputs[signature] = {
-                'analyses': analyses,
-                'debug': (ar2bw(form), cond_s, cond_t, prefix_cats, stem_cats, suffix_cats)}
+            debug_info = dict(analyses=analyses,
+                              form=ar2bw(form),
+                              cond_s=cond_s,
+                              cond_t=cond_t,
+                              prefix_cats=prefix_cats,
+                              stem_cats=stem_cats,
+                              suffix_cats=suffix_cats,
+                              lemma=ar2bw(lemma),
+                              pos=pos)
+            outputs[signature] = debug_info
         lemmas_conj.append(outputs)
     
     return lemmas_conj
 
-def process_outputs(lemmas, lemmas_conj):
+def process_outputs(lemmas_conj):
     conjugations = []
     header = ["STATUS", "SIGNATURE", "COLOR", "LEMMA", "STEM", "DIAC", "BW", "GLOSS", "COUNT", "COND-S", "COND-T",
               "PREFIX-CAT", "STEM-CAT", "SUFFIX-CAT", "FEATURES"]
 
-    for lemma_i, paradigm in enumerate(lemmas_conj):
+    for paradigm in lemmas_conj:
         color = 0
         for signature, info in paradigm.items():
             if info['analyses']:
                 outputs = OrderedDict()
                 for i, analysis in enumerate(info['analyses']):
                     signature = re.sub('Q', 'P', signature)
-                    output = [signature, ar2bw(analysis['lex']), info['debug'][0]]
+                    output = [signature, ar2bw(analysis['lex']), info['form']]
                     output += [ar2bw(analysis['diac']), ar2bw(analysis['bw'])]
-                    output += [*info['debug'][1:3], info['debug'][3][i], info['debug'][4][i], info['debug'][5][i]]
+                    output += [info['cond_s'], info['cond_t']]
+                    output += [info['prefix_cats'][i], info['stem_cats'][i], info['suffix_cats'][i]]
                     output.append(' '.join(
                         [f"{feat}:{analysis[feat]}" for feat in _test_features if feat in analysis]))
                     output.append(analysis['stemgloss'])
                     output = tuple(output)
                     outputs.setdefault(output[:-1], []).append(output)
-
-                conjugations += filter_and_status(outputs, color)
-                color = abs(color - 1)
-                
+                info['color'] = color
+                conjugations += filter_and_status(outputs, info)
             else:
+                features = parse_signature(signature, info['pos'])
                 signature = re.sub('Q', 'P', signature)
-                output = [signature, color, strip_lex(lemmas[lemma_i]['lemma']), info['debug'][0]]
-                output += ['', '', '', 0, *info['debug'][1:3], '', '', '', '']
-                output.insert(0, 'OK' if 'E0' in output[0] and 'intrans' in output[9] else 'CHECK')
+                output = []
+                if 'E0' in signature and 'intrans' in info['cond_s']:
+                    output.append('OK-ZERO')
+                elif features.get('vox') and features['vox'] == 'p':
+                    output.append('CHECK-ZERO-PASS')
+                else:
+                    output.append('CHECK-ZERO')
+                output += [signature, str(color), info['lemma'], info['form']]
+                output += ['', '', '', 0, info['cond_s'], info['cond_t'], '', '', '', '']
+                
                 conjugations.append(output)
-                color = abs(color - 1)
+            
+            color = abs(color - 1)
     
     conjugations.insert(0, header)
     return conjugations
@@ -263,7 +278,7 @@ if __name__ == "__main__":
                                             paradigm_key=paradigm_key,
                                             paradigms=paradigms,
                                             generator=generator)
-    processed_outputs = process_outputs(lemmas, lemmas_conj)
+    processed_outputs = process_outputs(lemmas_conj)
 
     output_path = os.path.join(args.output_dir, args.output_name)
     with open(output_path, 'w') as f:
