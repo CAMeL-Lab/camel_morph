@@ -110,17 +110,40 @@ def expand_paradigm(paradigms, pos_type, paradigm_key):
             
     return paradigm_
 
-def create_conjugation_tables(lemmas_file_name,
+def filter_and_status(outputs, color):
+    # If analysis is the same except for stemgloss, filter out (as duplicate)
+    signature_outputs = []
+    for output_no_gloss, outputs_same_gloss in outputs.items():
+        output = list(outputs_same_gloss[0])
+        output.insert(1, color)
+        output.insert(6, len(outputs))
+        signature_outputs.append(output)
+    # From the remaining, keep only one of each same-stemgloss outputs
+    gloss2outputs = {}
+    for so in signature_outputs:
+        gloss2outputs.setdefault(so[-1], []).append(so)
+    signature_outputs_ = []
+    for outputs in gloss2outputs.values():
+        outputs[0][6] = len(gloss2outputs)
+        gloss = outputs[0][-1]
+        output = outputs[0][:-1]
+        output.insert(6, gloss)
+        output.insert(0, 'OK' if len(gloss2outputs) == 1 else 'CHECK')
+        signature_outputs_.append(output)
+
+    if len(signature_outputs_) > 1:
+        if len(set([tuple(signature_output[5:7]) for signature_output in signature_outputs_])) == 1:
+            for signature_output in signature_outputs_:
+                signature_output[0] = 'OK'
+    
+    return signature_outputs_
+
+def create_conjugation_tables(lemmas,
                               pos_type,
                               paradigm_key,
                               paradigms,
-                              output_path,
                               generator):
-    with open(lemmas_file_name, 'rb') as f:
-        lemmas = pickle.load(f)
-
     lemmas_conj = []
-    lemmas = list(lemmas.values())
     for info in tqdm(lemmas):
         lemma, form = info['lemma'], info['form']
         pos, gen, num = info['pos'], info['gen'], info['num']
@@ -144,7 +167,10 @@ def create_conjugation_tables(lemmas_file_name,
                 'analyses': analyses,
                 'debug': (ar2bw(form), cond_s, cond_t, prefix_cats, stem_cats, suffix_cats)}
         lemmas_conj.append(outputs)
+    
+    return lemmas_conj
 
+def process_outputs(lemmas, lemmas_conj):
     conjugations = []
     header = ["STATUS", "SIGNATURE", "COLOR", "LEMMA", "STEM", "DIAC", "BW", "GLOSS", "COUNT", "COND-S", "COND-T",
               "PREFIX-CAT", "STEM-CAT", "SUFFIX-CAT", "FEATURES"]
@@ -164,32 +190,8 @@ def create_conjugation_tables(lemmas_file_name,
                     output.append(analysis['stemgloss'])
                     output = tuple(output)
                     outputs.setdefault(output[:-1], []).append(output)
-                # If analysis is the same except for stemgloss, filter out (as duplicate)
-                signature_outputs = []
-                for output_no_gloss, outputs_same_gloss in outputs.items():
-                    output = list(outputs_same_gloss[0])
-                    output.insert(1, color)
-                    output.insert(6, len(outputs))
-                    signature_outputs.append(output)
-                # From the remaining, keep only one of each same-stemgloss outputs
-                gloss2outputs = {}
-                for so in signature_outputs:
-                    gloss2outputs.setdefault(so[-1], []).append(so)
-                signature_outputs_ = []
-                for outputs in gloss2outputs.values():
-                    outputs[0][6] = len(gloss2outputs)
-                    gloss = outputs[0][-1]
-                    output = outputs[0][:-1]
-                    output.insert(6, gloss)
-                    output.insert(0, 'OK' if len(gloss2outputs) == 1 else 'CHECK')
-                    signature_outputs_.append(output)
 
-                if len(signature_outputs_) > 1:
-                    if len(set([tuple(signature_output[5:7]) for signature_output in signature_outputs_])) == 1:
-                        for signature_output in signature_outputs_:
-                            signature_output[0] = 'OK'
-                        
-                conjugations += signature_outputs_
+                conjugations += filter_and_status(outputs, color)
                 color = abs(color - 1)
                 
             else:
@@ -199,13 +201,10 @@ def create_conjugation_tables(lemmas_file_name,
                 output.insert(0, 'OK' if 'E0' in output[0] and 'intrans' in output[9] else 'CHECK')
                 conjugations.append(output)
                 color = abs(color - 1)
-        
+    
+    conjugations.insert(0, header)
+    return conjugations
 
-
-    with open(output_path, 'w') as f:
-        print(*header, sep='\t', file=f)
-        for output in conjugations:
-            print(*output, sep='\t', file=f)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -254,9 +253,19 @@ if __name__ == "__main__":
     else:
         raise NotImplementedError
 
-    create_conjugation_tables(lemmas_file_name=os.path.join(args.lemmas_dir, args.repr_lemmas),
-                              pos_type=args.pos_type,
-                              paradigm_key=paradigm_key,
-                              paradigms=paradigms,
-                              output_path=os.path.join(args.output_dir, args.output_name),
-                              generator=generator)
+    lemmas_path = os.path.join(args.lemmas_dir, args.repr_lemmas)
+    with open(lemmas_path, 'rb') as f:
+        lemmas = pickle.load(f)
+        lemmas = list(lemmas.values())
+    
+    lemmas_conj = create_conjugation_tables(lemmas=lemmas,
+                                            pos_type=args.pos_type,
+                                            paradigm_key=paradigm_key,
+                                            paradigms=paradigms,
+                                            generator=generator)
+    processed_outputs = process_outputs(lemmas, lemmas_conj)
+
+    output_path = os.path.join(args.output_dir, args.output_name)
+    with open(output_path, 'w') as f:
+        for output in processed_outputs:
+            print(*output, sep='\t', file=f)
