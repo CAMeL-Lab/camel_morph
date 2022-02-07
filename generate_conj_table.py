@@ -183,7 +183,12 @@ def create_conjugation_tables(lemmas_file_name,
                     output.insert(6, gloss)
                     output.insert(0, 'OK' if len(gloss2outputs) == 1 else 'CHECK')
                     signature_outputs_.append(output)
-                
+
+                if len(signature_outputs_) > 1:
+                    if len(set([tuple(signature_output[5:7]) for signature_output in signature_outputs_])) == 1:
+                        for signature_output in signature_outputs_:
+                            signature_output[0] = 'OK'
+                        
                 conjugations += signature_outputs_
                 color = abs(color - 1)
                 
