@@ -1,0 +1,15 @@
+,LINE,DEFINE,VAR,CLASS,COND-T,PREFIX,STEM,SUFFIX,PREFIX-SHORT,STEM-SHORT,SUFFIX-SHORT
+0,1002,ORDER,GLF,VERBAL,pos:verb,[CONJ],[STEM-PV],[PVBuff] [PVSuff] [PRON] [LPRON],[P],[P],[P]
+1,,,,,,,,,,,
+2,,#ORDER,GLF,VERBAL,pos:verb,[CONJ] [VPART] [IVPref.1P] [IVPreBuff],[STEM-IV],[IVBuff] [IVSuff.1P] [PRON] [LPRON],[I1P],[I],[I1P]
+3,,#ORDER,GLF,VERBAL,pos:verb,[CONJ] [VPART] [IVPref.1S] [IVPreBuff],[STEM-IV],[IVBuff] [IVSuff.1S] [PRON] [LPRON],[I1S],[I],[I1S]
+4,,#ORDER,GLF,VERBAL,pos:verb,[CONJ] [VPART] [IVPref.2MS] [IVPreBuff],[STEM-IV],[IVBuff] [IVSuff.2MS] [PRON] [LPRON],[I2MS],[I],[I2MS]
+5,,#ORDER,GLF,VERBAL,pos:verb,[CONJ] [VPART] [IVPref.2FS] [IVPreBuff],[STEM-IV],[IVBuff] [IVSuff.2FS] [PRON] [LPRON],[I2FS],[I],[I2FS]
+6,,#ORDER,GLF,VERBAL,pos:verb,[CONJ] [VPART] [IVPref.2P] [IVPreBuff],[STEM-IV],[IVBuff] [IVSuff.2P] [PRON] [LPRON],[I2P],[I],[I2P]
+7,,#ORDER,GLF,VERBAL,pos:verb,[CONJ] [VPART] [IVPref.2FP] [IVPreBuff],[STEM-IV],[IVBuff] [IVSuff.2FP] [PRON] [LPRON],[I2FP],[I],[I2FP]
+8,,#ORDER,GLF,VERBAL,pos:verb,[CONJ] [VPART] [IVPref.3MS] [IVPreBuff],[STEM-IV],[IVBuff] [IVSuff.3MS] [PRON] [LPRON],[I3MS],[I],[I3MS]
+9,,#ORDER,GLF,VERBAL,pos:verb,[CONJ] [VPART] [IVPref.3FS] [IVPreBuff],[STEM-IV],[IVBuff] [IVSuff.3FS] [PRON] [LPRON],[I3FS],[I],[I3FS]
+10,,#ORDER,GLF,VERBAL,pos:verb,[CONJ] [VPART] [IVPref.3P] [IVPreBuff],[STEM-IV],[IVBuff] [IVSuff.3P] [PRON] [LPRON],[I3P],[I],[I3P]
+11,,#ORDER,GLF,VERBAL,pos:verb,[CONJ] [VPART] [IVPref.3FP] [IVPreBuff],[STEM-IV],[IVBuff] [IVSuff.3FP] [PRON] [LPRON],[I3FP],[I],[I3FP]
+12,,,,,,,,,,,
+13,1001,#ORDER,GLF,VERBAL,pos:verb,[CONJ],[STEM-CV],[CVBuff] [CVSuff] [PRON] [LPRON] ,[C],[C],[C]
