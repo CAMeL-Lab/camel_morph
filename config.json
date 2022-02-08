@@ -86,7 +86,7 @@
             "pruning": true,
             "specs": {
                 "order": "ORDER-v4-CV",
-                "morph": "MSA-MORPH-Verbs-v4"
+                "morph": "MSA-MORPH-Verbs-v4-Red"
             },
             "lexicon": {
                 "spreadsheet": "msa-verb-lex",

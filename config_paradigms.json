@@ -86,11 +86,16 @@
                 "enclitics": true,
                 "passive": false,
                 "paradigm": [
-                    "VERB.C2MS",
-                    "VERB.C2FS",
-                    "VERB.C2D",
-                    "VERB.C2MQ",
-                    "VERB.C2FQ"
+                    "VERB.C2MS.AI",
+                    "VERB.C2FS.AI",
+                    "VERB.C2D.AI",
+                    "VERB.C2MQ.AI",
+                    "VERB.C2FQ.AI",
+                    "VERB.C2MS.AE",
+                    "VERB.C2FS.AE",
+                    "VERB.C2D.AE",
+                    "VERB.C2MQ.AE",
+                    "VERB.C2FQ.AE"
                 ]
             }
         },

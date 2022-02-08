@@ -40,7 +40,7 @@ sig2feat = {
         'stt': ['D', 'I', 'C'],
         'cas': ['N', 'G', 'A'],
         'vox': ['A', 'P'],
-        'mod': ['S', 'I', 'J']},
+        'mod': ['S', 'I', 'J', 'E']},
     'feats3': {
         'prc0': ['0'],
         'prc1': ['1'],
@@ -260,7 +260,7 @@ if __name__ == "__main__":
     with open(args.paradigms) as f:
         paradigms = json.load(f)[args.dialect]
     asp = f"asp:{args.asp}"
-    mod = f" mod:{args.mod}" if args.asp == 'i' and args.mod else ''
+    mod = f" mod:{args.mod}" if args.asp in ['i', 'c'] and args.mod else ''
     if args.pos_type == 'verbal':
         paradigm_key = asp + mod
     elif args.pos_type == 'nominal':
