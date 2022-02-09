@@ -50,11 +50,15 @@ def create_repr_lemmas_list(config_file,
                     feats[feat] += f'+{value}'
                 else:
                     feats[feat] = value
-        form = '+'.join(set([stem[3] for stem in stems]))
-        cond_t = '+'.join(set([stem[0] if stem[0] else '_' for stem in stems]))
-        cond_t = cond_t if cond_t != '+' else ''
-        cond_s = '+'.join(set([stem[1] if stem[1] else '_' for stem in stems]))
-        cond_s = cond_s if cond_s != '+' else ''
+        form = ''.join(
+            set([(f"[{stem[3]}]"
+                  f"({sum(1 for stem_ in stems if stem_[3] == stem[3])})") for stem in stems]))
+        cond_t = ''.join(
+            set([(f"[{stem[0] if stem[0] else '—'}]"
+                  f"({sum(1 for stem_ in stems if stem_[0] == stem[0])})") for stem in stems]))
+        cond_s = ''.join(
+            set([(f"[{stem[1] if stem[1] else '—'}]"
+                  f"({sum(1 for stem_ in stems if stem_[1] == stem[1])})") for stem in stems]))
         info = dict(form=form,
                     lemma=lemma.split(':')[1],
                     cond_t=cond_t,
@@ -63,11 +67,13 @@ def create_repr_lemmas_list(config_file,
                     gen=feats['gen'],
                     num=feats['num'],
                     gloss=stem[4])
-        uniq_lemma_classes.setdefault(lemmas_cond_sig, []).append(info)
+        uniq_lemma_classes.setdefault(lemmas_cond_sig, {'freq': 0, 'lemmas': []})
+        uniq_lemma_classes[lemmas_cond_sig]['freq'] += 1
+        uniq_lemma_classes[lemmas_cond_sig]['lemmas'].append(info)
     
     lemma2prob = {}
     for lemmas_cond_sig, lemmas_info in uniq_lemma_classes.items():
-        for info in lemmas_info:
+        for info in lemmas_info['lemmas']:
             lemma_ar = bw2ar(strip_lex(info['lemma']))
             analyses = analyzer.analyze(lemma_ar)
             if pos_type == 'verbal':
@@ -95,14 +101,16 @@ def create_repr_lemmas_list(config_file,
         else:
             raise 'Still more than one analysis after filtering and discarding'
     
-    assert all([any([True if info['lemma'] in lemma2prob else False for info in lemmas_info])
+    assert all([any([True if info['lemma'] in lemma2prob else False for info in lemmas_info['lemmas']])
         for lemmas_info in uniq_lemma_classes.values()]), \
             'Some classes do not contain any representative after filtering'
     
     for lemmas_cond_sig, lemmas_info in uniq_lemma_classes.items():
-        lemmas = [info['lemma'] for info in lemmas_info]
+        lemmas = [info['lemma'] for info in lemmas_info['lemmas']]
         best_index = int(np.array([lemma2prob[lemma] for lemma in lemmas]).argmax())
-        uniq_lemma_classes[lemmas_cond_sig] = lemmas_info[best_index]
+        best_lemma_info = lemmas_info['lemmas'][best_index]
+        best_lemma_info['freq'] = lemmas_info['freq']
+        uniq_lemma_classes[lemmas_cond_sig] = best_lemma_info
         
     return uniq_lemma_classes
 
