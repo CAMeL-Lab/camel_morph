@@ -88,7 +88,7 @@ def expand_paradigm(paradigms, pos_type, paradigm_key):
     paradigm = paradigms[pos_type][paradigm_key]
     paradigm_ = paradigm['paradigm'][:]
     if pos_type == 'verbal':
-        if paradigm['passive']:
+        if paradigm.get('passive') != None:
             paradigm_ += [re.sub('A', 'P', signature)
                           for signature in paradigm['paradigm']]
         else:
@@ -180,9 +180,8 @@ def process_outputs(lemmas_conj):
     conjugations = []
     header = ["status", "signature", "color", "lemma", "stem", "diac", "bw", "freq",
               "gloss", "count", "cond-s", "cond-t", "pref-cat", "stem-cat", "suff-cat", "feats"]
-
+    color = 0
     for paradigm in lemmas_conj:
-        color = 0
         for signature, info in paradigm.items():
             output = {}
             output['stem'] = info['form']
@@ -193,40 +192,42 @@ def process_outputs(lemmas_conj):
             if info['analyses']:
                 outputs = OrderedDict()
                 for i, analysis in enumerate(info['analyses']):
-                    output['signature'] = re.sub('Q', 'P', signature)
-                    output['lemma'] = ar2bw(analysis['lex'])
-                    output['diac'] = ar2bw(analysis['diac'])
-                    output['bw'] = ar2bw(analysis['bw'])
-                    output['pref-cat'] = info['prefix_cats'][i]
-                    output['stem-cat'] = info['stem_cats'][i]
-                    output['suff-cat'] = info['suffix_cats'][i]
-                    output ['feats'] = ' '.join(
+                    output_ = output.copy()
+                    output_['signature'] = re.sub('Q', 'P', signature)
+                    output_['lemma'] = ar2bw(analysis['lex'])
+                    output_['diac'] = ar2bw(analysis['diac'])
+                    output_['bw'] = ar2bw(analysis['bw'])
+                    output_['pref-cat'] = info['prefix_cats'][i]
+                    output_['stem-cat'] = info['stem_cats'][i]
+                    output_['suff-cat'] = info['suffix_cats'][i]
+                    output_['feats'] = ' '.join(
                         [f"{feat}:{analysis[feat]}" for feat in _test_features if feat in analysis])
-                    output_duplicates = outputs.setdefault(tuple(output.values()), [])
-                    output['gloss'] = analysis['stemgloss']
-                    output_duplicates.append(output)
+                    output_duplicates = outputs.setdefault(tuple(output_.values()), [])
+                    output_['gloss'] = analysis['stemgloss']
+                    output_duplicates.append(output_)
                 outputs_filtered = filter_and_status(outputs)
                 conjugations += [[output[key] for key in header] for output in outputs_filtered]
             else:
                 features = parse_signature(signature, info['pos'])
                 signature = re.sub('Q', 'P', signature)
-                output['signature'] = signature
-                output['lemma'] = info['lemma']
-                output['diac'] = ''
-                output['bw'] = ''
-                output['pref-cat'] = ''
-                output['stem-cat'] = ''
-                output['suff-cat'] = ''
-                output ['feats'] = ''
-                output['gloss'] = ''
-                output['count'] = 0
+                output_ = output.copy()
+                output_['signature'] = signature
+                output_['lemma'] = info['lemma']
+                output_['diac'] = ''
+                output_['bw'] = ''
+                output_['pref-cat'] = ''
+                output_['stem-cat'] = ''
+                output_['suff-cat'] = ''
+                output_ ['feats'] = ''
+                output_['gloss'] = ''
+                output_['count'] = 0
                 if 'E0' in signature and 'intrans' in info['cond_s']:
-                    output['status'] = 'OK-ZERO'
+                    output_['status'] = 'OK-ZERO'
                 elif features.get('vox') and features['vox'] == 'p':
-                    output['status'] = 'CHECK-ZERO-PASS'
+                    output_['status'] = 'CHECK-ZERO-PASS'
                 else:
-                    output['status'] = 'CHECK-ZERO'
-                conjugations.append([output[key] for key in header])
+                    output_['status'] = 'CHECK-ZERO'
+                conjugations.append([output_[key] for key in header])
             color = abs(color - 1)
     
     conjugations.insert(0, list(map(str.upper, header)))
@@ -244,7 +245,9 @@ if __name__ == "__main__":
     parser.add_argument("-asp", choices=['p', 'i', 'c'],
                         type=str, help="Aspect to generate the conjugation tables for.")
     parser.add_argument("-mod", choices=['i', 's', 'j'], default='',
-                        type=str, help="Aspect to generate the conjugation tables for.")
+                        type=str, help="Mood to generate the conjugation tables for.")
+    parser.add_argument("-vox", choices=['a', 'p'], default='',
+                        type=str, help="Voice to generate the conjugation tables for.")
     parser.add_argument("-dialect", choices=['msa', 'glf', 'egy'], required=True,
                         type=str, help="Aspect to generate the conjugation tables for.")
     parser.add_argument("-repr_lemmas", required=True,
@@ -273,10 +276,12 @@ if __name__ == "__main__":
         paradigms = json.load(f)[args.dialect]
     asp = f"asp:{args.asp}"
     mod = f" mod:{args.mod}" if args.asp in ['i', 'c'] and args.mod else ''
+    vox = f" vox:{args.vox}" if args.vox else ''
     if args.pos_type == 'verbal':
-        paradigm_key = asp + mod
+        paradigm_key = asp + mod + vox
     elif args.pos_type == 'nominal':
         paradigm_key = None
+        raise NotImplementedError
     else:
         raise NotImplementedError
 

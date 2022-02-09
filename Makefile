@@ -58,14 +58,35 @@ repr_lemmas_all: repr_lemmas_verb_msa repr_lemmas_verb_glf repr_lemmas_verb_egy 
 
 conj_pv_msa:
 	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_pv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_pv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp p -dialect msa -output_name conj_pv_msa_v1.0.tsv -output_dir conjugation_local/tables
+conj_pv-a_msa:
+	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_pv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_pv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp p -vox a -dialect msa -output_name conj_pv-a_msa_v1.0.tsv -output_dir conjugation_local/tables
+conj_pv-p_msa:
+	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_pv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_pv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp p -vox p -dialect msa -output_name conj_pv-p_msa_v1.0.tsv -output_dir conjugation_local/tables
+
 conj_iv-i_msa:	
 	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_iv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_iv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp i -mod i -dialect msa -output_name conj_iv-i_msa_v1.0.tsv -output_dir conjugation_local/tables
+conj_iv-i-a_msa:	
+	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_iv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_iv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp i -mod i -vox a -dialect msa -output_name conj_iv-i-a_msa_v1.0.tsv -output_dir conjugation_local/tables
+conj_iv-i-p_msa:	
+	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_iv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_iv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp i -mod i -vox p -dialect msa -output_name conj_iv-i-p_msa_v1.0.tsv -output_dir conjugation_local/tables
+
 conj_iv-s_msa:	
 	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_iv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_iv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp i -mod s -dialect msa -output_name conj_iv-s_msa_v1.0.tsv -output_dir conjugation_local/tables
+conj_iv-s-a_msa:	
+	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_iv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_iv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp i -mod s -vox a -dialect msa -output_name conj_iv-s-a_msa_v1.0.tsv -output_dir conjugation_local/tables
+conj_iv-s-p_msa:	
+	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_iv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_iv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp i -mod s -vox p -dialect msa -output_name conj_iv-s-p_msa_v1.0.tsv -output_dir conjugation_local/tables
+
 conj_iv-j_msa:	
 	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_iv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_iv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp i -mod j -dialect msa -output_name conj_iv-j_msa_v1.0.tsv -output_dir conjugation_local/tables
+conj_iv-j-a_msa:	
+	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_iv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_iv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp i -mod j -vox a -dialect msa -output_name conj_iv-j-a_msa_v1.0.tsv -output_dir conjugation_local/tables
+conj_iv-j-p_msa:	
+	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_iv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_iv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp i -mod j -vox p -dialect msa -output_name conj_iv-j-p_msa_v1.0.tsv -output_dir conjugation_local/tables
+
 conj_cv_msa:	
 	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_cv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_cv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp c -dialect msa -output_name conj_cv_msa_v1.0.tsv -output_dir conjugation_local/tables
+
 conj_nom_msa:	
 	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_nom_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_nom_v1.0_red.db -db_dir db_iterations_local -pos_type nominal -dialect msa -output_name conj_nom_msa_v1.0.tsv -output_dir conjugation_local/tables
 
