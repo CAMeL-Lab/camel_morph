@@ -88,7 +88,7 @@ def expand_paradigm(paradigms, pos_type, paradigm_key):
     paradigm = paradigms[pos_type][paradigm_key]
     paradigm_ = paradigm['paradigm'][:]
     if pos_type == 'verbal':
-        if paradigm.get('passive') != None:
+        if paradigm.get('passive'):
             paradigm_ += [re.sub('A', 'P', signature)
                           for signature in paradigm['paradigm']]
         else:
@@ -100,8 +100,7 @@ def expand_paradigm(paradigms, pos_type, paradigm_key):
     
     if paradigm['enclitics']:
         if pos_type == 'verbal':
-            paradigm_ += [signature + '.E0'
-                            for signature in paradigm['paradigm']]
+            paradigm_ += [signature + '.E0' for signature in paradigm_]
         elif pos_type == 'nominal':
             paradigm_ += [signature + '.E0'
                           for signature in paradigm_ if 'D' not in signature.split('.')[2]]
