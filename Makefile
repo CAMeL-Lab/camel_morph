@@ -84,6 +84,13 @@ conj_iv-j-a_msa:
 conj_iv-j-p_msa:	
 	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_iv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_iv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp i -mod j -vox p -dialect msa -output_name conj_iv-j-p_msa_v1.0.tsv -output_dir conjugation_local/tables
 
+conj_iv-e_msa:	
+	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_iv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_iv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp i -mod e -dialect msa -output_name conj_iv-e_msa_v1.0.tsv -output_dir conjugation_local/tables
+conj_iv-e-a_msa:	
+	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_iv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_iv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp i -mod e -vox a -dialect msa -output_name conj_iv-e-a_msa_v1.0.tsv -output_dir conjugation_local/tables
+conj_iv-e-p_msa:	
+	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_iv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_iv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp i -mod e -vox p -dialect msa -output_name conj_iv-e-p_msa_v1.0.tsv -output_dir conjugation_local/tables
+
 conj_cv_msa:	
 	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_cv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_cv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp c -dialect msa -output_name conj_cv_msa_v1.0.tsv -output_dir conjugation_local/tables
 
@@ -104,7 +111,7 @@ conj_iv_egy:
 conj_cv_egy:	
 	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_cv_egy.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_egy_cv_v1.0_red.db -pos_type verbal -asp c -dialect egy -output_name conj_cv_egy_v1.0.tsv -output_dir conjugation_local/tables
 
-conj_verb_msa: conj_pv_msa conj_iv_msa conj_cv_msa
+conj_verb_msa: conj_pv_msa conj_pv-a_msa conj_pv-p_msa conj_iv-i_msa conj_iv-i-a_msa conj_iv-i-p_msa conj_iv-s_msa conj_iv-s-a_msa conj_iv-s-p_msa conj_iv-j_msa conj_iv-j-a_msa conj_iv-j-p_msa conj_iv-e_msa conj_iv-e-a_msa conj_iv-e-p_msa conj_cv_msa
 conj_verb_glf: conj_pv_glf conj_iv_glf conj_cv_glf
 conj_verb_egy: conj_pv_egy conj_iv_egy conj_cv_egy
 conj_nom_msa: conj_nom_msa
@@ -136,5 +143,43 @@ download_msa_nom:
 	python download_sheets.py -config_file config.json -config_name nom_msa_red
 
 download_all: download_msa_pv download_msa_iv download_msa_cv download_glf_pv download_glf_iv download
+
+upload_pv_msa:
+	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_pv_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-PV
+upload_pv-a_msa:
+	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_pv-a_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-PV-Act
+upload_pv-p_msa:
+	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_pv-p_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-PV-Pass
+
+upload_iv-i_msa:
+	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_iv-i_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-IV-Ind
+upload_iv-i-a_msa:
+	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_iv-i-a_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-IV-Ind-Act
+upload_iv-i-p_msa:
+	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_iv-i-p_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-IV-Ind-Pass
+
+upload_iv-s_msa:
+	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_iv-s_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-IV-Sub
+upload_iv-s-a_msa:
+	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_iv-s-a_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-IV-Sub-Act
+upload_iv-s-p_msa:
+	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_iv-s-p_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-IV-Sub-Pass
+
+upload_iv-j_msa:
+	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_iv-j_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-IV-Jus
+upload_iv-j-a_msa:
+	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_iv-j-a_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-IV-Jus-Act
+upload_iv-j-p_msa:
+	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_iv-j-p_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-IV-Jus-Pass
+
+upload_iv-e_msa:
+	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_iv-e_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-IV-Ener
+upload_iv-e-a_msa:
+	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_iv-e-a_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-IV-Ener-Act
+upload_iv-e-p_msa:
+	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_iv-e-p_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-IV-Ener-Pass
+
+upload_cv_msa:
+	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_cv_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-CV
 
 all: download_all make_db_all repr_lemmas_all conj_all
