@@ -57,6 +57,7 @@ if __name__ == "__main__":
         )
     )
     rules = gspread_formatting.get_conditional_format_rules(worksheet)
+    rules.clear()
     rules.append(rule1)
     rules.append(rule2)
     rules.save()

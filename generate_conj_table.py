@@ -155,7 +155,7 @@ def create_conjugation_tables(lemmas,
         for signature in paradigm:
             features = parse_signature(signature, pos)
             # Using altered local copy of generator.py in camel_tools
-            analyses = generator.generate(lemma, features, debug=True)
+            analyses, debug_message = generator.generate(lemma, features, debug=True)
             prefix_cats = [a[1] for a in analyses]
             stem_cats = [a[2] for a in analyses]
             suffix_cats = [a[3] for a in analyses]
@@ -169,7 +169,8 @@ def create_conjugation_tables(lemmas,
                               suffix_cats=suffix_cats,
                               lemma=ar2bw(lemma),
                               pos=pos,
-                              freq=info['freq'])
+                              freq=info['freq'],
+                              debug_message=debug_message)
             outputs[signature] = debug_info
         lemmas_conj.append(outputs)
     
@@ -178,25 +179,26 @@ def create_conjugation_tables(lemmas,
 def process_outputs(lemmas_conj):
     conjugations = []
     header = ["status", "signature", "color", "lemma", "stem", "diac", "bw", "freq",
-              "gloss", "count", "cond-s", "cond-t", "pref-cat", "stem-cat", "suff-cat", "feats"]
+              "gloss", "count", "cond-s", "cond-t", "pref-cat", "stem-cat", "suff-cat", "feats", "debug"]
     color = 0
     for paradigm in lemmas_conj:
         for signature, info in paradigm.items():
             output = {}
             features = parse_signature(signature, info['pos'])
             signature = re.sub('Q', 'P', signature)
-            output_['signature'] = signature
+            output['signature'] = signature
             output['stem'] = info['form']
-            output_['lemma'] = info['lemma']
+            output['lemma'] = info['lemma']
             output['cond-s'] = info['cond_s']
             output['cond-t'] = info['cond_t']
             output['color'] = color
             output['freq'] = info['freq']
+            output['debug'] = ' '.join([m[1] for m in info['debug_message']])
             if info['analyses']:
                 outputs = OrderedDict()
                 for i, analysis in enumerate(info['analyses']):
-                    assert output_['lemma'] == ar2bw(analysis['lex'])
                     output_ = output.copy()
+                    assert output_['lemma'] == ar2bw(analysis['lex'])
                     output_['diac'] = ar2bw(analysis['diac'])
                     output_['bw'] = ar2bw(analysis['bw'])
                     output_['pref-cat'] = info['prefix_cats'][i]
