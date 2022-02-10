@@ -183,7 +183,11 @@ def process_outputs(lemmas_conj):
     for paradigm in lemmas_conj:
         for signature, info in paradigm.items():
             output = {}
+            features = parse_signature(signature, info['pos'])
+            signature = re.sub('Q', 'P', signature)
+            output_['signature'] = signature
             output['stem'] = info['form']
+            output_['lemma'] = info['lemma']
             output['cond-s'] = info['cond_s']
             output['cond-t'] = info['cond_t']
             output['color'] = color
@@ -191,9 +195,8 @@ def process_outputs(lemmas_conj):
             if info['analyses']:
                 outputs = OrderedDict()
                 for i, analysis in enumerate(info['analyses']):
+                    assert output_['lemma'] == ar2bw(analysis['lex'])
                     output_ = output.copy()
-                    output_['signature'] = re.sub('Q', 'P', signature)
-                    output_['lemma'] = ar2bw(analysis['lex'])
                     output_['diac'] = ar2bw(analysis['diac'])
                     output_['bw'] = ar2bw(analysis['bw'])
                     output_['pref-cat'] = info['prefix_cats'][i]
@@ -205,13 +208,12 @@ def process_outputs(lemmas_conj):
                     output_['gloss'] = analysis['stemgloss']
                     output_duplicates.append(output_)
                 outputs_filtered = filter_and_status(outputs)
+                for output in outputs_filtered:
+                    if 'E0' in signature and features.get('vox') and features['vox'] == 'p':
+                        output_['status'] = 'CHECK-E0-PASS'
                 conjugations += [[output[key] for key in header] for output in outputs_filtered]
             else:
-                features = parse_signature(signature, info['pos'])
-                signature = re.sub('Q', 'P', signature)
                 output_ = output.copy()
-                output_['signature'] = signature
-                output_['lemma'] = info['lemma']
                 output_['diac'] = ''
                 output_['bw'] = ''
                 output_['pref-cat'] = ''
@@ -221,7 +223,9 @@ def process_outputs(lemmas_conj):
                 output_['gloss'] = ''
                 output_['count'] = 0
                 if 'E0' in signature and 'intrans' in info['cond_s']:
-                    output_['status'] = 'OK-ZERO'
+                    output_['status'] = 'OK-ZERO-E0-INTRANS'
+                elif 'E0' in signature and features.get('vox') and features['vox'] == 'p':
+                    output_['status'] = 'OK-ZERO-E0-PASS'
                 elif features.get('vox') and features['vox'] == 'p':
                     output_['status'] = 'CHECK-ZERO-PASS'
                 else:
@@ -243,7 +247,7 @@ if __name__ == "__main__":
                         type=str, help="POS type of the lemmas for which we want to generate a representative sample.")
     parser.add_argument("-asp", choices=['p', 'i', 'c'],
                         type=str, help="Aspect to generate the conjugation tables for.")
-    parser.add_argument("-mod", choices=['i', 's', 'j'], default='',
+    parser.add_argument("-mod", choices=['i', 's', 'j', 'e'], default='',
                         type=str, help="Mood to generate the conjugation tables for.")
     parser.add_argument("-vox", choices=['a', 'p'], default='',
                         type=str, help="Voice to generate the conjugation tables for.")

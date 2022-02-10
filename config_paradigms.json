@@ -43,7 +43,7 @@
             },
             "asp:p vox:p": {
                 "proclitics": false,
-                "enclitics": false,
+                "enclitics": true,
                 "passive": null,
                 "paradigm": [
                     "VERB.P1S.P",
@@ -239,6 +239,66 @@
                     "VERB.I3FD.PJ",
                     "VERB.I3MQ.PJ",
                     "VERB.I3FQ.PJ"
+                ]
+            },
+            "asp:i mod:e": {
+                "proclitics": false,
+                "enclitics": true,
+                "passive": true,
+                "paradigm": [
+                    "VERB.I1S.AE",
+                    "VERB.I1Q.AE",
+                    "VERB.I2MS.AE",
+                    "VERB.I2FS.AE",
+                    "VERB.I2D.AE",
+                    "VERB.I2MQ.AE",
+                    "VERB.I2FQ.AE",
+                    "VERB.I3MS.AE",
+                    "VERB.I3FS.AE",
+                    "VERB.I3MD.AE",
+                    "VERB.I3FD.AE",
+                    "VERB.I3MQ.AE",
+                    "VERB.I3FQ.AE"
+                ]
+            },
+            "asp:i mod:e vox:a": {
+                "proclitics": false,
+                "enclitics": true,
+                "passive": null,
+                "paradigm": [
+                    "VERB.I1S.AE",
+                    "VERB.I1Q.AE",
+                    "VERB.I2MS.AE",
+                    "VERB.I2FS.AE",
+                    "VERB.I2D.AE",
+                    "VERB.I2MQ.AE",
+                    "VERB.I2FQ.AE",
+                    "VERB.I3MS.AE",
+                    "VERB.I3FS.AE",
+                    "VERB.I3MD.AE",
+                    "VERB.I3FD.AE",
+                    "VERB.I3MQ.AE",
+                    "VERB.I3FQ.AE"
+                ]
+            },
+            "asp:i mod:e vox:p": {
+                "proclitics": false,
+                "enclitics": true,
+                "passive": null,
+                "paradigm": [
+                    "VERB.I1S.PE",
+                    "VERB.I1Q.PE",
+                    "VERB.I2MS.PE",
+                    "VERB.I2FS.PE",
+                    "VERB.I2D.PE",
+                    "VERB.I2MQ.PE",
+                    "VERB.I2FQ.PE",
+                    "VERB.I3MS.PE",
+                    "VERB.I3FS.PE",
+                    "VERB.I3MD.PE",
+                    "VERB.I3FD.PE",
+                    "VERB.I3MQ.PE",
+                    "VERB.I3FQ.PE"
                 ]
             },
             "asp:c": {
