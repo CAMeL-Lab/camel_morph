@@ -44,10 +44,6 @@ def generate_passive(LEXICON, patterns_path):
     def get_cond_s_pass(row):
         match = cond_s_pattern.search(row['COND-TS'])
         return match.group(1) if match else ''
-
-    def get_trans(row):
-        match = trans_pattern.search(row['COND-S'])
-        return match.group(1) if match else ''
     
     LEXICON_PASS = LEXICON.copy()
     LEXICON_PASS['PATTERN-DEF'] = LEXICON_PASS.apply(assign_pattern_wrapper, axis=1)
@@ -70,9 +66,9 @@ def generate_passive(LEXICON, patterns_path):
                            row['PATTERN-MAP']['regex_sub'],
                            row['FORM']), axis=1)
     LEXICON_PASS['COND-S'] = LEXICON_PASS['COND-S'].str.strip()
-    LEXICON_PASS['TRANS'] = LEXICON_PASS.apply(get_trans, axis=1)
+    # All passive forms should be intransitive
     LEXICON_PASS['COND-TS'] = LEXICON_PASS.apply(
-        lambda row: row['PATTERN-MAP']['cond_map'] + (' ' if row['TRANS'] else '') + row['TRANS'], axis=1)
+        lambda row: row['PATTERN-MAP']['cond_map'] + ' intrans', axis=1)
     LEXICON_PASS['COND-T'] = LEXICON_PASS.apply(get_cond_t_pass, axis=1)
     LEXICON_PASS['COND-S'] = LEXICON_PASS.apply(get_cond_s_pass, axis=1)
     LEXICON_PASS['COND-S'] = LEXICON_PASS['COND-S'].str.strip()
@@ -86,7 +82,6 @@ def generate_passive(LEXICON, patterns_path):
     LEXICON_PASS.drop('COND-S-NO-TRANS', axis=1, inplace=True)
     LEXICON_PASS.drop('COND-TS', axis=1, inplace=True)
     LEXICON_PASS.drop('PATTERN-MAP', axis=1, inplace=True)
-    LEXICON_PASS.drop('TRANS', axis=1, inplace=True)
 
     return LEXICON_PASS
             
