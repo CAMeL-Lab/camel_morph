@@ -146,7 +146,6 @@ def create_conjugation_tables(lemmas,
         pos, gen, num = info['pos'], info['gen'], info['num']
         cond_s, cond_t = info['cond_s'], info['cond_t']
         lemma = bw2ar(strip_lex(lemma))
-        form = bw2ar(form)
         if pos_type == 'nominal' and paradigm_key == None:
             paradigm_key = f"gen:{gen} num:{num}"
 
@@ -161,7 +160,7 @@ def create_conjugation_tables(lemmas,
             suffix_cats = [a[3] for a in analyses]
             analyses = [a[0] for a in analyses]
             debug_info = dict(analyses=analyses,
-                              form=ar2bw(form),
+                              form=form,
                               cond_s=cond_s,
                               cond_t=cond_t,
                               prefix_cats=prefix_cats,
@@ -255,9 +254,9 @@ if __name__ == "__main__":
                         type=str, help="Voice to generate the conjugation tables for.")
     parser.add_argument("-dialect", choices=['msa', 'glf', 'egy'], required=True,
                         type=str, help="Aspect to generate the conjugation tables for.")
-    parser.add_argument("-repr_lemmas", required=True,
+    parser.add_argument("-repr_lemmas",
                         type=str, help="Name of the file in conjugation/repr_lemmas/ from which to load the representative lemmas from.")
-    parser.add_argument("-output_name", required=True,
+    parser.add_argument("-output_name",
                         type=str, help="Name of the file to output the conjugation tables to in conjugation/tables/ directory.")
     parser.add_argument("-output_dir", default='conjugation/tables',
                         type=str, help="Path of the directory to output the tables to.")
@@ -265,6 +264,8 @@ if __name__ == "__main__":
                         type=str, help="Path of the directory to output the tables to.")
     parser.add_argument("-db_dir", default='db_iterations',
                         type=str, help="Path of the directory to load the DB from.")
+    parser.add_argument("-lemma_debug", default=[], action='append',
+                        type=str, help="Lemma (without _1) to debug. Use the following format after the flag: lemma pos:val gen:val num:val")
     args = parser.parse_args([] if "__file__" not in globals() else None)
 
     conj_dir = args.output_dir.split('/')[0]
@@ -290,19 +291,31 @@ if __name__ == "__main__":
     else:
         raise NotImplementedError
 
-    lemmas_path = os.path.join(args.lemmas_dir, args.repr_lemmas)
-    with open(lemmas_path, 'rb') as f:
-        lemmas = pickle.load(f)
-        lemmas = list(lemmas.values())
-    
-    lemmas_conj = create_conjugation_tables(lemmas=lemmas,
-                                            pos_type=args.pos_type,
-                                            paradigm_key=paradigm_key,
-                                            paradigms=paradigms,
-                                            generator=generator)
-    processed_outputs = process_outputs(lemmas_conj)
+    if args.lemma_debug:
+        lemma_debug = args.lemma_debug[0].split()
+        lemma = lemma_debug[0]
+        feats = {feat.split(':')[0]: feat.split(':')[1] for feat in args.lemma_debug[1:]}
+        lemmas = [dict(form='',
+                       lemma=lemma.split(':')[1],
+                       cond_t='',
+                       cond_s='',
+                       pos=feats['pos'],
+                       gen=feats['gen'],
+                       num=feats['num'])]
+    else:
+        lemmas_path = os.path.join(args.lemmas_dir, args.repr_lemmas)
+        with open(lemmas_path, 'rb') as f:
+            lemmas = pickle.load(f)
+            lemmas = list(lemmas.values())
+        
+        lemmas_conj = create_conjugation_tables(lemmas=lemmas,
+                                                pos_type=args.pos_type,
+                                                paradigm_key=paradigm_key,
+                                                paradigms=paradigms,
+                                                generator=generator)
+        processed_outputs = process_outputs(lemmas_conj)
 
-    output_path = os.path.join(args.output_dir, args.output_name)
-    with open(output_path, 'w') as f:
-        for output in processed_outputs:
-            print(*output, sep='\t', file=f)
+        output_path = os.path.join(args.output_dir, args.output_name)
+        with open(output_path, 'w') as f:
+            for output in processed_outputs:
+                print(*output, sep='\t', file=f)

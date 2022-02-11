@@ -182,4 +182,13 @@ upload_iv-e-p_msa:
 upload_cv_msa:
 	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_cv_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-CV
 
+upload_msa: upload_pv_msa upload_pv-a_msa upload_pv-p_msa upload_iv-i_msa upload_iv-i-a_msa upload_iv-i-p_msa upload_iv-s_msa upload_iv-s-a_msa upload_iv-s-p_msa upload_iv-j_msa upload_iv-j-a_msa upload_iv-j-p_msa upload_iv-e_msa upload_iv-e-a_msa upload_iv-e-p_msa upload_cv_msa
+
 all: download_all make_db_all repr_lemmas_all conj_all
+
+msa_pv_process: download_msa_pv make_db_pv_msa conj_pv_msa upload_pv_msa
+msa_iv-i_process: download_msa_iv make_db_iv_msa conj_iv-i_msa upload_iv-i_msa
+msa_iv-s_process: download_msa_iv make_db_iv_msa conj_iv-s_msa upload_iv-s_msa
+msa_iv-j_process: download_msa_iv make_db_iv_msa conj_iv-j_msa upload_iv-j_msa
+msa_iv-e_process: download_msa_iv make_db_iv_msa conj_iv-e_msa upload_iv-e_msa
+msa_cv_process: download_msa_cv make_db_cv_msa conj_cv_msa upload_cv_msa
