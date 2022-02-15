@@ -10,6 +10,8 @@ from camel_tools.morphology.utils import strip_lex
 
 from utils import assign_pattern
 
+errors = {}
+
 def generate_passive(LEXICON, patterns_path):
     patterns = pd.read_csv(patterns_path)
     patterns = patterns.replace(nan, '', regex=True)
@@ -23,10 +25,11 @@ def generate_passive(LEXICON, patterns_path):
     cond_t_pattern = re.compile(r'([cv]-suff)')
     cond_s_pattern = re.compile(r'(?:.* \+ )?(.*)')
     one_or_more_pluses = re.compile(r' +')
-    trans_pattern = re.compile(r'(intrans|trans)')
 
     def assign_pattern_wrapper(row):
-        pattern, _, _, _ = assign_pattern(strip_lex(row['LEMMA']))
+        pattern, _, _, error = assign_pattern(strip_lex(row['LEMMA']))
+        if error:
+            errors.setdefault(error, []).append(row['LEMMA'])
         return pattern if pattern else nan
 
     def get_info(row):

@@ -11,6 +11,8 @@ from camel_tools.morphology.generator import Generator
 from camel_tools.utils.charmap import CharMapper
 from camel_tools.morphology.utils import strip_lex
 
+from utils import assign_pattern
+
 bw2ar = CharMapper.builtin_mapper('bw2ar')
 ar2bw = CharMapper.builtin_mapper('ar2bw')
 
@@ -145,7 +147,10 @@ def create_conjugation_tables(lemmas,
         lemma, form = info['lemma'], info['form']
         pos, gen, num = info['pos'], info['gen'], info['num']
         cond_s, cond_t = info['cond_s'], info['cond_t']
-        lemma = bw2ar(strip_lex(lemma))
+        lemma = strip_lex(lemma)
+        pattern, _, _, _ = assign_pattern(lemma)
+        lemma = bw2ar(lemma)
+        
         if pos_type == 'nominal' and paradigm_key == None:
             paradigm_key = f"gen:{gen} num:{num}"
 
@@ -167,6 +172,7 @@ def create_conjugation_tables(lemmas,
                               stem_cats=stem_cats,
                               suffix_cats=suffix_cats,
                               lemma=ar2bw(lemma),
+                              pattern=pattern,
                               pos=pos,
                               freq=info['freq'],
                               debug_message=debug_message)
@@ -177,7 +183,7 @@ def create_conjugation_tables(lemmas,
 
 def process_outputs(lemmas_conj):
     conjugations = []
-    header = ["status", "signature", "color", "lemma", "stem", "diac", "bw", "freq",
+    header = ["status", "signature", "color", "lemma", "pattern", "stem", "diac", "bw", "freq",
               "gloss", "count", "cond-s", "cond-t", "pref-cat", "stem-cat", "suff-cat", "feats", "debug"]
     color = 0
     for paradigm in lemmas_conj:
@@ -188,6 +194,7 @@ def process_outputs(lemmas_conj):
             output['signature'] = signature
             output['stem'] = info['form']
             output['lemma'] = info['lemma']
+            output['pattern'] = info['pattern']
             output['cond-s'] = info['cond_s']
             output['cond-t'] = info['cond_t']
             output['color'] = color
@@ -294,9 +301,9 @@ if __name__ == "__main__":
     if args.lemma_debug:
         lemma_debug = args.lemma_debug[0].split()
         lemma = lemma_debug[0]
-        feats = {feat.split(':')[0]: feat.split(':')[1] for feat in args.lemma_debug[1:]}
+        feats = {feat.split(':')[0]: feat.split(':')[1] for feat in lemma_debug[1:]}
         lemmas = [dict(form='',
-                       lemma=lemma.split(':')[1],
+                       lemma=lemma.replace('\\', ''),
                        cond_t='',
                        cond_s='',
                        pos=feats['pos'],
@@ -308,13 +315,14 @@ if __name__ == "__main__":
             lemmas = pickle.load(f)
             lemmas = list(lemmas.values())
         
-        lemmas_conj = create_conjugation_tables(lemmas=lemmas,
-                                                pos_type=args.pos_type,
-                                                paradigm_key=paradigm_key,
-                                                paradigms=paradigms,
-                                                generator=generator)
-        processed_outputs = process_outputs(lemmas_conj)
+    lemmas_conj = create_conjugation_tables(lemmas=lemmas,
+                                            pos_type=args.pos_type,
+                                            paradigm_key=paradigm_key,
+                                            paradigms=paradigms,
+                                            generator=generator)
+    processed_outputs = process_outputs(lemmas_conj)
 
+    if not args.lemma_debug:
         output_path = os.path.join(args.output_dir, args.output_name)
         with open(output_path, 'w') as f:
             for output in processed_outputs:
