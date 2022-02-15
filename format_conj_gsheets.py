@@ -32,6 +32,7 @@ if __name__ == "__main__":
             response = input('A sheet with this name already exists. Do you still want to overwrite it? [y/n]: ')
             if response == 'y':
                 worksheet = sh.worksheet(title=args.gsheet_name)
+                worksheet.clear()
                 print('Sheet content will be overwritten.')
             elif response == 'n':
                 print('Process aborted.')
@@ -41,7 +42,7 @@ if __name__ == "__main__":
     worksheet.update(
         [sheet_csv.columns.values.tolist()] + sheet_csv.values.tolist())
     rule1 = gspread_formatting.ConditionalFormatRule(
-        ranges=[gspread_formatting.GridRange.from_a1_range('A:R', worksheet)],
+        ranges=[gspread_formatting.GridRange.from_a1_range('A:S', worksheet)],
         booleanRule=gspread_formatting.BooleanRule(
             condition=gspread_formatting.BooleanCondition('CUSTOM_FORMULA', ['=$C1=0']),
             format=gspread_formatting.CellFormat(
@@ -49,7 +50,7 @@ if __name__ == "__main__":
         )
     )
     rule2 = gspread_formatting.ConditionalFormatRule(
-        ranges=[gspread_formatting.GridRange.from_a1_range('A:R', worksheet)],
+        ranges=[gspread_formatting.GridRange.from_a1_range('A:S', worksheet)],
         booleanRule=gspread_formatting.BooleanRule(
             condition=gspread_formatting.BooleanCondition('CUSTOM_FORMULA', ['=$C1=1']),
             format=gspread_formatting.CellFormat(

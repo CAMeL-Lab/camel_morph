@@ -1,6 +1,7 @@
 import os
 import argparse
 import json
+import time
 
 import gspread
 import pandas as pd
@@ -49,6 +50,18 @@ if __name__ == "__main__":
             for sheet_name in spreadsheets['sheets'][i]:
                 if 'PASS' in sheet_name:
                     continue
-                sheet = spreadsheet.worksheet(sheet_name)
+                not_downloaded = True
+                while not_downloaded:
+                    try:
+                        sheet = spreadsheet.worksheet(sheet_name)
+                        not_downloaded = False
+                    except gspread.exceptions.APIError as e:
+                        if 'Quota exceeded' in e.args[0]['message']:
+                            print('Quota exceeded, waiting for 15 seconds and then retrying...')
+                            time.sleep(15)
+                        else:
+                            raise NotImplementedError
                 sheet = pd.DataFrame(sheet.get_all_records())
                 sheet.to_csv(os.path.join(args.save_dir, f"{sheet_name}.csv"))
+
+    time.sleep(10)
