@@ -142,7 +142,7 @@ download_egy_cv:
 download_msa_nom:	
 	python download_sheets.py -config_file config.json -config_name nom_msa_red
 
-download_all: download_msa_pv download_msa_iv download_msa_cv download_glf_pv download_glf_iv download
+download_all: download_msa_pv download_msa_iv download_msa_cv download_glf_pv download_glf_iv download_glf_cv download_egy_pv download_egy_iv download_egy_cv download_msa_nom
 
 upload_pv_msa:
 	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_pv_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-PV
@@ -186,9 +186,9 @@ upload_msa: upload_pv_msa upload_pv-a_msa upload_pv-p_msa upload_iv-i_msa upload
 
 all: download_all make_db_all repr_lemmas_all conj_all
 
-msa_pv_process: download_msa_pv make_db_pv_msa conj_pv_msa upload_pv_msa
-msa_iv-i_process: download_msa_iv make_db_iv_msa conj_iv-i_msa upload_iv-i_msa
-msa_iv-s_process: download_msa_iv make_db_iv_msa conj_iv-s_msa upload_iv-s_msa
-msa_iv-j_process: download_msa_iv make_db_iv_msa conj_iv-j_msa upload_iv-j_msa
-msa_iv-e_process: download_msa_iv make_db_iv_msa conj_iv-e_msa upload_iv-e_msa
-msa_cv_process: download_msa_cv make_db_cv_msa conj_cv_msa upload_cv_msa
+msa_pv_process: download_msa_pv repr_lemmas_pv_msa make_db_pv_msa conj_pv_msa upload_pv_msa
+msa_iv-i_process: download_msa_iv repr_lemmas_iv_msa make_db_iv_msa conj_iv-i_msa upload_iv-i_msa
+msa_iv-s_process: download_msa_iv repr_lemmas_iv_msa make_db_iv_msa conj_iv-s_msa upload_iv-s_msa
+msa_iv-j_process: download_msa_iv repr_lemmas_iv_msa make_db_iv_msa conj_iv-j_msa upload_iv-j_msa
+msa_iv-e_process: download_msa_iv repr_lemmas_iv_msa make_db_iv_msa conj_iv-e_msa upload_iv-e_msa
+msa_cv_process: download_msa_cv repr_lemmas_cv_msa make_db_cv_msa conj_cv_msa upload_cv_msa
