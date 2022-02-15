@@ -119,6 +119,8 @@ conj_nom_msa: conj_nom_msa
 conj_verb: conj_verb_msa conj_verb_glf conj_verb_egy
 conj_all: conj_verb_msa conj_verb_glf conj_verb_egy conj_nom_msa
 
+download_specs:
+	python download_sheets.py -specs header-morph-order-sheets MSA-MORPH-Verbs-v4-Red
 download_msa_pv:	
 	python download_sheets.py -config_file config.json -config_name pv_msa_order-v4_red
 download_msa_iv:

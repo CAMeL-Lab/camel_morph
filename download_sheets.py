@@ -11,9 +11,9 @@ sa = gspread.service_account(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-lex", nargs='+', action='append',
+    parser.add_argument("-lex", nargs='+', action='append', default=[],
                         type=str, help="Name of the lexicon gsheets to download followed by the desired individual sheets.")
-    parser.add_argument("-specs", nargs='+', action='append',
+    parser.add_argument("-specs", nargs='+', action='append', default=[],
                         type=str, help="Name of the specs spreadsheet to download followed by the desired individual sheets.")
     parser.add_argument("-save_dir", default="data",
                         type=str, help="Path of the directory to save the csv files to.")
@@ -26,10 +26,10 @@ if __name__ == "__main__":
     if not os.path.exists(args.save_dir):
         os.mkdir(args.save_dir)
     
-    if args.lex != None or args.specs != None:
+    if args.lex or args.specs:
         lex = {'spreadsheets': [ss[0] for ss in args.lex],
                'sheets': [ss[1:] for ss in args.lex]}
-        specs = {'spreadsheet': [ss[0] for ss in args.specs],
+        specs = {'spreadsheets': [ss[0] for ss in args.specs],
                  'sheets': [ss[1:] for ss in args.specs]}
     else:
         with open(args.config_file) as f:

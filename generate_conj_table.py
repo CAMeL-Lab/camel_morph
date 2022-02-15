@@ -174,7 +174,7 @@ def create_conjugation_tables(lemmas,
                               lemma=ar2bw(lemma),
                               pattern=pattern,
                               pos=pos,
-                              freq=info['freq'],
+                              freq=info.get('freq'),
                               debug_message=debug_message)
             outputs[signature] = debug_info
         lemmas_conj.append(outputs)
