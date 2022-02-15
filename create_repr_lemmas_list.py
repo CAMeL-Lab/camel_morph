@@ -33,14 +33,13 @@ def create_repr_lemmas_list(config_file,
 
     lemmas_uniq = {}
     for _, row in SHEETS['lexicon'].iterrows():
-        feats = tuple(row['FEAT'].split())
-        if 'vox:p' in feats:
-            continue
+        #TODO: see if need to exclude anything for noms
+        feats = tuple([feat for feat in row['FEAT'].split() if 'vox' not in feat])
         lemmas_uniq.setdefault(row['LEMMA'], []).append(
             (row['COND-T'], row['COND-S'], feats, row['FORM'], row['GLOSS']))
     uniq_lemma_classes = {}
     for lemma, stems in lemmas_uniq.items():
-        lemmas_cond_sig = tuple([stem[:3] for stem in stems])
+        lemmas_cond_sig = tuple(sorted([stem[:3] for stem in stems]))
         feats = {}
         for stem in stems:
             stem_feats = {
@@ -50,15 +49,15 @@ def create_repr_lemmas_list(config_file,
                     feats[feat] += f'+{value}'
                 else:
                     feats[feat] = value
-        form = ''.join(
-            set([(f"[{stem[3]}]"
-                  f"({sum(1 for stem_ in stems if stem_[3] == stem[3])})") for stem in stems]))
-        cond_t = ''.join(
-            set([(f"[{stem[0] if stem[0] else '—'}]"
-                  f"({sum(1 for stem_ in stems if stem_[0] == stem[0])})") for stem in stems]))
-        cond_s = ''.join(
-            set([(f"[{stem[1] if stem[1] else '—'}]"
-                  f"({sum(1 for stem_ in stems if stem_[1] == stem[1])})") for stem in stems]))
+        form = ''.join([(f"[{stem[3]}]({i})") for i, stem in enumerate(stems)])
+        cond_t_ = {}
+        for i, stem in enumerate(stems):
+            cond_t_.setdefault(stem[0], []).append(f'({i})')
+        cond_t = ''.join([f"[{ct if ct else '-'}]{''.join(indexes)}" for ct, indexes in cond_t_.items()])
+        cond_s_ = {}
+        for i, stem in enumerate(stems):
+            cond_s_.setdefault(stem[1], []).append(f'({i})')
+        cond_s = ''.join([f"[{cs if cs else '-'}]{''.join(indexes)}" for cs, indexes in cond_s_.items()])
         info = dict(form=form,
                     lemma=lemma.split(':')[1],
                     cond_t=cond_t,
@@ -79,8 +78,7 @@ def create_repr_lemmas_list(config_file,
             if pos_type == 'verbal':
                 analyses_filtered = [a  for a in analyses
                     if a['lex'] == lemma_ar and a['pos'] == 'verb' and
-                    a['per'] == '3' and a['num'] == 's' and a['gen'] == 'm' and
-                    a['stemgloss'] == info['gloss']]
+                    a['per'] == '3' and a['num'] == 's' and a['gen'] == 'm']
             #TODO: update this before generating for nouns
             elif pos_type == 'nominal':
                 analyses_filtered = [a  for a in analyses
