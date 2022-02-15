@@ -4,7 +4,7 @@ This repository contains code meant to build an ALMOR-style database from a set 
 
 ## Downloading Files
 
-To download files from Google Drive, first, follow the instructions in the first 3:50 minutes of [this](https://www.youtube.com/watch?v=bu5wXjz2KvU) video to get API access to the Google Drive interface. Then, run the following command to download selected/individual sheets (not spreadsheets) in csv format from the following cloud [directory](https://drive.google.com/drive/folders/1yRq5PZ7rwQKzGCIIcoVPvgbTLHrkkxpE). [^1]
+To download files from Google Drive, first, follow the instructions in the first 3:50 minutes of [this](https://www.youtube.com/watch?v=bu5wXjz2KvU) video to get API access to the Google Drive interface. Then, run the following command to download selected/individual sheets (not spreadsheets) in csv format from the following cloud [directory](https://drive.google.com/drive/folders/1yRq5PZ7rwQKzGCIIcoVPvgbTLHrkkxpE).
 
     python download_sheets.py [-save_dir A] [-config_file B -config_name C] [-lex D1 D2 [...] [-lex ...] -specs E1 E2 [...] [-specs ...]]
 
@@ -61,7 +61,7 @@ To run the above command, the following flags are required:
     where:
 
   - `<POS_TYPE>` can be either `VERB` or `NOM`.
-  - `<A><P><G><N>.<S><C><V><M>` is as specified as in the [CAMeL POS](https://camel-guidelines.readthedocs.io/en/latest/morphology/) schema with the only exception that the plural value for `gen` is specified as `Q` instead of `P` (for ease of signature parsing)[^2].
+  - `<A><P><G><N>.<S><C><V><M>` is as specified as in the [CAMeL POS](https://camel-guidelines.readthedocs.io/en/latest/morphology/) schema with the only exception that the plural value for `gen` is specified as `Q` instead of `P` (for ease of signature parsing)[^1].
   - The last part specifies the presence of clitics. For instance, if we want a 0-enclitic to be present, we add `.E0`. If we want both a 0- and a 1- enclitic, we add `.E01`, etc.
   
 - `B`: file containing the representative lemmas list and their debug info.
@@ -74,5 +74,4 @@ To run the above command, the following flags are required:
 - `I`: `p`, `i`, or `c`. If we are generating verb conjugation tables, we need to specify what aspect we are generating for. Otherwise, do not use.
 - `J`: `i`, `s`, or `j`. If we are generating `IV` verb conjugation tables, we need to specify what mood we want to generate for. Otherwise, do not use.
 
-[^1]: Note that some issues might be faced regarding the number of requests the API allows per minute if too many sheets are requested in the same command. This should and will be fixed at some point. If problems are encountered, for now, reduce the number of sheets in the flags.
-[^2]: The `Q` is reverted to a `P` when the signature is printed out again.
+[^1]: The `Q` is reverted to a `P` when the signature is printed out again.
