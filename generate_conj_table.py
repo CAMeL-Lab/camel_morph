@@ -183,7 +183,7 @@ def create_conjugation_tables(lemmas,
 
 def process_outputs(lemmas_conj):
     conjugations = []
-    header = ["status", "signature", "color", "lemma", "pattern", "stem", "diac", "bw", "freq",
+    header = ["status", "signature", "color", "lemma", "pattern", "stem", "diac", "diac_ar", "bw", "freq",
               "gloss", "count", "cond-s", "cond-t", "pref-cat", "stem-cat", "suff-cat", "feats", "debug"]
     color = 0
     for paradigm in lemmas_conj:
@@ -206,6 +206,7 @@ def process_outputs(lemmas_conj):
                     output_ = output.copy()
                     assert output_['lemma'] == ar2bw(analysis['lex'])
                     output_['diac'] = ar2bw(analysis['diac'])
+                    output_['diac_ar'] = analysis['diac']
                     output_['bw'] = ar2bw(analysis['bw'])
                     output_['pref-cat'] = info['prefix_cats'][i]
                     output_['stem-cat'] = info['stem_cats'][i]
@@ -222,13 +223,6 @@ def process_outputs(lemmas_conj):
                 conjugations += [[output[key] for key in header] for output in outputs_filtered]
             else:
                 output_ = output.copy()
-                output_['diac'] = ''
-                output_['bw'] = ''
-                output_['pref-cat'] = ''
-                output_['stem-cat'] = ''
-                output_['suff-cat'] = ''
-                output_ ['feats'] = ''
-                output_['gloss'] = ''
                 output_['count'] = 0
                 if 'E0' in signature and 'intrans' in info['cond_s']:
                     output_['status'] = 'OK-ZERO-E0-INTRANS'
@@ -238,7 +232,7 @@ def process_outputs(lemmas_conj):
                     output_['status'] = 'CHECK-ZERO-PASS'
                 else:
                     output_['status'] = 'CHECK-ZERO'
-                conjugations.append([output_[key] for key in header])
+                conjugations.append([output_.get(key, '') for key in header])
             color = abs(color - 1)
     
     conjugations.insert(0, list(map(str.upper, header)))
