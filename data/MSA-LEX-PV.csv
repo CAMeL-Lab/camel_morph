@@ -4717,7 +4717,7 @@
 4715,1a2~3,1a2~a3,1a2~a3,1a2~a3,h.$.m,هَشَّم#1,LEXICON,[STEM-PV],ha$~am_1,ha$~am,PV,shatter;crush,pos:verb asp:p vox:a gen:_ num:_,,,trans,QC-DONE
 4716,1a2~3,1a2~aY,1a2~a#,1a2~,H.$.#,حَشَّى#1,LEXICON,[STEM-PV],Ha$~aY_1,Ha$~,PV,insert;interpolate,pos:verb asp:p vox:a gen:_ num:_,,,#-ay defective trans,QC-DONE
 4717,1a2a3,1a2aA,1a2a@,1a2,H.$.#,حَشا#1,LEXICON,[STEM-PV],Ha$A_1,Ha$,PV,stuff;load;fill,pos:verb asp:p vox:a gen:_ num:_,,,#-aw defective trans,QC-DONE
-4718,1A2a3,1A2aA,1@2a@,1A2A,H.$.#,حاشا#3,LEXICON,[STEM-PV],HA$A_3,HA$A,PV,forbid,pos:verb asp:p vox:a gen:_ num:_,,,trans,QC-DONE
+4718,1A2a3,1A2aA,1@2a@,1A2A,H.$.#,حاشا#3,LEXICON,[STEM-PV],HA$A_1,HA$,PV,forbid,pos:verb asp:p vox:a gen:_ num:_,,,#-aA defective trans,QC-DONE
 4719,1a2a3,1a2a3,1a2a3,1a2a3,H.$.d,حَشَد-ُِ#1,LEXICON,[STEM-PV],Ha$ad-iu_1,Ha$ad,PV,gather;mobilize,pos:verb asp:p vox:a gen:_ num:_,,,trans,QC-DONE
 4720,1a2a3,1a2a3,1a2a3,1a2a3,H.$.k,حَشَك-ِ#1,LEXICON,[STEM-PV],Ha$ak-i_1,Ha$ak,PV,cram;stuff,pos:verb asp:p vox:a gen:_ num:_,,,trans,QC-DONE
 4721,1a2a3,1a2a3,1a2a3,1a2a3,H.$.m,حَشَم-ِ#1,LEXICON,[STEM-PV],Ha$am-i_1,Ha$am,PV,shame;put_to_shame,pos:verb asp:p vox:a gen:_ num:_,,,trans,QC-DONE
@@ -5161,7 +5161,7 @@
 5159,1a2~3,1a2~a3,1a2~a3,1a2~a3,H.T.T,حَطَّط#1,LEXICON,[STEM-PV],HaT~aT_1,HaT~aT,PV,set_down;unload,pos:verb asp:p vox:a gen:_ num:_,,,trans,QC-DONE
 5160,1a2a3,1a2a3,1a2a3,1a2a3,H.T.b,حَطَب-ِ#1,LEXICON,[STEM-PV],HaTab-i_1,HaTab,PV,support;back;gather_firewood,pos:verb asp:p vox:a gen:_ num:_,,,trans,QC-DONE
 5161,1a2a3,1a2a3,1a2a3,1a2a3,h.t.f,هَتَف-ِ#1,LEXICON,[STEM-PV],hataf-i_1,hataf,PV,call;shout;cheer,pos:verb asp:p vox:a gen:_ num:_,,,trans,QC-DONE
-5162,1A2a3,1A2a3a,1@2a3a,,h.t.f,هاتَفَ#1,LEXICON,[STEM-PV],hAtafa_1,hAtaf,PV,phone,pos:verb asp:p vox:a gen:_ num:_,,,trans,
+5162,1A2a3,1A2a3a,1@2a3a,,h.t.f,هاتَفَ#1,LEXICON,[STEM-PV],hAtaf_1,hAtaf,PV,phone,pos:verb asp:p vox:a gen:_ num:_,,,trans,
 5163,1a2a3,1a2a3,1a2a3,1a2a3,H.t.k,حَتَك#1,LEXICON,[STEM-PV],Hatak_1,Hatak,PV,scratch;scrape,pos:verb asp:p vox:a gen:_ num:_,,,trans,QC-DONE
 5164,1a2a3,1a2a3,1a2a3,1a2a3,h.t.k,هَتَك-ِ#1,LEXICON,[STEM-PV],hatak-i_1,hatak,PV,rip_apart;disclose;disgrace,pos:verb asp:p vox:a gen:_ num:_,,,trans,QC-DONE
 5165,1a2a3,1a2a3,1a2a3,1a2a3,h.T.l,هَطَل-ِ#1,LEXICON,[STEM-PV],haTal-i_1,haTal,PV,flow_in_torrents;pour_down,pos:verb asp:p vox:a gen:_ num:_,,,trans,QC-DONE
@@ -8442,7 +8442,7 @@
 8440,ta1A2a3,ta1A2~,ta1@2~,ta1A2~,H.j.j,تَحاجّ#1,LEXICON,[STEM-PV],taHAj~_1,taHAj~,PV,argue;debate,pos:verb asp:p vox:a gen:_ num:_,v-suff,,gem trans,QC-DONE
 8441,ta1a2~3,ta1a2~a3,ta1a2~a3,ta1a2~a3,H.j.b,تَحَجَّب#1,LEXICON,[STEM-PV],taHaj~ab_1,taHaj~ab,PV,conceal;flee;hide,pos:verb asp:p vox:a gen:_ num:_,,,trans,QC-DONE
 8442,ta1a2~3,ta1a2~a3,ta1a2~a3,ta1a2~a3,h.j.d,تَهَجَّد#1,LEXICON,[STEM-PV],tahaj~ad_1,tahaj~ad,PV,stay_awake;keep_watch,pos:verb asp:p vox:a gen:_ num:_,,,trans,QC-DONE
-8443,ta1a2~3,ta1a2~a3a,ta1a2~a3a,,H.j.j,تَحَجَّجَ#1,LEXICON,[STEM-PV],taHaj~aja_1,taHaj~aja,PV,allege/use_as_excuse,pos:verb asp:p vox:a gen:_ num:_,,,trans,
+8443,ta1a2~3,ta1a2~a3a,ta1a2~a3a,,H.j.j,تَحَجَّجَ#1,LEXICON,[STEM-PV],taHaj~aj_1,taHaj~aj,PV,allege/use_as_excuse,pos:verb asp:p vox:a gen:_ num:_,,,trans,
 8444,ta1a2~3,ta1a2~a3,ta1a2~a3,ta1a2~a3,h.j.m,تَهَجَّم#1,LEXICON,[STEM-PV],tahaj~am_1,tahaj~am,PV,fall_upon,pos:verb asp:p vox:a gen:_ num:_,,,trans,QC-DONE
 8445,ta1a2~3,ta1a2~a3,ta1a2~a3,ta1a2~a3,H.j.r,تَحَجَّر#1,LEXICON,[STEM-PV],taHaj~ar_1,taHaj~ar,PV,turn_to_stone;be_petrified;fossilize,pos:verb asp:p vox:a gen:_ num:_,,,trans,QC-DONE
 8446,ta1a2~3,ta1a2~a3,ta1a2~a3,ta1a2~a3,h.j.s,تَهَجَّس#1,LEXICON,[STEM-PV],tahaj~as_1,tahaj~as,PV,fear;suspect,pos:verb asp:p vox:a gen:_ num:_,,,trans,QC-DONE
