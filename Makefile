@@ -126,25 +126,21 @@ download_msa_nom:
 download_all: download_msa_pv download_msa_iv download_msa_cv download_glf_pv download_glf_iv download_glf_cv download_egy_pv download_egy_iv download_egy_cv download_msa_nom
 
 upload_pv_msa:
-	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_pv_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-PV
-upload_pv-a_msa:
-	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_pv-a_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-PV-Act
-upload_pv-p_msa:
-	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_pv-p_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-PV-Pass
+	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_pv_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-PV -overwrite
 
 upload_iv-i_msa:
-	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_iv-i_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-IV-Ind
+	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_iv-i_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-IV-Ind -overwrite
 upload_iv-s_msa:
-	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_iv-s_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-IV-Sub
+	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_iv-s_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-IV-Sub -overwrite
 upload_iv-j_msa:
-	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_iv-j_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-IV-Jus
+	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_iv-j_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-IV-Jus -overwrite
 upload_iv-e_msa:
-	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_iv-e_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-IV-Ener
+	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_iv-e_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-IV-Ener -overwrite
 
 upload_cv-i_msa:
-	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_cv-i_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-CV-Ind
+	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_cv-i_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-CV-Ind -overwrite
 upload_cv-e_msa:
-	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_cv-e_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-CV-Ener
+	python format_conj_gsheets.py -dir conjugation_local/tables -file_name conj_cv-e_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-CV-Ener -overwrite
 
 upload_msa: upload_pv_msa upload_iv-i_msa upload_iv-s_msa upload_iv-j_msa upload_iv-e_msa upload_cv-i_msa upload_cv-e_msa
 

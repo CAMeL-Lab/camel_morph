@@ -18,6 +18,8 @@ if __name__ == "__main__":
                         type=str, help="Name of the spreadsheet to write the CSV file to (and to format).")
     parser.add_argument("-gsheet_name", required=True,
                         type=str, help="Name of the gsheet to write the CSV file to (and to format).")
+    parser.add_argument("-overwrite", default=False,
+                        action='store_true', help="Overwrite sheet content if sheet with same name already exists.")
     args = parser.parse_args()
 
     sheet_csv = pd.read_csv(os.path.join(args.dir, args.file_name), sep='\t')
@@ -29,7 +31,10 @@ if __name__ == "__main__":
         worksheet = sh.add_worksheet(title=args.gsheet_name, rows="100", cols="20")
     except gspread.exceptions.APIError as e:
         if re.search(r'name.*already exists', e.args[0]['message']):
-            response = input('A sheet with this name already exists. Do you still want to overwrite it? [y/n]: ')
+            if not args.overwrite:
+                response = input('A sheet with this name already exists. Do you still want to overwrite it? [y/n]: ')
+            else:
+                response = 'y'
             if response == 'y':
                 worksheet = sh.worksheet(title=args.gsheet_name)
                 worksheet.clear()
