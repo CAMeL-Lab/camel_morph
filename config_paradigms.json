@@ -301,20 +301,44 @@
                     "VERB.I3FQ.PE"
                 ]
             },
-            "asp:c": {
+            "asp:c mod:i": {
                 "proclitics": false,
                 "enclitics": true,
+                "passive": true,
                 "paradigm": [
+                    "VERB.C1S.AI",
+                    "VERB.C1Q.AI",
                     "VERB.C2MS.AI",
                     "VERB.C2FS.AI",
                     "VERB.C2D.AI",
                     "VERB.C2MQ.AI",
                     "VERB.C2FQ.AI",
+                    "VERB.C3MS.AI",
+                    "VERB.C3FS.AI",
+                    "VERB.C3MD.AI",
+                    "VERB.C3FD.AI",
+                    "VERB.C3MQ.AI",
+                    "VERB.C3FQ.AI"
+                ]
+            },
+            "asp:c mod:e": {
+                "proclitics": false,
+                "enclitics": true,
+                "passive": true,
+                "paradigm": [
+                    "VERB.C1S.AE",
+                    "VERB.C1Q.AE",
                     "VERB.C2MS.AE",
                     "VERB.C2FS.AE",
                     "VERB.C2D.AE",
                     "VERB.C2MQ.AE",
-                    "VERB.C2FQ.AE"
+                    "VERB.C2FQ.AE",
+                    "VERB.C3MS.AE",
+                    "VERB.C3FS.AE",
+                    "VERB.C3MD.AE",
+                    "VERB.C3FD.AE",
+                    "VERB.C3MQ.AE",
+                    "VERB.C3FQ.AE"
                 ]
             }
         },

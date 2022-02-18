@@ -228,6 +228,10 @@ def process_outputs(lemmas_conj):
                     output_['status'] = 'OK-ZERO-E0-INTRANS'
                 elif 'E0' in signature and features.get('vox') and features['vox'] == 'p':
                     output_['status'] = 'OK-ZERO-E0-PASS'
+                elif 'C' in signature and features['vox'] == 'p':
+                    output_['status'] = 'OK-ZERO-CV-PASS'
+                elif ('' in signature or 'C3' in signature) and features['asp'] == 'c':
+                    output_['status'] = 'OK-ZERO-CV-PER'
                 elif features.get('vox') and features['vox'] == 'p':
                     output_['status'] = 'CHECK-ZERO-PASS'
                 else:
