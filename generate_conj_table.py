@@ -56,6 +56,10 @@ sig2feat = {
     }
 }
 
+header = ["line", "status", "count", "signature", "lemma", "diac_ar", "diac", "freq",
+          "qc", "pattern", "stem", "bw", "gloss", "cond-s", "cond-t", "pref-cat",
+          "stem-cat", "suff-cat", "feats", "debug", "color"]
+
 def parse_signature(signature, pos):
     match = SIGNATURE_PATTERN.search(signature)
     feats0, feats1, feats2, feats3, feats4 = match.groups()
@@ -116,22 +120,24 @@ def filter_and_status(outputs):
     signature_outputs = []
     for output_no_gloss, outputs_same_gloss in outputs.items():
         output = outputs_same_gloss[0]
-        output['count'] = len(outputs)
         signature_outputs.append(output)
-    # From the remaining, keep only one of each same-stemgloss outputs
+
     gloss2outputs = {}
     for so in signature_outputs:
         gloss2outputs.setdefault(so['gloss'], []).append(so)
     signature_outputs_ = []
     for outputs in gloss2outputs.values():
-        # Just pick first one since they are supposedly the same
-        output = outputs[0]
-        output['count'] = len(gloss2outputs)
-        output['status'] = 'OK-ONE' if len(gloss2outputs) == 1 else 'CHECK-GT-ONE'
-        signature_outputs_.append(output)
+        for output in outputs:
+            output['count'] = len(outputs)
+            output['status'] = 'OK-ONE' if len(outputs) == 1 else 'CHECK-GT-ONE'
+            signature_outputs_.append(output)
+            if len(set([tuple([o['diac'], o['bw']]) for o in outputs])) == 1:
+                break
 
     if len(signature_outputs_) > 1:
-        if len(set([tuple([so['diac'], so['bw']]) for so in signature_outputs_])) == 1:
+        if len(set([(so['diac'], so['bw']) for so in signature_outputs_])) == 1 or \
+            '-' in so['lemma'] and \
+            len(set([(so['pref-cat'], so['stem-cat'], so['suff-cat']) for so in signature_outputs_])) == 1:
             for signature_output in signature_outputs_:
                 signature_output['status'] = 'OK-GT-ONE'
     
@@ -171,7 +177,7 @@ def create_conjugation_tables(lemmas,
                               prefix_cats=prefix_cats,
                               stem_cats=stem_cats,
                               suffix_cats=suffix_cats,
-                              lemma=ar2bw(lemma),
+                              lemma=info['lemma'],
                               pattern=pattern,
                               pos=pos,
                               freq=info.get('freq'),
@@ -183,9 +189,7 @@ def create_conjugation_tables(lemmas,
 
 def process_outputs(lemmas_conj):
     conjugations = []
-    header = ["status", "signature", "color", "lemma", "pattern", "stem", "diac", "diac_ar", "bw", "freq",
-              "gloss", "count", "cond-s", "cond-t", "pref-cat", "stem-cat", "suff-cat", "feats", "debug"]
-    color = 0
+    color, line = 0, 1
     for paradigm in lemmas_conj:
         for signature, info in paradigm.items():
             output = {}
@@ -200,11 +204,11 @@ def process_outputs(lemmas_conj):
             output['color'] = color
             output['freq'] = info['freq']
             output['debug'] = ' '.join([m[1] for m in info['debug_message']])
+            output['qc'] = ''
             if info['analyses']:
                 outputs = OrderedDict()
                 for i, analysis in enumerate(info['analyses']):
                     output_ = output.copy()
-                    assert output_['lemma'] == ar2bw(analysis['lex'])
                     output_['diac'] = ar2bw(analysis['diac'])
                     output_['diac_ar'] = analysis['diac']
                     output_['bw'] = ar2bw(analysis['bw'])
@@ -218,9 +222,16 @@ def process_outputs(lemmas_conj):
                     output_duplicates.append(output_)
                 outputs_filtered = filter_and_status(outputs)
                 for output in outputs_filtered:
+                    output['line'] = line
+                    line += 1
                     if 'E0' in signature and features.get('vox') and features['vox'] == 'p':
-                        output_['status'] = 'CHECK-E0-PASS'
-                conjugations += [[output[key] for key in header] for output in outputs_filtered]
+                        output['status'] = 'CHECK-E0-PASS'
+                for i, output in enumerate(outputs_filtered):
+                    output_ = OrderedDict()
+                    for h in header:
+                        output_[h.upper()] = output[h]
+                    outputs_filtered[i] = output_
+                conjugations += outputs_filtered
             else:
                 output_ = output.copy()
                 output_['count'] = 0
@@ -236,10 +247,15 @@ def process_outputs(lemmas_conj):
                     output_['status'] = 'CHECK-ZERO-PASS'
                 else:
                     output_['status'] = 'CHECK-ZERO'
-                conjugations.append([output_.get(key, '') for key in header])
+                output_['line'] = line
+                line += 1
+                output_ordered = OrderedDict()
+                for h in header:
+                    output_ordered[h.upper()] = output_.get(h, '')
+                conjugations.append(output_ordered)
             color = abs(color - 1)
     
-    conjugations.insert(0, list(map(str.upper, header)))
+    conjugations.insert(0, OrderedDict((i, x) for i, x in enumerate(map(str.upper, header))))
     return conjugations
 
 
@@ -318,10 +334,10 @@ if __name__ == "__main__":
                                             paradigm_key=paradigm_key,
                                             paradigms=paradigms,
                                             generator=generator)
-    processed_outputs = process_outputs(lemmas_conj)
-
+    outputs = process_outputs(lemmas_conj)
+    
     if not args.lemma_debug:
         output_path = os.path.join(args.output_dir, args.output_name)
         with open(output_path, 'w') as f:
-            for output in processed_outputs:
-                print(*output, sep='\t', file=f)
+            for output in outputs:
+                print(*output.values(), sep='\t', file=f)

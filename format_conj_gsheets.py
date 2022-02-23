@@ -49,7 +49,7 @@ if __name__ == "__main__":
     rule1 = gspread_formatting.ConditionalFormatRule(
         ranges=[gspread_formatting.GridRange.from_a1_range('A:S', worksheet)],
         booleanRule=gspread_formatting.BooleanRule(
-            condition=gspread_formatting.BooleanCondition('CUSTOM_FORMULA', ['=$C1=0']),
+            condition=gspread_formatting.BooleanCondition('CUSTOM_FORMULA', ['=$U1=0']),
             format=gspread_formatting.CellFormat(
                 backgroundColor=gspread_formatting.Color(217/255, 234/255, 211/255))
         )
@@ -57,7 +57,7 @@ if __name__ == "__main__":
     rule2 = gspread_formatting.ConditionalFormatRule(
         ranges=[gspread_formatting.GridRange.from_a1_range('A:S', worksheet)],
         booleanRule=gspread_formatting.BooleanRule(
-            condition=gspread_formatting.BooleanCondition('CUSTOM_FORMULA', ['=$C1=1']),
+            condition=gspread_formatting.BooleanCondition('CUSTOM_FORMULA', ['=$U1=1']),
             format=gspread_formatting.CellFormat(
                 backgroundColor=gspread_formatting.Color(255/255, 242/255, 204/255))
         )
@@ -68,4 +68,4 @@ if __name__ == "__main__":
     rules.append(rule2)
     rules.save()
 
-    worksheet.freeze(rows=1)
+    worksheet.freeze(rows=1, cols=9)
