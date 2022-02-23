@@ -2,7 +2,6 @@ import re
 import argparse
 import json
 import os
-from tqdm import tqdm
 
 import pandas as pd
 from numpy import nan
@@ -15,20 +14,18 @@ errors = {}
 def generate_passive(LEXICON, patterns_path):
     passive_patterns = pd.read_csv(patterns_path)
     passive_patterns = passive_patterns.replace(nan, '', regex=True)
-    passive_patterns['COND-ST'] = passive_patterns.apply(
-        lambda row: re.sub(r' ?\+? ?(gem|hamzated|hollow|defective) ?\+? ?', '', row['COND-ST']), axis=1)
-    passive_patterns['COND-map'] = passive_patterns.apply(
-        lambda row: re.sub(r' ?\+? ?(gem|hamzated|hollow|defective) ?\+? ?', '', row['COND-map']), axis=1)
+    passive_patterns['COND-S-ESSENTIAL-Act'] = passive_patterns.apply(
+        lambda row: re.sub(r' ?(gem|hamzated|hollow|defective) ?', '', row['COND-S-Act']), axis=1)
+    passive_patterns['COND-S-ESSENTIAL-Pass'] = passive_patterns.apply(
+        lambda row: re.sub(r' ?(gem|hamzated|hollow|defective) ?', '', row['COND-S-Pass']), axis=1)
     passive_patterns_map = {}
     for _, row in passive_patterns.iterrows():
         info = dict(regex_match=row['REGEX-match'],
                     regex_sub=row['REGEX-sub'],
-                    cond_map=row['COND-map'])
-        passive_patterns_map[(row['Pattern'], row['COND-ST'])] = info
+                    cond_t_pass=row['COND-T-Pass'],
+                    cond_s_pass=row['COND-S-ESSENTIAL-Pass'])
+        passive_patterns_map[(row['Pattern'], row['COND-T-Act'], row['COND-S-ESSENTIAL-Act'])] = info
 
-    cond_t_pattern = re.compile(r'([cv]-suff)')
-    cond_s_pattern = re.compile(r'(?:.* \+ )?(.*)')
-    one_or_more_pluses = re.compile(r' +')
     soundness_pattern = re.compile(r'(hollow|defective|gem|hamzated)')
 
     def assign_pattern_wrapper(row):
@@ -38,20 +35,12 @@ def generate_passive(LEXICON, patterns_path):
         return pattern if pattern else nan
 
     def get_info(row):
-        info = passive_patterns_map.get((row['PATTERN-DEF'], row['COND-TS']))
+        info = passive_patterns_map.get((row['PATTERN-DEF'], row['COND-T'], row['COND-S-ESSENTIAL']))
         if info != None:
             info['regex_sub'] = info['regex_sub'].replace('$', '\\')
             return info
         else:
             return nan
-
-    def get_cond_t_pass(row):
-        match = cond_t_pattern.search(row['COND-TS'])
-        return match.group(1) if match else ''
-
-    def get_cond_s_pass(row):
-        match = cond_s_pattern.search(row['COND-TS'])
-        return match.group(1) if match else ''
 
     def get_soundness(row):
         match = soundness_pattern.search(row['COND-S'])
@@ -61,30 +50,27 @@ def generate_passive(LEXICON, patterns_path):
     LEXICON_PASS['PATTERN-DEF'] = LEXICON_PASS.apply(assign_pattern_wrapper, axis=1)
     LEXICON_PASS = LEXICON_PASS[LEXICON_PASS['PATTERN-DEF'].notna()]
     LEXICON_PASS['COND-T'] = LEXICON_PASS['COND-T'].str.strip()
-    LEXICON_PASS['COND-T'] = LEXICON_PASS.apply(
-        lambda row: one_or_more_pluses.sub(' ', row['COND-T']), axis=1)
-    LEXICON_PASS['COND-S-NO-TRANS'] = LEXICON_PASS.apply(
-        lambda row: re.sub(r' ?\+? ?(trans|intrans|gem|hamzated|hollow|defective) ?\+? ?', '', row['COND-S']), axis=1)
-    LEXICON_PASS['COND-S-NO-TRANS'] = LEXICON_PASS.apply(
-        lambda row: one_or_more_pluses.sub(' ', row['COND-S-NO-TRANS']), axis=1)
-    LEXICON_PASS['COND-S-NO-TRANS'] = LEXICON_PASS['COND-S-NO-TRANS'].str.strip()
-    LEXICON_PASS['COND-TS'] = LEXICON_PASS['COND-T']
-    LEXICON_PASS['COND-TS'] = LEXICON_PASS.apply(
-        lambda row: row['COND-TS'] + f"{' + ' if row['COND-TS'] and row['COND-S-NO-TRANS'] else ''}{row['COND-S-NO-TRANS']}", axis=1)
+    LEXICON_PASS['COND-S-ESSENTIAL'] = LEXICON_PASS.apply(
+        lambda row: re.sub(r'trans|intrans|gem|hamzated|hollow|defective', '', row['COND-S']), axis=1)
+    LEXICON_PASS['COND-S-ESSENTIAL'] = LEXICON_PASS['COND-S-ESSENTIAL'].str.strip()
     LEXICON_PASS['PATTERN-MAP'] = LEXICON_PASS.apply(get_info, axis=1)
     LEXICON_PASS = LEXICON_PASS[LEXICON_PASS['PATTERN-MAP'].notna()]
     LEXICON_PASS['FORM'] = LEXICON_PASS.apply(
         lambda row: re.sub(row['PATTERN-MAP']['regex_match'],
                            row['PATTERN-MAP']['regex_sub'],
                            row['FORM']), axis=1)
-    LEXICON_PASS['COND-S'] = LEXICON_PASS['COND-S'].str.strip()
     LEXICON_PASS['SOUND'] = LEXICON_PASS.apply(get_soundness, axis=1)
     # All passive forms should be intransitive
-    LEXICON_PASS['COND-TS'] = LEXICON_PASS.apply(
-        lambda row: row['PATTERN-MAP']['cond_map'] + (' ' if row['SOUND'] else '') + row['SOUND'] + ' intrans', axis=1)
-    LEXICON_PASS['COND-T'] = LEXICON_PASS.apply(get_cond_t_pass, axis=1)
-    LEXICON_PASS['COND-S'] = LEXICON_PASS.apply(get_cond_s_pass, axis=1)
-    LEXICON_PASS['COND-S'] = LEXICON_PASS['COND-S'].str.strip()
+    LEXICON_PASS['COND-T'] = LEXICON_PASS.apply(
+        lambda row: row['PATTERN-MAP']['cond_t_pass'], axis=1)
+    LEXICON_PASS['COND-S-ESSENTIAL-Pass'] = LEXICON_PASS.apply(
+        lambda row: row['PATTERN-MAP']['cond_s_pass'], axis=1)
+    LEXICON_PASS['COND-S-ESSENTIAL-Pass'] = LEXICON_PASS['COND-S-ESSENTIAL-Pass'].str.strip()
+    LEXICON_PASS['COND-S'] = LEXICON_PASS.apply(
+        lambda row: row['COND-S-ESSENTIAL-Pass'] +
+                    (' ' if row['COND-S-ESSENTIAL-Pass'] else '') +
+                    row['SOUND'] +
+                    (' ' if row['SOUND'] else '') + "intrans", axis=1)
     
     LEXICON_PASS['BW'] = LEXICON_PASS.apply(
         lambda row: re.sub(r'(.V)', r'\1_PASS', row['BW']), axis=1)
@@ -92,8 +78,7 @@ def generate_passive(LEXICON, patterns_path):
         lambda row: re.sub(r'vox:a', r'vox:p', row['FEAT']), axis=1)
 
     LEXICON_PASS.drop('PATTERN-DEF', axis=1, inplace=True)
-    LEXICON_PASS.drop('COND-S-NO-TRANS', axis=1, inplace=True)
-    LEXICON_PASS.drop('COND-TS', axis=1, inplace=True)
+    LEXICON_PASS.drop('COND-S-ESSENTIAL', axis=1, inplace=True)
     LEXICON_PASS.drop('PATTERN-MAP', axis=1, inplace=True)
     LEXICON_PASS.drop('SOUND', axis=1, inplace=True)
 
