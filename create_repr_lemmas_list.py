@@ -3,6 +3,7 @@ import json
 import os
 import pickle
 import numpy as np
+import re
 
 from camel_tools.utils.charmap import CharMapper
 from camel_tools.morphology.utils import strip_lex
@@ -30,12 +31,19 @@ def create_repr_lemmas_list(config_file,
     with open(config_file) as f:
         config = json.load(f)
     SHEETS, _ = db_maker.read_morph_specs(config, config_name)
+    SHEETS['lexicon']['COND-S'] = SHEETS['lexicon'].apply(
+        lambda row: re.sub(r'hamzated|hollow|defective', '', row['COND-S']), axis=1)
+    SHEETS['lexicon']['COND-S'] = SHEETS['lexicon'].apply(
+        lambda row: re.sub(r' +', ' ', row['COND-S']), axis=1)
 
     lemmas_uniq = {}
+    lemmas_stripped_uniq = {}
     for _, row in SHEETS['lexicon'].iterrows():
         #TODO: see if need to exclude anything for noms
         feats = tuple([feat for feat in row['FEAT'].split() if 'vox' not in feat])
         lemmas_uniq.setdefault(row['LEMMA'], []).append(
+            (row['COND-T'], row['COND-S'], feats, row['FORM'], row['GLOSS']))
+        lemmas_stripped_uniq.setdefault(strip_lex(row['LEMMA'].split(':')[1]), []).append(
             (row['COND-T'], row['COND-S'], feats, row['FORM'], row['GLOSS']))
     uniq_lemma_classes = {}
     for lemma, stems in lemmas_uniq.items():
@@ -102,12 +110,18 @@ def create_repr_lemmas_list(config_file,
     assert all([any([True if info['lemma'] in lemma2prob else False for info in lemmas_info['lemmas']])
         for lemmas_info in uniq_lemma_classes.values()]), \
             'Some classes do not contain any representative after filtering'
-    
     for lemmas_cond_sig, lemmas_info in uniq_lemma_classes.items():
         lemmas = [info['lemma'] for info in lemmas_info['lemmas']]
-        best_index = int(np.array([lemma2prob[lemma] for lemma in lemmas]).argmax())
-        best_lemma_info = lemmas_info['lemmas'][best_index]
-        best_lemma_info['freq'] = lemmas_info['freq']
+        best_indexes = (-np.array([lemma2prob[lemma] for lemma in lemmas])).argsort()[:len(lemmas)]
+        for best_index in best_indexes:
+            best_lemma_info = lemmas_info['lemmas'][best_index]
+            best_lemma_info['freq'] = lemmas_info['freq']
+            lemma = best_lemma_info['lemma']
+            lemma_stripped = strip_lex(lemma)
+            if not ('-' in lemma and
+                    len(lemmas_stripped_uniq[lemma_stripped]) > 2 and
+                    all([stem[0] == '' for stem in lemmas_stripped_uniq[lemma_stripped]])):
+                break
         uniq_lemma_classes[lemmas_cond_sig] = best_lemma_info
         
     return uniq_lemma_classes
