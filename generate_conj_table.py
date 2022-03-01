@@ -42,7 +42,7 @@ sig2feat = {
         'stt': ['D', 'I', 'C'],
         'cas': ['N', 'G', 'A'],
         'vox': ['A', 'P'],
-        'mod': ['S', 'I', 'J', 'E']},
+        'mod': ['S', 'I', 'J', 'E', 'X']},
     'feats3': {
         'prc0': ['0'],
         'prc1': ['1'],
@@ -126,18 +126,21 @@ def filter_and_status(outputs):
     for so in signature_outputs:
         gloss2outputs.setdefault(so['gloss'], []).append(so)
     signature_outputs_ = []
+    count = 0
     for outputs in gloss2outputs.values():
         for output in outputs:
-            output['count'] = len(outputs)
-            output['status'] = 'OK-ONE' if len(outputs) == 1 else 'CHECK-GT-ONE'
+            count += 1
             signature_outputs_.append(output)
             if len(set([tuple([o['diac'], o['bw']]) for o in outputs])) == 1:
                 break
+    for so in signature_outputs_:
+        so['count'] = count
+        so['status'] = 'OK-ONE' if count == 1 else 'CHECK-GT-ONE'
 
     if len(signature_outputs_) > 1:
         if len(set([(so['diac'], so['bw']) for so in signature_outputs_])) == 1 or \
             '-' in so['lemma'] and \
-            len(set([(so['pref-cat'], so['stem-cat'], so['suff-cat']) for so in signature_outputs_])) == 1:
+            len(set([(so['pref-cat'], re.sub('intrans', 'trans', so['stem-cat']), so['suff-cat']) for so in signature_outputs_])) == 1:
             for signature_output in signature_outputs_:
                 signature_output['status'] = 'OK-GT-ONE'
     
@@ -269,7 +272,7 @@ if __name__ == "__main__":
                         type=str, help="POS type of the lemmas for which we want to generate a representative sample.")
     parser.add_argument("-asp", choices=['p', 'i', 'c'],
                         type=str, help="Aspect to generate the conjugation tables for.")
-    parser.add_argument("-mod", choices=['i', 's', 'j', 'e'], default='',
+    parser.add_argument("-mod", choices=['i', 's', 'j', 'e', 'x'], default='',
                         type=str, help="Mood to generate the conjugation tables for.")
     parser.add_argument("-vox", choices=['a', 'p'], default='',
                         type=str, help="Voice to generate the conjugation tables for.")
