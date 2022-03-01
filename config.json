@@ -40,6 +40,21 @@
             },
             "output": "XYZ_msa_pv_v1.0_red.db"
         },
+        "pv_msa_order-v4_no-pass": {
+            "pruning": true,
+            "passive": false,
+            "specs": {
+                "order": "ORDER-v4-PV",
+                "morph": "MSA-MORPH-Verbs-v4-Red"
+            },
+            "lexicon": {
+                "spreadsheet": "msa-verb-lex",
+                "sheets": [
+                    "MSA-LEX-PV"
+                ]
+            },
+            "output": "XYZ_msa_pv_v1.0_red.db"
+        },
         "iv_msa_order-v3": {
             "pruning": true,
             "specs": {
@@ -70,6 +85,21 @@
         },
         "iv_msa_order-v4_red": {
             "pruning": true,
+            "specs": {
+                "order": "ORDER-v4-IV",
+                "morph": "MSA-MORPH-Verbs-v4-Red"
+            },
+            "lexicon": {
+                "spreadsheet": "msa-verb-lex",
+                "sheets": [
+                    "MSA-LEX-IV"
+                ]
+            },
+            "output": "XYZ_msa_iv_v1.0_red.db"
+        },
+        "iv_msa_order-v4_no-pass": {
+            "pruning": true,
+            "passive": false,
             "specs": {
                 "order": "ORDER-v4-IV",
                 "morph": "MSA-MORPH-Verbs-v4-Red"

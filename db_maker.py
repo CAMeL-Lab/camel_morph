@@ -85,15 +85,16 @@ def read_morph_specs(config, config_name):
     LEXICON['COND-T'] = LEXICON['COND-T'].replace(' +', ' ', regex=True)
     LEXICON['COND-T'] = LEXICON['COND-T'].replace(' $', '', regex=True)
 
-    LEXICON_PASS = None
-    for name in lexicon_sheets:
-        match = re.search(r'MSA-LEX-([IP]V)', name)
-        if match:
-            patterns_path = os.path.join(data_dir, f"{match.group(1)}-Patterns.csv")
-            LEXICON_PASS = pd.concat(
-                [LEXICON_PASS, generate_passive(LEXICON, patterns_path)])
-    if LEXICON_PASS is not None:
-        LEXICON = pd.concat([LEXICON, LEXICON_PASS])
+    if local_specs.get('passive') in [None, True]:
+        LEXICON_PASS = None
+        for name in lexicon_sheets:
+            match = re.search(r'MSA-LEX-([IP]V)', name)
+            if match:
+                patterns_path = os.path.join(data_dir, f"{match.group(1)}-Patterns.csv")
+                LEXICON_PASS = pd.concat(
+                    [LEXICON_PASS, generate_passive(LEXICON, patterns_path)])
+        if LEXICON_PASS is not None:
+            LEXICON = pd.concat([LEXICON, LEXICON_PASS])
 
     LEXICON['BW'] = LEXICON['FORM'] + '/' + LEXICON['BW']
     LEXICON['LEMMA'] = 'lex:' + LEXICON['LEMMA']
