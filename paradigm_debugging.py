@@ -16,6 +16,7 @@ class AnnotationBank:
     GOOD = 'OK'
     CORRECTION = 'CORRECT'
     PROBLEM = 'PROB'
+    TAGS = {UNKOWN, GOOD, CORRECTION, PROBLEM}
 
     def __init__(self, bank_path, annotated_paradigms):
         self._bank_path = bank_path
@@ -36,6 +37,11 @@ class AnnotationBank:
         return self._bank[key]
 
     def _update_bank(self, annotated_paradigms):
+        annotated_paradigms['QC'] = annotated_paradigms['QC'].replace(
+            '', AnnotationBank.UNKOWN, regex=True)
+        assert all([qc in AnnotationBank.TAGS for qc in annotated_paradigms['QC'].values.tolist()]), \
+            f"Get rid of all tags not belonging to {AnnotationBank.TAGS}"
+        
         for _, row in annotated_paradigms.iterrows():
             key = (row['SIGNATURE'], row['LEMMA'], row['DIAC'], row['QC'])
             if key not in self._bank and row['QC'] != AnnotationBank.UNKOWN:
@@ -46,9 +52,6 @@ class AnnotationBank:
                         del self._bank[current_key]
                         self._bank[key] = 1
         self._save_bank()
-
-    def dict2pandas(self):
-        raise NotImplementedError
 
     def _save_bank(self):
         with open(self._bank_path, 'w', newline='') as f:
@@ -69,6 +72,7 @@ def automatic_bank_annotation(bank_path, annotated_paradigms):
         row = row.to_dict()
         if key in bank:
             row['QC'] = bank[key]
+        #TODO: add elifs here
         else:
             row['QC'] = AnnotationBank.UNKOWN
 
