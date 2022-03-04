@@ -46,12 +46,11 @@ repr_lemmas_iv_egy:
 repr_lemmas_cv_egy:	
 	python create_repr_lemmas_list.py -config_file config.json -config_name cv_egy_order-v4_red -output_name repr_lemmas_cv_egy.pkl -output_dir conjugation_local/repr_lemmas -pos_type verbal
 repr_lemmas_nom_msa:	
-	python create_repr_lemmas_list.py -config_file config.json -config_name nom_msa_red -output_name repr_lemmas_nom_msa.pkl -output_dir conjugation_local/repr_lemmas -pos_type nominal
+	python create_repr_lemmas_list.py -config_file config.json -config_name nom_msa_split -output_name repr_lemmas_nom_msa.pkl -output_dir conjugation_local/repr_lemmas -pos_type nominal -display_format expanded
 
 repr_lemmas_verb_msa: repr_lemmas_pv_msa repr_lemmas_iv_msa repr_lemmas_cv_msa
 repr_lemmas_verb_glf: repr_lemmas_pv_glf repr_lemmas_iv_glf repr_lemmas_cv_glf
 repr_lemmas_verb_egy: repr_lemmas_pv_egy repr_lemmas_iv_egy repr_lemmas_cv_egy
-repr_lemmas_nom_msa: repr_lemmas_nom_msa
 
 repr_lemmas_verb: repr_lemmas_verb_msa repr_lemmas_verb_glf repr_lemmas_verb_egy
 repr_lemmas_all: repr_lemmas_verb_msa repr_lemmas_verb_glf repr_lemmas_verb_egy repr_lemmas_nom_msa
@@ -97,7 +96,6 @@ conj_cv_egy:
 conj_verb_msa: conj_pv_msa conj_pv-a_msa conj_pv-p_msa conj_iv-i_msa conj_iv-s_msa conj_iv-j_msa conj_iv-e_msa conj_iv-x_msa conj_cv-i_msa conj_cv-e_msa conj_cv-x_msa
 conj_verb_glf: conj_pv_glf conj_iv_glf conj_cv_glf
 conj_verb_egy: conj_pv_egy conj_iv_egy conj_cv_egy
-conj_nom_msa: conj_nom_msa
 
 conj_verb: conj_verb_msa conj_verb_glf conj_verb_egy
 conj_all: conj_verb_msa conj_verb_glf conj_verb_egy conj_nom_msa

@@ -85,7 +85,7 @@ def read_morph_specs(config, config_name):
     LEXICON['COND-T'] = LEXICON['COND-T'].replace(' +', ' ', regex=True)
     LEXICON['COND-T'] = LEXICON['COND-T'].replace(' $', '', regex=True)
 
-    if local_specs.get('passive') in [None, True]:
+    if local_specs.get('passive'):
         LEXICON_PASS = None
         for name in lexicon_sheets:
             match = re.search(r'MSA-LEX-([IP]V)', name)
@@ -98,6 +98,18 @@ def read_morph_specs(config, config_name):
 
     LEXICON['BW'] = LEXICON['FORM'] + '/' + LEXICON['BW']
     LEXICON['LEMMA'] = 'lex:' + LEXICON['LEMMA']
+    
+    if local_specs.get('split_or') == True:
+        LEXICON_ = []
+        for _, row in LEXICON.iterrows():
+            if '||' in row['COND-T'] and ' ' not in row['COND-T']:
+                for term in row['COND-T'].split('||'):
+                    row_ = row.to_dict()
+                    row_['COND-T'] = term
+                    LEXICON_.append(row_)
+            else:
+                LEXICON_.append(row.to_dict())
+        LEXICON = pd.DataFrame(LEXICON_)
 
     #Process all the components:
     ORDER = ORDER[ORDER.DEFINE == 'ORDER']  # skip comments & empty lines

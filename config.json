@@ -14,6 +14,7 @@
     "local": {
         "pv_msa_order-v4": {
             "pruning": true,
+            "passive": true,
             "specs": {
                 "order": "ORDER-v4-PV",
                 "morph": "MSA-MORPH-Verbs-v4"
@@ -28,6 +29,7 @@
         },
         "pv_msa_order-v4_red": {
             "pruning": true,
+            "passive": true,
             "specs": {
                 "order": "ORDER-v4-PV",
                 "morph": "MSA-MORPH-Verbs-v4-Red"
@@ -57,6 +59,7 @@
         },
         "iv_msa_order-v3": {
             "pruning": true,
+            "passive": true,
             "specs": {
                 "order": "ORDER-v3-IV",
                 "morph": "MSA-MORPH-Verbs-v4"
@@ -71,6 +74,7 @@
         },
         "iv_msa_order-v4": {
             "pruning": true,
+            "passive": true,
             "specs": {
                 "order": "ORDER-v4-IV",
                 "morph": "MSA-MORPH-Verbs-v4"
@@ -85,6 +89,7 @@
         },
         "iv_msa_order-v4_red": {
             "pruning": true,
+            "passive": true,
             "specs": {
                 "order": "ORDER-v4-IV",
                 "morph": "MSA-MORPH-Verbs-v4-Red"
@@ -222,7 +227,52 @@
                     "MSA-LEX-Nom"
                 ]
             },
-            "output": "XYZ_msa_nom_v1.0_red.db"
+            "output": "XYZ_msa_nom_v1.0_red.db",
+            "class_keys": [
+                "cond_t",
+                "cond_s",
+                "gen",
+                "num",
+                "cas"
+            ],
+            "extended_lemma_keys": [
+                "lemma",
+                "form",
+                "pos",
+                "rat",
+                "cond_t",
+                "index"
+            ]
+        },
+        "nom_msa_split": {
+            "pruning": false,
+            "split_or": true,
+            "specs": {
+                "order": "ORDER-MSA-Nom",
+                "morph": "MSA-MORPH-Nom-Red"
+            },
+            "lexicon": {
+                "spreadsheet": "msa-nom-lex",
+                "sheets": [
+                    "MSA-LEX-Nom"
+                ]
+            },
+            "output": "XYZ_msa_nom_v1.0_red.db",
+            "class_keys": [
+                "cond_t",
+                "cond_s",
+                "gen",
+                "num",
+                "cas"
+            ],
+            "extended_lemma_keys": [
+                "lemma",
+                "form",
+                "pos",
+                "rat",
+                "cond_t",
+                "index"
+            ]
         }
     }
 }
