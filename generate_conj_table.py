@@ -101,17 +101,9 @@ def expand_paradigm(paradigms, pos_type, paradigm_key):
             paradigm_ = paradigm['paradigm'][:]
     elif pos_type == 'nominal':
         pass
-    else:
-        raise NotImplementedError
     
-    if paradigm['enclitics']:
-        if pos_type == 'verbal':
-            paradigm_ += [signature + '.E0' for signature in paradigm_]
-        elif pos_type == 'nominal':
-            paradigm_ += [signature + '.E0'
-                          for signature in paradigm_ if 'D' not in signature.split('.')[2]]
-        else:
-            raise NotImplementedError
+    if paradigm.get('enclitics'):
+        paradigm_ += [signature + '.E0' for signature in paradigm_]
             
     return paradigm_
 
@@ -157,16 +149,32 @@ def create_conjugation_tables(lemmas,
         pos, gen, num = info['pos'], info['gen'], info['num']
         cond_s, cond_t = info['cond_s'], info['cond_t']
         lemma = strip_lex(lemma)
-        pattern, _, _, _ = assign_pattern(lemma)
+        pattern = None
+        if pos_type == 'verbal':
+            pattern, _, _, _ = assign_pattern(lemma)
+        elif pos_type == 'nominal':
+            match = re.search(r'([MF][SDP])', cond_t)
+            form_gen, form_num = None, None
+            if match:
+                form_gen, form_num = match.groups()[0].lower()
+            
+            num = process_nom_gen_num_(
+                num, form_num, form, cond_t, cond_s, lemma, pattern, pos, info.get('freq'))
+            gen = process_nom_gen_num_(
+                gen, form_gen, form, cond_t, cond_s, lemma, pattern, pos, info.get('freq'))
+            if type(num) is dict or type(gen) is dict:
+                outputs['NOM.MS.DN'] = num if type(num) is dict else gen 
+                lemmas_conj.append(outputs)
+                continue
+            
+            paradigm_key = f'gen:{gen} num:{num}'
+
         lemma = bw2ar(lemma)
-        
-        if pos_type == 'nominal' and paradigm_key == None:
-            paradigm_key = f"gen:{gen} num:{num}"
 
         paradigm = expand_paradigm(paradigms, pos_type, paradigm_key)
         outputs = {}
         for signature in paradigm:
-            features = parse_signature(signature, pos)
+            features = parse_signature(signature, _strip_brackets(pos))
             # Using altered local copy of generator.py in camel_tools
             analyses, debug_message = generator.generate(lemma, features, debug=True)
             prefix_cats = [a[1] for a in analyses]
@@ -190,12 +198,43 @@ def create_conjugation_tables(lemmas,
     
     return lemmas_conj
 
-def process_outputs(lemmas_conj):
+def _strip_brackets(info):
+    if info[0] == '[' and info[-1] == ']':
+        info = info[1:-1]
+    return info
+
+def process_nom_gen_num_(feat, form_feat,
+                         form=None, cond_t=None, cond_s=None,
+                         lemma=None, pattern=None, pos=None, freq=None):
+    feat_ = _strip_brackets(feat)
+    if feat_ == '-':
+        if form_feat:
+            feat_ = form_feat
+        else:
+            debug_info = dict(analyses=[],
+                              form=form,
+                              cond_s=cond_s,
+                              cond_t=cond_t,
+                              prefix_cats=[],
+                              stem_cats=[],
+                              suffix_cats=[],
+                              lemma=lemma,
+                              pattern=pattern,
+                              pos=pos,
+                              freq=freq,
+                              debug_message='')
+            return debug_info
+    return feat_
+
+
+def process_outputs(lemmas_conj, pos_type):
     conjugations = []
     color, line = 0, 1
     for paradigm in lemmas_conj:
         for signature, info in paradigm.items():
             output = {}
+            form = _strip_brackets(info['form'])
+            pos = _strip_brackets(info['pos'].upper())
             features = parse_signature(signature, info['pos'])
             signature = re.sub('Q', 'P', signature)
             output['signature'] = signature
@@ -211,6 +250,10 @@ def process_outputs(lemmas_conj):
             if info['analyses']:
                 outputs = OrderedDict()
                 for i, analysis in enumerate(info['analyses']):
+                    if pos_type == 'nominal':
+                        stem_bw = f"{bw2ar(form)}/{pos}"
+                        if stem_bw not in analysis['bw']:
+                            continue
                     output_ = output.copy()
                     output_['diac'] = ar2bw(analysis['diac'])
                     output_['diac_ar'] = analysis['diac']
@@ -240,13 +283,13 @@ def process_outputs(lemmas_conj):
                 output_['count'] = 0
                 if 'E0' in signature and 'intrans' in info['cond_s']:
                     output_['status'] = 'OK-ZERO-E0-INTRANS'
-                elif 'E0' in signature and features.get('vox') and features['vox'] == 'p':
+                elif 'E0' in signature and features.get('vox') and features.get('vox') == 'p':
                     output_['status'] = 'OK-ZERO-E0-PASS'
-                elif 'C' in signature and features['vox'] == 'p':
+                elif 'C' in signature and features.get('vox') == 'p':
                     output_['status'] = 'OK-ZERO-CV-PASS'
-                elif ('' in signature or 'C3' in signature) and features['asp'] == 'c':
+                elif ('' in signature or 'C3' in signature) and features.get('asp') == 'c':
                     output_['status'] = 'OK-ZERO-CV-PER'
-                elif features.get('vox') and features['vox'] == 'p':
+                elif features.get('vox') and features.get('vox') == 'p':
                     output_['status'] = 'CHECK-ZERO-PASS'
                 else:
                     output_['status'] = 'CHECK-ZERO'
@@ -270,12 +313,10 @@ if __name__ == "__main__":
                         type=str, help="Name of the DB file which will be used with the generation module.")
     parser.add_argument("-pos_type", required=True, choices=['verbal', 'nominal'],
                         type=str, help="POS type of the lemmas for which we want to generate a representative sample.")
-    parser.add_argument("-asp", choices=['p', 'i', 'c'],
+    parser.add_argument("-asp", choices=['p', 'i', 'c'], default='',
                         type=str, help="Aspect to generate the conjugation tables for.")
     parser.add_argument("-mod", choices=['i', 's', 'j', 'e', 'x'], default='',
                         type=str, help="Mood to generate the conjugation tables for.")
-    parser.add_argument("-vox", choices=['a', 'p'], default='',
-                        type=str, help="Voice to generate the conjugation tables for.")
     parser.add_argument("-dialect", choices=['msa', 'glf', 'egy'], required=True,
                         type=str, help="Aspect to generate the conjugation tables for.")
     parser.add_argument("-repr_lemmas",
@@ -304,16 +345,12 @@ if __name__ == "__main__":
     
     with open(args.paradigms) as f:
         paradigms = json.load(f)[args.dialect]
-    asp = f"asp:{args.asp}"
-    mod = f" mod:{args.mod}" if args.asp in ['i', 'c'] and args.mod else ''
-    vox = f" vox:{args.vox}" if args.vox else ''
+    
+    paradigm_key = ''
     if args.pos_type == 'verbal':
-        paradigm_key = asp + mod + vox
-    elif args.pos_type == 'nominal':
-        paradigm_key = None
-        raise NotImplementedError
-    else:
-        raise NotImplementedError
+        asp = f"asp:{args.asp}"
+        mod = f" mod:{args.mod}" if args.asp in ['i', 'c'] and args.mod else ''
+        paradigm_key = asp + mod
 
     if args.lemma_debug:
         lemma_debug = args.lemma_debug[0].split()
@@ -337,7 +374,7 @@ if __name__ == "__main__":
                                             paradigm_key=paradigm_key,
                                             paradigms=paradigms,
                                             generator=generator)
-    outputs = process_outputs(lemmas_conj)
+    outputs = process_outputs(lemmas_conj, args.pos_type)
     
     if not args.lemma_debug:
         output_path = os.path.join(args.output_dir, args.output_name)
