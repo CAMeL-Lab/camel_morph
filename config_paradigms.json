@@ -183,9 +183,9 @@
             }
         },
         "nominal": {
-            "gen:m num:-": {
+            "gen:m num:s": {
                 "proclitics": false,
-                "enclitics": true,
+                "enclitics": null,
                 "paradigm": [
                     "NOM.MS.DN",
                     "NOM.MS.DG",
@@ -196,29 +196,17 @@
                     "NOM.MS.CN",
                     "NOM.MS.CG",
                     "NOM.MS.CA",
-                    "NOM.MD.DN",
-                    "NOM.MD.DG",
-                    "NOM.MD.DA",
-                    "NOM.MD.IN",
-                    "NOM.MD.IG",
-                    "NOM.MD.IA",
-                    "NOM.MD.CN",
-                    "NOM.MD.CG",
-                    "NOM.MD.CA",
-                    "NOM.MQ.DN",
-                    "NOM.MQ.DG",
-                    "NOM.MQ.DA",
-                    "NOM.MQ.IN",
-                    "NOM.MQ.IG",
-                    "NOM.MQ.IA",
-                    "NOM.MQ.CN",
-                    "NOM.MQ.CG",
-                    "NOM.MQ.CA"
+                    "NOM.MS.DN.E0",
+                    "NOM.MS.DG.E0",
+                    "NOM.MS.DA.E0",
+                    "NOM.MS.CN.E0",
+                    "NOM.MS.CG.E0",
+                    "NOM.MS.CA.E0"
                 ]
             },
-            "gen:f num:-": {
+            "gen:f num:s": {
                 "proclitics": false,
-                "enclitics": true,
+                "enclitics": null,
                 "paradigm": [
                     "NOM.FS.DN",
                     "NOM.FS.DG",
@@ -229,6 +217,39 @@
                     "NOM.FS.CN",
                     "NOM.FS.CG",
                     "NOM.FS.CA",
+                    "NOM.FS.DN.E0",
+                    "NOM.FS.DG.E0",
+                    "NOM.FS.DA.E0",
+                    "NOM.FS.CN.E0",
+                    "NOM.FS.CG.E0",
+                    "NOM.FS.CA.E0"
+                ]
+            },
+            "gen:m num:d": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "NOM.MD.DN",
+                    "NOM.MD.DG",
+                    "NOM.MD.DA",
+                    "NOM.MD.IN",
+                    "NOM.MD.IG",
+                    "NOM.MD.IA",
+                    "NOM.MD.CN",
+                    "NOM.MD.CG",
+                    "NOM.MD.CA",
+                    "NOM.MD.DN.E0",
+                    "NOM.MD.DG.E0",
+                    "NOM.MD.DA.E0",
+                    "NOM.MD.CN.E0",
+                    "NOM.MD.CG.E0",
+                    "NOM.MD.CA.E0"
+                ]
+            },
+            "gen:f num:d": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
                     "NOM.FD.DN",
                     "NOM.FD.DG",
                     "NOM.FD.DA",
@@ -238,35 +259,17 @@
                     "NOM.FD.CN",
                     "NOM.FD.CG",
                     "NOM.FD.CA",
-                    "NOM.FQ.DN",
-                    "NOM.FQ.DG",
-                    "NOM.FQ.DA",
-                    "NOM.FQ.IN",
-                    "NOM.FQ.IG",
-                    "NOM.FQ.IA",
-                    "NOM.FQ.CN",
-                    "NOM.FQ.CG",
-                    "NOM.FQ.CA"
-                ]
-            },
-            "gen:m num:s": {
-                "proclitics": false,
-                "enclitics": true,
-                "paradigm": [
-                    "NOM.MS.DN",
-                    "NOM.MS.DG",
-                    "NOM.MS.DA",
-                    "NOM.MS.IN",
-                    "NOM.MS.IG",
-                    "NOM.MS.IA",
-                    "NOM.MS.CN",
-                    "NOM.MS.CG",
-                    "NOM.MS.CA"
+                    "NOM.FD.DN.E0",
+                    "NOM.FD.DG.E0",
+                    "NOM.FD.DA.E0",
+                    "NOM.FD.CN.E0",
+                    "NOM.FD.CG.E0",
+                    "NOM.FD.CA.E0"
                 ]
             },
             "gen:m num:p": {
                 "proclitics": false,
-                "enclitics": true,
+                "enclitics": null,
                 "paradigm": [
                     "NOM.MQ.DN",
                     "NOM.MQ.DG",
@@ -276,27 +279,18 @@
                     "NOM.MQ.IA",
                     "NOM.MQ.CN",
                     "NOM.MQ.CG",
-                    "NOM.MQ.CA"
-                ]
-            },
-            "gen:f num:s": {
-                "proclitics": false,
-                "enclitics": true,
-                "paradigm": [
-                    "NOM.FS.DN",
-                    "NOM.FS.DG",
-                    "NOM.FS.DA",
-                    "NOM.FS.IN",
-                    "NOM.FS.IG",
-                    "NOM.FS.IA",
-                    "NOM.FS.CN",
-                    "NOM.FS.CG",
-                    "NOM.FS.CA"
+                    "NOM.MQ.CA",
+                    "NOM.MQ.DN.E0",
+                    "NOM.MQ.DG.E0",
+                    "NOM.MQ.DA.E0",
+                    "NOM.MQ.CN.E0",
+                    "NOM.MQ.CG.E0",
+                    "NOM.MQ.CA.E0"
                 ]
             },
             "gen:f num:p": {
                 "proclitics": false,
-                "enclitics": true,
+                "enclitics": null,
                 "paradigm": [
                     "NOM.FQ.DN",
                     "NOM.FQ.DG",
@@ -306,7 +300,13 @@
                     "NOM.FQ.IA",
                     "NOM.FQ.CN",
                     "NOM.FQ.CG",
-                    "NOM.FQ.CA"
+                    "NOM.FQ.CA",
+                    "NOM.FQ.DN.E0",
+                    "NOM.FQ.DG.E0",
+                    "NOM.FQ.DA.E0",
+                    "NOM.FQ.CN.E0",
+                    "NOM.FQ.CG.E0",
+                    "NOM.FQ.CA.E0"
                 ]
             }
         }

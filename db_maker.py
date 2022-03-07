@@ -142,8 +142,8 @@ def populate_db(cmplx_morph_classes,
 
     cat_memoize = {'stem': {}, 'suffix': {}, 'prefix': {}}
     for cmplx_stem_cls, cmplx_stems in cmplx_stem_classes.items():
-        # `stem_class` = (stem['COND-S'], stem['COND-T'], stem['COND-F'])
-        # All `stem_comb` in `stem_combs` have the same cat 
+        # `cmplx_stem_cls` = (cmplx_stem['COND-S'], cmplx_stem['COND-T'], cmplx_stem['COND-F'])
+        # All entries in `cmplx_stems` have the same cat
         stem_cond_s = ' '.join([f['COND-S'] for f in cmplx_stems[0]])
         stem_cond_t = ' '.join([f['COND-T'] for f in cmplx_stems[0]])
         stem_cond_f = ' '.join([f['COND-F'] for f in cmplx_stems[0]])

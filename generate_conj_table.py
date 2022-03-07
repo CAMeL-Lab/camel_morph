@@ -135,6 +135,11 @@ def filter_and_status(outputs):
     
     return signature_outputs_
 
+def _strip_brackets(info):
+    if info[0] == '[' and info[-1] == ']':
+        info = info[1:-1]
+    return info
+
 def create_conjugation_tables(lemmas,
                               pos_type,
                               paradigm_key,
