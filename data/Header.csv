@@ -17,7 +17,7 @@
 15,DEFINE rat rat:n rat:na rat:y rat:i rat:r rat:b rat:u
 16,DEFINE per per:na per:3 per:2 per:1
 17,DEFINE bw bw:*open*
-18,DEFINE mod mod:s mod:i mod:na mod:u mod:j mod:e
+18,DEFINE mod mod:s mod:i mod:na mod:u mod:j mod:e mod:x
 19,DEFINE enc0 enc0:3mp_poss enc0:3d_dobj enc0:2mp_poss enc0:3d_pron enc0:3ms_pron enc0:3ms_poss enc0:man_interrog enc0:3mp_pron enc0:2d_pron enc0:3mp_dobj enc0:2fp_pron enc0:lA_neg enc0:man_rel enc0:1s_dobj enc0:2ms_pron enc0:2mp_pron enc0:ma_interrog enc0:na enc0:3fs_dobj enc0:mA_rel enc0:0 enc0:2fs_pron enc0:2fp_poss enc0:1s_poss enc0:Ah_voc enc0:2d_dobj enc0:2mp_dobj enc0:3fp_pron enc0:1p_poss enc0:ma_rel enc0:2fs_poss enc0:3ms_dobj enc0:mA_interrog enc0:3d_poss enc0:3fp_poss enc0:ma_sub enc0:2fp_dobj enc0:2d_poss enc0:1s_pron enc0:3fs_pron enc0:3fs_poss enc0:3fp_dobj enc0:1p_pron enc0:2fs_dobj enc0:2ms_poss enc0:1p_dobj enc0:2ms_dobj enc0:mA_sub
 20,DEFINE lex lex:*open*
 21,DEFINE form_gen form_gen:na form_gen:m form_gen:f
