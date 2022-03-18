@@ -2,7 +2,6 @@ import argparse
 import json
 import os
 import pickle
-from sys import displayhook
 import numpy as np
 import re
 
@@ -11,6 +10,8 @@ from camel_tools.morphology.utils import strip_lex
 from camel_tools.morphology.database import MorphologyDB
 from camel_tools.morphology.analyzer import DEFAULT_NORMALIZE_MAP
 from camel_tools.utils.dediac import dediac_ar
+
+from paradigm_debugging import AnnotationBank
 
 import db_maker
 
@@ -24,13 +25,14 @@ nominals = [n.lower() for n in nominals]
 
 ar2bw = CharMapper.builtin_mapper('ar2bw')
 bw2ar = CharMapper.builtin_mapper('bw2ar')
-db = MorphologyDB.builtin_db()
 
 def create_repr_lemmas_list(lexicon,
                             class_keys,
                             extended_lemma_keys,
                             pos_type,
-                            info_display_format='compact'):
+                            bank=None,
+                            info_display_format='compact',
+                            lemma2prob=None):
     lemmas_uniq, lemmas_stripped_uniq = get_extended_lemmas(lexicon, extended_lemma_keys)
     uniq_lemma_classes = {}
     for lemma, stems in lemmas_uniq.items():
@@ -58,7 +60,7 @@ def create_repr_lemmas_list(lexicon,
         uniq_lemma_classes[lemmas_cond_sig]['lemmas'].append(info)
 
     uniq_lemma_classes = get_highest_prob_lemmas(
-        pos_type, uniq_lemma_classes, lemmas_stripped_uniq)
+        pos_type, uniq_lemma_classes, lemmas_stripped_uniq, bank, lemma2prob)
     
     return uniq_lemma_classes
 
@@ -93,33 +95,56 @@ def get_extended_lemmas(lexicon, extended_lemma_keys):
     return lemmas_uniq, lemmas_stripped_uniq
     
 
-def get_highest_prob_lemmas(pos_type, uniq_lemma_classes, lemmas_stripped_uniq):
-    lemma2prob = {}
-    for lemmas_cond_sig, lemmas_info in uniq_lemma_classes.items():
-        for info in lemmas_info['lemmas']:
-            lemma = info['lemma']
-            lemma_ar = bw2ar(strip_lex(lemma))
-            normalized_lemma_ar = DEFAULT_NORMALIZE_MAP(dediac_ar(lemma_ar))
-            matches = db.stem_hash.get(normalized_lemma_ar, [])
-            db_entries = [db_entry[1] for db_entry in matches]
+def get_highest_prob_lemmas(pos_type, uniq_lemma_classes, lemmas_stripped_uniq, bank, lemma2prob=None):
+    if lemma2prob is None:
+        db = MorphologyDB.builtin_db()
+        lemma2prob = {}
+        for lemmas_cond_sig, lemmas_info in uniq_lemma_classes.items():
+            for info in lemmas_info['lemmas']:
+                lemma = info['lemma']
+                lemma_ar = bw2ar(strip_lex(lemma))
+                normalized_lemma_ar = DEFAULT_NORMALIZE_MAP(dediac_ar(lemma_ar))
+                matches = db.stem_hash.get(normalized_lemma_ar, [])
+                db_entries = [db_entry[1] for db_entry in matches]
 
-            if pos_type == 'verbal':
-                entries_filtered = [e  for e in db_entries
-                    if e['lex'] == lemma_ar and e['pos'] == 'verb' and
-                    e['per'] == '3' and e['num'] == 's' and e['gen'] == 'm']
+                if pos_type == 'verbal':
+                    entries_filtered = [e  for e in db_entries
+                        if e['lex'] == lemma_ar and e['pos'] == 'verb']
 
-            elif pos_type == 'nominal':
-                entries_filtered = [e  for e in db_entries
-                    if e['lex'] == lemma_ar and e['pos'] == info['pos'][1:-1]]
+                elif pos_type == 'nominal':
+                    entries_filtered = [e  for e in db_entries
+                        if e['lex'] == lemma_ar and e['pos'] == info['pos'][1:-1]]
 
-            if len(entries_filtered) >= 1:
-                lemma2prob[info['lemma']] = max([float(a['pos_lex_logprob']) for a in db_entries])
-            else:
-                lemma2prob[info['lemma']] = -99.0
+                if len(entries_filtered) >= 1:
+                    lemma2prob[info['lemma']] = max([float(a['pos_lex_logprob']) for a in db_entries])
+                else:
+                    lemma2prob[info['lemma']] = -99.0
+    else:
+        for lemmas_cond_sig, lemmas_info in uniq_lemma_classes.items():
+            for info in lemmas_info['lemmas']:
+                if info['lemma'] not in lemma2prob:
+                    lemma2prob[info['lemma']] = 0
+
+    if bank is not None:
+        old_lemmas = set([re.sub(r'_\d', '', entry[1]) for entry in bank._bank])
+        strip = True if not any(['-' in lemma for lemma in old_lemmas]) else False
 
     uniq_lemma_classes_ = {}
     for lemmas_cond_sig, lemmas_info in uniq_lemma_classes.items():
         lemmas = [info['lemma'] for info in lemmas_info['lemmas']]
+        lemmas_ = lemmas
+        done = False
+        if bank is not None:
+            if strip:
+                lemmas_ = [strip_lex(lemma) for lemma in lemmas]
+            common_lemmas = old_lemmas.intersection(set(lemmas_))
+            if common_lemmas:
+                uniq_lemma_classes_[lemmas_cond_sig] = [
+                    info for info in lemmas_info['lemmas']
+                    if strip_lex(info['lemma']) in common_lemmas or info['lemma'] in common_lemmas][0]
+                uniq_lemma_classes_[lemmas_cond_sig]['freq'] = lemmas_info['freq']
+                done = True
+
         best_indexes = (-np.array([lemma2prob[lemma] for lemma in lemmas])).argsort()[:len(lemmas)]
         for best_index in best_indexes:
             best_lemma_info = lemmas_info['lemmas'][best_index]
@@ -130,14 +155,17 @@ def get_highest_prob_lemmas(pos_type, uniq_lemma_classes, lemmas_stripped_uniq):
                     len(lemmas_stripped_uniq[lemma_stripped]) > 2 and
                     all([stem['cond_t'] == '' for stem in lemmas_stripped_uniq[lemma_stripped]])):
                 break
+        
+        if not done:
+            uniq_lemma_classes_[lemmas_cond_sig] = best_lemma_info
+        
         other_lemmas, i = [], 0
         while len(other_lemmas) < 5 and i < len(best_indexes):
             if lemmas[best_indexes[i]] != best_lemma_info['lemma']:
                 other_lemmas.append(lemmas[best_indexes[i]])
             i += 1
         other_lemmas = ' '.join(other_lemmas)
-        best_lemma_info['other_lemmas'] = other_lemmas
-        uniq_lemma_classes_[lemmas_cond_sig] = best_lemma_info
+        uniq_lemma_classes_[lemmas_cond_sig]['other_lemmas'] = other_lemmas
         
     return uniq_lemma_classes_
 
@@ -154,6 +182,12 @@ if __name__ == "__main__":
                         type=str, help="Name of the file to output the representative lemmas to. File will be placed in a directory called conjugation/repr_lemmas/")
     parser.add_argument("-pos_type", required=True, choices=['verbal', 'nominal'],
                         type=str, help="POS type of the lemmas.")
+    parser.add_argument("-bank_dir",  default='conjugation_local/banks',
+                        type=str, help="Directory in which the annotation banks are.")
+    parser.add_argument("-bank_name",  default='',
+                        type=str, help="Name of the annotation bank to use.")
+    parser.add_argument("-lexprob",  default='',
+                        type=str, help="Custom lexical probabilities file which contains two columns (lemma, frequency).")
     parser.add_argument("-display_format", default='compact', choices=['compact', 'expanded'],
                         type=str, help="Display format of the debug info for each representative lemma.")
     args = parser.parse_args([] if "__file__" not in globals() else None)
@@ -180,11 +214,25 @@ if __name__ == "__main__":
     if extended_lemma_keys == None:
         extended_lemma_keys = ['lemma']
 
+    bank = None
+    if args.bank_name:
+        bank = AnnotationBank(bank_path=os.path.join(args.bank_dir, f"{args.bank_name}.tsv"))
+
+    lemma2prob = None
+    if args.lexprob:
+        with open(args.lexprob) as f:
+            lemma2prob = dict(map(lambda x: (x[0], int(x[1])),
+                                  [line.strip().split('\t') for line in f.readlines()]))
+            total = sum(lemma2prob.values())
+            lemma2prob = {lemma: freq / total for lemma, freq in lemma2prob.items()}
+
     uniq_lemma_classes = create_repr_lemmas_list(lexicon=SHEETS['lexicon'],
                                                  class_keys=class_keys,
                                                  extended_lemma_keys=extended_lemma_keys,
                                                  pos_type=args.pos_type,
-                                                 info_display_format=args.display_format)
+                                                 bank=bank,
+                                                 info_display_format=args.display_format,
+                                                 lemma2prob=lemma2prob)
 
     output_path = os.path.join(args.output_dir, args.output_name)
     with open(output_path, 'wb') as f:
