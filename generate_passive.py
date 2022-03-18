@@ -24,7 +24,8 @@ def generate_passive(LEXICON, patterns_path):
                     regex_sub=row['REGEX-sub'],
                     cond_t_pass=row['COND-T-Pass'],
                     cond_s_pass=row['COND-S-ESSENTIAL-Pass'])
-        passive_patterns_map[(row['Pattern'], row['COND-T-Act'], row['COND-S-ESSENTIAL-Act'])] = info
+        key = (row['Pattern'], row['COND-T-Act'], row['COND-S-ESSENTIAL-Act'])
+        passive_patterns_map.setdefault(key, []).append(info)
 
     soundness_pattern = re.compile(r'(hollow|defective|gem|hamzated)')
 
@@ -35,16 +36,25 @@ def generate_passive(LEXICON, patterns_path):
         return pattern if pattern else nan
 
     def get_info(row):
-        info = passive_patterns_map.get((row['PATTERN-DEF'], row['COND-T'], row['COND-S-ESSENTIAL']))
-        if info != None:
-            info['regex_sub'] = info['regex_sub'].replace('$', '\\')
-            return info
+        infos = passive_patterns_map.get((row['PATTERN-DEF'], row['COND-T'], row['COND-S-ESSENTIAL']))
+        if infos != None:
+            if len(infos) == 1:
+                info = infos[0]
+                info['regex_sub'] = info['regex_sub'].replace('$', '\\')
+                return info
+            else:
+                for info in infos:
+                    if re.match(info['regex_match'], row['FORM']):
+                        info['regex_sub'] = info['regex_sub'].replace('$', '\\')
+                        return info
         else:
             return nan
 
     def get_soundness(row):
         match = soundness_pattern.search(row['COND-S'])
         return match.group(1) if match else ''
+
+    LEXICON = LEXICON[~LEXICON['COND-S'].str.contains("Frozen")]
 
     LEXICON_PASS = LEXICON.copy()
     LEXICON_PASS['PATTERN-DEF'] = LEXICON_PASS.apply(assign_pattern_wrapper, axis=1)
