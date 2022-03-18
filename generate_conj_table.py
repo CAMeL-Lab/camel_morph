@@ -57,7 +57,7 @@ sig2feat = {
 }
 
 header = ["line", "status", "count", "signature", "lemma", "diac_ar", "diac", "freq",
-          "qc", "pattern", "stem", "bw", "gloss", "cond-s", "cond-t", "pref-cat",
+          "qc", "comments", "pattern", "stem", "bw", "gloss", "cond-s", "cond-t", "pref-cat",
           "stem-cat", "suff-cat", "feats", "debug", "color"]
 
 def parse_signature(signature, pos):
@@ -145,9 +145,10 @@ def create_conjugation_tables(lemmas,
                               generator):
     lemmas_conj = []
     for info in tqdm(lemmas):
-        lemma, form = info['lemma'], info['form']
+        lemma, form, gloss = info['lemma'], info['form'], info['gloss']
         pos, gen, num = info['pos'], info['gen'], info['num']
         cond_s, cond_t = info['cond_s'], info['cond_t']
+        lemma_raw = lemma[:]
         lemma = strip_lex(lemma)
         pattern = None
         if pos_type == 'verbal':
@@ -159,9 +160,9 @@ def create_conjugation_tables(lemmas,
                 form_gen, form_num = match.groups()[0].lower()
             
             num = process_nom_gen_num_(
-                num, form_num, form, cond_t, cond_s, lemma, pattern, pos, info.get('freq'))
+                num, form_num, form, cond_t, cond_s, gloss, lemma, pattern, pos, info.get('freq'))
             gen = process_nom_gen_num_(
-                gen, form_gen, form, cond_t, cond_s, lemma, pattern, pos, info.get('freq'))
+                gen, form_gen, form, cond_t, cond_s, gloss, lemma, pattern, pos, info.get('freq'))
             if type(num) is dict or type(gen) is dict:
                 outputs['NOM.MS.DN'] = num if type(num) is dict else gen 
                 lemmas_conj.append(outputs)
@@ -169,19 +170,20 @@ def create_conjugation_tables(lemmas,
             
             paradigm_key = f'gen:{gen} num:{num}'
 
-        lemma = bw2ar(lemma)
+        lemma_raw = bw2ar(lemma_raw)
 
         paradigm = expand_paradigm(paradigms, pos_type, paradigm_key)
         outputs = {}
         for signature in paradigm:
             features = parse_signature(signature, _strip_brackets(pos))
             # Using altered local copy of generator.py in camel_tools
-            analyses, debug_message = generator.generate(lemma, features, debug=True)
+            analyses, debug_message = generator.generate(lemma_raw, features, debug=True)
             prefix_cats = [a[1] for a in analyses]
             stem_cats = [a[2] for a in analyses]
             suffix_cats = [a[3] for a in analyses]
             analyses = [a[0] for a in analyses]
             debug_info = dict(analyses=analyses,
+                              gloss=gloss,
                               form=form,
                               cond_s=cond_s,
                               cond_t=cond_t,
@@ -204,7 +206,7 @@ def _strip_brackets(info):
     return info
 
 def process_nom_gen_num_(feat, form_feat,
-                         form=None, cond_t=None, cond_s=None,
+                         form=None, cond_t=None, cond_s=None, gloss=None,
                          lemma=None, pattern=None, pos=None, freq=None):
     feat_ = _strip_brackets(feat)
     if feat_ == '-':
@@ -212,6 +214,7 @@ def process_nom_gen_num_(feat, form_feat,
             feat_ = form_feat
         else:
             debug_info = dict(analyses=[],
+                              gloss=gloss,
                               form=form,
                               cond_s=cond_s,
                               cond_t=cond_t,
@@ -254,6 +257,9 @@ def process_outputs(lemmas_conj, pos_type):
                         stem_bw = f"{bw2ar(form)}/{pos}"
                         if stem_bw not in analysis['bw']:
                             continue
+                    elif pos_type == 'verbal':
+                        if info['lemma'] != ar2bw(analysis['lex']) or _strip_brackets(info['gloss']) != analysis['stemgloss']:
+                            continue
                     output_ = output.copy()
                     output_['diac'] = ar2bw(analysis['diac'])
                     output_['diac_ar'] = analysis['diac']
@@ -275,21 +281,24 @@ def process_outputs(lemmas_conj, pos_type):
                 for i, output in enumerate(outputs_filtered):
                     output_ = OrderedDict()
                     for h in header:
-                        output_[h.upper()] = output[h]
+                        output_[h.upper()] = output.get(h, '')
                     outputs_filtered[i] = output_
                 conjugations += outputs_filtered
             else:
                 output_ = output.copy()
                 output_['count'] = 0
-                if 'E0' in signature and 'intrans' in info['cond_s']:
+                zero_check = re.findall(r'intrans|trans', info['cond_s'])
+                if 'E0' in signature and len(set(zero_check)) == 1 and zero_check[0] == 'intrans':
                     output_['status'] = 'OK-ZERO-E0-INTRANS'
                 elif 'E0' in signature and features.get('vox') and features.get('vox') == 'p':
                     output_['status'] = 'OK-ZERO-E0-PASS'
                 elif 'C' in signature and features.get('vox') == 'p':
                     output_['status'] = 'OK-ZERO-CV-PASS'
-                elif ('' in signature or 'C3' in signature) and features.get('asp') == 'c':
+                elif ('C1' in signature or 'C3' in signature) and features.get('asp') == 'c':
                     output_['status'] = 'OK-ZERO-CV-PER'
-                elif features.get('vox') and features.get('vox') == 'p':
+                elif 'Frozen' in output['cond-s'] and features.get('vox') == 'p':
+                    output_['status'] = 'OK-ZERO-FROZEN-PASS'
+                elif features.get('vox') == 'p':
                     output_['status'] = 'CHECK-ZERO-PASS'
                 else:
                     output_['status'] = 'CHECK-ZERO'
