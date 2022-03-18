@@ -66,7 +66,7 @@ def read_morph_specs(config, config_name):
     """Read Input file containing morphological specifications"""
     data_dir = config['global']['data-dir']
     local_specs = config['local'][config_name]
-    global_specs = config['global']
+
     ABOUT = pd.read_csv(os.path.join(data_dir, 'About.csv'))
     HEADER = pd.read_csv(os.path.join(data_dir, 'Header.csv'))
     order_filename = f"{local_specs['specs']['order']}.csv"
@@ -85,19 +85,21 @@ def read_morph_specs(config, config_name):
     LEXICON['COND-T'] = LEXICON['COND-T'].replace(' +', ' ', regex=True)
     LEXICON['COND-T'] = LEXICON['COND-T'].replace(' $', '', regex=True)
 
-    if local_specs.get('passive'):
-        LEXICON_PASS = None
-        for name in lexicon_sheets:
-            match = re.search(r'MSA-LEX-([IP]V)', name)
-            if match:
-                patterns_path = os.path.join(data_dir, f"{match.group(1)}-Patterns.csv")
-                LEXICON_PASS = pd.concat(
-                    [LEXICON_PASS, generate_passive(LEXICON, patterns_path)])
-        if LEXICON_PASS is not None:
-            LEXICON = pd.concat([LEXICON, LEXICON_PASS])
+    patterns_path = local_specs['specs'].get('passive')
+    if patterns_path:
+        LEXICON_PASS = generate_passive(LEXICON, os.path.join(data_dir, f"{patterns_path}.csv"))
+        LEXICON = pd.concat([LEXICON, LEXICON_PASS])
 
     LEXICON['BW'] = LEXICON['FORM'] + '/' + LEXICON['BW']
     LEXICON['LEMMA'] = 'lex:' + LEXICON['LEMMA']
+
+    POSTREGEX = None
+    postregex_path = local_specs['specs'].get('postregex')
+    if postregex_path:
+        POSTREGEX = pd.read_csv(os.path.join(data_dir, 'PostRegex.csv'))
+        POSTREGEX = POSTREGEX[POSTREGEX.DEFINE == 'POSTREGEX']
+        POSTREGEX = POSTREGEX.replace(np.nan, '', regex=True)
+        POSTREGEX = _process_postregex(POSTREGEX)
     
     if local_specs.get('split_or') == True:
         LEXICON_ = []
@@ -140,7 +142,7 @@ def read_morph_specs(config, config_name):
         if MORPH.equals(MORPH_prev):
             MORPH = pd.read_pickle('morph_cache/morph_sheet_processed.pkl')
             SHEETS = dict(about=ABOUT, header=HEADER,
-                          order=ORDER, morph=MORPH, lexicon=LEXICON)
+                          order=ORDER, morph=MORPH, lexicon=LEXICON, postregex=POSTREGEX)
             return SHEETS, cond2class
     MORPH.to_pickle('morph_cache/morph_sheet_prev.pkl')
     
@@ -237,19 +239,25 @@ def read_morph_specs(config, config_name):
                 MORPH.loc[idx, 'COND-T'] = ' '.join(cond_t_almrph)
                 MORPH.loc[idx, 'COND-F'] = ' '.join(cond_f_almrph)
     MORPH.to_pickle('morph_cache/morph_sheet_processed.pkl')
-    SHEETS = dict(about=ABOUT, header=HEADER, order=ORDER, morph=MORPH, lexicon=LEXICON)
+    SHEETS = dict(about=ABOUT, header=HEADER, order=ORDER, morph=MORPH, lexicon=LEXICON, postregex=POSTREGEX)
     return SHEETS, cond2class
    
 
 def construct_almor_db(SHEETS, pruning, cond2class):
     ORDER, MORPH, LEXICON = SHEETS['order'], SHEETS['morph'], SHEETS['lexicon']
-    ABOUT, HEADER = SHEETS['about'], SHEETS['header']
+    ABOUT, HEADER, POSTREGEX = SHEETS['about'], SHEETS['header'], SHEETS['postregex']
 
     short_cat_maps = _get_short_cat_name_maps(ORDER)
 
     db = {}
     db['OUT:###ABOUT###'] = list(ABOUT['Content'])
     db['OUT:###HEADER###'] = list(HEADER['Content'])
+    if POSTREGEX is not None:
+        db['OUT:###POSTREGEX###'] = [
+            "###POSTREGEX###",
+            'MATCH\t' + '\t'.join([match for match in POSTREGEX['MATCH'].values.tolist()]),
+            'REPLACE\t' + '\t'.join([replace for replace in POSTREGEX['REPLACE'].values.tolist()])
+        ]
     
     defaults = _process_defaults(db['OUT:###HEADER###'])
     
@@ -525,6 +533,11 @@ def print_almor_db(output_filename, db):
         for x in db['OUT:###HEADER###']:
             print(x, file=f)
 
+        postregex = db.get('OUT:###POSTREGEX###')
+        if postregex:
+            for x in postregex:
+                print(x, file=f)
+
         print("###PREFIXES###", file=f)
         for x in db['OUT:###PREFIXES###']:
             print(x, file=f)
@@ -756,6 +769,19 @@ def _get_cond_false(cond_t_all, cond_t_almrph):
         cond_t_almrph = ['_']
 
     return cond_f_almrph, cond_t_almrph
+
+
+def _process_postregex(postregex):
+    for i, row in postregex.iterrows():
+        match_ = []
+        for match in re.split(r'(\\.|[\|}{\*\$_])', row['MATCH']):
+            match = match if re.match(r'(\\.)', match) else bw2ar(match)
+            match_.append(match)
+
+        postregex.at[i, 'MATCH'] = ''.join(match_)
+        postregex.at[i, 'REPLACE'] = ''.join(re.sub(r'\$', r'\\', row['REPLACE']))
+    
+    return postregex
 
 
 def _process_defaults(header):
