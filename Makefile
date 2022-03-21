@@ -158,9 +158,9 @@ egy_cv_process: download_egy_cv repr_lemmas_cv_egy make_db_cv_egy conj_cv_egy up
 msa_pv_bank_annotation:
 	python paradigm_debugging.py -output_name paradigm_debug_pv_msa_v1.0.tsv -output_dir conjugation_local/paradigm_debugging -gsheet MSA-PV -spreadsheet Paradigm-Debugging -bank_dir conjugation_local/banks -bank_name MSA-PV-Bank -new_conj conjugation_local/tables/conj_pv_msa_v1.0.tsv
 msa_pv_bank_upload:
-	python format_conj_gsheets.py -dir conjugation_local/banks -file_name MSA-PV-Bank.tsv -spreadsheet_name Paradigm-Banks -gsheet_name MSA-PV-Bank -formatting bank
+	python format_conj_gsheets.py -dir conjugation_local/banks -file_name MSA-PV-Bank.tsv -spreadsheet_name Paradigm-Banks -gsheet_name MSA-PV-Bank -formatting bank -mode backup
 msa_pv_auto_qc_upload:
-	python format_conj_gsheets.py -dir conjugation_local/paradigm_debugging -file_name paradigm_debug_pv_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-PV -formatting conj_tables
+	python format_conj_gsheets.py -dir conjugation_local/paradigm_debugging -file_name paradigm_debug_pv_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-PV -formatting conj_tables -mode backup
 msa_pv_debug: download_msa_pv repr_lemmas_pv_msa make_db_pv_msa conj_pv_msa msa_pv_bank_annotation msa_pv_bank_upload msa_pv_auto_qc_upload
 
 msa_iv_i_bank_annotation:

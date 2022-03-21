@@ -48,8 +48,12 @@ def create_repr_lemmas_list(lexicon,
         
         elif info_display_format == 'expanded':
             for k in stems[0]:
-                info[k] = ''.join(
-                    list(set(sorted([f"[{stem[k]}]" if stem[k] else '[-]' for stem in stems]))))
+                if k in ['cond_t', 'cond_s']:
+                    info[k] = ''.join(
+                        sorted([f"[{stem[k]}]" if stem[k] else '[-]' for stem in stems]))
+                else:
+                    info[k] = ''.join(
+                        list(set(sorted([f"[{stem[k]}]" if stem[k] else '[-]' for stem in stems]))))
             info['lemma'] = info['lemma'][1:-1]
         
         lemmas_cond_sig = [{k: stem.get(k) for k in class_keys} for stem in stems]

@@ -123,7 +123,8 @@ def filter_and_status(outputs):
         for output in outputs:
             count += 1
             signature_outputs_.append(output)
-            if len(set([tuple([o['diac'], o['bw']]) for o in outputs])) == 1:
+            if len(set([tuple([o['diac'], o['bw']]) for o in outputs])) == 1 or \
+                    len(re.findall(r'\[.+?\]', output['cond-s'])) == 6 and len(outputs) == 2:
                 break
     for so in signature_outputs_:
         so['count'] = count
