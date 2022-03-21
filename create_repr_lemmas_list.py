@@ -131,7 +131,6 @@ def get_highest_prob_lemmas(pos_type, uniq_lemma_classes, lemmas_stripped_uniq, 
 
     if bank is not None:
         old_lemmas = set([re.sub(r'_\d', '', entry[1]) for entry in bank._bank])
-        strip = True if not any(['-' in lemma for lemma in old_lemmas]) else False
 
     uniq_lemma_classes_ = {}
     for lemmas_cond_sig, lemmas_info in uniq_lemma_classes.items():
@@ -139,13 +138,10 @@ def get_highest_prob_lemmas(pos_type, uniq_lemma_classes, lemmas_stripped_uniq, 
         lemmas_ = lemmas
         done = False
         if bank is not None:
-            if strip:
-                lemmas_ = [strip_lex(lemma) for lemma in lemmas]
             common_lemmas = old_lemmas.intersection(set(lemmas_))
             if common_lemmas:
-                uniq_lemma_classes_[lemmas_cond_sig] = [
-                    info for info in lemmas_info['lemmas']
-                    if strip_lex(info['lemma']) in common_lemmas or info['lemma'] in common_lemmas][0]
+                uniq_lemma_classes_[lemmas_cond_sig] = [info for info in lemmas_info['lemmas']
+                                                        if info['lemma'] in common_lemmas][0]
                 uniq_lemma_classes_[lemmas_cond_sig]['freq'] = lemmas_info['freq']
                 done = True
 

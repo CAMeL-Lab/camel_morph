@@ -66,11 +66,6 @@ class AnnotationBank:
         assert all([qc in AnnotationBank.TAGS for qc in annotated_paradigms['QC'].values.tolist()]), \
             f"Get rid of all tags not belonging to {AnnotationBank.TAGS}"
         assert set(AnnotationBank.HEADER).issubset(annotated_paradigms.columns)
-
-        lemmas = [entry[1] for entry in self._bank]
-        strip = True if not any(['-' in lemma for lemma in lemmas]) else False
-        if strip:
-            annotated_paradigms['LEMMA'] = annotated_paradigms['LEMMA'].replace(r'-.', '', regex=True)
         
         keys_to_del = []
         for _, row in annotated_paradigms.iterrows():
