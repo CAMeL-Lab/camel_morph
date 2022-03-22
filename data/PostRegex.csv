@@ -7,7 +7,7 @@
 5,,,,,,,,
 6,,,,,,,,
 7,,,,,,,,
-8,DEFINE,diac,EGY,Input,Output,Status,,
+8,DEFINE,diac,EGY,Input,Reference,Status,,
 9,CHECK,diac,EGY,katabta#hA,katabtahA,TRUE,katabta#hA,katabtahA
 10,CHECK,diac,EGY,sAmi#Htu#kuw,sAmiHtukuw,TRUE,sAmi#Htu#kuw,sAmiHtukuw
 11,CHECK,diac,EGY,sAmi#Ht$,sAmiHti$,TRUE,sAmi#Ht$,sAmiHti$
@@ -29,7 +29,7 @@
 27,CHECK,diac,EGY,ma_sAmi#Ht$,ma_sAmiHti$,TRUE,ma_sAmi#Ht$,ma_sAmiHti$
 28,CHECK,diac,EGY,ma_sakat~$,ma_sakat~i$,TRUE,ma_sakat~$,ma_sakat~i$
 29,CHECK,diac,EGY,ma_tim$iy$,ma_tim$iy$,TRUE,ma_tim$iy$,ma_tim$iy$
-30,CHECK,diac,EGY,btim$iy,ma_tim$iy$,FALSE,btim$iy,bitim$iy
+30,CHECK,diac,EGY,btim$iy,bitim$iy,TRUE,btim$iy,bitim$iy
 31,,,,,,,,
 32,,,,,,,,
 33,,,,,,,,

@@ -165,7 +165,7 @@
 163,164,MORPH,[IVBuff],Buffer,},}/STEM,MSA,,,#-}iy y-suff,_,iy,,DONE,,"Christian, add"
 164,165,MORPH,[IVBuff],Buffer,&,&/STEM,MSA,,,#-}iy w-suff,_,_,,DONE,,"Christian, add"
 165,124,MORPH,[IVBuff],Buffer,>ay,>ay/STEM,MSA,,,#->ay else,_,ay,تريان,DONE,,
-166,125,MORPH,[IVBuff],Buffer,>,>,MSA,,,#->ay w-suff||y-suff,_,_,ترون ترين,DONE,,
+166,125,MORPH,[IVBuff],Buffer,>,>/STEM,MSA,,,#->ay w-suff||y-suff,_,_,ترون ترين,DONE,,
 167,126,MORPH,[IVBuff],Buffer,>a,>a/STEM,MSA,,,#->ay z-suff c-suff,_,a,ترَ,DONE,,
 168,127,MORPH,[IVBuff],Buffer,>aY,>aY/STEM,MSA,,,#->ay z-suff v-suff !enc0,_,aY,ترى,DONE,,
 169,128,MORPH,[IVBuff],Buffer,|,|/STEM,MSA,,,#->ay z-suff v-suff enc0,_,aY,تراه,DONE,,
