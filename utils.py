@@ -99,12 +99,12 @@ def analyze_pattern(lemma, root=None, surface_form=False):
                 pattern, soundness = patternize_root(lemma_, dc, surface_form)
                 pattern.insert(1, "A")
                 abstract_pattern = "1A2a3"
-            # >1o2a3 (tri) [has precedence over the next clause]
-            elif lemma[0] == ">" and dc is None:
+            # >a1o2a3 (tri) [has precedence over the next clause]
+            elif lemma[0] == ">" and dc is None and (len(root) == 3 if root else True):
                 lemma_ = lemma[2:]
                 pattern, soundness = patternize_root(lemma_, dc, surface_form)
                 pattern.insert(0, ">a")
-                abstract_pattern = ">1o2a3"
+                abstract_pattern = ">a1o2a3"
             # 1a2o3a4 (quad)
             elif lemma[3] == "o":
                 pattern, soundness = patternize_root(lemma, dc, surface_form)
@@ -133,10 +133,18 @@ def analyze_pattern(lemma, root=None, surface_form=False):
                     result['error'] = '5+t'
                     return result
             # {ino1a2a3 (tri)
-            elif lemma.startswith("{ino") and (lemma[4] == root[0] if root else True):
-                lemma_ = lemma[4:]
+            elif lemma.startswith("{ino") and (lemma[4] == root[0] if root else True) or \
+                 lemma.startswith("{im~"):
+                if lemma.startswith("{im~"):
+                    lemma_ = lemma[2] + "o" + lemma[5:]
+                else:
+                    lemma_ = lemma[4:]
                 pattern, soundness = patternize_root(lemma_, dc, surface_form)
-                pattern.insert(0, "{ino")
+                if lemma.startswith("{im~"):
+                    pattern.insert(0, "{i")
+                    pattern[2] = '~a'
+                else:
+                    pattern.insert(0, "{ino")
                 abstract_pattern = "{ino1a2a3"
             # {i1o2a3~ (tri) [has precedence over the next clause]
             elif lemma[0] == "{" and lemma[-1] == "~" and (lemma[4] == root[1] if root else True):
@@ -146,8 +154,8 @@ def analyze_pattern(lemma, root=None, surface_form=False):
                 pattern.insert(0, "{i")
                 abstract_pattern = "{i1o2a3~"
             # {i1ota2a3 (tri)
-            elif lemma[0] == "{" and (lemma[4] in ["t", "T"] or lemma[3] == "~" or
-                                      lemma[2] == 'z'):
+            elif lemma[0] == "{" and (lemma[4] in ["t", "T"] and lemma[4] not in ["m"] or
+                                      lemma[3] == "~" or lemma[2] == 'z'):
                 abstract_pattern = "{i1ota2a3"
                 if len(lemma) == 7:
                     lemma_ = lemma[2:4] + lemma[5:]
@@ -164,6 +172,8 @@ def analyze_pattern(lemma, root=None, surface_form=False):
                     pattern[2] = "~"
                     if len(lemma) != 6:
                         pattern[2] = "~a"
+                    if root and root[0] != 't':
+                        pattern[1] = 't'
                 elif len(lemma) in [6, 7]:
                     pattern.insert(3, "t")
                 else:
@@ -220,7 +230,10 @@ def analyze_pattern(lemma, root=None, surface_form=False):
         if abstract_pattern == "{i1ota2a3" and '~' not in lemma_raw or \
             abstract_pattern == "{i1ota2a3" and lemma[3] != "~" and len(lemma) not in [6, 7]:
             pattern = pattern[:4] + lemma_raw[4] + pattern[5:]
-    
+        elif abstract_pattern == "{i1ota2a3"and lemma[0] == "{" and (lemma[4] in ["t", "T"] or 
+            lemma[3] == "~" or lemma[2] == 'z'):
+            if root and root[0] in ['d', 'D', 'v', 'T', 'Z']:
+                pattern = pattern[:2] + '1' + pattern[3:]
     result['pattern'] = pattern
     result['pattern_abstract'] = abstract_pattern
     result['soundness'] = soundness

@@ -9,7 +9,7 @@ from camel_tools.morphology.utils import strip_lex
 
 from utils import assign_pattern
 
-errors = {}
+errors, missing = {}, {}
 
 def generate_passive(LEXICON, patterns_path):
     passive_patterns = pd.read_csv(patterns_path)
@@ -30,7 +30,9 @@ def generate_passive(LEXICON, patterns_path):
     soundness_pattern = re.compile(r'(hollow|defective|gem|hamzated)')
 
     def assign_pattern_wrapper(row):
-        pattern, _, _, error = assign_pattern(strip_lex(row['LEMMA']))
+        result = assign_pattern(strip_lex(row['LEMMA']), root=row['ROOT'].split('.'))
+        pattern = result['pattern_conc']
+        error = result['error']
         if error:
             errors.setdefault(error, []).append(row['LEMMA'])
         return pattern if pattern else nan
@@ -48,6 +50,7 @@ def generate_passive(LEXICON, patterns_path):
                         info['regex_sub'] = info['regex_sub'].replace('$', '\\')
                         return info
         else:
+            missing.setdefault((row['PATTERN-DEF'], row['COND-T'], row['COND-S-ESSENTIAL']), []).append(row.to_dict())
             return nan
 
     def get_soundness(row):
@@ -69,6 +72,10 @@ def generate_passive(LEXICON, patterns_path):
         lambda row: re.sub(row['PATTERN-MAP']['regex_match'],
                            row['PATTERN-MAP']['regex_sub'],
                            row['FORM']), axis=1)
+    LEXICON_PASS['PATTERN'] = LEXICON_PASS.apply(
+        lambda row: re.sub(row['PATTERN-MAP']['regex_match'],
+                           row['PATTERN-MAP']['regex_sub'],
+                           row['PATTERN']), axis=1)
     LEXICON_PASS['SOUND'] = LEXICON_PASS.apply(get_soundness, axis=1)
     # All passive forms should be intransitive
     LEXICON_PASS['COND-T'] = LEXICON_PASS.apply(
