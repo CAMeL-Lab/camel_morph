@@ -143,11 +143,10 @@ def generate_abstract_lexicon(lexicon):
 
         # ROOT ##########################################################
         root, root_sub = [], []
-        # count = 1
         root_split = row['ROOT'].split('.')
         for i, r in enumerate(root_split, start=1):
             if r in ['>', 'w', 'y'] or i == len(root_split) and r in ['n', 't'] or \
-                i == len(root_split) - 1 and root_split[i - 1] == root_split[i] and 'gem' in cond_s:
+               i == len(root_split) - 1 and root_split[i - 1] == root_split[i] and 'gem' in cond_s and r in ['n', 't']:
                 root.append(r)
                 root_sub.append(r)
             else:
@@ -159,9 +158,6 @@ def generate_abstract_lexicon(lexicon):
                     else:
                         raise NotImplementedError
                 root_sub.append(f'\{grp}')
-                # if i < len(root_split) and root_split[i] != r:
-                # if count < n_match or i < len(root_split) - 1:
-                    # count += 1
 
         root = '.'.join(root)
         root_sub = '.'.join(root_sub)
@@ -184,7 +180,7 @@ def generate_abstract_lexicon(lexicon):
         columns['ROOT_EX'] = row['ROOT']
 
         abstract_entries.append(columns)
-    
+
     entry2freq = Counter(
         [tuple([entry.get(h) for h in header]) for entry in abstract_entries])
     comments_index = header.index('COMMENTS')
