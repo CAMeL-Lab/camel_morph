@@ -3,12 +3,12 @@
 1,{i>o2a3~,{i>o2a3~,v-suff + gem,v-suff,gem,1,{i}otam~,{i}otam~,{i(.).(.).(.)~,{u&o$2u$3~,v-suff + gem,v-suff,gem,{u&otum~,0,,DONE
 2,{i>ota2a3,{i>ota2a3,#n,,#n,1,{i}otalaf,{i}otalaf,{i(.).(.).(.).(.),{u&o$2u$3i$4,#n,,#n,{u&otulif,1,,DONE
 3,{i>ota2a3,{i>ota2a3,,,,6,{i}otalaf,{i}otalaf,{i(.).(.).(.).(.),{u&o$2u$3i$4,,,,{u&otulif,1,,DONE
-4,{i1~a>a3,{i1~a>a3,,,,2,{it~a>ad,{it~a>ad,{i(.)~.(.).(.),{u$1~u}i$3,,,,{ut~u}id,0,,DONE
-5,{i1~a2a>,{i1~a2a>,#-a>,,#-a>,2,{id~afa>,{id~af,{i(.)~.(.),{u$1~u$2i},,,,{ud~ufi},1,,DONE
-6,{i1~a2a3,{i1~a2a3,,,,38,{it~aEaZ,{it~aEaZ,{i(.)~.(.).(.),{u$1~u$2i$3,,,,{ut~uEiZ,0,,DONE
-7,{i1~a2aY,{i1~a2a#,#-ay,,#-ay,4,{im~aHaY,{im~aH,{i(.)~.(.),{u$1~u$2,#-iy,,#-iy,{um~uH,1,,DONE
-8,{i1~aAo3,{i1~a@o3,c-suff + hollow,c-suff,hollow,1,{id~AH,{id~aH,{i(.)~.(.),{u$1~i$2,c-suff + hollow,c-suff,hollow,{ud~iH,0,,DONE
-9,{i1~aAo3,{i1~a@o3,v-suff + hollow,v-suff,hollow,1,{id~AH,{id~AH,{i(.)~A(.),{u$1~iy$2,v-suff + hollow,v-suff,hollow,{ud~iyH,0,,DONE
+4,{it~a>a3,{it~a>a3,,,,2,{it~a>ad,{it~a>ad,{i(.)~.(.).(.),{u$1~u}i$3,,,,{ut~u}id,0,,DONE
+5,{it~a2a>,{it~a2a>,#-a>,,#-a>,2,{id~afa>,{id~af,{i(.)~.(.),{u$1~u$2i},,,,{ud~ufi},1,,DONE
+6,{it~a2a3,{it~a2a3,,,,38,{it~aEaZ,{it~aEaZ,{i(.)~.(.).(.),{u$1~u$2i$3,,,,{ut~uEiZ,0,,DONE
+7,{it~a2aY,{it~a2a#,#-ay,,#-ay,4,{im~aHaY,{im~aH,{i(.)~.(.),{u$1~u$2,#-iy,,#-iy,{um~uH,1,,DONE
+8,{it~aAo3,{it~a@o3,c-suff + hollow,c-suff,hollow,1,{id~AH,{id~aH,{i(.)~.(.),{u$1~i$2,c-suff + hollow,c-suff,hollow,{ud~iH,0,,DONE
+9,{it~aAo3,{it~a@o3,v-suff + hollow,v-suff,hollow,1,{id~AH,{id~AH,{i(.)~A(.),{u$1~iy$2,v-suff + hollow,v-suff,hollow,{ud~iyH,0,,DONE
 10,{i1o2a>a4~,{i1o2a>a4~,c-suff + hollow,c-suff,hollow,2,{iToma>an~,{iToma>onan,{i(.).(.).(.).(.).(.),{u$1o$2u&o$4i$5,c-suff + hollow,c-suff,hollow,{uTomu&onin,1,This is not hollow,DONE
 11,{i1o2a>a4~,{i1o2a>a4~,v-suff + hollow,v-suff,hollow,2,{iToma>an~,{iToma>an~,{i(.).(.).(.).(.)~,{u$1o$2u&i$4~,v-suff + hollow,v-suff,hollow,{uTomu&in~,1,This is not hollow,DONE
 12,{i1o2a>a4~,{i1o2a>a4~,c-suff + #n hollow,c-suff,#n hollow,1,{iToma>an~,{iToma>onan,{i(.).(.).(.).(.).(.),{u$1o$2u&o$4i$5,c-suff + #n hollow,c-suff,#n hollow,{uTomu&onin,1,This is not hollow,DONE
@@ -20,8 +20,8 @@
 18,{i1o2aAo4~,{i1o2a@o4~,c-suff + gem,c-suff,gem,2,{iSohAb~,{iSohAbab,{i(.).(.)A(.).(.),{u$1o$2uw$3i$4,c-suff + gem,c-suff,gem,{uSohuwbib,0,,DONE
 19,{i1o2aAo4~,{i1o2a@o4~,v-suff + gem,v-suff,gem,2,{iSohAb~,{iSohAb~,{i(.).(.)A(.)~,{u$1o$2uw$3~,v-suff + gem,v-suff,gem,{uSohuwb~,0,,DONE
 20,{i1o2ano3a4,{i1o2ano3a4,,,,1,{iqoEanosas,{iqoEanosas,{i(.).(.).(.).(.).(.),{u$1o$2u$3o$4i$5,,,,{uqoEunosis,1,,DONE
-21,{i1oEawo2a3,{i1oEawo2a3,#n,,#n,2,{igoraworaq,{igoraworaq,{i(.).(.).(.).(.).(.),{u$1o$2u$3o$4i$5,#n,,#n,{ugoruworiq,0,,DONE
-22,{i1oEawo2a3,{i1oEawo2a3,,,,6,{igoraworaq,{igoraworaq,{i(.).(.).(.).(.).(.),{u$1o$2u$3o$4i$5,,,,{ugoruworiq,0,,DONE
+21,{i1o2awo2a3,{i1o2awo2a3,#n,,#n,2,{igoraworaq,{igoraworaq,{i(.).(.).(.).(.).(.),{u$1o$2u$3o$4i$5,#n,,#n,{ugoruworiq,0,,DONE
+22,{i1o2awo2a3,{i1o2awo2a3,,,,6,{igoraworaq,{igoraworaq,{i(.).(.).(.).(.).(.),{u$1o$2u$3o$4i$5,,,,{ugoruworiq,0,,DONE
 23,{i1ota>a3,{i1ota>a3,#t,,#t,1,{ilota>am,{ilota>am,{i(.).(.).(.).(.),{u$1o$2u}i$4,#t,,#t,{ulotu}im,1,,DONE
 24,{i1ota>a3,{i1ota>a3,,,,4,{ilota>am,{ilota>am,{i(.).(.).(.).(.),{u$1o$2u}i$4,,,,{ulotu}im,1,,DONE
 25,{i1ota>aY,{i1ota>a#,#-ay,,#-ay,1,{irota>aY,{irota>,{i(.).(.).(.),{u$1o$2u,#-'iy,,#-}iy,{urotu,0,Added new cond: #-'iy,DONE
@@ -111,7 +111,7 @@
 109,>a1aAo3,>a1a@o3,v-suff + #n hollow,v-suff,#n hollow,5,>azAr,>azAr,(.).(.)A(.),$1u$2iy$3,v-suff + #n hollow,v-suff,#n hollow,>uziyr,1,,DONE
 110,>a1aAo3,>a1a@o3,c-suff + #t hollow,c-suff,#t hollow,5,>azAr,>azar,(.).(.).(.),$1u$2i$3,c-suff + #t hollow,c-suff,#t hollow,>uzir,1,,DONE
 111,>a1aAo3,>a1a@o3,v-suff + #t hollow,v-suff,#t hollow,3,>azAr,>azAr,(.).(.)A(.),$1u$2iy$3,v-suff + #t hollow,v-suff,#t hollow,>uziyr,1,,DONE
-112,>a1o>a3,>a1o>a3,,,,7,>alo>ak,>alo>ak,(.).(.).(.).(.),$1u$2o$3i$4,,,,>ulo>ik,0,,DONE
+112,>a1o>a3,>a1o>a3,,,,7,>alo>ak,>alo>ak,(.).(.).(.).(.),$1u$2o}i$4,,,,>ulo}ik,0,,DONE
 113,>a1o>aY,>a1o>a#,#->ay,,#->ay,1,>ano>aY,>ano>,(.).(.).(.),$1u$2o,#-'iy,,#-}iy,>uno,1,Added new cond: #-'iy,DONE
 114,>a1o>aY,>a1o>a#,#-ay,,#-ay,1,>ano>aY,>ano>,(.).(.).(.),>u$2o,#-'iy,,#-}iy,>uno,1,Added new cond: #-'iy,DONE
 115,>a1o2a>,>a1o2a>,#-a>,,#-a>,19,>ahoda>,>ahod,(.).(.).(.),$1u$2o$3i},,,,>uhodi},0,,DONE
@@ -144,10 +144,10 @@
 142,>a2iy,>a2iy,#-iy,,#-iy,2,>a*iy,>a*,(.).(.),$1u$2iy,#-iy,,#-iy,>u*iy,0,,DONE
 143,>a2u3,>a2u3,#n,,#n,1,>anuv,>anuv,(.).(.).(.),$1u$2i$3,#n,,#n,>univ,1,,DONE
 144,>a2u3,>a2u3,,,,2,>anuv,>anuv,(.).(.).(.),$1u$2i$3,,,,>univ,1,,DONE
-145,>aAo3,>a@o3,c-suff + hollow,c-suff,hollow,6,>Aq,>uq,(.).(.),$1i$2,c-suff + hollow,c-suff,hollow,>iq,0,,DONE
+145,>aAo3,>a@o3,c-suff + hollow,c-suff,hollow,6,>Aq,>uq,(.).(.),<i$2,c-suff + hollow,c-suff,hollow,<iq,0,,DONE
 146,>aAo3,>a@o3,v-suff + hollow,v-suff,hollow,6,>Aq,|q,.(.),<iy$1,v-suff + hollow,v-suff,hollow,<iyq,0,,DONE
 147,>aw~a3,>aw~a3,,,,6,>aw~ah,>aw~ah,(.).(.)~.(.),$1u$2~i$3,,,,>uw~ih,1,,DONE
-148,>aw~aY,>aw~a#,#-ay,,#-ay,1,>aw~aY,>aw~,(.).(.)~,$1u$2~,#-iy,,#-iy,,0,,DONE
+148,>aw~aY,>aw~a#,#-ay,,#-ay,1,>aw~aY,>aw~,(.).(.)~,$1u$2~,#-iy,,#-iy,>uw~,0,,DONE
 149,>AwaY,>@wa#,#-ay,,#-ay,1,>AwaY,|w,.(.),>uw$1,#-iy,,#-iy,>uww,1,,DONE
 150,>awaY,>awa#,#-ay,,#-ay,1,>awaY,>aw,(.).(.),$1u$2,#-iy,,#-iy,>uw,1,,DONE
 151,>awi3,>awi3,,,,1,>awid,>awid,(.).(.).(.),$1u$2i$3,,,,>uwid,0,,DONE
@@ -382,8 +382,15 @@
 380,{i1o2a3~,{i1o2a3~,c-suff + #t gem,c-suff,#t gem,-,{izoraq~,{izoraqaq,{i(.).(.).(.).(.),{u$1o$2u$3i$4,c-suff + #t gem,c-suff,#t gem,{uzoruqiq,0,,DONE
 381,{i1o2a3~,{i1o2a3~,v-suff + #t gem,v-suff,#t gem,-,{izoraq~,{izoraq~,{i(.).(.).(.)~,{u$1o$2u$3~,v-suff + #t gem,v-suff,#t gem,{uzoruq~,0,,DONE
 382,1AwaY,1@wa#,#-ay,,#-ay,-,sAwaY,sAw,(.)A(.),$1uw$2,#-iy,,#-iy,suww,1,,DONE
-383,>aAo3,>a@o3,c-suff + #n hollow,c-suff,#n hollow,-,>An,>uq,(.).(.),$1i$2,c-suff + #n hollow,c-suff,#n hollow,>iq,0,,DONE
+383,>aAo3,>a@o3,c-suff + #n hollow,c-suff,#n hollow,-,>An,>uq,(.).(.),<i$2,c-suff + #n hollow,c-suff,#n hollow,<iq,0,,DONE
 384,>aAo3,>a@o3,v-suff + #n hollow,v-suff,#n hollow,-,>An,|q,.(.),<iy$1,v-suff + #n hollow,v-suff,#n hollow,<iyq,0,,DONE
 385,1u2iy,1u2iy,#-iy,,#-iy,-,zuhiy,zuhiy,(.).(.).(.),$1u$2i$3,#-iy,,#-iy,zuhiy,1,Isn't this pattern inherently passive?,DONE
 386,>a2o3o4a5,>a2o3o4a5,,,,-,>anokolaz,>anokolaz,(.).(.).(.).(.).(.),$1u$2o$3o$4i$5,,,,>unokoliz,0,,DONE
 387,ta>a2o3o4a5,ta>a2o3o4a5,,,,-,ta>anokolaz,ta>anokolaz,ta(.).(.).(.).(.).(.),tu$1u$2o$3o$4i$5,,,,tu>unokoliz,1,,DONE
+388,{i>ota2~,{i>ota2~,c-suff + gem,c-suff,gem,-,{i}otam~,{i}otamam,{i(.).(.).(.).(.),{u&o$2u$3i$4,c-suff + gem,c-suff,gem,{u&otumim,0,,DONE
+389,{i>ota2~,{i>ota2~,v-suff + gem,v-suff,gem,-,{i}otam~,{i}otam~,{i(.).(.).(.)~,{u&o$2u$3~,v-suff + gem,v-suff,gem,{u&otum~,0,,DONE
+390,>a2o3a4,>a2o3a4,,,,-,>aforaq,>aforaq,(.).(.).(.).(.),$1u$2o$3i$4,,,,>uforiq,1,,DONE
+391,>a2o3a4,>a2o3a4,,,#n,-,>aloman,>aloman,(.).(.).(.).(.),$1u$2o$3i$4,,,#n,>ulomin,1,,DONE
+392,>awo3a4,>awo3a4,,,,-,>aworab,>aworab,(.).(.).(.).(.),$1u$2o$3i$4,,,,>uworib,0,,DONE
+393,{i1~a2a3,{i1~a2a3,,,,-,{it~abaE,{it~abaE,{i(.)~.(.).(.),{u$1~u$2i$3,,,,{ut~ubiE,1,,DONE
+394,{i1~a2aY,{i1~a2a#,#-ay,,#-ay,-,{im~aHaY,{im~aH,{i(.)~.(.),{u$1~u$2,#-iy,,#-iy,{um~uH,0,,DONE
