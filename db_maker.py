@@ -72,7 +72,6 @@ def construct_almor_db(SHEETS, pruning, cond2class):
     db['OUT:###HEADER###'] = list(HEADER['Content'])
     if POSTREGEX is not None:
         db['OUT:###POSTREGEX###'] = [
-            "###POSTREGEX###",
             'MATCH\t' + '\t'.join([match for match in POSTREGEX['MATCH'].values.tolist()]),
             'REPLACE\t' + '\t'.join([replace for replace in POSTREGEX['REPLACE'].values.tolist()])
         ]
@@ -119,7 +118,8 @@ def construct_almor_db(SHEETS, pruning, cond2class):
         pbar.close()
     
     construct_process(LEXICON, stems_section_title='OUT:###STEMS###')
-    construct_process(BACKOFF, stems_section_title='OUT:###SMARTBACKOFF###')
+    if BACKOFF is not None:
+        construct_process(BACKOFF, stems_section_title='OUT:###SMARTBACKOFF###')
 
     return db
 
@@ -369,6 +369,7 @@ def print_almor_db(output_filename, db):
         for x in db['OUT:###HEADER###']:
             print(x, file=f)
 
+        print("###POSTREGEX###", file=f)
         postregex = db.get('OUT:###POSTREGEX###')
         if postregex:
             for x in postregex:
@@ -388,9 +389,9 @@ def print_almor_db(output_filename, db):
             x = re.sub('ـ', '_', x)
             print(x, file=f)
 
+        print("###SMARTBACKOFF###", file=f)
         backoff = db.get('OUT:###SMARTBACKOFF###')
         if backoff:
-            print("###SMARTBACKOFF###", file=f)
             for x in db['OUT:###SMARTBACKOFF###']:
                 print(x, file=f)
             
