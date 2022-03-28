@@ -21,10 +21,8 @@ import cProfile, pstats
 from camel_tools.utils.dediac import dediac_bw
 from camel_tools.utils.charmap import CharMapper
 from camel_tools.utils.normalize import normalize_alef_bw, normalize_alef_maksura_bw, normalize_teh_marbuta_bw
-from generate_passive import generate_passive
 
-import pandas as pd
-import numpy as np
+import db_maker_utils
 
 bw2ar = CharMapper.builtin_mapper('bw2ar')
 ar2bw = CharMapper.builtin_mapper('ar2bw')
@@ -48,7 +46,7 @@ def make_db(config_file, config_name, output_dir):
     #Config file specifies which sheets to read in the xlsx spreadsheet
     with open(config_file) as f:
         config = json.load(f)
-    SHEETS, cond2class = read_morph_specs(config, config_name)
+    SHEETS, cond2class = db_maker_utils.read_morph_specs(config, config_name)
     
     print("\nValidating combinations... [2/3]")
     db = construct_almor_db(
@@ -62,190 +60,10 @@ def make_db(config_file, config_name, output_dir):
     print(f"\nTotal time required: {strftime('%M:%S', gmtime(c1 - c0))}")
 
 
-def read_morph_specs(config, config_name):
-    """Read Input file containing morphological specifications"""
-    data_dir = config['global']['data-dir']
-    local_specs = config['local'][config_name]
-
-    ABOUT = pd.read_csv(os.path.join(data_dir, 'About.csv'))
-    HEADER = pd.read_csv(os.path.join(data_dir, 'Header.csv'))
-    order_filename = f"{local_specs['specs']['order']}.csv"
-    ORDER = pd.read_csv(os.path.join(data_dir, order_filename))
-    morph_filename = f"{local_specs['specs']['morph']}.csv"
-    MORPH = pd.read_csv(os.path.join(data_dir, morph_filename))
-    lexicon_sheets = local_specs['lexicon']['sheets']
-    LEXICON = pd.concat([pd.read_csv(os.path.join(data_dir, f"{name}.csv"))
-                         for name in lexicon_sheets])
-    # Replace spaces in BW and GLOSS with '#'; skip commented rows and empty lines
-    LEXICON = LEXICON[LEXICON.DEFINE == 'LEXICON']
-    LEXICON = LEXICON.replace(np.nan, '', regex=True)
-    LEXICON['GLOSS'] = LEXICON['GLOSS'].replace('\s+', '#', regex=True)
-    LEXICON['COND-S'] = LEXICON['COND-S'].replace(' +', ' ', regex=True)
-    LEXICON['COND-S'] = LEXICON['COND-S'].replace(' $', '', regex=True)
-    LEXICON['COND-T'] = LEXICON['COND-T'].replace(' +', ' ', regex=True)
-    LEXICON['COND-T'] = LEXICON['COND-T'].replace(' $', '', regex=True)
-
-    patterns_path = local_specs['specs'].get('passive')
-    if patterns_path:
-        LEXICON_PASS = generate_passive(LEXICON, os.path.join(data_dir, f"{patterns_path}.csv"))
-        LEXICON = pd.concat([LEXICON, LEXICON_PASS])
-
-    LEXICON['BW'] = LEXICON['FORM'] + '/' + LEXICON['BW']
-    LEXICON['LEMMA'] = 'lex:' + LEXICON['LEMMA']
-
-    POSTREGEX = None
-    postregex_path = local_specs['specs'].get('postregex')
-    if postregex_path:
-        POSTREGEX = pd.read_csv(os.path.join(data_dir, 'PostRegex.csv'))
-        POSTREGEX = POSTREGEX[POSTREGEX.DEFINE == 'POSTREGEX']
-        POSTREGEX = POSTREGEX.replace(np.nan, '', regex=True)
-        POSTREGEX = _process_postregex(POSTREGEX)
-    
-    if local_specs.get('split_or') == True:
-        LEXICON_ = []
-        for _, row in LEXICON.iterrows():
-            if '||' in row['COND-T'] and ' ' not in row['COND-T']:
-                for term in row['COND-T'].split('||'):
-                    row_ = row.to_dict()
-                    row_['COND-T'] = term
-                    LEXICON_.append(row_)
-            else:
-                LEXICON_.append(row.to_dict())
-        LEXICON = pd.DataFrame(LEXICON_)
-
-    #Process all the components:
-    ORDER = ORDER[ORDER.DEFINE == 'ORDER']  # skip comments & empty lines
-    ORDER = ORDER.replace(np.nan, '', regex=True)
-
-    # Dictionary which groups conditions into classes (used later to
-    # do partial compatibility which is useful from pruning out incoherent
-    # suffix/prefix/stem combinations before performing full compatibility
-    # in which (prefix, stem, suffix) instances are tried out individually).
-    class2cond = MORPH[MORPH.DEFINE == 'CONDITIONS']
-    class2cond = {cond_class["CLASS"]:
-                            [cond for cond in cond_class["FUNC"].split() if cond]
-                        for _, cond_class in class2cond.iterrows()}
-    # Reverses the dictionary (k -> v and v -> k) so that individual conditions
-    # which belonged to a class are now keys with that class as a value. In addition,
-    # each condition gets its corresponding one-hot vector (actually stored as an int
-    # because bitwise operations can only be performed on ints) computed based on the
-    # other conditions within the same class (useful for pruning later).
-    cond2class = {
-        cond: (cond_class, 
-               int(''.join(['1' if i == index else '0' for index in range (len(cond_s))]), 2)
-        )
-        for cond_class, cond_s in class2cond.items()
-            for i, cond in enumerate(cond_s)}
-
-    if os.path.exists('morph_cache/morph_sheet_prev.pkl'):
-        MORPH_prev = pd.read_pickle('morph_cache/morph_sheet_prev.pkl')
-        if MORPH.equals(MORPH_prev):
-            MORPH = pd.read_pickle('morph_cache/morph_sheet_processed.pkl')
-            SHEETS = dict(about=ABOUT, header=HEADER,
-                          order=ORDER, morph=MORPH, lexicon=LEXICON, postregex=POSTREGEX)
-            return SHEETS, cond2class
-    MORPH.to_pickle('morph_cache/morph_sheet_prev.pkl')
-    
-    # Skip commented rows and empty lines
-    MORPH = MORPH[MORPH.DEFINE == 'MORPH']
-    MORPH = MORPH.replace(np.nan, '', regex=True)
-    MORPH = MORPH.replace('^\s+', '', regex=True)
-    MORPH = MORPH.replace('\s+$', '', regex=True)
-    MORPH = MORPH.replace('\s+', ' ', regex=True)
-    # add FUNC and FEAT to COND-S
-    MORPH['COND-S'] = MORPH['COND-S'].replace('[\[\]]', '', regex=True)
-    MORPH.loc[MORPH['COND-S'] == '', 'COND-S'] = '_'
-    MORPH.loc[MORPH['COND-T'] == '', 'COND-T'] = '_'
-    # Replace spaces in BW and GLOSS with '#'
-    MORPH['BW'] = MORPH['BW'].replace('\s+', '#', regex=True)
-    MORPH.loc[MORPH['BW'] == '', 'BW'] = '_'
-    MORPH.loc[MORPH['FORM'] == '', 'FORM'] = '_'
-    MORPH['GLOSS'] = MORPH['GLOSS'].replace('\s+', '#', regex=True)
-    # Retroactively generate the condFalse by creating the complementry distribution
-    # of all the conditions within a single morpheme (all the allomorphs)
-    # This is perfomed here once instead of on the fly.
-    # Get all the classes in Morph
-    MORPH_CLASSES = MORPH.CLASS.unique()
-    MORPH_CLASSES = MORPH_CLASSES[MORPH_CLASSES != '_']
-    # Get all the morphemes in Morph
-    MORPH_MORPHEMES = MORPH.FUNC.unique()
-    MORPH_MORPHEMES = MORPH_MORPHEMES[MORPH_MORPHEMES != '_']
-    # Go through each class
-    for CLASS in MORPH_CLASSES:
-        # Go through each morpheme
-        for MORPHEME in MORPH_MORPHEMES: 
-
-            # Get the unique list of the true conditions in all the allomorphs.
-            # We basically want to convert the 'COND-T' column in to n columns
-            #   where n = maximum number of conditions for a single allomorph
-            cond_t = MORPH[(MORPH.FUNC == MORPHEME) & 
-                                (MORPH.CLASS == CLASS)]['COND-T'].str.split(pat=' ', expand=True)
-            if cond_t.empty:
-                continue
-            cond_t = cond_t.replace(['_'], '')
-
-            if len(cond_t.iloc[:][:]) == 1 and cond_t.iloc[0][0] == '':
-                continue
-            # Go through each column in the true conditions
-            for col in cond_t:
-              
-                # if we are at the first columns
-                if col == 0:
-                    #TODO: uniq col[0] and remove fluff -> c_T
-                    cond_t_current = get_clean_set(cond_t[col])
-                    # Go through each allomorph
-                    MORPH = get_morph_cond_f(cond_t[col], cond_t_current, MORPH)
-                # we are in col > 0
-                else:
-                    #TODO: create temp_T by merging the the condTrue for col 0-col, put it in 
-                    # col[0] and remove 1:col. This is basically to group allomorph with 
-                    # similar general conditions
-                    # Take the uniq of what is now col[0] and remove the fluff
-                    if col == 1:
-                        cond_t_temp = cond_t.copy()
-                    else:
-                        cond_t_temp = cond_t.copy()
-                        cond_t_temp = cond_t_temp.replace([None], '')
-
-                        cond_t_temp[0] = cond_t_temp.loc[:,:col-1].agg(' '.join, axis=1)
-                        cond_t_temp = cond_t_temp.drop(cond_t_temp.columns[1:col], axis=1)
-                        cond_t_temp.columns = range(cond_t_temp.shape[1])
-                    if len(cond_t_temp.columns) == 1:
-                        continue
-
-
-                    cond_groups = cond_t_temp[0].unique()
-                    cond_groups = cond_groups[cond_groups!= '_']
-                    # Go through each group of allomorphs
-                    for cond_group in cond_groups:
-                        cond_t_current = get_clean_set(cond_t_temp[cond_t_temp[0] == cond_group][1])
-                        MORPH = get_morph_cond_f(
-                            cond_t_temp[cond_t_temp[0] == cond_group][1], cond_t_current, MORPH)
-            
-            for idx, _ in MORPH[(MORPH.FUNC == MORPHEME) & (MORPH.CLASS == CLASS)].iterrows():
-                # If there is a negated condition in the set of true conditions for the 
-                #   current allomorph, remove the negation and add it to the false 
-                #   conditions list for the current alomorph.
-                cond_t_almrph = MORPH.loc[idx, 'COND-T'].split(' ')
-                cond_f_almrph = MORPH.loc[idx, 'COND-F'].split(' ')
-                cond_s_negated = [x for x in cond_t_almrph if x.startswith('!')]
-                if cond_s_negated:
-                    for cond_negated in cond_s_negated:
-                        cond_f_almrph.append(cond_negated[1:])
-                        # remove from the true conditions
-                        cond_t_almrph.remove(cond_negated)
-                cond_t_almrph = [y for y in cond_t_almrph if y not in ['', '_', 'else', None]]
-                cond_f_almrph = [y for y in cond_f_almrph if y not in ['', '_', 'else', None]]
-                MORPH.loc[idx, 'COND-T'] = ' '.join(cond_t_almrph)
-                MORPH.loc[idx, 'COND-F'] = ' '.join(cond_f_almrph)
-    MORPH.to_pickle('morph_cache/morph_sheet_processed.pkl')
-    SHEETS = dict(about=ABOUT, header=HEADER, order=ORDER, morph=MORPH, lexicon=LEXICON, postregex=POSTREGEX)
-    return SHEETS, cond2class
-   
-
 def construct_almor_db(SHEETS, pruning, cond2class):
     ORDER, MORPH, LEXICON = SHEETS['order'], SHEETS['morph'], SHEETS['lexicon']
     ABOUT, HEADER, POSTREGEX = SHEETS['about'], SHEETS['header'], SHEETS['postregex']
+    BACKOFF = SHEETS['backoff']
 
     short_cat_maps = _get_short_cat_name_maps(ORDER)
 
@@ -261,43 +79,47 @@ def construct_almor_db(SHEETS, pruning, cond2class):
     
     defaults = _process_defaults(db['OUT:###HEADER###'])
     
-    compatibility_memoize = {}
-    cmplx_morph_memoize = {'stem': {}, 'suffix': {}, 'prefix': {}}
-    stem_pattern = re.compile(r'\[(STEM(?:-[PIC]V)?)\]')
-    # Currently not used
-    # TODO: see how different order lines can benefit from each other's information
-    # when it comes to affixes
-    prefix_pattern = re.compile(r'(\[(IVPref)\.\d\w{1,2}\])')
-    suffix_pattern = re.compile(r'(\[(IVSuff)\.\w\.\d\w{1,2}\])')
+    def construct_process(lexicon, stems_section_title):
+        compatibility_memoize = {}
+        cmplx_morph_memoize = {'stem': {}, 'suffix': {}, 'prefix': {}}
+        stem_pattern = re.compile(r'\[(STEM(?:-[PIC]V)?)\]')
+        # Currently not used
+        # TODO: see how different order lines can benefit from each other's information
+        # when it comes to affixes
+        prefix_pattern = re.compile(r'(\[(IVPref)\.\d\w{1,2}\])')
+        suffix_pattern = re.compile(r'(\[(IVSuff)\.\w\.\d\w{1,2}\])')
+        
+        pbar = tqdm(total=len(list(ORDER.iterrows())))
+        for _, order in ORDER.iterrows():
+            cmplx_prefix_classes = gen_cmplx_morph_combs(
+                order['PREFIX'], MORPH, lexicon, cond2class, prefix_pattern,
+                cmplx_morph_memoize=cmplx_morph_memoize['prefix'],
+                pruning_cond_s_f=pruning, pruning_same_class_incompat=pruning)
+            cmplx_suffix_classes = gen_cmplx_morph_combs(
+                order['SUFFIX'], MORPH, lexicon, cond2class, suffix_pattern,
+                cmplx_morph_memoize=cmplx_morph_memoize['suffix'],
+                pruning_cond_s_f=pruning, pruning_same_class_incompat=pruning)
+            cmplx_stem_classes = gen_cmplx_morph_combs(
+                order['STEM'], MORPH, lexicon, cond2class, stem_pattern,
+                cmplx_morph_memoize=cmplx_morph_memoize['stem'],
+                pruning_cond_s_f=pruning, pruning_same_class_incompat=pruning)
+            
+            cmplx_morph_classes = dict(
+                cmplx_prefix_classes=(cmplx_prefix_classes, order['PREFIX']),
+                cmplx_suffix_classes=(cmplx_suffix_classes, order['SUFFIX']),
+                cmplx_stem_classes=(cmplx_stem_classes, order['STEM']))
+            
+            db_ = populate_db(
+                cmplx_morph_classes, order['CLASS'].lower(), compatibility_memoize,
+                short_cat_maps, defaults, stems_section_title)
+            for section, contents in db_.items():
+                db.setdefault(section, {}).update(contents)
+            
+            pbar.update(1)
+        pbar.close()
     
-    pbar = tqdm(total=len(list(ORDER.iterrows())))
-    for _, order in ORDER.iterrows():
-        cmplx_prefix_classes = gen_cmplx_morph_combs(
-            order['PREFIX'], MORPH, LEXICON, cond2class, prefix_pattern,
-            cmplx_morph_memoize=cmplx_morph_memoize['prefix'],
-            pruning_cond_s_f=pruning, pruning_same_class_incompat=pruning)
-        cmplx_suffix_classes = gen_cmplx_morph_combs(
-            order['SUFFIX'], MORPH, LEXICON, cond2class, suffix_pattern,
-            cmplx_morph_memoize=cmplx_morph_memoize['suffix'],
-            pruning_cond_s_f=pruning, pruning_same_class_incompat=pruning)
-        cmplx_stem_classes = gen_cmplx_morph_combs(
-            order['STEM'], MORPH, LEXICON, cond2class, stem_pattern,
-            cmplx_morph_memoize=cmplx_morph_memoize['stem'],
-            pruning_cond_s_f=pruning, pruning_same_class_incompat=pruning)
-        
-        cmplx_morph_classes = dict(
-            cmplx_prefix_classes=(cmplx_prefix_classes, order['PREFIX']),
-            cmplx_suffix_classes=(cmplx_suffix_classes, order['SUFFIX']),
-            cmplx_stem_classes=(cmplx_stem_classes, order['STEM']))
-        
-        db_ = populate_db(
-            cmplx_morph_classes, order['CLASS'].lower(), compatibility_memoize,
-            short_cat_maps, defaults)
-        for section, contents in db_.items():
-            db.setdefault(section, {}).update(contents)
-        
-        pbar.update(1)
-    pbar.close()
+    construct_process(LEXICON, stems_section_title='OUT:###STEMS###')
+    construct_process(BACKOFF, stems_section_title='OUT:###SMARTBACKOFF###')
 
     return db
 
@@ -305,11 +127,12 @@ def populate_db(cmplx_morph_classes,
                 pos_type,
                 compatibility_memoize,
                 short_cat_maps=None,
-                defaults=None):
+                defaults=None,
+                stems_section_title='OUT:###STEMS###'):
     db = {}
     db['OUT:###PREFIXES###'] = {}
     db['OUT:###SUFFIXES###'] = {}
-    db['OUT:###STEMS###'] = {}
+    db[stems_section_title] = {}
     db['OUT:###TABLE AB###'] = {}
     db['OUT:###TABLE BC###'] = {}
     db['OUT:###TABLE AC###'] = {}
@@ -348,7 +171,7 @@ def populate_db(cmplx_morph_classes,
                                             cmplx_morph_type='stem',
                                             cmplx_morphs=cmplx_stems,
                                             conditions=(stem_cond_s, stem_cond_t, stem_cond_f),
-                                            db_section='OUT:###STEMS###')
+                                            db_section=stems_section_title)
                     update_info_prefix = dict(pos_type=pos_type,
                                               cmplx_morph_seq=cmplx_prefix_seq,
                                               cmplx_morph_cls=cmplx_prefix_cls,
@@ -483,7 +306,7 @@ def _generate_stem(cmplx_morph_seq,
                    stem_cond_s, stem_cond_t, stem_cond_f,
                    short_cat_map=None,
                    defaults=None):
-    stem_match, stem_diac, stem_lex, stem_gloss, stem_feat, stem_bw = _read_stem(stem)
+    stem_match, stem_diac, stem_lex, stem_gloss, stem_feat, stem_bw, root, backoff = _read_stem(stem)
     xcat = _create_cat(
         "X", cmplx_morph_seq, stem_cond_s, stem_cond_t, stem_cond_f, short_cat_map)
     ar_xbw = _convert_bw_tag(stem_bw)
@@ -497,10 +320,10 @@ def _generate_stem(cmplx_morph_seq,
     stem_feat = ' '.join(stem_feat)
     #TODO: strip lex before transliteration (else underscore will be handled wrong)
     stem = {
-        'match': bw2ar(stem_match),
+        'match': db_maker_utils._bw2ar_regex(stem_match) if backoff else bw2ar(stem_match),
         'cat': xcat,
         'feats': (f"diac:{bw2ar(stem_diac)} bw:{ar_xbw} lex:{bw2ar(stem_lex)} "
-                  f"gloss:{stem_gloss.strip()} {stem_feat} ")
+                  f"root:{bw2ar(root)} gloss:{stem_gloss.strip()} {stem_feat} ")
     }
     return stem, xcat
 
@@ -516,16 +339,29 @@ def _read_affix(affix):
     return affix_match, affix_diac, affix_gloss, affix_feat, affix_bw
 
 def _read_stem(stem):
-    stem_bw = '+'.join([s['BW'] for s in stem if s['BW'] != '_'])
-    stem_diac = ''.join([s['FORM'] for s in stem if s['FORM'] != '_'])
+    stem_bw = '+'.join([s['BW_SUB'] if s['DEFINE'] == 'BACKOFF' else s['BW']
+                        for s in stem if s['BW'] != '_'])
     stem_gloss = '+'.join([s['GLOSS'] for s in stem if 'LEMMA' in s])
     stem_gloss = stem_gloss if stem_gloss else '_'
-    stem_lex = '+'.join([s['LEMMA'].split(':')[1] for s in stem if 'LEMMA' in s])
+    stem_lex = '+'.join([s['LEMMA_SUB'].split(':')[1] if s['DEFINE'] == 'BACKOFF' else s['LEMMA'].split(':')[1]
+                            for s in stem if 'LEMMA' in s])
     stem_feat = {feat.split(':')[0]: feat.split(':')[1]
                 for s in stem for feat in s['FEAT'].split()}
-    stem_match = normalize_alef_bw(normalize_alef_maksura_bw(
-        normalize_teh_marbuta_bw(dediac_bw(stem_diac))))
-    return stem_match, stem_diac, stem_lex, stem_gloss, stem_feat, stem_bw
+    root = [s['ROOT_SUB'] if s['DEFINE'] == 'BACKOFF' else s['ROOT']
+            for s in stem if s.get('ROOT')][0]
+    
+    backoff = False
+    if not any([s['DEFINE'] == 'BACKOFF' for s in stem]):
+        stem_diac = ''.join([s['FORM']for s in stem if s['FORM'] != '_'])
+        stem_match = normalize_alef_bw(normalize_alef_maksura_bw(
+            normalize_teh_marbuta_bw(dediac_bw(stem_diac))))
+    else:
+        backoff = True
+        stem_diac = ''.join([s['FORM_SUB']for s in stem if s['FORM_SUB'] != '_'])
+        stem_match = ''.join([s['MATCH'] if s['DEFINE'] == 'BACKOFF' else s['FORM']
+                            for s in stem if s['FORM_SUB'] != '_'])
+
+    return stem_match, stem_diac, stem_lex, stem_gloss, stem_feat, stem_bw, root, backoff
 
 def print_almor_db(output_filename, db):
     """Create output file in ALMOR DB format"""
@@ -551,6 +387,12 @@ def print_almor_db(output_filename, db):
             # Fixes weird underscore generated by bw2ar()
             x = re.sub('ـ', '_', x)
             print(x, file=f)
+
+        backoff = db.get('OUT:###SMARTBACKOFF###')
+        if backoff:
+            print("###SMARTBACKOFF###", file=f)
+            for x in db['OUT:###SMARTBACKOFF###']:
+                print(x, file=f)
             
         print("###TABLE AB###", file=f)
         for x in db['OUT:###TABLE AB###']:
@@ -715,73 +557,6 @@ def check_compatibility (cond_s, cond_t, cond_f, compatibility_memoize):
 
     compatibility_memoize[key] = valid
     return valid                     
-
-
-def get_clean_set(cond_col):
-    morph_cond_t = cond_col.tolist()
-    morph_cond_t = [
-        y for y in morph_cond_t if y not in ['', '_', 'else', None]]
-    morph_cond_t = set(morph_cond_t)  # make it a set
-
-    return morph_cond_t
-
-
-def get_morph_cond_f(morph_cond_t, cond_t_current, MORPH):
-    # Go through each allomorph
-    for idx, entry in morph_cond_t.iteritems():
-        # If we have no true condition for the allomorph (aka can take anything)
-        if entry is None:
-            continue
-        elif entry != 'else':
-            #TODO: create condFalse for the morpheme by c_T - entry
-            cond_f_almrph, _ = _get_cond_false(
-                cond_t_current, [entry])
-        elif entry == 'else':
-            # TODO: condFalse = c_T
-            cond_f_almrph = cond_t_current
-            # Finally, populate the 'COND-F' cell with the false conditions
-        MORPH.loc[idx, 'COND-F'] = MORPH.loc[idx, 'COND-F'] + \
-            ' ' + ' '.join(cond_f_almrph)
-        MORPH.loc[idx, 'COND-F'] = MORPH.loc[idx, 'COND-F'].replace('_', '')
-    
-    return MORPH
-
-def _get_cond_false(cond_t_all, cond_t_almrph):
-    # The false conditions for the current allomorph is whatever true condition
-    #   in the morpheme set that does not belong to the set of true conditions
-    #   to the current allomorph.
-    cond_f_almrph = cond_t_all - set(cond_t_almrph)
-    # If there is a negated condition in the set of true conditions for the
-    #   current allomorph, remove the negation and add it to the false
-    #   conditions list for the current alomorph.
-    # negated_cond = [x for x in almrph_condTrue if x.startswith('!')]
-    # if negated_cond:
-    #   for cond in negated_cond:
-    #     almrph_condFalse.add(cond[1:])
-    #     # remove from the true conditions
-    #     almrph_condTrue.remove(cond)
-
-    # If we end up with no false condition, set it to '_'
-    if not cond_f_almrph:
-        cond_f_almrph = ['_']
-    # If we end up with no true condition, set it to '_'
-    if not cond_t_almrph:
-        cond_t_almrph = ['_']
-
-    return cond_f_almrph, cond_t_almrph
-
-
-def _process_postregex(postregex):
-    for i, row in postregex.iterrows():
-        match_ = []
-        for match in re.split(r'(\\.|[\|}{\*\$_])', row['MATCH']):
-            match = match if re.match(r'(\\.)', match) else bw2ar(match)
-            match_.append(match)
-
-        postregex.at[i, 'MATCH'] = ''.join(match_)
-        postregex.at[i, 'REPLACE'] = ''.join(re.sub(r'\$', r'\\', row['REPLACE']))
-    
-    return postregex
 
 
 def _process_defaults(header):

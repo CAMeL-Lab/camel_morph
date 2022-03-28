@@ -153,7 +153,7 @@ def create_conjugation_tables(lemmas,
         lemma = strip_lex(lemma)
         pattern = None
         if pos_type == 'verbal':
-            pattern, _, _, _ = assign_pattern(lemma)
+            pattern = assign_pattern(lemma)['pattern_conc']
         elif pos_type == 'nominal':
             match = re.search(r'([MF][SDP])', cond_t)
             form_gen, form_num = None, None

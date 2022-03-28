@@ -36,7 +36,8 @@
                 "spreadsheet": "msa-verb-lex",
                 "sheets": [
                     "MSA-LEX-PV"
-                ]
+                ],
+                "backoff": "MSA-LEX-PV-ABSTRACT"
             },
             "output": "XYZ_msa_pv_v1.0_red.db",
             "extended_lemma_keys": [

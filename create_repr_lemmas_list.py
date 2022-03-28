@@ -13,7 +13,7 @@ from camel_tools.utils.dediac import dediac_ar
 
 from paradigm_debugging import AnnotationBank
 
-import db_maker
+import db_maker_utils
 
 nominals = ["ABBREV", "ADJ", "ADJ_COMP", "ADJ_NUM", "ADV",
             "ADV_INTERROG", "ADV_REL",
@@ -201,7 +201,7 @@ if __name__ == "__main__":
 
     with open(args.config_file) as f:
         config = json.load(f)
-    SHEETS, _ = db_maker.read_morph_specs(config, args.config_name)
+    SHEETS, _ = db_maker_utils.read_morph_specs(config, args.config_name)
     SHEETS['lexicon']['COND-S'] = SHEETS['lexicon'].apply(
         lambda row: re.sub(r'hamzated|hollow|defective', '', row['COND-S']), axis=1)
     SHEETS['lexicon']['COND-S'] = SHEETS['lexicon'].apply(
