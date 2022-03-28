@@ -150,6 +150,13 @@ def well_formedness_check(verbs, lemma2info, iv):
         error_cases[lemma] = info
     assert len(error_cases) == 0, add_check_mark_online(verbs, error_cases)
 
+    #TODO: make sure (lemma, gloss) are unique
+    #TODO: add root/pattern/form concordance check
+    #TODO: check that there are no letters other than defective letters in patterns
+    #TODO: add #n/#t/gem check
+    #TODO: (maybe later) add check that all forms belonging to same defective pattern must have same shape
+    #TODO: add diacritic rules
+
 def get_lemma2info(verbs):
     lemma2info = {}
     for i, row in verbs.iterrows():
@@ -162,40 +169,44 @@ def get_lemma2info(verbs):
             'cond-s': row['COND-S'], 'cond-t': row['COND-T'], 'feats': row['FEAT']})
     return lemma2info
 
-def well_formedness_all_aspects(pv, iv, cv):
+def well_formedness_all_aspects(pv, iv, cv, strictness):
     assert len(iv.index) == len(cv.index)
 
     merging_info, merge_indexes = {}, {}
-    gloss2lemmas = {}
+    extlemma2infos = {}
     for asp, verbs_asp in [('pv', pv), ('iv', iv), ('cv', cv)]:
         verbs_asp = verbs_asp.replace(nan, '', regex=True)
         lemma2info = get_lemma2info(verbs_asp)
         well_formedness_check(verbs_asp, lemma2info, iv)
         merge_indexes[asp], merging_info[asp] = merge_same_feats_diff_gloss_lemmas(lemma2info, iv)
-        gloss2lemmas_asp = gloss2lemmas.setdefault(asp, {})
+        extlemma2infos_asp = extlemma2infos.setdefault(asp, {})
         for lemma, info in lemma2info.items():
             for row in info[2]:
                 transitivity = re.search(r'trans|intrans', row['cond-s']).group()
                 if 'Frozen' in row['cond-s']:
                     continue
-                gloss2lemmas_asp.setdefault(row['gloss'], set()).add((row['lemma'], transitivity))
+                if strictness == 'high':
+                    extlemma = (row['lemma'], transitivity, row['gloss'])
+                elif strictness == 'low':
+                    extlemma = (row['lemma'], row['gloss'])
+                extlemma2infos_asp.setdefault(extlemma, []).append(info[2])
     
     merging_cases_pv = set([lemma[0] for lemma in merging_info['pv']])
     merging_cases_iv = set([lemma[0] for lemma in merging_info['iv']])
     merging_cases_cv = set([lemma[0] for lemma in merging_info['cv']])
     assert merging_cases_pv == merging_cases_iv == merging_cases_cv
 
-    missing_iv_pv = [gloss2lemmas['iv'][gloss] for gloss in set(gloss2lemmas['iv']) - set(gloss2lemmas['pv'])]
+    missing_iv_pv = [extlemma2infos['iv'][gloss] for gloss in set(extlemma2infos['iv']) - set(extlemma2infos['pv'])]
     assert len(missing_iv_pv) == 0
-    missing_iv_cv = [gloss2lemmas['iv'][gloss] for gloss in set(gloss2lemmas['iv']) - set(gloss2lemmas['cv'])]
+    missing_iv_cv = [extlemma2infos['iv'][gloss] for gloss in set(extlemma2infos['iv']) - set(extlemma2infos['cv'])]
     assert len(missing_iv_cv) == 0
-    missing_pv_iv = [gloss2lemmas['pv'][gloss] for gloss in set(gloss2lemmas['pv']) - set(gloss2lemmas['iv'])]
+    missing_pv_iv = [extlemma2infos['pv'][gloss] for gloss in set(extlemma2infos['pv']) - set(extlemma2infos['iv'])]
     assert len(missing_pv_iv) == 0
-    missing_pv_cv = [gloss2lemmas['pv'][gloss] for gloss in set(gloss2lemmas['pv']) - set(gloss2lemmas['cv'])]
+    missing_pv_cv = [extlemma2infos['pv'][gloss] for gloss in set(extlemma2infos['pv']) - set(extlemma2infos['cv'])]
     assert len(missing_pv_cv) == 0
-    missing_cv_iv = [gloss2lemmas['cv'][gloss] for gloss in set(gloss2lemmas['cv']) - set(gloss2lemmas['iv'])]
+    missing_cv_iv = [extlemma2infos['cv'][gloss] for gloss in set(extlemma2infos['cv']) - set(extlemma2infos['iv'])]
     assert len(missing_cv_iv) == 0
-    missing_cv_pv = [gloss2lemmas['cv'][gloss] for gloss in set(gloss2lemmas['cv']) - set(gloss2lemmas['pv'])]
+    missing_cv_pv = [extlemma2infos['cv'][gloss] for gloss in set(extlemma2infos['cv']) - set(extlemma2infos['pv'])]
     assert len(missing_cv_pv) == 0
 
     return merge_indexes
@@ -237,9 +248,9 @@ def merge_same_feats_diff_gloss_lemmas(lemma2info, iv):
     
     return row_indexes_to_merge, lemmas_info
 
-def msa_verbs_lexicon_well_formedness(verbs):
+def msa_verbs_lexicon_well_formedness(verbs, strictness):
 
-    merge_indexes = well_formedness_all_aspects(verbs['pv'], verbs['iv'], verbs['cv'])
+    merge_indexes = well_formedness_all_aspects(verbs['pv'], verbs['iv'], verbs['cv'], strictness)
 
     for asp, merging_indexes_asp in merge_indexes.items():
         for merge_indexes_tuple in merging_indexes_asp:
@@ -248,7 +259,7 @@ def msa_verbs_lexicon_well_formedness(verbs):
                 verbs[asp].at[index_to_keep, 'GLOSS'] += f";{verbs[asp].at[merge_index, 'GLOSS']}"
                 verbs[asp] = verbs[asp].drop([merge_index])
 
-    merge_indexes = well_formedness_all_aspects(verbs['pv'], verbs['iv'], verbs['cv'])
+    merge_indexes = well_formedness_all_aspects(verbs['pv'], verbs['iv'], verbs['cv'], strictness)
 
     for verbs_asp in verbs.values():
         verbs_asp['#LEMMA_AR'] = verbs_asp['LEMMA'].apply(bw2ar)
@@ -263,6 +274,8 @@ if __name__ == "__main__":
                         type=str, help="Path of the IV verbs.")
     parser.add_argument("-cv", default='data/MSA-LEX-CV.csv',
                         type=str, help="Path of the CV verbs.")
+    parser.add_argument("-strictness", default='low', choices=['low', 'high'],
+                        type=str, help="Strictness level of the check.")
     parser.add_argument("-output_path", default='',
                         type=str, help="Path of the CV verbs.")
     args = parser.parse_args()
@@ -272,7 +285,7 @@ if __name__ == "__main__":
     cv = pd.read_csv(args.cv)
     verbs = {'pv': pv, 'iv': iv, 'cv': cv}
 
-    verbs_ = msa_verbs_lexicon_well_formedness(verbs=verbs)
+    verbs_ = msa_verbs_lexicon_well_formedness(verbs=verbs, strictness=args.strictness)
 
     if args.output_path:
         verbs_.to_csv(args.output_path)
