@@ -2,6 +2,25 @@ import pandas as pd
 from numpy import nan
 import re
 import argparse
+import sys
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-pv", default='data/MSA-LEX-PV.csv',
+                    type=str, help="Path of the PV verbs.")
+parser.add_argument("-iv", default='data/MSA-LEX-IV.csv',
+                    type=str, help="Path of the IV verbs.")
+parser.add_argument("-cv", default='data/MSA-LEX-CV.csv',
+                    type=str, help="Path of the CV verbs.")
+parser.add_argument("-strictness", default='low', choices=['low', 'high'],
+                    type=str, help="Strictness level of the check.")
+parser.add_argument("-output_path", default='',
+                    type=str, help="Path of the CV verbs.")
+parser.add_argument("-camel_tools", default='',
+                type=str, help="Path of the directory containing the camel_tools modules.")
+args = parser.parse_args()
+
+if args.camel_tools:
+    sys.path.insert(0, args.camel_tools)
 
 import gspread
 from camel_tools.morphology.utils import strip_lex

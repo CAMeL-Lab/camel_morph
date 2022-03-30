@@ -4,6 +4,25 @@ import re
 import argparse
 from collections import Counter
 from tqdm import tqdm
+import sys
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-config_file", default='',
+                    type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
+parser.add_argument("-config_name", default='',
+                    type=str, help="Name of the configuration to load from the config file.")
+parser.add_argument("-lexicon_path", default='',
+                    type=str, help="Path of the lexicon to load.")
+parser.add_argument("-output_dir", default='data',
+                    type=str, help="Path of the directory to output the lemmas to.")
+parser.add_argument("-output_name", default='ABSTRACT-LEX.csv',
+                    type=str, help="Name of the file to output the abstract lexicon to.")
+parser.add_argument("-camel_tools", default='',
+                    type=str, help="Path of the directory containing the camel_tools modules.")
+args = parser.parse_args()
+
+if args.camel_tools:
+    sys.path.insert(0, args.camel_tools)
 
 import pandas as pd
 from numpy import nan
@@ -193,19 +212,6 @@ def generate_abstract_lexicon(lexicon):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-config_file", default='',
-                        type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
-    parser.add_argument("-config_name", default='',
-                        type=str, help="Name of the configuration to load from the config file.")
-    parser.add_argument("-lexicon_path", default='',
-                        type=str, help="Path of the lexicon to load.")
-    parser.add_argument("-output_dir", default='data',
-                        type=str, help="Path of the directory to output the lemmas to.")
-    parser.add_argument("-output_name", default='ABSTRACT-LEX.csv',
-                        type=str, help="Name of the file to output the abstract lexicon to.")
-    args = parser.parse_args()
-
     if args.config_file:
         with open(args.config_file) as f:
             config = json.load(f)

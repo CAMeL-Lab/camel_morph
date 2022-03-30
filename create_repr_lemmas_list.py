@@ -4,6 +4,33 @@ import os
 import pickle
 import numpy as np
 import re
+import sys
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-config_file", required=True,
+                    type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
+parser.add_argument("-config_name", required=True,
+                    type=str, help="Name of the configuration to load from the config file.")
+parser.add_argument("-output_dir", default='conjugation/repr_lemmas',
+                    type=str, help="Path of the directory to output the lemmas to.")
+parser.add_argument("-output_name", required=True,
+                    type=str, help="Name of the file to output the representative lemmas to. File will be placed in a directory called conjugation/repr_lemmas/")
+parser.add_argument("-pos_type", required=True, choices=['verbal', 'nominal'],
+                    type=str, help="POS type of the lemmas.")
+parser.add_argument("-bank_dir",  default='conjugation_local/banks',
+                    type=str, help="Directory in which the annotation banks are.")
+parser.add_argument("-bank_name",  default='',
+                    type=str, help="Name of the annotation bank to use.")
+parser.add_argument("-lexprob",  default='',
+                    type=str, help="Custom lexical probabilities file which contains two columns (lemma, frequency).")
+parser.add_argument("-display_format", default='compact', choices=['compact', 'expanded'],
+                    type=str, help="Display format of the debug info for each representative lemma.")
+parser.add_argument("-camel_tools", default='',
+                    type=str, help="Path of the directory containing the camel_tools modules.")
+args = parser.parse_args([] if "__file__" not in globals() else None)
+
+if args.camel_tools:
+    sys.path.insert(0, args.camel_tools)
 
 from camel_tools.utils.charmap import CharMapper
 from camel_tools.morphology.utils import strip_lex
@@ -171,27 +198,6 @@ def get_highest_prob_lemmas(pos_type, uniq_lemma_classes, lemmas_stripped_uniq, 
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-config_file", required=True,
-                        type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
-    parser.add_argument("-config_name", required=True,
-                        type=str, help="Name of the configuration to load from the config file.")
-    parser.add_argument("-output_dir", default='conjugation/repr_lemmas',
-                        type=str, help="Path of the directory to output the lemmas to.")
-    parser.add_argument("-output_name", required=True,
-                        type=str, help="Name of the file to output the representative lemmas to. File will be placed in a directory called conjugation/repr_lemmas/")
-    parser.add_argument("-pos_type", required=True, choices=['verbal', 'nominal'],
-                        type=str, help="POS type of the lemmas.")
-    parser.add_argument("-bank_dir",  default='conjugation_local/banks',
-                        type=str, help="Directory in which the annotation banks are.")
-    parser.add_argument("-bank_name",  default='',
-                        type=str, help="Name of the annotation bank to use.")
-    parser.add_argument("-lexprob",  default='',
-                        type=str, help="Custom lexical probabilities file which contains two columns (lemma, frequency).")
-    parser.add_argument("-display_format", default='compact', choices=['compact', 'expanded'],
-                        type=str, help="Display format of the debug info for each representative lemma.")
-    args = parser.parse_args([] if "__file__" not in globals() else None)
-
     conj_dir = args.output_dir.split('/')[0]
     if not os.path.exists(conj_dir):
         os.mkdir(conj_dir)

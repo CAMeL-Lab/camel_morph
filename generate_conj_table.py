@@ -5,6 +5,39 @@ from tqdm import tqdm
 import argparse
 import os
 import pickle
+import sys
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-paradigms", required=True,
+                    type=str, help="Configuration file containing the sets of paradigms from which we generate conjugation tables.")
+parser.add_argument("-db", required=True,
+                    type=str, help="Name of the DB file which will be used with the generation module.")
+parser.add_argument("-pos_type", required=True, choices=['verbal', 'nominal'],
+                    type=str, help="POS type of the lemmas for which we want to generate a representative sample.")
+parser.add_argument("-asp", choices=['p', 'i', 'c'], default='',
+                    type=str, help="Aspect to generate the conjugation tables for.")
+parser.add_argument("-mod", choices=['i', 's', 'j', 'e', 'x'], default='',
+                    type=str, help="Mood to generate the conjugation tables for.")
+parser.add_argument("-dialect", choices=['msa', 'glf', 'egy'], required=True,
+                    type=str, help="Aspect to generate the conjugation tables for.")
+parser.add_argument("-repr_lemmas",
+                    type=str, help="Name of the file in conjugation/repr_lemmas/ from which to load the representative lemmas from.")
+parser.add_argument("-output_name",
+                    type=str, help="Name of the file to output the conjugation tables to in conjugation/tables/ directory.")
+parser.add_argument("-output_dir", default='conjugation/tables',
+                    type=str, help="Path of the directory to output the tables to.")
+parser.add_argument("-lemmas_dir", default='conjugation/repr_lemmas',
+                    type=str, help="Path of the directory to output the tables to.")
+parser.add_argument("-db_dir", default='db_iterations',
+                    type=str, help="Path of the directory to load the DB from.")
+parser.add_argument("-lemma_debug", default=[], action='append',
+                    type=str, help="Lemma (without _1) to debug. Use the following format after the flag: lemma pos:val gen:val num:val")
+parser.add_argument("-camel_tools", default='',
+                    type=str, help="Path of the directory containing the camel_tools modules.")
+args = parser.parse_args([] if "__file__" not in globals() else None)
+
+if args.camel_tools:
+    sys.path.insert(0, args.camel_tools)
 
 from camel_tools.morphology.database import MorphologyDB
 from camel_tools.morphology.generator import Generator
@@ -316,33 +349,6 @@ def process_outputs(lemmas_conj, pos_type):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-paradigms", required=True,
-                        type=str, help="Configuration file containing the sets of paradigms from which we generate conjugation tables.")
-    parser.add_argument("-db", required=True,
-                        type=str, help="Name of the DB file which will be used with the generation module.")
-    parser.add_argument("-pos_type", required=True, choices=['verbal', 'nominal'],
-                        type=str, help="POS type of the lemmas for which we want to generate a representative sample.")
-    parser.add_argument("-asp", choices=['p', 'i', 'c'], default='',
-                        type=str, help="Aspect to generate the conjugation tables for.")
-    parser.add_argument("-mod", choices=['i', 's', 'j', 'e', 'x'], default='',
-                        type=str, help="Mood to generate the conjugation tables for.")
-    parser.add_argument("-dialect", choices=['msa', 'glf', 'egy'], required=True,
-                        type=str, help="Aspect to generate the conjugation tables for.")
-    parser.add_argument("-repr_lemmas",
-                        type=str, help="Name of the file in conjugation/repr_lemmas/ from which to load the representative lemmas from.")
-    parser.add_argument("-output_name",
-                        type=str, help="Name of the file to output the conjugation tables to in conjugation/tables/ directory.")
-    parser.add_argument("-output_dir", default='conjugation/tables',
-                        type=str, help="Path of the directory to output the tables to.")
-    parser.add_argument("-lemmas_dir", default='conjugation/repr_lemmas',
-                        type=str, help="Path of the directory to output the tables to.")
-    parser.add_argument("-db_dir", default='db_iterations',
-                        type=str, help="Path of the directory to load the DB from.")
-    parser.add_argument("-lemma_debug", default=[], action='append',
-                        type=str, help="Lemma (without _1) to debug. Use the following format after the flag: lemma pos:val gen:val num:val")
-    args = parser.parse_args([] if "__file__" not in globals() else None)
-
     conj_dir = args.output_dir.split('/')[0]
     if not os.path.exists(conj_dir):
         os.mkdir(conj_dir)

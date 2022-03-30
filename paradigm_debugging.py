@@ -9,6 +9,36 @@ import gspread
 import pandas as pd
 from numpy import nan
 
+parser = argparse.ArgumentParser()
+parser.add_argument("-gsheet", default='',
+                    type=str, help="Name of the manually annotated paradigms gsheet, the annotations of which will go in the bank.")
+parser.add_argument("-spreadsheet", default='',
+                    type=str, help="Name of the spreadsheet in which that sheet is.")
+parser.add_argument("-use_local",  default='',
+                    type=str, help="Use local sheet instead of downloading. Add the name of the conjugation table path to use.")
+parser.add_argument("-new_conj",  default='',
+                    type=str, help="Path of the conjugation tables file generated after fixes were made to the specification sheets. This file will be automatically annotated using the information in the bank.")
+parser.add_argument("-bank_dir",  default='conjugation_local/banks',
+                    type=str, help="Directory in which the annotation banks are.")
+parser.add_argument("-bank_name",  default='',
+                    type=str, help="Name of the annotation bank to use.")
+parser.add_argument("-bank_spreadsheet", default='Paradigm-Banks',
+                    type=str, help="Name of the spreadsheet in which that sheet is.")
+parser.add_argument("-output_name",
+                    type=str, help="Name of the file to output the automatically bank-annotated paradigm tables to.")
+parser.add_argument("-output_dir", default='conjugation/paradigm_debugging',
+                    type=str, help="Path of the directory to output the paradigm tables to.")
+parser.add_argument("-mode", default='debugging', choices=['debugging', 'bank_cleanup'],
+                    type=str, help="Path of the directory to output the paradigm tables to.")
+parser.add_argument("-process_key", default='', choices=['', 'extra_energetic'],
+                    type=str, help="Flag used to process the key before cross-checking it with bank entries while performing automatic bank annotation. Useful in cases like energetic and extra energetic when same diacs are shared by multiple paradigm slots.")
+parser.add_argument("-camel_tools", default='',
+                    type=str, help="Path of the directory containing the camel_tools modules.")
+args = parser.parse_args()
+
+if args.camel_tools:
+    sys.path.insert(0, args.camel_tools)
+    
 from camel_tools.morphology.utils import strip_lex
 
 header = ["line", "status", "count", "signature", "lemma", "diac_ar", "diac", "freq",
@@ -230,31 +260,6 @@ def _add_check_mark_online(bank, error_cases):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-gsheet", default='',
-                        type=str, help="Name of the manually annotated paradigms gsheet, the annotations of which will go in the bank.")
-    parser.add_argument("-spreadsheet", default='',
-                        type=str, help="Name of the spreadsheet in which that sheet is.")
-    parser.add_argument("-use_local",  default='',
-                        type=str, help="Use local sheet instead of downloading. Add the name of the conjugation table path to use.")
-    parser.add_argument("-new_conj",  default='',
-                        type=str, help="Path of the conjugation tables file generated after fixes were made to the specification sheets. This file will be automatically annotated using the information in the bank.")
-    parser.add_argument("-bank_dir",  default='conjugation_local/banks',
-                        type=str, help="Directory in which the annotation banks are.")
-    parser.add_argument("-bank_name",  default='',
-                        type=str, help="Name of the annotation bank to use.")
-    parser.add_argument("-bank_spreadsheet", default='Paradigm-Banks',
-                        type=str, help="Name of the spreadsheet in which that sheet is.")
-    parser.add_argument("-output_name",
-                        type=str, help="Name of the file to output the automatically bank-annotated paradigm tables to.")
-    parser.add_argument("-output_dir", default='conjugation/paradigm_debugging',
-                        type=str, help="Path of the directory to output the paradigm tables to.")
-    parser.add_argument("-mode", default='debugging', choices=['debugging', 'bank_cleanup'],
-                        type=str, help="Path of the directory to output the paradigm tables to.")
-    parser.add_argument("-process_key", default='', choices=['', 'extra_energetic'],
-                        type=str, help="Flag used to process the key before cross-checking it with bank entries while performing automatic bank annotation. Useful in cases like energetic and extra energetic when same diacs are shared by multiple paradigm slots.")
-    args = parser.parse_args()
-
     bank_path = os.path.join(args.bank_dir, f"{args.bank_name}.tsv")
 
     if args.mode == 'bank_cleanup':

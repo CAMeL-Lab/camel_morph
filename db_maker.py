@@ -17,6 +17,23 @@ import itertools
 from time import strftime, gmtime, process_time
 from functools import partial
 import cProfile, pstats
+import sys
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-config_file", required=True,
+                    type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
+parser.add_argument("-config_name", required=True,
+                    type=str, help="Name of the configuration to load from the config file.")
+parser.add_argument("-output_dir", default='db_iterations',
+                    type=str, help="Path of the directory to output the DBs to.")
+parser.add_argument("-run_profiling", default=False,
+                    action='store_true', help="Run execution time profiling for the make_db().")
+parser.add_argument("-camel_tools", default='',
+                    type=str, help="Path of the directory containing the camel_tools modules.")
+args = parser.parse_args()
+
+if args.camel_tools:
+    sys.path.insert(0, args.camel_tools)
 
 from camel_tools.utils.dediac import dediac_bw
 from camel_tools.utils.charmap import CharMapper
@@ -581,17 +598,6 @@ def _choose_required_feats(pos_type):
     return required_feats
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-config_file", required=True,
-                        type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
-    parser.add_argument("-config_name", required=True,
-                        type=str, help="Name of the configuration to load from the config file.")
-    parser.add_argument("-output_dir", default='db_iterations',
-                        type=str, help="Path of the directory to output the DBs to.")
-    parser.add_argument("-run_profiling", default=False,
-                        action='store_true', help="Run execution time profiling for the make_db().")
-    args = parser.parse_args()
-    
     if args.run_profiling:
         profiler = cProfile.Profile()
         profiler.enable()
