@@ -6,9 +6,8 @@ import time
 import gspread
 import pandas as pd
 
-def download_sheets(lex, specs, save_dir, config_file, config_name):
-    sa = gspread.service_account(
-        "/Users/chriscay/.config/gspread/service_account.json")
+def download_sheets(lex, specs, save_dir, config_file, config_name, service_account):
+    sa = gspread.service_account(service_account)
 
     if not os.path.exists(save_dir):
         os.mkdir(save_dir)
@@ -64,7 +63,9 @@ if __name__ == "__main__":
                         type=str, help="Config file specifying which sheets to use.")
     parser.add_argument("-config_name",
                         type=str, help="Name of the configuration to load from the config file.")
+    parser.add_argument("-service_account", required=True,
+                        type=str, help="Path of the JSON file containing the information about the service account used for the Google API.")
     args = parser.parse_args()
 
     download_sheets(args.lex, args.specs, args.save_dir,
-                    args.config_file, args.config_name)
+                    args.config_file, args.config_name, args.service_account)

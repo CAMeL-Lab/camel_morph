@@ -9,9 +9,9 @@ To download files from Google Drive, first, follow the instructions in the first
     python download_sheets.py [-save_dir A] [-config_file B -config_name C] [-lex D1 D2 [...] [-lex ...] -specs E1 E2 [...] [-specs ...]]
 
 - `A`: path of the directory to save all the downloaded files in. It is `./data` by default (if it does not exist, it will be automatically created).
-- `B`: path of configuration file (already included in repo, i.e., `./config.json`) which contains different configurations to run the DB on (previsouly the `PARAMS` sheet in the specs spreadsheet). Some pre-compiled configurations already exist in `config.json`, but new ones could be easily added on demand.
+- `B`: path of the configuration file (already included in repo, i.e., `./config.json`) which contains different configurations to run the DB on (previsouly the `PARAMS` sheet in the specs spreadsheet). Some pre-compiled configurations already exist in `config.json`, but new ones could be easily added on demand.
 - `C`: configuration name of one of the configurations contained in `A` which specifies what sheets to use for the DB (e.g., `pv_msa_order-v4_red` for a DB using only PV MSA lexicon, the `Order-v4` order sheet, and a **red**uced morph file for more efficient debugging). It also specifies what the name of the output DB file will be.
-- Note that either of `B` and `C` can be set, or alternatively, the below (but not both):
+- Note that only one of `B` or `C` can be set. If `C` is set, then:
   - `D`: used for lexicon sheets (usually contain `LEX` in their names)
     - `D1`: name of spreadsheet
     - `D2 [...]`: name of sheets contained in `D1` to download in csv format
