@@ -3,6 +3,7 @@ from collections import OrderedDict
 import os
 import csv
 import sys
+import re
 
 import gspread
 import pandas as pd
@@ -124,7 +125,19 @@ class AnnotationBank:
         bank.columns = AnnotationBank.HEADER
         return bank
 
-def automatic_bank_annotation(bank_path, annotated_paradigms, new_conj_tables):
+def _process_key(key, mode):
+    if mode == 'extra_energetic':
+        signature = key[0]
+        signature = re.sub(r'(I2D\..)X', r'\1E', signature)
+        signature = re.sub(r'(I2FP\..)X', r'\1E', signature)
+        signature = re.sub(r'(I3FD\..)X', r'\1E', signature)
+        signature = re.sub(r'(I3FP\..)X', r'\1E', signature)
+        signature = re.sub(r'(I3MD\..)X', r'\1E', signature)
+        key = (signature, *key[1:])
+    
+    return key
+
+def automatic_bank_annotation(bank_path, annotated_paradigms, new_conj_tables, process_key):
     bank = AnnotationBank(bank_path, annotated_paradigms)
     lemmas = [entry[1] for entry in bank._bank]
     strip = True if not any(['-' in lemma for lemma in lemmas]) else False
@@ -133,6 +146,8 @@ def automatic_bank_annotation(bank_path, annotated_paradigms, new_conj_tables):
     for _, row in new_conj_tables.iterrows():
         lemma = row['LEMMA'] if not strip else strip_lex(row['LEMMA'])
         key = (row['SIGNATURE'], lemma, row['DIAC'])
+        if process_key:
+            key = _process_key(key, process_key)
         row = row.to_dict()
         info = bank.get(key)
         if info is not None:
@@ -236,6 +251,8 @@ if __name__ == "__main__":
                         type=str, help="Path of the directory to output the paradigm tables to.")
     parser.add_argument("-mode", default='debugging', choices=['debugging', 'bank_cleanup'],
                         type=str, help="Path of the directory to output the paradigm tables to.")
+    parser.add_argument("-process_key", default='', choices=['', 'extra_energetic'],
+                        type=str, help="Flag used to process the key before cross-checking it with bank entries while performing automatic bank annotation. Useful in cases like energetic and extra energetic when same diacs are shared by multiple paradigm slots.")
     args = parser.parse_args()
 
     bank_path = os.path.join(args.bank_dir, f"{args.bank_name}.tsv")
@@ -278,7 +295,8 @@ if __name__ == "__main__":
 
     outputs = automatic_bank_annotation(bank_path=bank_path,
                                         annotated_paradigms=annotated_paradigms,
-                                        new_conj_tables=new_conj_tables)
+                                        new_conj_tables=new_conj_tables,
+                                        process_key=args.process_key)
 
     output_path = os.path.join(args.output_dir, args.output_name)
     with open(output_path, 'w') as f:
