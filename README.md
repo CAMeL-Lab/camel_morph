@@ -23,11 +23,12 @@ To download files from Google Drive, first, follow the instructions in the first
 
 The below command compiles the ALMOR-style database.
 
-    python db_maker.py -config_file A -config_name B [-output_dir C] [-run_profiling]
+    python db_maker.py -config_file A -config_name B -camel_tools C [-output_dir D] [-run_profiling]
 
 - `A`: same as above.
 - `B`: same as above.
-- `C`: directory to save the generated DBs in. By default, `./db_iterations`
+- `C`: directory containing the CAMeL Tools modules (clone this from [this](https://github.com/christios/camel_tools) fork).
+- `D`: directory to save the generated DBs in. By default, `./db_iterations`
 
 The following flag is optional:
 
