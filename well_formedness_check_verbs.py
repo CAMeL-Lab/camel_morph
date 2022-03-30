@@ -26,6 +26,8 @@ import gspread
 from camel_tools.morphology.utils import strip_lex
 from camel_tools.utils.charmap import CharMapper
 
+from utils import assign_pattern
+
 bw2ar = CharMapper.builtin_mapper('bw2ar')
 
 def add_check_mark_online(verbs, error_cases):
@@ -188,6 +190,36 @@ def get_lemma2info(verbs):
             'cond-s': row['COND-S'], 'cond-t': row['COND-T'], 'feats': row['FEAT']})
     return lemma2info
 
+
+def form_pattern_well_formedness(verbs):
+    verbs['COND-S'] = verbs.apply(
+        lambda row: re.sub(r'(hamzated|hollow|defective|trans|intrans)', '', row['COND-S']), axis=1)
+    verbs['COND-S'] = verbs.apply(
+        lambda row: re.sub(r' +', ' ', row['COND-S']), axis=1)
+    verbs['COND-S'] = verbs.apply(
+        lambda row: re.sub(r'^ $', '', row['COND-S']), axis=1)
+    class2pattern = {}
+    for i, row in verbs.iterrows():
+        result = assign_pattern(strip_lex(row['LEMMA']), root=row['ROOT'].split('.'))
+        pattern = result['pattern_conc']
+        Eayn_diac = re.search(r'[^-]+(?:-(.))?', row['LEMMA']).group(1)
+        info = {'index': i, 'pattern': row['PATTERN'], 'cond_s': row['COND-S'],
+                'cond_t': row['COND-T'], 'lemma_pattern': pattern,
+                'lemma': row['LEMMA'], 'root': row['ROOT']}
+        class2pattern.setdefault(
+            (pattern, row['COND-S'], row['COND-T'], Eayn_diac), []).append(info)
+
+    errors = {}
+    for stem_class, lemmas in class2pattern.items():
+        if len(set([info['pattern'] for info in lemmas])) != 1:
+            pattern2lemmas = {}
+            for info in lemmas:
+                pattern2lemmas.setdefault(info['pattern'], []).append(info)
+            errors[stem_class] = pattern2lemmas
+    
+    return
+
+
 def well_formedness_all_aspects(pv, iv, cv, strictness):
     assert len(iv.index) == len(cv.index)
 
@@ -268,7 +300,9 @@ def merge_same_feats_diff_gloss_lemmas(lemma2info, iv):
     return row_indexes_to_merge, lemmas_info
 
 def msa_verbs_lexicon_well_formedness(verbs, strictness):
-
+    for verbs in [verbs['pv'], verbs['iv'], verbs['cv']]:
+        form_pattern_well_formedness(verbs)
+    
     merge_indexes = well_formedness_all_aspects(verbs['pv'], verbs['iv'], verbs['cv'], strictness)
 
     for asp, merging_indexes_asp in merge_indexes.items():
@@ -286,19 +320,6 @@ def msa_verbs_lexicon_well_formedness(verbs, strictness):
     return verbs
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-pv", default='data/MSA-LEX-PV.csv',
-                        type=str, help="Path of the PV verbs.")
-    parser.add_argument("-iv", default='data/MSA-LEX-IV.csv',
-                        type=str, help="Path of the IV verbs.")
-    parser.add_argument("-cv", default='data/MSA-LEX-CV.csv',
-                        type=str, help="Path of the CV verbs.")
-    parser.add_argument("-strictness", default='low', choices=['low', 'high'],
-                        type=str, help="Strictness level of the check.")
-    parser.add_argument("-output_path", default='',
-                        type=str, help="Path of the CV verbs.")
-    args = parser.parse_args()
-    
     pv = pd.read_csv(args.pv)
     iv = pd.read_csv(args.iv)
     cv = pd.read_csv(args.cv)
