@@ -99,6 +99,8 @@ def read_morph_specs(config, config_name):
         for cond_class, cond_s in class2cond.items()
             for i, cond in enumerate(cond_s)}
 
+    if not os.path.exists('morph_cache'):
+        os.mkdir('morph_cache')
     if os.path.exists('morph_cache/morph_sheet_prev.pkl'):
         MORPH_prev = pd.read_pickle('morph_cache/morph_sheet_prev.pkl')
         if MORPH.equals(MORPH_prev):
