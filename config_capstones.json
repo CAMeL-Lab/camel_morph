@@ -1,0 +1,28 @@
+{
+    "global": {
+        "data-dir": "data",
+        "specs": {
+            "spreadsheet": "header-morph-order-sheets",
+            "sheets": [
+                "About",
+                "Header"
+            ]
+        }
+    },
+    "local": {
+        "msa_pv_capstones": {
+            "pruning": true,
+            "specs": {
+                "order": "ORDER-PV-Capstones",
+                "morph": "MSA-MORPH-PV-Capstones"
+            },
+            "lexicon": {
+                "spreadsheet": "msa-verb-lex-capstones",
+                "sheets": [
+                    "MSA-LEX-PV-Capstones"
+                ]
+            },
+            "output": "XYZ_msa_pv_v1.0_red.db"
+        }
+    }
+}
