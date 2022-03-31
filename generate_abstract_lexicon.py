@@ -6,29 +6,8 @@ from collections import Counter
 from tqdm import tqdm
 import sys
 
-parser = argparse.ArgumentParser()
-parser.add_argument("-config_file", default='',
-                    type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
-parser.add_argument("-config_name", default='',
-                    type=str, help="Name of the configuration to load from the config file.")
-parser.add_argument("-lexicon_path", default='',
-                    type=str, help="Path of the lexicon to load.")
-parser.add_argument("-output_dir", default='data',
-                    type=str, help="Path of the directory to output the lemmas to.")
-parser.add_argument("-output_name", default='ABSTRACT-LEX.csv',
-                    type=str, help="Name of the file to output the abstract lexicon to.")
-parser.add_argument("-camel_tools", default='',
-                    type=str, help="Path of the directory containing the camel_tools modules.")
-args = parser.parse_args()
-
-if args.camel_tools:
-    sys.path.insert(0, args.camel_tools)
-
 import pandas as pd
 from numpy import nan
-
-from camel_tools.utils.charmap import CharMapper
-from camel_tools.morphology.utils import strip_lex
 
 from utils import assign_pattern
 import db_maker_utils
@@ -37,13 +16,7 @@ header = ['PATTERN_ABS', 'PATTERN_DEF', 'ROOT', 'ROOT_SUB', 'DEFINE', 'CLASS', '
           'LEMMA', 'LEMMA_SUB', 'FORM', 'FORM_SUB', 'BW', 'BW_SUB', 'GLOSS', 'FEAT', 'COND-T', 'COND-F', 'COND-S',
           'MATCH', 'COMMENTS', 'STATUS']
 
-normalize_map = CharMapper({
-    '<': 'A',
-    '>': 'A',
-    '|': 'A',
-    '{': 'A',
-    'Y': 'y'
-})
+
 
 def generate_substitution_regex(pattern):
     sub, radicalindex2grp = [], {}
@@ -66,7 +39,8 @@ def generate_abstract_lexicon(lexicon):
         columns['CLASS'] = row['CLASS']
         cond_t = ' '.join(sorted(row['COND-T'].split()))
         columns['COND-T'] = cond_t
-        cond_s = ' '.join(sorted([cond for cond in row['COND-S'].split() if 'trans' not in cond]))
+        cond_s = re.sub('intrans', 'trans', row['COND-S']) if 'PASS' not in row['BW'] else row['COND-S']
+        cond_s = ' '.join(sorted([cond for cond in cond_s.split()]))
         columns['COND-S'] = cond_s
         columns['PATTERN'] = row['PATTERN']
         columns['FEAT'] = row['FEAT']
@@ -84,12 +58,19 @@ def generate_abstract_lexicon(lexicon):
             radical2index.setdefault(r, []).append(i)
         
         form_pattern_dediac, form_pattern = row['PATTERN'], row['PATTERN']
+        form_reconstructed = []
+        for c in row['PATTERN']:
+            form_reconstructed.append(index2radical[int(c) - 1] if c.isdigit() else c)
+        form_reconstructed = ''.join(form_reconstructed)
+        assert form_reconstructed == row['FORM']
         form_dediac = normalize_map(row['FORM'])
         form_dediac = re.sub(r"[uioa~]", '', form_dediac)
         form_pattern_dediac = normalize_map(form_pattern_dediac)
         form_pattern_dediac = re.sub(r"[uioa~]", '', form_pattern_dediac)
 
         match_form, match_form_diac = form_pattern_dediac, form_pattern
+        max_form_digit = re.findall(r'\d', match_form)
+        max_form_digit = max(int(d) for d in max_form_digit) if max_form_digit else None
         n_t = re.search(r'[nt]~?$', lemma_ex_stripped)
         if n_t:
             if lemma_ex_stripped[-1] != '~':
@@ -112,9 +93,10 @@ def generate_abstract_lexicon(lexicon):
                 assert n0 == n1 == form_pattern.count(str(index))
         
         n0 = 0
-        if '#t' in cond_s or '#n' in cond_s:
-            match_form, n0 = re.subn(r'\d$', '([^ntwy])', match_form)
-        match_form, n1 = re.subn(r'\d', '([^wy])', match_form)
+        if '#t' not in cond_s and '#n' not in cond_s and max_form_digit == len(index2radical):
+            match_form, n0 = re.subn(r'\d$', '([^ntwyA}&])', match_form)
+            assert n0 == 1
+        match_form, n1 = re.subn(r'\d', '([^wyA}&])', match_form)
         n_match = n0 + n1
         columns['MATCH'] = f"^{match_form}$"
         
@@ -141,6 +123,11 @@ def generate_abstract_lexicon(lexicon):
         # LEMMA #########################################################
         columns['PATTERN_DEF'] = lemma_pattern_surf
         columns['PATTERN_ABS'] = abstract_pattern
+        lemma_reconstructed = []
+        for c in lemma_pattern_surf:
+            lemma_reconstructed.append(index2radical[int(c) - 1] if c.isdigit() else c)
+        lemma_reconstructed = ''.join(lemma_reconstructed)
+        assert lemma_reconstructed == lemma_ex_stripped
 
         if n_t:
             lemma_pattern_surf = re.sub(str(index), r, lemma_pattern_surf)
@@ -165,7 +152,7 @@ def generate_abstract_lexicon(lexicon):
         root_split = row['ROOT'].split('.')
         for i, r in enumerate(root_split, start=1):
             if r in ['>', 'w', 'y'] or i == len(root_split) and r in ['n', 't'] or \
-               i == len(root_split) - 1 and root_split[i - 1] == root_split[i] and 'gem' in cond_s and r in ['n', 't']:
+            i == len(root_split) - 1 and root_split[i - 1] == root_split[i] and 'gem' in cond_s and r in ['n', 't']:
                 root.append(r)
                 root_sub.append(r)
             else:
@@ -212,6 +199,33 @@ def generate_abstract_lexicon(lexicon):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-config_file", default='',
+                        type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
+    parser.add_argument("-config_name", default='',
+                        type=str, help="Name of the configuration to load from the config file.")
+    parser.add_argument("-lexicon_path", default='',
+                        type=str, help="Path of the lexicon to load.")
+    parser.add_argument("-output_dir", default='data',
+                        type=str, help="Path of the directory to output the lemmas to.")
+    parser.add_argument("-output_name", default='ABSTRACT-LEX.csv',
+                        type=str, help="Name of the file to output the abstract lexicon to.")
+    parser.add_argument("-camel_tools", default='',
+                        type=str, help="Path of the directory containing the camel_tools modules.")
+    args = parser.parse_args()
+
+    if args.camel_tools:
+        sys.path.insert(0, args.camel_tools)
+    from camel_tools.utils.charmap import CharMapper
+    from camel_tools.morphology.utils import strip_lex
+    normalize_map = CharMapper({
+        '<': 'A',
+        '>': 'A',
+        '|': 'A',
+        '{': 'A',
+        'Y': 'y'
+    })
+
     if args.config_file:
         with open(args.config_file) as f:
             config = json.load(f)
