@@ -337,7 +337,7 @@ def _generate_stem(cmplx_morph_seq,
     stem_feat = ' '.join(stem_feat)
     #TODO: strip lex before transliteration (else underscore will be handled wrong)
     stem = {
-        'match': db_maker_utils._bw2ar_regex(stem_match) if backoff else bw2ar(stem_match),
+        'match': db_maker_utils._bw2ar_regex(stem_match, bw2ar) if backoff else bw2ar(stem_match),
         'cat': xcat,
         'feats': (f"diac:{bw2ar(stem_diac)} bw:{ar_xbw} lex:{bw2ar(stem_lex)} "
                   f"root:{bw2ar(root)} gloss:{stem_gloss.strip()} {stem_feat} ")

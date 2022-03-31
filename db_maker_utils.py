@@ -1,17 +1,17 @@
 import re
+import sys
 
 import pandas as pd
 import os
 from numpy import nan
 
-from camel_tools.utils.charmap import CharMapper
-
 from generate_passive import generate_passive
 from generate_abstract_lexicon import generate_abstract_lexicon
 
-bw2ar = CharMapper.builtin_mapper('bw2ar')
-
 def read_morph_specs(config, config_name):
+    from camel_tools.utils.charmap import CharMapper
+    safebw2ar = CharMapper.builtin_mapper('safebw2ar')
+
     """Read Input file containing morphological specifications"""
     data_dir = config['global']['data-dir']
     local_specs = config['local'][config_name]
@@ -59,8 +59,9 @@ def read_morph_specs(config, config_name):
         POSTREGEX = POSTREGEX[POSTREGEX.DEFINE == 'POSTREGEX']
         POSTREGEX = POSTREGEX.replace(nan, '', regex=True)
         for i, row in POSTREGEX.iterrows():
-            POSTREGEX.at[i, 'MATCH'] = _bw2ar_regex(row['MATCH'])
-            POSTREGEX.at[i, 'REPLACE'] = ''.join(re.sub(r'\$', r'\\', row['REPLACE']))
+            POSTREGEX.at[i, 'MATCH'] = _bw2ar_regex(row['MATCH'], safebw2ar)
+            POSTREGEX.at[i, 'REPLACE'] = _bw2ar_regex(
+                ''.join(re.sub(r'\$', r'\\', row['REPLACE'])), safebw2ar)
     
     if local_specs.get('split_or') == True:
         assert BACKOFF is None
@@ -262,7 +263,7 @@ def _get_cond_false(cond_t_all, cond_t_almrph):
     return cond_f_almrph, cond_t_almrph
 
 
-def _bw2ar_regex(regex):
+def _bw2ar_regex(regex, bw2ar):
     match_ = []
     for match in re.split(r'(\\.|[\|}{\*\$_])', regex):
         match = match if re.match(r'(\\.)|[\|}{\*\$_]', match) else bw2ar(match)
