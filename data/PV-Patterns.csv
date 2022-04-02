@@ -171,8 +171,8 @@
 169,1a>o3a>,1a>o3a>,#-a>,,#-a>,8,ha>oha>,ha>oh,(.).(.).(.),$1u&o$3i},,,,hu&ohi},1,,DONE
 170,1a>o3a4,1a>o3a4,#n,,#n,1,Ta>oman,Ta>oman,(.).(.).(.).(.),$1u&o$3i$4,#n,,#n,Tu&omin,0,,DONE
 171,1a>u3,1a>u3,,,,4,la&um,la&um,(.).(.).(.),$1u}i$3,,,,lu}im,1,,DONE
-172,1A2~,1@2~,c-suff + gem,c-suff,gem,15,xAl~,xAlal,(.)A(.).(.),$1uw$2i$3,,,,xuwlil,0,C2,DONE
-173,1A2~,1@2~,v-suff + gem,v-suff,gem,15,xAl~,xAl~,(.)A(.)~,DROP,,,,DROP,0,C2,DONE
+172,1A2~,1@2~,c-suff + gem,c-suff,gem,15,xAl~,xAlal,(.)A(.).(.),$1uw$2i$3,,c-suff,gem,xuwlil,0,C2,DONE
+173,1A2~,1@2~,v-suff + gem,v-suff,gem,15,xAl~,xAl~,(.)A(.)~,$1uw$2~,,v-suff,gem,xuwl~,0,C2,DONE
 174,1a2~,1a2~,c-suff + gem,c-suff,gem,272,zar~,zarar,(.).(.).(.),$1u$2i$3,c-suff + gem,c-suff,gem,zurir,0,,DONE
 175,1a2~,1a2~,v-suff + gem,v-suff,gem,268,zar~,zar~,(.).(.)~,$1u$2~,v-suff + gem,v-suff,gem,zur~,0,,DONE
 176,1a2~,1a2~,c-suff + #n gem,c-suff,#n gem,16,zar~,zarar,(.).(.).(.),$1u$2i$3,c-suff + #n gem,c-suff,#n gem,zurir,0,,DONE
@@ -273,10 +273,10 @@
 271,ta1a>o3a>,ta1a>o3a>,#-a>,,#-a>,2,tala>ola>,tala>ol,ta(.).(.).(.),tu$1u$2o$3i},,,,tulu>oli},0,,DONE
 272,ta1a>o3a4,ta1a>o3a4,#n,,#n,1,tava>olal,tava>olal,ta(.).(.).(.).(.),tu$1u&o$3i$4,#n,,#n,tuvu&olil,1,,DONE
 273,ta1a>o3a4,ta1a>o3a4,,,,1,tava>olal,tava>olal,ta(.).(.).(.).(.),tu$1u$2o$3i$4,,,,tuvu>olil,1,,DONE
-274,ta1A2~,ta1@2~,c-suff + gem,c-suff,gem,16,tasAr~,tasArar,ta(.)A(.).(.),tu$1uw$2i$3,,,,tusuwrir,0,C2,DONE
-275,ta1A2~,ta1@2~,v-suff + gem,v-suff,gem,16,tasAr~,tasAr~,ta(.)A(.)~,DROP,,,,DROP,0,C2,DONE
-276,ta1A2~,ta1@2~,c-suff + #t gem,c-suff,#t gem,1,tasAr~,tasArar,ta(.)A(.).(.),tu$1uw$2i$3,#t,,#t,tusuwrir,0,C2,DONE
-277,ta1A2~,ta1@2~,v-suff + #t gem,v-suff,#t gem,1,tasAr~,tasAr~,ta(.)A(.)~,DROP,,,,DROP,0,C2,DONE
+274,ta1A2~,ta1@2~,c-suff + gem,c-suff,gem,16,tasAr~,tasArar,ta(.)A(.).(.),tu$1uw$2i$3,,c-suff,gem,tusuwrir,0,C2,DONE
+275,ta1A2~,ta1@2~,v-suff + gem,v-suff,gem,16,tasAr~,tasAr~,ta(.)A(.)~,tu$1uw$2~,,v-suff,gem,tusuwr~,0,C2,DONE
+276,ta1A2~,ta1@2~,c-suff + #t gem,c-suff,#t gem,1,tasAr~,tasArar,ta(.)A(.).(.),tu$1uw$2i$3,#t,c-suff,#t,tusuwrir,0,C2,DONE
+277,ta1A2~,ta1@2~,v-suff + #t gem,v-suff,#t gem,1,tasAr~,tasAr~,ta(.)A(.)~,tu$1uw$2~,,v-suff,#t,tusuwr~,0,C2,DONE
 278,ta1a2~a>,ta1a2~a>,#-a>,,#-a>,16,tahar~a>,tahar~,ta(.).(.)~,tu$1u$2~i},,,,tuhur~i},1,,DONE
 279,ta1a2~a3,ta1a2~a3,#n,,#n,27,tahal~al,tahal~al,ta(.).(.)~.(.),tu$1u$2~i$3,#n,,#n,tuhul~il,0,,DONE
 280,ta1a2~a3,ta1a2~a3,#t,,#t,8,tahal~al,tahal~al,ta(.).(.)~.(.),tu$1u$2~i$3,#t,,#t,tuhul~il,0,,DONE
@@ -317,8 +317,8 @@
 315,ta1ayowa4,ta1ayowa4,,,,1,ta$ayowaE,ta$ayowaE,ta(.).(.).(.).(.),tu$1u$2o$3i$4,,,,tu$uyowiE,1,,DONE
 316,tawa>~a3,tawa>~a3,,,,1,tawa>~ad,tawa>~ad,ta(.).(.)~.(.),tu$1u}~i$3,,,,tuwu}~id,0,,DONE
 317,tawA>a3,taw@>a3,,,,1,tawA'am,tawA'am,ta(.)A(.).(.),tu$1uw}i$3,,,,tuwuw}im,1,,DONE
-318,tawA2~,taw@2~,c-suff + gem,c-suff,gem,1,tawAd~,tawAdad,ta(.)A(.).(.),tu$1uw$2i$3,,,,tuwuwdid,0,C2,DONE
-319,tawA2~,taw@2~,v-suff + gem,v-suff,gem,1,tawAd~,tawAd~,ta(.)A(.)~,DROP,,,,DROP,0,C2,DONE
+318,tawA2~,taw@2~,c-suff + gem,c-suff,gem,1,tawAd~,tawAdad,ta(.)A(.).(.),tu$1uw$2i$3,,c-suff,gem,tuwuwdid,0,C2,DONE
+319,tawA2~,taw@2~,v-suff + gem,v-suff,gem,1,tawAd~,tawAd~,ta(.)A(.)~,tu$1uw$2~,,v-suff,gem,tuwuwd~,0,C2,DONE
 320,tawa2~a>,tawa2~a>,#-a>,,#-a>,2,tawak~a>,tawak~,ta(.).(.)~,tu$1u$2~i},,,,tuwuk~i},1,,DONE
 321,tawa2~a3,tawa2~a3,#n,,#n,1,tawah~am,tawah~am,ta(.).(.)~.(.),tu$1u$2~i$3,#n,,#n,tuwuh~im,0,,DONE
 322,tawa2~a3,tawa2~a3,,,,50,tawah~am,tawah~am,ta(.).(.)~.(.),tu$1u$2~i$3,,,,tuwuh~im,0,,DONE
@@ -332,8 +332,8 @@
 330,taya2~a3,taya2~a3,,,,5,tayaq~aZ,tayaq~aZ,ta(.).(.)~.(.),tu$1u$2~i$3,,,,tuyuq~iZ,0,,DONE
 331,wA>a3,w@>a3,,,,1,wA'am,wA'am,(.)A(.).(.),$1uw}i$3,,,,wuw}im,1,,DONE
 332,wa>a3,wa>a3,,,,2,wa>ar,wa>ar,(.).(.).(.),$1u}i$3,,,,wu}ir,1,,DONE
-333,wA2~,w@2~,c-suff + hollow,c-suff,hollow,1,wAd~,wAdad,(.)A(.).(.),$1uw$2i$3,,,,wuwdid,0,C2,DONE
-334,wA2~,w@2~,v-suff + hollow,v-suff,hollow,1,wAd~,wAd~,(.)A(.)~,DROP,,,,DROP,0,C2,DONE
+333,wA2~,w@2~,c-suff + hollow,c-suff,hollow,1,wAd~,wAdad,(.)A(.).(.),$1uw$2i$3,,c-suff,hollow,wuwdid,0,C2,DONE
+334,wA2~,w@2~,v-suff + hollow,v-suff,hollow,1,wAd~,wAd~,(.)A(.)~,$1uw$2~,,v-suff,hollow,wuwd~,0,C2,DONE
 335,wa2~,wa2~,c-suff + hollow,c-suff,hollow,2,waz~,wazaz,(.).(.).(.),$1u$2i$3,c-suff + hollow,c-suff,hollow,wuziz,0,,DONE
 336,wa2~,wa2~,v-suff + hollow,v-suff,hollow,2,waz~,waz~,(.).(.)~,$1u$2~,v-suff + hollow,v-suff,hollow,wuz~,0,,DONE
 337,wa2~,wa2~,c-suff + #n gem,c-suff,#n gem,1,waz~,wazaz,(.).(.).(.),$1u$2i$3,c-suff + #n gem,c-suff,#n gem,wuziz,0,,DONE

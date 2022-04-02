@@ -54,6 +54,19 @@
 52,1003,ORDER,MSA,VERBAL,pos:verb,[QUES] [CONJ] [VPART.E] [IVPref.3MD],[IVPreBuff] [STEM-IV],[IVBuff] [IVSuff.E.3MD] [PRON] [PRON2],[I3MD.E],[I],[I3MD.E],
 53,1003,ORDER,MSA,VERBAL,pos:verb,[QUES] [CONJ] [VPART.E] [IVPref.3MP],[IVPreBuff] [STEM-IV],[IVBuff] [IVSuff.E.3MP] [PRON] [PRON2],[I3MP.E],[I],[I3MP.E],
 54,1003,ORDER,MSA,VERBAL,pos:verb,[QUES] [CONJ] [VPART.E] [IVPref.3MS],[IVPreBuff] [STEM-IV],[IVBuff] [IVSuff.E.3MS] [PRON] [PRON2],[I3MS.E],[I],[I3MS.E],
-55,,,,,,,,,,,,
-56,1001,#ORDER,MSA,VERBAL,pos:verb,[CONJ],[STEM-CV],[CVBuff] [CVSuff] [PRON] [PRON2],[C],[C],[C],Imperative
-57,1001,#ORDER,MSA,VERBAL,pos:verb,[CONJ],[STEM-CV],[CVBuff] [CVSuff.E] [PRON] [PRON2],[C],[C],[C.E],Imperative+energetic 
+55,1003,ORDER,MSA,VERBAL,pos:verb,[QUES] [CONJ] [VPART.X] [IVPref.1P],[IVPreBuff] [STEM-IV],[IVBuff] [IVSuff.X.1P] [PRON] [PRON2],[I1P.X],[I],[I1P.X],Imperfective+extra energetic - لأكتبَن لأكتبَنَّ nun tawkid of two types
+56,1003,ORDER,MSA,VERBAL,pos:verb,[QUES] [CONJ] [VPART.X] [IVPref.1S],[IVPreBuff] [STEM-IV],[IVBuff] [IVSuff.X.1S] [PRON] [PRON2],[I1S.X],[I],[I1S.X],
+57,1003,ORDER,MSA,VERBAL,pos:verb,[QUES] [CONJ] [VPART.X] [IVPref.2D],[IVPreBuff] [STEM-IV],[IVBuff] [IVSuff.X.2D] [PRON] [PRON2],[I2D.X],[I],[I2D.X],
+58,1003,ORDER,MSA,VERBAL,pos:verb,[QUES] [CONJ] [VPART.X] [IVPref.2FP],[IVPreBuff] [STEM-IV],[IVBuff] [IVSuff.X.2FP] [PRON] [PRON2],[I2FP.X],[I],[I2FP.X],
+59,1003,ORDER,MSA,VERBAL,pos:verb,[QUES] [CONJ] [VPART.X] [IVPref.2FS],[IVPreBuff] [STEM-IV],[IVBuff] [IVSuff.X.2FS] [PRON] [PRON2],[I2FS.X],[I],[I2FS.X],
+60,1003,ORDER,MSA,VERBAL,pos:verb,[QUES] [CONJ] [VPART.X] [IVPref.2MP],[IVPreBuff] [STEM-IV],[IVBuff] [IVSuff.X.2MP] [PRON] [PRON2],[I2MP.X],[I],[I2MP.X],
+61,1003,ORDER,MSA,VERBAL,pos:verb,[QUES] [CONJ] [VPART.X] [IVPref.2MS],[IVPreBuff] [STEM-IV],[IVBuff] [IVSuff.X.2MS] [PRON] [PRON2],[I2MS.X],[I],[I2MS.X],
+62,1003,ORDER,MSA,VERBAL,pos:verb,[QUES] [CONJ] [VPART.X] [IVPref.3FD],[IVPreBuff] [STEM-IV],[IVBuff] [IVSuff.X.3FD] [PRON] [PRON2],[I3FD.X],[I],[I3FD.X],
+63,1003,ORDER,MSA,VERBAL,pos:verb,[QUES] [CONJ] [VPART.X] [IVPref.3FP],[IVPreBuff] [STEM-IV],[IVBuff] [IVSuff.X.3FP] [PRON] [PRON2],[I3FP.X],[I],[I3FP.X],
+64,1003,ORDER,MSA,VERBAL,pos:verb,[QUES] [CONJ] [VPART.X] [IVPref.3FS],[IVPreBuff] [STEM-IV],[IVBuff] [IVSuff.X.3FS] [PRON] [PRON2],[I3FS.X],[I],[I3FS.X],
+65,1003,ORDER,MSA,VERBAL,pos:verb,[QUES] [CONJ] [VPART.X] [IVPref.3MD],[IVPreBuff] [STEM-IV],[IVBuff] [IVSuff.X.3MD] [PRON] [PRON2],[I3MD.X],[I],[I3MD.X],
+66,1003,ORDER,MSA,VERBAL,pos:verb,[QUES] [CONJ] [VPART.X] [IVPref.3MP],[IVPreBuff] [STEM-IV],[IVBuff] [IVSuff.X.3MP] [PRON] [PRON2],[I3MP.X],[I],[I3MP.X],
+67,1003,ORDER,MSA,VERBAL,pos:verb,[QUES] [CONJ] [VPART.X] [IVPref.3MS],[IVPreBuff] [STEM-IV],[IVBuff] [IVSuff.X.3MS] [PRON] [PRON2],[I3MS.X],[I],[I3MS.X],
+68,,,,,,,,,,,,
+69,1001,#ORDER,MSA,VERBAL,pos:verb,[CONJ],[STEM-CV],[CVBuff] [CVSuff] [PRON] [PRON2],[C],[C],[C],Imperative
+70,1001,#ORDER,MSA,VERBAL,pos:verb,[CONJ],[STEM-CV],[CVBuff] [CVSuff.E] [PRON] [PRON2],[C],[C],[C.E],Imperative+energetic 

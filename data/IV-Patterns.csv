@@ -370,5 +370,6 @@
 368,1a2o3a4,>a2o3a4,>a2o3a4,u-#,,u-#,-,>aforaq_1,>aforiq,-,(.).(.).(.).(.),$1a$2o$3a$4,u-#,,u-#,>aforaq,1,,DONE
 369,1a2o3a4,>a2o3a4,>a2o3a4,u-# #n,,u-# #n,-,>aloman_1,>alomin,-,(.).(.).(.).(.),$1a$2o$3a$4,u-# #n,,u-# #n,>aloman,1,,DONE
 370,1a2o3a4,>awo3a4,>awo3a4,u-#,,u-#,-,>aworab_1,>aworib,-,(.).(.).(.).(.),$1a$2o$3a$4,u-#,,u-#,>aworab,0,,DONE
-371,{i1ota2a3,{i>ota2~,{i>ota2~,v-suff + a-# gem,v-suff,a-# >-# gem,-,{i>otam~_1,>otam~,-,(.).(.).(.)~,$1o$2a$3~,v-suff + u-# gem,v-suff,u-# gem,>otam~,1,,DONE
-372,{i1ota2a3,{i>ota2~,{i>ota2~,c-suff + a-# gem,c-suff,a-# >-# gem,-,{i>otam~_1,>otamim,-,(.).(.).(.).(.),$1o$2a$3a$4,c-suff + u-# gem,c-suff,u-# gem,>otamam,1,,DONE
+371,{i1ota2a3,{i>ota2~,{i>ota2~,v-suff + a-# gem,v-suff,a-# >-# gem,-,{i>otam~_1,tam~,-,(.).(.)~,$1a$2~,v-suff + u-# gem,v-suff,u-# >-# gem,tam~,1,,DONE
+372,{i1ota2a3,{i>ota2~,{i>ota2~,c-suff + a-# gem,c-suff,a-# >-# gem,-,{i>otam~_1,tamim,-,(.).(.).(.),$1a$2a$3,c-suff + u-# gem,c-suff,u-# >-# gem,tamam,1,,DONE
+373,ta1a2~3,ta>ay~a3,ta>ay~a3,a-#,,a-# #n,-,ta>ay~an_1,ta>ay~an,-,ta(.).(.)~.(.),ta$1a$2~a$3,u-#,,u-# #n,ta>ay~an,0,,DONE
