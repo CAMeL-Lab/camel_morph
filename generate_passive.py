@@ -5,13 +5,13 @@ import os
 
 import pandas as pd
 from numpy import nan
-from camel_tools.morphology.utils import strip_lex
 
 from utils import assign_pattern
 
 errors, missing = {}, {}
 
 def generate_passive(LEXICON, patterns_path):
+    from camel_tools.morphology.utils import strip_lex
     passive_patterns = pd.read_csv(patterns_path)
     passive_patterns = passive_patterns.replace(nan, '', regex=True)
     passive_patterns['COND-S-ESSENTIAL-Act'] = passive_patterns.apply(
