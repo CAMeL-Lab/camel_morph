@@ -16,9 +16,7 @@ header = ['PATTERN_ABS', 'PATTERN_DEF', 'ROOT', 'ROOT_SUB', 'DEFINE', 'CLASS', '
           'LEMMA', 'LEMMA_SUB', 'FORM', 'FORM_SUB', 'BW', 'BW_SUB', 'GLOSS', 'FEAT', 'COND-T', 'COND-F', 'COND-S',
           'MATCH', 'COMMENTS', 'STATUS']
 
-
-
-def generate_substitution_regex(pattern):
+def generate_substitution_regex(pattern, gem_c_suff_form=False):
     sub, radicalindex2grp = [], {}
     parenth_grp = 1
     for c in pattern:
@@ -28,6 +26,8 @@ def generate_substitution_regex(pattern):
             parenth_grp += 1
         else:
             sub.append(c)
+    if gem_c_suff_form and len(radicalindex2grp) >= 2:
+        sub[-1] = [s for s in sub if re.search(r'\d', s)][-2]
     sub = ''.join(sub)
     return sub, radicalindex2grp
 
@@ -39,12 +39,14 @@ def generate_abstract_lexicon(lexicon):
         columns['CLASS'] = row['CLASS']
         cond_t = ' '.join(sorted(row['COND-T'].split()))
         columns['COND-T'] = cond_t
-        cond_s = re.sub('intrans', 'trans', row['COND-S']) if 'PASS' not in row['BW'] else row['COND-S']
+        cond_s = re.sub('intrans', 'trans', row['COND-S']) if 'vox:p' not in row['FEAT'] else row['COND-S']
         cond_s = ' '.join(sorted([cond for cond in cond_s.split()]))
         columns['COND-S'] = cond_s
         columns['PATTERN'] = row['PATTERN']
         columns['FEAT'] = row['FEAT']
         columns['GLOSS'] = 'na'
+
+        t_explicit = True if 'asp:p' in row['FEAT'] else False
 
         lemma_ex_stripped = strip_lex(row['LEMMA']).split('lex:')[1]
         result = assign_pattern(
@@ -71,7 +73,7 @@ def generate_abstract_lexicon(lexicon):
         match_form, match_form_diac = form_pattern_dediac, form_pattern
         max_form_digit = re.findall(r'\d', match_form)
         max_form_digit = max(int(d) for d in max_form_digit) if max_form_digit else None
-        n_t = re.search(r'[nt]~?$', lemma_ex_stripped)
+        n_t = re.search(r'[nt]~?$', lemma_ex_stripped) if t_explicit else re.search(r'[n]~?$', lemma_ex_stripped)
         if n_t:
             if lemma_ex_stripped[-1] != '~':
                 r = lemma_ex_stripped[-1]
@@ -93,17 +95,30 @@ def generate_abstract_lexicon(lexicon):
                 assert n0 == n1 == form_pattern.count(str(index))
         
         n0 = 0
-        if '#t' not in cond_s and '#n' not in cond_s and max_form_digit == len(index2radical):
-            match_form, n0 = re.subn(r'\d$', '([^ntwyA}&])', match_form)
-            assert n0 == 1
-        match_form, n1 = re.subn(r'\d', '([^wyA}&])', match_form)
+        not_t_n = '#t' not in cond_s and '#n' not in cond_s
+        generic_last_radical = 'gem' in cond_s or max_form_digit == len(index2radical)
+        gem_c_suff = True if 'c-suff' in cond_t and 'gem' in cond_s else False
+        form_sub, radicalindex2grp = generate_substitution_regex(
+            match_form_diac, gem_c_suff_form=not_t_n and generic_last_radical and gem_c_suff)
+        
+        if not_t_n and generic_last_radical and len(radicalindex2grp) >= 2:
+            regex_match = r'\d$' if not gem_c_suff else r'\d\d$'
+            regex_replace = '([^ntwyA}&])' if t_explicit else '([^nwyA}&])'
+            if gem_c_suff:
+                penultimate_replace_grp = re.findall(r'\d', form_sub)[-2]
+            regex_replace = regex_replace if not gem_c_suff else f"{regex_replace}\\\{penultimate_replace_grp}"
+            match_form, n0 = re.subn(regex_match, regex_replace, match_form)
+            if n0 == 1 and gem_c_suff:
+                n0 = 2
+            else:
+                assert n0 == 1
+
+        match_form, n1 = re.subn(r'(?<!\\)\d', '([^wyA}&])', match_form)
         n_match = n0 + n1
         columns['MATCH'] = f"^{match_form}$"
         
         match_form_diac_parenth = re.escape(match_form_diac)
         match_form_diac_parenth = re.sub(r'\d', '(.)', match_form_diac_parenth)
-
-        form_sub, _ = generate_substitution_regex(match_form_diac)
 
         digits = [int(d) for d in re.findall(r'\d', form_sub)]
         max_digit = max(digits) if digits else 0
@@ -151,8 +166,9 @@ def generate_abstract_lexicon(lexicon):
         root, root_sub = [], []
         root_split = row['ROOT'].split('.')
         for i, r in enumerate(root_split, start=1):
-            if r in ['>', 'w', 'y'] or i == len(root_split) and r in ['n', 't'] or \
-            i == len(root_split) - 1 and root_split[i - 1] == root_split[i] and 'gem' in cond_s and r in ['n', 't']:
+            radical_nt = r in ['n', 't'] if t_explicit else r == 'n'
+            if r in ['>', 'w', 'y'] or i == len(root_split) and radical_nt or \
+                    i == len(root_split) - 1 and root_split[i - 1] == root_split[i] and 'gem' in cond_s and radical_nt:
                 root.append(r)
                 root_sub.append(r)
             else:
