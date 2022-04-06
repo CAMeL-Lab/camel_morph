@@ -1,6 +1,7 @@
 import os
 import argparse
 import json
+from re import L
 import time
 
 import gspread
@@ -20,10 +21,19 @@ def download_sheets(lex, specs, save_dir, config_file, config_name, service_acco
     else:
         with open(config_file) as f:
             config = json.load(f)
+        
+        specs_local = []
+        for sheets in config['local'][config_name]['specs'].values():
+            if type(sheets) is str:
+                specs_local.append(sheets)
+            elif type(sheets) is dict:
+                for sheet in sheets.values():
+                    specs_local.append(sheet)
+                    
         specs = {
             'spreadsheets': [config['global']['specs']['spreadsheet']],
             'sheets': [
-                config['global']['specs']['sheets'] + list(config['local'][config_name]['specs'].values())]
+                config['global']['specs']['sheets'] + specs_local]
         }
         lex = {
             'spreadsheets': [config['local'][config_name]['lexicon']['spreadsheet']],

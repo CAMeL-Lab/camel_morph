@@ -22,35 +22,45 @@ def read_morph_specs(config, config_name):
     ORDER = pd.read_csv(os.path.join(data_dir, order_filename))
     morph_filename = f"{local_specs['specs']['morph']}.csv"
     MORPH = pd.read_csv(os.path.join(data_dir, morph_filename))
+    
     lexicon_sheets = local_specs['lexicon']['sheets']
-    LEXICON = pd.concat([pd.read_csv(os.path.join(data_dir, f"{name}.csv"))
-                         for name in lexicon_sheets])
-    # Replace spaces in BW and GLOSS with '#'; skip commented rows and empty lines
-    LEXICON = LEXICON[LEXICON.DEFINE == 'LEXICON']
-    LEXICON = LEXICON.replace(nan, '', regex=True)
+    patterns_sheets = local_specs['specs'].get('passive')
+    backoff_sheets = local_specs['lexicon'].get('backoff')
+    LEXICON, BACKOFF = None, None
+    for lexicon_sheet_name in lexicon_sheets:
+        LEXICON_ = pd.read_csv(os.path.join(data_dir, f"{lexicon_sheet_name}.csv"))
+        # Replace spaces in BW and GLOSS with '#'; skip commented rows and empty lines
+        LEXICON_ = LEXICON_[LEXICON_.DEFINE == 'LEXICON']
+        LEXICON_ = LEXICON_.replace(nan, '', regex=True)
+
+        if patterns_sheets:
+            passive_patterns = patterns_sheets.get(lexicon_sheet_name)
+            if passive_patterns:
+                LEXICON_PASS = generate_passive(
+                    LEXICON_, os.path.join(data_dir, f"{passive_patterns}.csv"))
+                LEXICON_ = pd.concat([LEXICON_, LEXICON_PASS])
+
+        if backoff_sheets:
+            if backoff_sheets == 'auto':
+                BACKOFF_ = generate_abstract_lexicon(LEXICON_)
+            elif backoff_sheets.get(lexicon_sheet_name):
+                backoff_filename = f"{backoff_sheets[lexicon_sheet_name]}.csv"
+                BACKOFF_ = pd.read_csv(os.path.join(data_dir, backoff_filename))
+                BACKOFF_ = BACKOFF_.replace(nan, '', regex=True)
+            BACKOFF = pd.concat([BACKOFF, BACKOFF_])
+
+        LEXICON_['BW'] = LEXICON_['FORM'] + '/' + LEXICON_['BW']
+        LEXICON_['LEMMA'] = 'lex:' + LEXICON_['LEMMA']
+
+        LEXICON = pd.concat([LEXICON, LEXICON_]) if LEXICON is not None else LEXICON_
+    
     LEXICON['GLOSS'] = LEXICON['GLOSS'].replace('\s+', '#', regex=True)
-    LEXICON['COND-S'] = LEXICON['COND-S'].replace(' +', ' ', regex=True)
-    LEXICON['COND-S'] = LEXICON['COND-S'].replace(' $', '', regex=True)
     LEXICON['COND-T'] = LEXICON['COND-T'].replace(' +', ' ', regex=True)
     LEXICON['COND-T'] = LEXICON['COND-T'].replace(' $', '', regex=True)
-
-    patterns_path = local_specs['specs'].get('passive')
-    if patterns_path:
-        LEXICON_PASS = generate_passive(LEXICON, os.path.join(data_dir, f"{patterns_path}.csv"))
-        LEXICON = pd.concat([LEXICON, LEXICON_PASS])
-
-    BACKOFF = None
-    backoff = local_specs['lexicon'].get('backoff')
-    if backoff:
-        if backoff == 'auto':
-            BACKOFF = generate_abstract_lexicon(LEXICON)
-        else:
-            backoff_filename = f"{backoff}.csv"
-            BACKOFF = pd.read_csv(os.path.join(data_dir, backoff_filename))
-            BACKOFF = BACKOFF.replace(nan, '', regex=True)
-
-    LEXICON['BW'] = LEXICON['FORM'] + '/' + LEXICON['BW']
-    LEXICON['LEMMA'] = 'lex:' + LEXICON['LEMMA']
+    LEXICON['COND-S'] = LEXICON.apply(
+        lambda row: re.sub(r'hamzated|hollow|defective', '', row['COND-S']), axis=1)
+    LEXICON['COND-S'] = LEXICON['COND-S'].replace(' +', ' ', regex=True)
+    LEXICON['COND-S'] = LEXICON['COND-S'].replace(' $', '', regex=True)
 
     POSTREGEX = None
     postregex_path = local_specs['specs'].get('postregex')

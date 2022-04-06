@@ -10,34 +10,102 @@
     },
 
     "local": {
-        "pv_msa_order-v4": {
+        "all_msa_order-v4_red": {
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4-PV",
-                "morph": "MSA-MORPH-Verbs-v4",
-                "passive": "PV-Patterns"
+                "order": "ORDER-v4",
+                "morph": "MSA-MORPH-Verbs-v4-Red",
+                "passive": {
+                    "MSA-LEX-PV": "PV-Patterns",
+                    "MSA-LEX-IV": "IV-Patterns"
+                }
             },
             "lexicon": {
                 "spreadsheet": "msa-verb-lex",
                 "sheets": [
-                    "MSA-LEX-PV"
-                ]
+                    "MSA-LEX-PV",
+                    "MSA-LEX-IV",
+                    "MSA-LEX-CV"
+                ],
+                "backoff": {
+                    "MSA-LEX-PV": "MSA-LEX-PV-ABSTRACT",
+                    "MSA-LEX-IV": "MSA-LEX-IV-ABSTRACT",
+                    "MSA-LEX-CV": "MSA-LEX-CV-ABSTRACT"
+                }
             },
-            "output": "XYZ_msa_pv_v1.0.db"
+            "output": "XYZ_msa_all_v1.0_red.db",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        },
+        "all_msa_order-v4": {
+            "pruning": true,
+            "specs": {
+                "order": "ORDER-v4",
+                "morph": "MSA-MORPH-Verbs-v4",
+                "passive": {
+                    "MSA-LEX-PV": "PV-Patterns",
+                    "MSA-LEX-IV": "IV-Patterns"
+                }
+            },
+            "lexicon": {
+                "spreadsheet": "msa-verb-lex",
+                "sheets": [
+                    "MSA-LEX-PV",
+                    "MSA-LEX-IV",
+                    "MSA-LEX-CV"
+                ],
+                "backoff": {
+                    "MSA-LEX-PV": "MSA-LEX-PV-ABSTRACT",
+                    "MSA-LEX-IV": "MSA-LEX-IV-ABSTRACT",
+                    "MSA-LEX-CV": "MSA-LEX-CV-ABSTRACT"
+                }
+            },
+            "output": "XYZ_msa_all_v1.0.db",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
         },
         "pv_msa_order-v4_red": {
             "pruning": true,
             "specs": {
                 "order": "ORDER-v4-PV",
                 "morph": "MSA-MORPH-Verbs-v4-Red",
-                "passive": "PV-Patterns"
+                "passive": {
+                    "MSA-LEX-PV": "PV-Patterns"
+                }
             },
             "lexicon": {
                 "spreadsheet": "msa-verb-lex",
                 "sheets": [
                     "MSA-LEX-PV"
                 ],
-                "backoff": "MSA-LEX-PV-ABSTRACT"
+                "backoff": {
+                    "MSA-LEX-PV": "MSA-LEX-PV-ABSTRACT"
+                }
+            },
+            "output": "XYZ_msa_pv_v1.0_red.db",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        },
+        "pv_msa_no_pass": {
+            "pruning": true,
+            "specs": {
+                "order": "ORDER-v4-PV",
+                "morph": "MSA-MORPH-Verbs-v4-Red"
+            },
+            "lexicon": {
+                "spreadsheet": "msa-verb-lex",
+                "sheets": [
+                    "MSA-LEX-PV"
+                ],
+                "backoff": {
+                    "MSA-LEX-PV": "MSA-LEX-PV-ABSTRACT"
+                }
             },
             "output": "XYZ_msa_pv_v1.0_red.db",
             "extended_lemma_keys": [
@@ -50,7 +118,9 @@
             "specs": {
                 "order": "ORDER-v3-IV",
                 "morph": "MSA-MORPH-Verbs-v4",
-                "passive": "IV-Patterns"
+                "passive": {
+                    "MSA-LEX-IV": "IV-Patterns"
+                }
             },
             "lexicon": {
                 "spreadsheet": "msa-verb-lex",
@@ -58,18 +128,17 @@
                     "MSA-LEX-IV"
                 ]
             },
-            "output": "XYZ_msa_iv_v1.0_order-v3.db",
+            "output": "XYZ_msa_pv_v1.0_red.db",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
             ]
         },
-        "iv_msa_order-v4": {
+        "iv_msa_no_pass": {
             "pruning": true,
             "specs": {
                 "order": "ORDER-v4-IV",
-                "morph": "MSA-MORPH-Verbs-v4",
-                "passive": "IV-Patterns"
+                "morph": "MSA-MORPH-Verbs-v4"
             },
             "lexicon": {
                 "spreadsheet": "msa-verb-lex",
@@ -88,13 +157,18 @@
             "specs": {
                 "order": "ORDER-v4-IV",
                 "morph": "MSA-MORPH-Verbs-v4-Red",
-                "passive": "IV-Patterns"
+                "passive": {
+                    "MSA-LEX-IV": "IV-Patterns"
+                }
             },
             "lexicon": {
                 "spreadsheet": "msa-verb-lex",
                 "sheets": [
                     "MSA-LEX-IV"
-                ]
+                ],
+                "backoff": {
+                    "MSA-LEX-IV": "MSA-LEX-IV-ABSTRACT"
+                }
             },
             "output": "XYZ_msa_iv_v1.0_red.db",
             "extended_lemma_keys": [
@@ -112,7 +186,10 @@
                 "spreadsheet": "msa-verb-lex",
                 "sheets": [
                     "MSA-LEX-CV"
-                ]
+                ],
+                "backoff": {
+                    "MSA-LEX-CV": "MSA-LEX-CV-ABSTRACT"
+                }
             },
             "output": "XYZ_msa_cv_v1.0_red.db",
             "extended_lemma_keys": [

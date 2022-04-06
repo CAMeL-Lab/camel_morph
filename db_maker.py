@@ -107,6 +107,7 @@ def construct_almor_db(SHEETS, pruning, cond2class):
         
         pbar = tqdm(total=len(list(ORDER.iterrows())))
         for _, order in ORDER.iterrows():
+            pbar.set_description(order['SUFFIX-SHORT'])
             cmplx_prefix_classes = gen_cmplx_morph_combs(
                 order['PREFIX'], MORPH, lexicon, cond2class, prefix_pattern,
                 cmplx_morph_memoize=cmplx_morph_memoize['prefix'],
@@ -129,13 +130,17 @@ def construct_almor_db(SHEETS, pruning, cond2class):
                 cmplx_morph_classes, order['CLASS'].lower(), compatibility_memoize,
                 short_cat_maps, defaults, stems_section_title)
             for section, contents in db_.items():
+                # if 'BACKOFF' in stems_section_title and section != stems_section_title:
+                #     assert set(contents) <= set(db[section])
                 db.setdefault(section, {}).update(contents)
             
             pbar.update(1)
         pbar.close()
     
+    print('Concrete lexicon')
     construct_process(LEXICON, stems_section_title='OUT:###STEMS###')
     if BACKOFF is not None:
+        print('Backoff lexicon')
         construct_process(BACKOFF, stems_section_title='OUT:###SMARTBACKOFF###')
 
     return db
@@ -269,13 +274,13 @@ def _create_cat(cmplx_morph_type, cmplx_morph_class,
     if short_cat_map:
         cmplx_morph_class = short_cat_map[cmplx_morph_class]
     cmplx_morph_cond_s = '+'.join(
-        [cond for cond in cmplx_morph_cond_s.split() if cond != '_'])
+        [cond for cond in sorted(cmplx_morph_cond_s.split()) if cond != '_'])
     cmplx_morph_cond_s = cmplx_morph_cond_s if cmplx_morph_cond_s else '-'
     cmplx_morph_cond_t = '+'.join(
-        [cond for cond in cmplx_morph_cond_t.split() if cond != '_'])
+        [cond for cond in sorted(cmplx_morph_cond_t.split()) if cond != '_'])
     cmplx_morph_cond_t = cmplx_morph_cond_t if cmplx_morph_cond_t else '-'
     cmplx_morph_cond_f = '+'.join(
-        [cond for cond in cmplx_morph_cond_f.split() if cond != '_'])
+        [cond for cond in sorted(cmplx_morph_cond_f.split()) if cond != '_'])
     cmplx_morph_cond_f = cmplx_morph_cond_f if cmplx_morph_cond_f else '-'
     cat = f"{cmplx_morph_type}:{cmplx_morph_class}_[CS:{cmplx_morph_cond_s}]_[CT:{cmplx_morph_cond_t}]_[CF:{cmplx_morph_cond_f}]"
     return cat
@@ -374,9 +379,10 @@ def _read_stem(stem):
             normalize_teh_marbuta_bw(dediac_bw(stem_diac))))
     else:
         backoff = True
-        stem_diac = ''.join([s['FORM_SUB']for s in stem if s['FORM_SUB'] != '_'])
+        stem_diac = ''.join([s['FORM_SUB'] if s['DEFINE'] == 'BACKOFF' else s['FORM']
+                             for s in stem if s['FORM'] != '_'])
         stem_match = ''.join([s['MATCH'] if s['DEFINE'] == 'BACKOFF' else s['FORM']
-                            for s in stem if s['FORM_SUB'] != '_'])
+                              for s in stem if s['FORM'] != '_'])
 
     return stem_match, stem_diac, stem_lex, stem_gloss, stem_feat, stem_bw, root, backoff
 
