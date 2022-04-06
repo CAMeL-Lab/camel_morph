@@ -4,41 +4,17 @@ import re
 import argparse
 import sys
 
-parser = argparse.ArgumentParser()
-parser.add_argument("-pv", default='data/MSA-LEX-PV.csv',
-                    type=str, help="Path of the PV verbs.")
-parser.add_argument("-iv", default='data/MSA-LEX-IV.csv',
-                    type=str, help="Path of the IV verbs.")
-parser.add_argument("-cv", default='data/MSA-LEX-CV.csv',
-                    type=str, help="Path of the CV verbs.")
-parser.add_argument("-strictness", default='low', choices=['low', 'high'],
-                    type=str, help="Strictness level of the check.")
-parser.add_argument("-output_path", default='',
-                    type=str, help="Path of the CV verbs.")
-parser.add_argument("-camel_tools", default='',
-                type=str, help="Path of the directory containing the camel_tools modules.")
-args = parser.parse_args()
-
-if args.camel_tools:
-    sys.path.insert(0, args.camel_tools)
-
 import gspread
-from camel_tools.morphology.utils import strip_lex
-from camel_tools.utils.charmap import CharMapper
 
 from utils import assign_pattern
 
-bw2ar = CharMapper.builtin_mapper('bw2ar')
-
 def add_check_mark_online(verbs, error_cases):
-    return
-    status = []
-    filtered = verbs[~verbs['LEMMA'].isin(error_cases)]
+    filtered = verbs[verbs['LEMMA'].isin(error_cases)]
     sa = gspread.service_account(
         "/Users/chriscay/.config/gspread/service_account.json")
-    sh = sa.open('msa-verb-lex')
-    worksheet = sh.worksheet(title='MSA-LEX-PV')
-    worksheet.update('R2:R10634', [['CHECK'] if i in filtered.index else [
+    sh = sa.open('egy-verb-lex')
+    worksheet = sh.worksheet(title='EGY-LEX-IV')
+    worksheet.update(f'Q2:{len(verbs.index) + 1}', [['CHECK'] if i in filtered.index else [
                      'OK'] for i in range(len(verbs['LEMMA']))])
 
 def two_stem_lemma_well_formedness(lemma, rows, iv=None):
@@ -50,11 +26,11 @@ def two_stem_lemma_well_formedness(lemma, rows, iv=None):
         lemma_uniq_forms = set([row['form'] for row in rows])
         lemma_trans = tuple(sorted([re.search(r'trans|intrans', row['cond-s']).group() for row in rows]))
         stems_cond_s_no_trans = set([re.sub(r' ?(trans|intrans) ?', '', row['cond-s']) for row in rows])
-        if (len(lemma_uniq_glosses) == 1 and stems_cond_t_sorted == ('c-suff', 'v-suff') and len(lemma_uniq_forms) == len(rows) and
-            len(lemma_uniq_cond_s) == 1):
+        if (len(lemma_uniq_glosses) == 1 and stems_cond_t_sorted in [('c-suff', 'v-suff'), ('c-suff', 'n-suff||v-suff')] and
+            len(lemma_uniq_forms) == len(rows) and len(lemma_uniq_cond_s) == 1):
             return True, 'legit'
-        elif (len(lemma_uniq_glosses) == 1 and stems_cond_t_sorted == ('c-suff', 'v-suff') and len(lemma_uniq_forms) == len(rows) and
-              len(lemma_uniq_cond_s) == 2):
+        elif (len(lemma_uniq_glosses) == 1 and stems_cond_t_sorted in [('c-suff', 'v-suff'), ('c-suff', 'n-suff||v-suff')] and
+              len(lemma_uniq_forms) == len(rows) and len(lemma_uniq_cond_s) == 2):
             if len(set(lemma_trans)) == 1:
                 return True, 'legit'
             else:
@@ -86,7 +62,7 @@ def two_stem_lemma_well_formedness(lemma, rows, iv=None):
                 return True, 'legit'
         return False, 'error'
 
-def well_formedness_check(verbs, lemma2info, iv):
+def well_formedness_check(verbs, lemma2info):
     elementary_feats = ['lemma', 'form', 'gloss', 'feats', 'cond-s', 'cond-t']
     # Duplicate entries are not allowed
     error_cases = {}
@@ -111,6 +87,15 @@ def well_formedness_check(verbs, lemma2info, iv):
                         for row in info[2]]):
             continue
         error_cases[lemma] = info
+    assert len(error_cases) == 0, add_check_mark_online(verbs, error_cases)
+
+    # If exactly one stem is associated to a lemma, then its COND-T must be empty.
+    error_cases = {}
+    for lemma, info in lemma2info.items():
+        if info[0] == 1:
+            if not info[2][0]['cond-t']:
+                continue
+            error_cases[lemma] = info
     assert len(error_cases) == 0, add_check_mark_online(verbs, error_cases)
 
     # If exactly two stems are associated to a lemma, then they must be 
@@ -148,7 +133,7 @@ def well_formedness_check(verbs, lemma2info, iv):
 
     # All COND-S associated to a lemma must belong to the stem condition categories
     # and they must be unique
-    morph = pd.read_csv('data/MSA-MORPH-Verbs-v4-Red.csv')
+    morph = pd.read_csv('data/EGY-MORPH-Verbs-v4-Red.csv')
     class2cond = morph[morph.DEFINE == 'CONDITIONS']
     class2cond = {cond_class["CLASS"]:
                             [cond for cond in cond_class["FUNC"].split() if cond]
@@ -171,12 +156,11 @@ def well_formedness_check(verbs, lemma2info, iv):
         error_cases[lemma] = info
     assert len(error_cases) == 0, add_check_mark_online(verbs, error_cases)
 
-    #TODO: make sure (lemma, gloss) are unique
     #TODO: add root/pattern/form concordance check
     #TODO: check that there are no letters other than defective letters in patterns
     #TODO: add #n/#t/gem check
-    #TODO: (maybe later) add check that all forms belonging to same defective pattern must have same shape
     #TODO: add diacritic rules
+    #TODO: all 1a2a3 forms should have a dash
 
 def get_lemma2info(verbs):
     lemma2info = {}
@@ -220,15 +204,16 @@ def form_pattern_well_formedness(verbs):
     return
 
 
-def well_formedness_all_aspects(pv, iv, cv, strictness):
-    assert len(iv.index) == len(cv.index)
+def well_formedness_all_aspects(verbs, strictness):
+    iv, cv = verbs.get('iv'), verbs.get('cv')
+    if iv is not None and cv is not None:
+        assert len(iv.index) == len(cv.index)
 
     merging_info, merge_indexes = {}, {}
     extlemma2infos = {}
-    for asp, verbs_asp in [('pv', pv), ('iv', iv), ('cv', cv)]:
-        verbs_asp = verbs_asp.replace(nan, '', regex=True)
+    for asp, verbs_asp in verbs.items():
         lemma2info = get_lemma2info(verbs_asp)
-        well_formedness_check(verbs_asp, lemma2info, iv)
+        well_formedness_check(verbs_asp, lemma2info)
         merge_indexes[asp], merging_info[asp] = merge_same_feats_diff_gloss_lemmas(lemma2info, iv)
         extlemma2infos_asp = extlemma2infos.setdefault(asp, {})
         for lemma, info in lemma2info.items():
@@ -242,27 +227,37 @@ def well_formedness_all_aspects(pv, iv, cv, strictness):
                     extlemma = (row['lemma'], row['gloss'])
                 extlemma2infos_asp.setdefault(extlemma, []).append(info[2])
     
-    merging_cases_pv = set([lemma[0] for lemma in merging_info['pv']])
-    merging_cases_iv = set([lemma[0] for lemma in merging_info['iv']])
-    merging_cases_cv = set([lemma[0] for lemma in merging_info['cv']])
-    assert merging_cases_pv == merging_cases_iv == merging_cases_cv
+    if merging_info.get('pv') is not None:
+        merging_cases_pv = set([lemma[0] for lemma in merging_info['pv']])
+    if merging_info.get('iv') is not None:
+        merging_cases_iv = set([lemma[0] for lemma in merging_info['iv']])
+    if merging_info.get('cv') is not None:
+        merging_cases_cv = set([lemma[0] for lemma in merging_info['cv']])
+    
+    if merging_info.get('pv') is not None and merging_info.get('iv') is not None:
+        assert merging_cases_pv == merging_cases_iv
+    if merging_info.get('iv') is not None and merging_info.get('cv') is not None:
+        assert merging_cases_iv == merging_cases_cv
 
-    missing_iv_pv = [extlemma2infos['iv'][gloss] for gloss in set(extlemma2infos['iv']) - set(extlemma2infos['pv'])]
-    assert len(missing_iv_pv) == 0
-    missing_iv_cv = [extlemma2infos['iv'][gloss] for gloss in set(extlemma2infos['iv']) - set(extlemma2infos['cv'])]
-    assert len(missing_iv_cv) == 0
-    missing_pv_iv = [extlemma2infos['pv'][gloss] for gloss in set(extlemma2infos['pv']) - set(extlemma2infos['iv'])]
-    assert len(missing_pv_iv) == 0
-    missing_pv_cv = [extlemma2infos['pv'][gloss] for gloss in set(extlemma2infos['pv']) - set(extlemma2infos['cv'])]
-    assert len(missing_pv_cv) == 0
-    missing_cv_iv = [extlemma2infos['cv'][gloss] for gloss in set(extlemma2infos['cv']) - set(extlemma2infos['iv'])]
-    assert len(missing_cv_iv) == 0
-    missing_cv_pv = [extlemma2infos['cv'][gloss] for gloss in set(extlemma2infos['cv']) - set(extlemma2infos['pv'])]
-    assert len(missing_cv_pv) == 0
+    if merging_info.get('pv') is not None and merging_info.get('iv') is not None:
+        missing_iv_pv = [extlemma2infos['iv'][gloss] for gloss in set(extlemma2infos['iv']) - set(extlemma2infos['pv'])]
+        assert len(missing_iv_pv) == 0
+        missing_pv_iv = [extlemma2infos['pv'][gloss] for gloss in set(extlemma2infos['pv']) - set(extlemma2infos['iv'])]
+        assert len(missing_pv_iv) == 0
+    if merging_info.get('iv') is not None and merging_info.get('cv') is not None:
+        missing_iv_cv = [extlemma2infos['iv'][gloss] for gloss in set(extlemma2infos['iv']) - set(extlemma2infos['cv'])]
+        assert len(missing_iv_cv) == 0
+        missing_cv_iv = [extlemma2infos['cv'][gloss] for gloss in set(extlemma2infos['cv']) - set(extlemma2infos['iv'])]
+        assert len(missing_cv_iv) == 0
+    if merging_info.get('pv') is not None and merging_info.get('cv') is not None:
+        missing_pv_cv = [extlemma2infos['pv'][gloss] for gloss in set(extlemma2infos['pv']) - set(extlemma2infos['cv'])]
+        assert len(missing_pv_cv) == 0
+        missing_cv_pv = [extlemma2infos['cv'][gloss] for gloss in set(extlemma2infos['cv']) - set(extlemma2infos['pv'])]
+        assert len(missing_cv_pv) == 0
 
     return merge_indexes
 
-def merge_same_feats_diff_gloss_lemmas(lemma2info, iv):
+def merge_same_feats_diff_gloss_lemmas(lemma2info, iv=None):
     row_indexes_to_merge = []
     lemmas_info = []
     for lemma, info in lemma2info.items():
@@ -300,10 +295,10 @@ def merge_same_feats_diff_gloss_lemmas(lemma2info, iv):
     return row_indexes_to_merge, lemmas_info
 
 def msa_verbs_lexicon_well_formedness(verbs, strictness):
-    for verbs in [verbs['pv'], verbs['iv'], verbs['cv']]:
-        form_pattern_well_formedness(verbs)
+    # for verbs in [verbs['pv'], verbs['iv'], verbs['cv']]:
+    #     form_pattern_well_formedness(verbs)
     
-    merge_indexes = well_formedness_all_aspects(verbs['pv'], verbs['iv'], verbs['cv'], strictness)
+    merge_indexes = well_formedness_all_aspects(verbs, strictness)
 
     for asp, merging_indexes_asp in merge_indexes.items():
         for merge_indexes_tuple in merging_indexes_asp:
@@ -312,7 +307,7 @@ def msa_verbs_lexicon_well_formedness(verbs, strictness):
                 verbs[asp].at[index_to_keep, 'GLOSS'] += f";{verbs[asp].at[merge_index, 'GLOSS']}"
                 verbs[asp] = verbs[asp].drop([merge_index])
 
-    merge_indexes = well_formedness_all_aspects(verbs['pv'], verbs['iv'], verbs['cv'], strictness)
+    merge_indexes = well_formedness_all_aspects(verbs, strictness)
 
     for verbs_asp in verbs.values():
         verbs_asp['#LEMMA_AR'] = verbs_asp['LEMMA'].apply(bw2ar)
@@ -320,10 +315,32 @@ def msa_verbs_lexicon_well_formedness(verbs, strictness):
     return verbs
 
 if __name__ == "__main__":
-    pv = pd.read_csv(args.pv)
-    iv = pd.read_csv(args.iv)
-    cv = pd.read_csv(args.cv)
-    verbs = {'pv': pv, 'iv': iv, 'cv': cv}
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-lex", action='append', default=[],
+                        type=str, help="Paths of the verb lexicon(s) that need(s) to be checked (against each other) for well-formedness.")
+    parser.add_argument("-strictness", default='low', choices=['low', 'high'],
+                        type=str, help="Strictness level of the check.")
+    parser.add_argument("-output_path", default='EGY-LEX-PV',
+                        type=str, help="Path of the CV verbs.")
+    parser.add_argument("-camel_tools", default='',
+                    type=str, help="Path of the directory containing the camel_tools modules.")
+    args = parser.parse_args()
+
+    if args.camel_tools:
+        sys.path.insert(0, args.camel_tools)
+    
+    from camel_tools.morphology.utils import strip_lex
+    from camel_tools.utils.charmap import CharMapper
+
+    bw2ar = CharMapper.builtin_mapper('bw2ar')
+    
+    verbs = {}
+    for path in args.lex:
+        asp = re.search(r'[cip]v', path, re.I).group().lower()
+        verbs[asp] = pd.read_csv(path)
+        verbs[asp] = verbs[asp].replace(nan, '', regex=True)
+        verbs[asp] = verbs[asp][verbs[asp].DEFINE == 'LEXICON']
 
     verbs_ = msa_verbs_lexicon_well_formedness(verbs=verbs, strictness=args.strictness)
 
