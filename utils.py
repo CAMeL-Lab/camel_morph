@@ -258,3 +258,82 @@ def assign_pattern(lemma, root=None):
               'error': info['error']}
 
     return result
+
+
+def analyze_pattern_egy(root, stem):
+    i = 0
+    tmp_stem = stem
+    first_part = ''
+    second_part = stem
+
+    for char in root:
+        i = i+1
+        if char not in 'yw><&C{}C':
+            # print tmp_stem,root,char,i
+            if char == '$':
+                char = '\$'
+            if char == '*':
+                char = '\*'
+            second_part = re.sub(char, str(i), second_part, 1)
+            # print root, second_part
+        # when w is a consonant that is the first letter
+        elif char == 'w' and second_part.startswith('w') and i == 1:
+            second_part = re.sub(char, str(i), second_part, 1)
+        elif char == 'y' and i == 1:
+            second_part = re.sub(char, str(i), second_part, 1)
+        elif (char == 'y' or char == 'w') and i == len(root) and (second_part.endswith('A') or second_part.endswith('a')):
+            second_part = second_part[:-1] + 'aY'
+            stem = stem[:-1] + 'aY'
+        elif (char == 'y' or char == 'w') and i == len(root) and (second_part.endswith('A') or second_part.endswith('a')):
+            second_part = second_part[:-1] + 'aY'
+            stem = stem[:-1] + 'aY'
+        elif (char == 'y' or char == 'w') and i == len(root) and (second_part.endswith('A') or second_part.endswith('a')):
+            second_part = second_part[:-1] + 'A'
+            stem = stem[:-1] + 'A'
+        elif second_part.endswith('i'):
+            second_part = second_part[:-1] + 'iy'
+            stem = stem[:-1] + 'iy'
+        elif char == 'y':       # when y in the root is a consonant
+            if not re.search('iy(?!a|i|u|\~)', second_part, 1):
+                second_part = re.sub(r'y', str(i), second_part, 1)
+                # print second_part
+            else:
+                second_part = re.sub(
+                    r'([aui\~])y([aiu\~])', r'\g<1>'+str(i)+r'\g<2>', second_part)
+        elif char == 'w':       # when w in the root is a consonant
+            if not re.search('uw(?!a|i|u|\~)', second_part):
+                second_part = re.sub(r'w', str(i), second_part, 1)
+        elif char == 'C' and i == len(root):
+            # print 'Salam'
+            if second_part.endswith('a'):
+                # print 'in',root, i, char,second_part,stem
+                second_part = second_part[:-1] + 'A'
+                stem = stem[:-1] + 'A'
+                # print 'out',second_part
+            elif second_part.endswith('i'):
+                second_part = second_part[:-1] + 'iy'
+                stem = stem[:-1] + 'iy'
+        else:
+            pass
+        if str(i) in second_part:
+            # print second_part, root
+            first_part = first_part + second_part.split(str(i))[0]+str(i)
+            second_part = second_part.split(str(i))[1]
+            # print first_part,second_part
+        else:
+            second_part = second_part
+
+    tmp_stem = first_part+second_part
+    # print second_part
+
+    # hardcoded stuff
+    if stem == 'AiftataH':
+        tmp_stem = 'Ai1ta2a3'
+    elif stem == 'yiftitiH':
+        tmp_stem = 'yi1ti2i3'
+    elif stem == 'Aistashal' or stem == 'Aistaslam':
+        tmp_stem = 'Aista12a3'
+    elif stem == 'yistashal' or stem == 'yistaslam':
+        tmp_stem = 'yista12i3'
+
+    return tmp_stem
