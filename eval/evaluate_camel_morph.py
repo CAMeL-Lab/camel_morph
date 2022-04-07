@@ -6,7 +6,7 @@ from tqdm import tqdm
 import pickle
 import re
 import itertools
-from random import shuffle, seed
+import random
 
 import pandas as pd
 from numpy import nan
@@ -59,15 +59,17 @@ def _preprocess_camel_tb_data(data):
     
     return data_fl
 
-def _preprocess_pred(analysis):
+def _preprocess_pred(analysis, optional_keys=[]):
     pred = []
-    for k in essential_keys:
+    for k in essential_keys + optional_keys:
         if k in ['lex', 'diac']:
             pred.append(strip_lex(ar2bw(analysis[k])))
             pred[-1] = sukun_regex.sub('', pred[-1])
             pred[-1] = aA_regex.sub('A', pred[-1])
+        elif k == 'gen':
+            pred.append('m' if analysis[k] == 'u' else analysis[k])
         else:
-            pred.append(analysis[k])
+            pred.append(analysis.get(k, 'na'))
     return tuple(pred)
 
 def _preprocess_gold(analysis):
@@ -82,15 +84,6 @@ def _preprocess_gold(analysis):
             gold[-1] = sukun_regex.sub('', gold[-1])
 
     return tuple(gold)
-
-def _preprocess_baseline_eval(analysis):
-    pred = []
-    for k in essential_keys:
-        if k in ['lex', 'diac']:
-            pred.append(strip_lex(ar2bw(analysis[k])))
-        else:
-            pred.append(analysis.get(k, 'na'))
-    return tuple(pred)
 
 
 def print_errors(errors, results_path):
@@ -175,8 +168,8 @@ def evaluate_verbs_recall(data, results_path):
     print_errors(errors, results_path)
 
 
-def print_comparison(words, analyses_words, status, results_path):
-    assert len(analyses_words) == len(status)
+def print_comparison(words, analyses_words, status, results_path, bw=False):
+    assert len(analyses_words) == len(status) == len(words)
 
     def qc_automatic(camel):
         for i, k in enumerate(essential_keys):
@@ -187,16 +180,29 @@ def print_comparison(words, analyses_words, status, results_path):
                 camel.loc[~feat_contained, 'qc'] += ' ' + qc[~feat_contained]
             else:
                 camel.loc[~feat_contained, 'qc'] += (' ' if i else '') + k
+                # Checks for a full row match in the grammatical features between baseline and camel (if it is not empty)
+                # The idea is to spot variation in spelling in the lexical features
+                if not baseline.empty:
+                    non_lex_feats = [c for c in camel.columns if c not in [k] + ['bw', 'filter', 'status', 'status-global', 'qc']]
+                    common_feat_rows_filter_camel = camel[non_lex_feats].isin(
+                        baseline[non_lex_feats]).all(axis=1)
+                    camel.loc[common_feat_rows_filter_camel, 'qc'] += f'check-{k}-features' 
         return camel
 
     analysis_results = []
-    for i, (word, analyses_word, status_word) in enumerate(zip(words, analyses_words, status), start=1):
+    count = 1
+    for (word, analyses_word, status_word) in zip(words, analyses_words, status):
+        if status_word == ['NOAN']:
+            continue
+        columns = ['filter'] + essential_keys + (['bw'] if bw else []) + ['status']
+        analyses_word = [analysis + ((ar2bw(analyses_word[analysis]['bw']),) if bw else ())
+                            for analysis in analyses_word]
         analyses_word = pd.DataFrame(analyses_word)
         status_word = pd.DataFrame(status_word)
         example = pd.concat([analyses_word, status_word], axis=1)
-        ex_col = pd.DataFrame([(f'{i} {dediac_bw(word)}',)]*len(example.index))
+        ex_col = pd.DataFrame([(f'{count} {dediac_bw(word)}',)]*len(example.index))
         example = pd.concat([ex_col, example], axis=1)
-        example.columns = ['filter'] + essential_keys + ['status']
+        example.columns = columns
         camel = example[example['status'] == 'CAMEL']
         baseline = example[example['status'] == 'BASELINE']
         both = example[example['status'] == 'BOTH']
@@ -207,7 +213,7 @@ def print_comparison(words, analyses_words, status, results_path):
         both.sort_values(by=['lex'], inplace=True)
         if baseline.empty or camel.empty:
             empty_row = pd.DataFrame([('-',)*len(camel.columns)], columns=camel.columns)
-            empty_row.loc[0, 'filter'] = f'{i} {dediac_bw(word)}'
+            empty_row.loc[0, 'filter'] = f'{count} {dediac_bw(word)}'
         if not both.empty:
             both['status-global'] = 'full'
             if not baseline.empty and not camel.empty:
@@ -229,7 +235,7 @@ def print_comparison(words, analyses_words, status, results_path):
             else:
                 camel = empty_row
                 camel['status-global'] = 'noadd-camel'
-                baseline = empty_row
+                baseline = empty_row.copy()
                 baseline['status-global'] = 'noadd-baseline'
                 both['status-global'] = 'full'
                 
@@ -248,42 +254,49 @@ def print_comparison(words, analyses_words, status, results_path):
             
         example = pd.concat([both, camel, baseline])
         analysis_results.append(example)
+        count += 1
 
     analysis_results = pd.concat(analysis_results)
     analysis_results = analysis_results.replace(nan, '', regex=True)
-    analysis_results.columns = ['filter'] + essential_keys + ['status', 'status-global', 'qc']
+    analysis_results.columns = columns + ['status-global', 'qc']
     analysis_results.to_csv(results_path, index=False, sep='\t')
 
 
 def evaluate_verbs_analyzer_comparison(data, n, results_path):
     words, analyses, status = [], [], []
-    pbar = tqdm(total=n)
     data = [word for word in list(data) if word]
-    shuffle(data)
+    pbar = tqdm(total=min(n, len(data)))
+    random.shuffle(data)
+    count = 0
     for word in data:
-        if len(status) == n:
+        if count == n:
             break
         word_dediac = bw2ar(word)
         analyses_camel = analyzer_camel.analyze(word_dediac)
         analyses_baseline = analyzer_baseline.analyze(word_dediac)
-        analyses_camel = set([_preprocess_baseline_eval(analysis)
-                              for analysis in analyses_camel if analysis['pos'] == 'verb'])
-        analyses_baseline = set([_preprocess_baseline_eval(analysis)
-                            for analysis in analyses_baseline if analysis['pos'] == 'verb'])
+        analyses_camel = {_preprocess_pred(analysis): analysis
+                          for analysis in analyses_camel if analysis['pos'] == 'verb'}
+        analyses_baseline = {_preprocess_pred(analysis): analysis
+                             for analysis in analyses_baseline if analysis['pos'] == 'verb'}
+        analyses_camel_set, analyses_baseline_set = set(analyses_camel), set(analyses_baseline)
         
-        pbar.update(1)
-        if analyses_camel == analyses_baseline == set():
-            status.append(['NOAN'])
-            continue
-
         words.append(ar2bw(word))
         
-        camel_minus_baseline = analyses_camel - analyses_baseline
-        baseline_minus_camel = analyses_baseline - analyses_camel
-        intersection = analyses_camel & analyses_baseline
-        union = list(analyses_camel | analyses_baseline)
-
+        if analyses_camel_set == analyses_baseline_set == set():
+            analyses.append([])
+            status.append(['NOAN'])
+            continue
+        
+        count += 1
+        
+        camel_minus_baseline = analyses_camel_set - analyses_baseline_set
+        baseline_minus_camel = analyses_baseline_set - analyses_camel_set
+        intersection = analyses_camel_set & analyses_baseline_set
+        analyses_camel.update(analyses_baseline)
+        union = analyses_camel
+        
         analyses.append(union)
+        union = list(analyses_camel.keys())
         
         status_ = []
         for analysis in union:
@@ -296,13 +309,15 @@ def evaluate_verbs_analyzer_comparison(data, n, results_path):
             else:
                 raise NotImplementedError
         status.append(status_)
+        
+        pbar.update(1)
     pbar.close()
 
     with open('eval/status_compare.tsv', 'w') as f:
         for line in status:
             print(*line, sep='\t', file=f)
 
-    print_comparison(words, analyses, status, results_path)
+    print_comparison(words, analyses, status, results_path, bw=True)
 
 def compare_stats(compare_results):
     stats = {'noan': 0, 'only_baseline': 0, 'only_camel': 0, 'equal': 0,
@@ -386,7 +401,7 @@ if __name__ == "__main__":
     parser.add_argument("-camel_tools", default='',
                         type=str, help="Path of the directory containing the camel_tools modules.")
     
-    seed = 42
+    random.seed(42)
 
     args = parser.parse_args()
 
@@ -427,7 +442,7 @@ if __name__ == "__main__":
     if args.eval_mode == 'recall':
         evaluate_verbs_recall(data, args.results_path)
     elif args.eval_mode == 'compare':
-        evaluate_verbs_analyzer_comparison(data, len(data), args.results_path)
+        evaluate_verbs_analyzer_comparison(data, args.n, args.results_path)
     elif args.eval_mode == 'compare_stats':
         with open('eval/status_compare.tsv') as f:
             compare_results = [line.strip().split('\t') for line in f.readlines()]
