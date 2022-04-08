@@ -14,36 +14,42 @@ pd.options.mode.chained_assignment = None  # default='warn'
 
 sukun_regex = re.compile('o')
 aA_regex = re.compile(r'(?<!^[wf])aA')
-pos_regex = re.compile(r'pos:([^ ]+)')
+verb_bw_regex = re.compile(r'[PIC]V')
 
 essential_keys = ['diac', 'lex', 'pos', 'asp', 'mod', 'vox', 'per', 'num', 'gen',
                   'prc0', 'prc1', 'prc2', 'prc3', 'enc0', 'enc1']
 
-def _preprocess_magold_data(gold_data, save_path):
-    gold_data = gold_data.split('\n--------------\n')
-    gold_data = [ex.split('\n') for ex in gold_data if ex.startswith(";;WORD")]
+def _preprocess_magold_data(gold_data):
+    # gold_data = gold_data.split('\n--------------\n')
+    gold_data = gold_data.split('--------------\nSENTENCE BREAK\n--------------\n')[:-1]
+    gold_data = [sentence.split('\n--------------\n') for sentence in gold_data]
+    gold_data = [{'sentence': ex[0].split('\n')[0], 'words': [ex[0].split('\n')[1:]] + [x.split('\n') for x in ex[1:]]} for ex in gold_data]
     gold_data_ = {}
-    start = len(";;WORD") + 1
+    word_start = len(";;WORD ")
+    sentence_start = len(";;; SENTENCE ")
     for example in tqdm(gold_data):
-        word = example[0][start:]
-        analysis_key = example[4]
+        for analysis in example['words']:
+            word = analysis[0][word_start:]
+            analysis_key = analysis[4]
+            ldc = analysis[1]
 
-        pos_type = 'verbal' if pos_regex.search(analysis_key).group(1) == 'verb' else 'other'
+            pos_type = 'verbal' if verb_bw_regex.search(ldc) else 'other'
+            if pos_type == 'verbal':
+                analysis_ = {}
+                for field in analysis[4].split()[1:]:
+                    field = field.split(':')
+                    analysis_[field[0]] = ''.join(field[1:])
 
-        info = gold_data_.setdefault(word, {}).setdefault(pos_type, {}).setdefault(
-            analysis_key, {'count': 0})
+                word = {
+                            'info': {
+                                'sentence': example['sentence'][sentence_start:],
+                                'word': word,
+                                'magold': analysis[1:4]
+                            },
+                            'analysis':analysis_
+                }
 
-        info['count'] += 1
-        if info.get('analysis') is None:
-            analysis = {}
-            for field in example[4].split()[1:]:
-                field = field.split(':')
-                analysis[field[0]] = ''.join(field[1:])
-            info['analysis'] = analysis
-
-
-    with open(save_path, 'wb') as f:
-        pickle.dump(gold_data_, f)
+            gold_data_.setdefault(pos_type, []).append(word)
 
     return gold_data_
 
@@ -59,96 +65,83 @@ def _preprocess_camel_tb_data(data):
     
     return data_fl
 
-def _preprocess_pred(analysis, optional_keys=[]):
+
+def _preprocess_analysis(analysis, optional_keys=[], gen_norm=True):
     pred = []
     for k in essential_keys + optional_keys:
         if k in ['lex', 'diac']:
             pred.append(strip_lex(ar2bw(analysis[k])))
             pred[-1] = sukun_regex.sub('', pred[-1])
             pred[-1] = aA_regex.sub('A', pred[-1])
-        elif k == 'gen':
+        elif gen_norm and k == 'gen':
             pred.append('m' if analysis[k] == 'u' else analysis[k])
         else:
             pred.append(analysis.get(k, 'na'))
     return tuple(pred)
-
-def _preprocess_gold(analysis):
-    gold = []
-    for k in essential_keys:
-        if k == 'lex':
-            gold.append(strip_lex(analysis[k]))
-        else:
-            gold.append(analysis[k])
-
-        if k in ['lex', 'diac']:
-            gold[-1] = sukun_regex.sub('', gold[-1])
-
-    return tuple(gold)
 
 
 def print_errors(errors, results_path):
     errors_ = []
     i = 0
     for error in errors:
-        for e_gold in error['gold']:
-            if not error['pred']:
-                pred = pd.DataFrame([('-',)*len(essential_keys)])
-            else:
-                if e_gold in error['pred']:
-                    continue
-                analyses_pred, index2similarity = [], {}
-                for analysis_index, analysis in enumerate(error['pred']):
-                    analysis_ = []
-                    for index, f in enumerate(analysis):
-                        if f == e_gold[index]:
-                            analysis_.append(f)
-                            index2similarity.setdefault(analysis_index, 0)
-                            index2similarity[analysis_index] += 1
-                        else:
-                            analysis_.append(f'[{f}]')
-                    analyses_pred.append(tuple(analysis_))
-                sorted_indexes = sorted(
-                    index2similarity.items(), key=lambda x: x[1], reverse=True)
-                analyses_pred = [analyses_pred[analysis_index]
-                                 for analysis_index, _ in sorted_indexes]
+        e_gold = error['gold']
+        if not error['pred']:
+            pred = pd.DataFrame([('-',)*len(essential_keys)])
+        else:
+            if e_gold in error['pred']:
+                continue
+            analyses_pred, index2similarity = [], {}
+            for analysis_index, analysis in enumerate(error['pred']):
+                analysis_ = []
+                for index, f in enumerate(analysis):
+                    if f == e_gold[index]:
+                        analysis_.append(f)
+                        index2similarity.setdefault(analysis_index, 0)
+                        index2similarity[analysis_index] += 1
+                    else:
+                        analysis_.append(f'[{f}]')
+                analyses_pred.append(tuple(analysis_))
+            sorted_indexes = sorted(
+                index2similarity.items(), key=lambda x: x[1], reverse=True)
+            analyses_pred = [analyses_pred[analysis_index]
+                                for analysis_index, _ in sorted_indexes]
 
-                pred = pd.DataFrame(analyses_pred)
+            pred = pd.DataFrame(analyses_pred)
 
-            gold = pd.DataFrame([e_gold])
-            example = pd.concat([gold, pred], axis=1)
-            ex_col = pd.DataFrame([(f'example {i}',)]*len(example.index))
-            example = pd.concat([ex_col, example], axis=1)
-            errors_.append(example)
-            i += 1
+        gold = pd.DataFrame([e_gold])
+        example = pd.concat([gold, pred], axis=1)
+        ex_col = pd.DataFrame([(f"{i} {error['word']['info']['word']}",)]*len(example.index))
+        extra_info = pd.DataFrame([(error['word']['info']['sentence'], *error['word']['info']['magold'])] )
+        example = pd.concat([ex_col, example, extra_info], axis=1)
+        errors_.append(example)
+        i += 1
     
     errors = pd.concat(errors_)
     errors = errors.replace(nan, '', regex=True)
-    errors.columns = ['filter'] + essential_keys + essential_keys
+    errors.columns = ['filter'] + essential_keys + essential_keys + ['sentence', 'ldc', 'rank', 'starline']
     errors.to_csv(results_path, sep='\t')
 
 
 def evaluate_verbs_recall(data, results_path):
     correct, total = 0, 0
     errors = []
-
     mod_index = essential_keys.index('mod')
     gen_index = essential_keys.index('gen')
-    for word, info_gold in tqdm(data.items()):
-        if 'verbal' not in info_gold:
-            continue
+    data_ = {}
+    for word_info in data['verbal']:
+        data_[(word_info['info']['word'], tuple(word_info['info']['magold'][0].split(' # ')[1:4]))] = word_info
+    
+    for (word, _), word_info in tqdm(data_.items()):
         total += 1
         word_dediac = bw2ar(word)
         analyses_pred = analyzer_camel.analyze(word_dediac)
-        analyses_gold = info_gold['verbal'].values()
-        analyses_pred = set([_preprocess_pred(analysis) for analysis in analyses_pred])
-        analyses_gold = set([_preprocess_gold(analysis['analysis'])for analysis in analyses_gold])
+        analyses_pred = set([_preprocess_analysis(analysis, gen_norm=False) for analysis in analyses_pred])
+        analysis_gold = _preprocess_analysis(word_info['analysis'], gen_norm=False)
 
-        gold_minus_pred = analyses_gold - analyses_pred
-        if len(gold_minus_pred) == 0:
+        if analysis_gold in analyses_pred:
             correct += 1
         else:
-            c = 0
-            for pred, gold in itertools.product(analyses_pred, gold_minus_pred):
+            for pred, gold in itertools.product(analyses_pred, [analysis_gold]):
                 if any(pred[i] != gold[i] for i in range(len(essential_keys))
                         if i not in [mod_index, gen_index]):
                     continue
@@ -157,13 +150,15 @@ def evaluate_verbs_recall(data, results_path):
                 else:
                     if gold[mod_index] == 'u':
                         correct += 1
-                    elif gold[gen_index] == 'u':
+                    elif gold[gen_index] == 'u' or pred[gen_index] == 'u':
                         correct += 1
                     else:
                         raise NotImplementedError
                     break
             else:
-                errors.append({'pred': analyses_pred, 'gold': analyses_gold})
+                errors.append({'word': word_info,
+                               'pred': analyses_pred,
+                               'gold': analysis_gold})
     
     print_errors(errors, results_path)
 
@@ -431,12 +426,7 @@ if __name__ == "__main__":
         data = f.read()
     
     if args.preprocessing == 'magold':
-        magold_pkl_path = f'{args.data_path}.pkl'
-        if os.path.exists(magold_pkl_path):
-            with open(magold_pkl_path, 'rb') as f:
-                data = pickle.load(f)
-        else:
-            data = _preprocess_magold_data(data, magold_pkl_path)
+        data = _preprocess_magold_data(data)
 
     elif args.preprocessing == 'camel_tb':
         data = _preprocess_camel_tb_data(data)
