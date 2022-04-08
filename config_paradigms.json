@@ -1,24 +1,24 @@
 {
     "msa": {
         "verbal": {
-            "asp:p": {
+            "asp:p mod:i": {
                 "proclitics": false,
                 "enclitics": true,
                 "passive": true,
                 "paradigm": [
-                    "VERB.P1S.A",
-                    "VERB.P1Q.A",
-                    "VERB.P2MS.A",
-                    "VERB.P2FS.A",
-                    "VERB.P2D.A",
-                    "VERB.P2MQ.A",
-                    "VERB.P2FQ.A",
-                    "VERB.P3MS.A",
-                    "VERB.P3FS.A",
-                    "VERB.P3MD.A",
-                    "VERB.P3FD.A",
-                    "VERB.P3MQ.A",
-                    "VERB.P3FQ.A"
+                    "VERB.P1S.AI",
+                    "VERB.P1Q.AI",
+                    "VERB.P2MS.AI",
+                    "VERB.P2FS.AI",
+                    "VERB.P2D.AI",
+                    "VERB.P2MQ.AI",
+                    "VERB.P2FQ.AI",
+                    "VERB.P3MS.AI",
+                    "VERB.P3FS.AI",
+                    "VERB.P3MD.AI",
+                    "VERB.P3FD.AI",
+                    "VERB.P3MQ.AI",
+                    "VERB.P3FQ.AI"
                 ]
             },
             "asp:i mod:i": {

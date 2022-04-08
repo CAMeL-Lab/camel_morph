@@ -49,7 +49,7 @@ repr_lemmas_nom_msa:
 	python create_repr_lemmas_list.py -config_file config.json -config_name nom_msa_split -output_name repr_lemmas_nom_msa.pkl -output_dir conjugation_local/repr_lemmas -pos_type nominal -display_format expanded -bank_dir conjugation_local/banks -bank_name MSA-Nom-Bank -camel_tools $(camel_tools)
 
 conj_pv_msa:
-	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_pv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_pv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp p -dialect msa -output_name conj_pv_msa_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
+	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_pv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_pv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp p -mod i -dialect msa -output_name conj_pv_msa_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
 
 conj_iv_i_msa:	
 	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_iv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_iv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp i -mod i -dialect msa -output_name conj_iv-i_msa_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
@@ -70,25 +70,25 @@ conj_cv_x_msa:
 	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_cv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_cv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp c -mod x -dialect msa -output_name conj_cv-x_msa_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
 
 conj_pv_msa_db_full:
-	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_pv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_all_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp p -dialect msa -output_name conj_pv_msa_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
+	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_pv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_all_v1.0.db -db_dir db_iterations_local -pos_type verbal -asp p -mod i -dialect msa -output_name conj_pv_msa_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
 
 conj_iv_i_msa_db_full:	
-	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_iv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_all_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp i -mod i -dialect msa -output_name conj_iv-i_msa_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
+	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_iv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_all_v1.0.db -db_dir db_iterations_local -pos_type verbal -asp i -mod i -dialect msa -output_name conj_iv-i_msa_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
 conj_iv_s_msa_db_full:	
-	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_iv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_all_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp i -mod s -dialect msa -output_name conj_iv-s_msa_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
+	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_iv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_all_v1.0.db -db_dir db_iterations_local -pos_type verbal -asp i -mod s -dialect msa -output_name conj_iv-s_msa_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
 conj_iv_j_msa_db_full:	
-	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_iv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_all_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp i -mod j -dialect msa -output_name conj_iv-j_msa_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
+	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_iv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_all_v1.0.db -db_dir db_iterations_local -pos_type verbal -asp i -mod j -dialect msa -output_name conj_iv-j_msa_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
 conj_iv_e_msa_db_full:	
-	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_iv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_all_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp i -mod e -dialect msa -output_name conj_iv-e_msa_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
+	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_iv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_all_v1.0.db -db_dir db_iterations_local -pos_type verbal -asp i -mod e -dialect msa -output_name conj_iv-e_msa_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
 conj_iv_x_msa_db_full:	
-	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_iv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_all_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp i -mod x -dialect msa -output_name conj_iv-x_msa_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
+	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_iv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_all_v1.0.db -db_dir db_iterations_local -pos_type verbal -asp i -mod x -dialect msa -output_name conj_iv-x_msa_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
 
 conj_cv_i_msa_db_full:	
-	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_cv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_all_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp c -mod i -dialect msa -output_name conj_cv-i_msa_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
+	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_cv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_all_v1.0.db -db_dir db_iterations_local -pos_type verbal -asp c -mod i -dialect msa -output_name conj_cv-i_msa_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
 conj_cv_e_msa_db_full:	
-	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_cv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_all_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp c -mod e -dialect msa -output_name conj_cv-e_msa_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
+	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_cv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_all_v1.0.db -db_dir db_iterations_local -pos_type verbal -asp c -mod e -dialect msa -output_name conj_cv-e_msa_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
 conj_cv_x_msa_db_full:	
-	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_cv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_all_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp c -mod x -dialect msa -output_name conj_cv-x_msa_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
+	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_cv_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_all_v1.0.db -db_dir db_iterations_local -pos_type verbal -asp c -mod x -dialect msa -output_name conj_cv-x_msa_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
 
 conj_nom_msa:	
 	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_nom_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_nom_v1.0_red.db -db_dir db_iterations_local -pos_type nominal -dialect msa -output_name conj_nom_msa_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
@@ -196,7 +196,7 @@ msa_pv_bank_upload:
 msa_pv_auto_qc_upload:
 	python format_conj_gsheets.py -dir conjugation_local/paradigm_debugging -file_name paradigm_debug_pv_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging -gsheet_name MSA-PV -formatting conj_tables -mode backup
 msa_pv_debug: download_msa_pv repr_lemmas_pv_msa make_db_pv_msa conj_pv_msa msa_pv_bank_annotation msa_pv_bank_upload msa_pv_auto_qc_upload
-msa_pv_debug_db_full: download_msa_all repr_lemmas_pv_msa make_db_all_msa conj_pv_msa_db_all msa_pv_bank_annotation msa_pv_bank_upload msa_pv_auto_qc_upload
+msa_pv_debug_db_full: download_msa_all repr_lemmas_pv_msa make_db_all_msa conj_pv_msa_db_full msa_pv_bank_annotation msa_pv_bank_upload msa_pv_auto_qc_upload
 
 msa_iv_i_bank_annotation:
 	python paradigm_debugging.py -output_name paradigm_debug_iv-i_msa_v1.0.tsv -output_dir conjugation_local/paradigm_debugging -gsheet MSA-IV-Ind -spreadsheet Paradigm-Debugging -bank_dir conjugation_local/banks -bank_name MSA-IV-Ind-Bank -new_conj conjugation_local/tables/conj_iv-i_msa_v1.0.tsv -camel_tools $(camel_tools)
@@ -287,4 +287,6 @@ egy_iv_auto_qc_upload:
 egy_iv_debug: download_egy_iv repr_lemmas_iv_egy make_db_iv_egy conj_iv_egy egy_iv_bank_annotation egy_iv_bank_upload egy_iv_auto_qc_upload
 
 eval_camel_tb_compare:
-	python eval/evaluate_camel_morph.py -data_path eval/camel_tb_uniq_types.txt -preprocessing camel_tb -db_dir db_iterations_local -config_file config.json -config_name all_msa_order-v4_red -camel_tools $(camel_tools) -ref_db eval/calima-msa-s31_0.4.2.utf8.db -eval_mode compare -results_path eval/camel_tb_compare.tsv
+	python eval/evaluate_camel_morph.py -data_path eval/camel_tb_uniq_types.txt -preprocessing camel_tb -db_dir db_iterations_local -config_file config.json -config_name all_msa_order-v4 -camel_tools $(camel_tools) -baseline_db eval/calima-msa-s31_0.4.2.utf8.db -eval_mode compare -results_path eval/camel_tb_compare.tsv -n 100000
+
+msa_all_debug_db_full: msa_pv_debug_db_full msa_iv_i_debug_db_full msa_iv_s_debug_db_full msa_iv_j_debug_db_full msa_iv_e_debug_db_full msa_iv_x_debug_db_full msa_cv_i_debug_db_full msa_cv_e_debug_db_full msa_cv_x_debug_db_full
