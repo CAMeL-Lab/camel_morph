@@ -240,17 +240,19 @@ def print_comparison(words, analyses_words, status, results_path, bw=False):
                 both['status-global'] = 'full'
                 
         else:
+            if not camel.empty:
+                camel['status-global'] = 'only-camel'
+                if not baseline.empty:
+                    camel = qc_automatic(camel)
+            else:
+                camel = empty_row
+                camel['status-global'] = 'noan-camel'
+
             if not baseline.empty:
                 baseline['status-global'] = 'only-baseline'
             else:
                 baseline = empty_row
                 baseline['status-global'] = 'noan-baseline'
-            
-            if not camel.empty:
-                camel['status-global'] = 'only-camel'
-            else:
-                camel = empty_row
-                camel['status-global'] = 'noan-camel'
             
         example = pd.concat([both, camel, baseline])
         analysis_results.append(example)
@@ -274,9 +276,9 @@ def evaluate_verbs_analyzer_comparison(data, n, results_path):
         word_dediac = bw2ar(word)
         analyses_camel = analyzer_camel.analyze(word_dediac)
         analyses_baseline = analyzer_baseline.analyze(word_dediac)
-        analyses_camel = {_preprocess_pred(analysis): analysis
+        analyses_camel = {_preprocess_analysis(analysis): analysis
                           for analysis in analyses_camel if analysis['pos'] == 'verb'}
-        analyses_baseline = {_preprocess_pred(analysis): analysis
+        analyses_baseline = {_preprocess_analysis(analysis): analysis
                              for analysis in analyses_baseline if analysis['pos'] == 'verb'}
         analyses_camel_set, analyses_baseline_set = set(analyses_camel), set(analyses_baseline)
         
