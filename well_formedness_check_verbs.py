@@ -3,6 +3,8 @@ from numpy import nan
 import re
 import argparse
 import sys
+import json
+import os
 
 import gspread
 
@@ -18,49 +20,49 @@ def add_check_mark_online(verbs, error_cases):
                      'OK'] for i in range(len(verbs['LEMMA']))])
 
 def two_stem_lemma_well_formedness(lemma, rows, iv=None):
-        stems_cond_t_sorted = tuple(sorted([row['cond-t'] for row in rows]))
-        lemma_uniq_glosses = set([row['gloss'] for row in rows])
-        lemma_uniq_conditions = set([tuple([row[k] for k in ['cond-t', 'cond-s']]) for row in rows])
-        lemma_uniq_cond_s = set([row['cond-s'] for row in rows])
-        lemma_uniq_feats = set([row['feats'] for row in rows])
-        lemma_uniq_forms = set([row['form'] for row in rows])
-        lemma_trans = tuple(sorted([re.search(r'trans|intrans', row['cond-s']).group() for row in rows]))
-        stems_cond_s_no_trans = set([re.sub(r' ?(trans|intrans) ?', '', row['cond-s']) for row in rows])
-        if (len(lemma_uniq_glosses) == 1 and stems_cond_t_sorted in [('c-suff', 'v-suff'), ('c-suff', 'n-suff||v-suff')] and
-            len(lemma_uniq_forms) == len(rows) and len(lemma_uniq_cond_s) == 1):
+    stems_cond_t_sorted = tuple(sorted([row['cond-t'] for row in rows]))
+    lemma_uniq_glosses = set([row['gloss'] for row in rows])
+    lemma_uniq_conditions = set([tuple([row[k] for k in ['cond-t', 'cond-s']]) for row in rows])
+    lemma_uniq_cond_s = set([row['cond-s'] for row in rows])
+    lemma_uniq_feats = set([row['feats'] for row in rows])
+    lemma_uniq_forms = set([row['form'] for row in rows])
+    lemma_trans = tuple(sorted([re.search(r'trans|intrans', row['cond-s']).group() for row in rows]))
+    stems_cond_s_no_trans = set([re.sub(r' ?(trans|intrans) ?', '', row['cond-s']) for row in rows])
+    if (len(lemma_uniq_glosses) == 1 and stems_cond_t_sorted in [('c-suff', 'v-suff'), ('c-suff', 'n-suff||v-suff')] and
+        len(lemma_uniq_forms) == len(rows) and len(lemma_uniq_cond_s) == 1):
+        return True, 'legit'
+    elif (len(lemma_uniq_glosses) == 1 and stems_cond_t_sorted in [('c-suff', 'v-suff'), ('c-suff', 'n-suff||v-suff')] and
+            len(lemma_uniq_forms) == len(rows) and len(lemma_uniq_cond_s) == 2):
+        if len(set(lemma_trans)) == 1:
             return True, 'legit'
-        elif (len(lemma_uniq_glosses) == 1 and stems_cond_t_sorted in [('c-suff', 'v-suff'), ('c-suff', 'n-suff||v-suff')] and
-              len(lemma_uniq_forms) == len(rows) and len(lemma_uniq_cond_s) == 2):
-            if len(set(lemma_trans)) == 1:
-                return True, 'legit'
-            else:
-                return False, 'legit'
-        elif (len(lemma_uniq_glosses) != 1 and len(lemma_uniq_conditions) == 1 and len(lemma_uniq_feats) == 1 and 
-              len(lemma_uniq_forms) == 1):
-            if len(lemma_uniq_feats) == 1 and 'asp:i' in rows[0]['feats'] and len(strip_lex(lemma)) == 4 and lemma[0] == '|':
-                message = 'legit'
-            else:
-                if iv is not None:
-                    if ('asp:p' in rows[0]['feats'] or 'asp:c' in rows[0]['feats']) and len(strip_lex(lemma)) == 4 and lemma[0] == '|':
-                        lemma_iv = iv[iv['LEMMA'] == lemma]
-                        lemma2info = get_lemma2info(lemma_iv)
-                        message = two_stem_lemma_well_formedness(lemma, lemma2info[lemma][2])[1]
-                        if message == 'error':
-                            raise NotImplementedError
-                    else:
-                        message = 'merge_case'
+        else:
+            return False, 'legit'
+    elif (len(lemma_uniq_glosses) != 1 and len(lemma_uniq_conditions) == 1 and len(lemma_uniq_feats) == 1 and 
+            len(lemma_uniq_forms) == 1):
+        if len(lemma_uniq_feats) == 1 and 'asp:i' in rows[0]['feats'] and len(strip_lex(lemma)) == 4 and lemma[0] == '|':
+            message = 'legit'
+        else:
+            if iv is not None:
+                if ('asp:p' in rows[0]['feats'] or 'asp:c' in rows[0]['feats']) and len(strip_lex(lemma)) == 4 and lemma[0] == '|':
+                    lemma_iv = iv[iv['LEMMA'] == lemma]
+                    lemma2info = get_lemma2info(lemma_iv)
+                    message = two_stem_lemma_well_formedness(lemma, lemma2info[lemma][2])[1]
+                    if message == 'error':
+                        raise NotImplementedError
                 else:
                     message = 'merge_case'
-            return True, message
-        elif (len(lemma_uniq_glosses) != 1 and len(lemma_uniq_conditions) == 2 and len(lemma_uniq_feats) == 1 and
-              len(stems_cond_s_no_trans) == 1):
-            if lemma_trans == ('intrans', 'trans'):
-                return True, 'legit'
-        # Verbs like |laf
-        elif len(lemma_uniq_feats) == 1 and 'asp:i' in rows[0]['feats'] and len(strip_lex(lemma)) == 4 and lemma[0] == '|':
-            if len(lemma_uniq_forms) == 2 and len(lemma_uniq_glosses) == 2:
-                return True, 'legit'
-        return False, 'error'
+            else:
+                message = 'merge_case'
+        return True, message
+    elif (len(lemma_uniq_glosses) != 1 and len(lemma_uniq_conditions) == 2 and len(lemma_uniq_feats) == 1 and
+            len(stems_cond_s_no_trans) == 1):
+        if lemma_trans == ('intrans', 'trans'):
+            return True, 'legit'
+    # Verbs like |laf
+    elif len(lemma_uniq_feats) == 1 and 'asp:i' in rows[0]['feats'] and len(strip_lex(lemma)) == 4 and lemma[0] == '|':
+        if len(lemma_uniq_forms) == 2 and len(lemma_uniq_glosses) == 2:
+            return True, 'legit'
+    return False, 'error'
 
 def well_formedness_check(verbs, lemma2info):
     elementary_feats = ['lemma', 'form', 'gloss', 'feats', 'cond-s', 'cond-t']
@@ -133,18 +135,6 @@ def well_formedness_check(verbs, lemma2info):
 
     # All COND-S associated to a lemma must belong to the stem condition categories
     # and they must be unique
-    morph = pd.read_csv('data/EGY-MORPH-Verbs-v4-Red.csv')
-    class2cond = morph[morph.DEFINE == 'CONDITIONS']
-    class2cond = {cond_class["CLASS"]:
-                            [cond for cond in cond_class["FUNC"].split() if cond]
-                        for _, cond_class in class2cond.iterrows()}
-    cond2class = {
-        cond: (cond_class, 
-               int(''.join(['1' if i == index else '0' for index in range (len(cond_s))]), 2)
-        )
-        for cond_class, cond_s in class2cond.items()
-            for i, cond in enumerate(cond_s)}
-
     error_cases = {}
     stem_cond_cats = ['[STEM-X]', '[X-STEM]', '[X-ROOT]', '[X-TRANS]', '[PREF-X]', '[LEMMA]']
     for lemma, info in lemma2info.items():
@@ -319,6 +309,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-lex", action='append', default=[],
                         type=str, help="Paths of the verb lexicon(s) that need(s) to be checked (against each other) for well-formedness.")
+    parser.add_argument("-config_file", default='',
+                        type=str, help="Config file specifying which sheets to use.")
+    parser.add_argument("-config_name", default='',
+                        type=str, help="Name of the configuration to load from the config file.")
+    parser.add_argument("-data_dir", default="data",
+                        type=str, help="Path of the directory where the sheets are.")
     parser.add_argument("-strictness", default='low', choices=['low', 'high'],
                         type=str, help="Strictness level of the check.")
     parser.add_argument("-output_path", default='EGY-LEX-PV',
@@ -335,12 +331,32 @@ if __name__ == "__main__":
 
     bw2ar = CharMapper.builtin_mapper('bw2ar')
     
+    if args.config_file and args.config_name:
+        with open(args.config_file) as f:
+            config = json.load(f)['local'][args.config_name]
+        lexicon_paths = [os.path.join(args.data_dir, f'{sheet}.csv') for sheet in config['lexicon']['sheets']]
+    else:
+        lexicon_paths = args.lex
+
     verbs = {}
-    for path in args.lex:
+    for path in lexicon_paths:
         asp = re.search(r'[cip]v', path, re.I).group().lower()
         verbs[asp] = pd.read_csv(path)
         verbs[asp] = verbs[asp].replace(nan, '', regex=True)
         verbs[asp] = verbs[asp][verbs[asp].DEFINE == 'LEXICON']
+
+    morph = pd.read_csv(os.path.join(args.data_dir, f"{config['specs']['morph']}.csv"))
+    class2cond = morph[morph.DEFINE == 'CONDITIONS']
+    class2cond = {cond_class["CLASS"]:
+                            [cond for cond in cond_class["FUNC"].split() if cond]
+                  for _, cond_class in class2cond.iterrows()}
+    cond2class = {
+        cond: (cond_class,
+               int(''.join(
+                   ['1' if i == index else '0' for index in range(len(cond_s))]), 2)
+               )
+        for cond_class, cond_s in class2cond.items()
+        for i, cond in enumerate(cond_s)}
 
     verbs_ = msa_verbs_lexicon_well_formedness(verbs=verbs, strictness=args.strictness)
 
