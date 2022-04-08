@@ -180,7 +180,7 @@ def create_conjugation_tables(lemmas,
     lemmas_conj = []
     for info in tqdm(lemmas):
         lemma, form, gloss = info['lemma'], info['form'], info['gloss']
-        pos, gen, num = info['pos'], info['gen'], info['num']
+        pos, gen, num = info['pos'], info.get('gen', '_'), info.get('num', '_')
         cond_s, cond_t = info['cond_s'], info['cond_t']
         lemma_raw = lemma[:]
         lemma = strip_lex(lemma)
@@ -364,9 +364,7 @@ if __name__ == "__main__":
     
     paradigm_key = ''
     if args.pos_type == 'verbal':
-        asp = f"asp:{args.asp}"
-        mod = f" mod:{args.mod}" if args.asp in ['i', 'c'] and args.mod else ''
-        paradigm_key = asp + mod
+        paradigm_key = f"asp:{args.asp} mod:{args.mod}"
 
     if args.lemma_debug:
         lemma_debug = args.lemma_debug[0].split()
