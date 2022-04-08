@@ -100,7 +100,7 @@
 98,>1o2a3,>a1o2a3,>a1o2a3,u-#,,u-#,485,>a$okal_1,$okil,be_ambiguous;be_complicated,(.).(.).(.),$1o$2a$3,u-#,,u-#,$okal,1,,DONE
 99,>1o2a3,>a1o2a3,>a1o2a3,u-# >-a# #n,,u-# >-a# #n,1,>aloman_1,alomin,Germanize;make_German,.(.).(.).(.),a$1o$2a$3,u-# >-a# #n,,u-# >-a# #n,aloman,1,,DONE
 100,>1o2a3,>a1o2a3,>a1o2a3,u-# #n,,u-# #n,28,>a*oEan_1,*oEin,submit;yield;obey,(.).(.).(.),$1o$2a$3,u-# #n,,u-# #n,*oEan,1,,DONE
-101,>1o2a3,>a1o2a>,>a1o2a>,u-#,,u-#,19,>aboda>_1,bodi},initiate;begin,(.).(.).(.),$1o$2a>,u-#,,u-#,boda>,0,,DONE
+101,>1o2a3,>a1o2a>,>a1o2a>,u-#,,u-#,19,>aboda>_1,bodi},initiate;begin,(.).(.).(.),$1o$2,u-#,,u-# #-a>,bod,0,,DONE
 102,>1o2a3,>a1o2a#,>a1o2aY,u-# #-iy defective,,u-# #-iy defective,10,>agoraY_1,gor,incite;induce;provoke,(.).(.),$1o$2,u-# #-aY defective,,u-# #-aY defective,gor,1,,DONE
 103,>1o2a3,>a1o>a3,>a1o>a3,u-#,,u-#,7,>ako>ab_1,ko}ib,aggrieve;distress,(.).(.).(.),$1o>a$3,u-#,,u-#,ko>ab,0,,DONE
 104,>1o2a3,>a1o>a#,>a1o>aY,u-# #-iy defective,,u-# #-}iy defective,1,>aro>aY_1,ro,show;demonstrate,(.).,$1o>,u-# #-aY defective,,u-# #-aY defective,ro>,1,,DONE
@@ -373,3 +373,4 @@
 371,{i1ota2a3,{i>ota2~,{i>ota2~,v-suff + a-# gem,v-suff,a-# >-# gem,-,{i>otam~_1,tam~,-,(.).(.)~,$1a$2~,v-suff + u-# gem,v-suff,u-# >-# gem,tam~,1,,DONE
 372,{i1ota2a3,{i>ota2~,{i>ota2~,c-suff + a-# gem,c-suff,a-# >-# gem,-,{i>otam~_1,tamim,-,(.).(.).(.),$1a$2a$3,c-suff + u-# gem,c-suff,u-# >-# gem,tamam,1,,DONE
 373,ta1a2~3,ta>ay~a3,ta>ay~a3,a-#,,a-# #n,-,ta>ay~an_1,ta>ay~an,-,ta(.).(.)~.(.),ta$1a$2~a$3,u-#,,u-# #n,ta>ay~an,0,,DONE
+374,1a2a3,1ayiy,1ayiy,a-# #-aA defective,,a-# #-aA defective,-,Hayiy-a_1,Hoy,-,(.).(.),$1o$2,u-# #-aA defective,,u-# #-aY defective,Hoy,1,,DONE

@@ -252,8 +252,8 @@
 250,1ayo3a,1ayo3a,v-suff + hollow,v-suff,hollow,1,layosa,layos,(.).(.).(.),$1a$2o$3,,v-suff,hollow,layos,0,C4,DONE
 251,1ayo3a4,1ayo3a4,#n,,#n,1,hayonam,hayonam,(.).(.).(.).(.),$1u$2o$3i$4,#n,,#n,huyonim,1,,DONE
 252,1ayo3a4,1ayo3a4,,,,3,hayonam,hayonam,(.).(.).(.).(.),$1u$2o$3i$4,,,,huyonim,1,,DONE
-253,1u2~,1u2~,c-suff + gem,c-suff,gem,1,kuz~,kuziz,(.).(.).(.),$1u$2i$3,,,,kuziz,0,Isn't this pattern inherently passive?,DONE
-254,1u2~,1u2~,v-suff + gem,v-suff,gem,1,kuz~,kuz~,(.).(.)~,$1u$2~,,,,kuz~,0,Isn't this pattern inherently passive?,DONE
+253,1u2~,1u2~,c-suff + gem,c-suff,gem,1,kuz~,kuziz,(.).(.).(.),$1u$2i$3,,c-suff,gem,kuziz,0,,DONE
+254,1u2~,1u2~,v-suff + gem,v-suff,gem,1,kuz~,kuz~,(.).(.)~,$1u$2~,,v-suff,gem,kuz~,0,,DONE
 255,1u2i>,1u2i>,,,,1,ruzi},ruzi},(.).(.).(.),$1u$2i$3,,,,ruzi},1,Isn't this pattern inherently passive?,DONE
 256,ta>a2~a3,ta>a2~a3,#n,,#n,2,ta>ah~al,ta>ah~al,ta(.).(.)~.(.),tu&u$2~i$3,#n,,#n,tu&uh~il,0,,DONE
 257,ta>a2~a3,ta>a2~a3,,,,38,ta>ah~al,ta>ah~al,ta(.).(.)~.(.),tu&u$2~i$3,,,,tu&uh~il,0,,DONE
