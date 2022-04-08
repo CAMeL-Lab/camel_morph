@@ -14,7 +14,7 @@
             "pruning": true,
             "specs": {
                 "order": "ORDER-v4",
-                "morph": "MSA-MORPH-Verbs-v4-Red",
+                "morph": "MSA-MORPH-Verbs-v4",
                 "passive": {
                     "MSA-LEX-PV": "PV-Patterns",
                     "MSA-LEX-IV": "IV-Patterns"
@@ -72,7 +72,7 @@
             "pruning": true,
             "specs": {
                 "order": "ORDER-v4-PV",
-                "morph": "MSA-MORPH-Verbs-v4-Red",
+                "morph": "MSA-MORPH-Verbs-v4",
                 "passive": {
                     "MSA-LEX-PV": "PV-Patterns"
                 }
@@ -96,7 +96,7 @@
             "pruning": true,
             "specs": {
                 "order": "ORDER-v4-PV",
-                "morph": "MSA-MORPH-Verbs-v4-Red"
+                "morph": "MSA-MORPH-Verbs-v4"
             },
             "lexicon": {
                 "spreadsheet": "msa-verb-lex",
@@ -156,7 +156,7 @@
             "pruning": true,
             "specs": {
                 "order": "ORDER-v4-IV",
-                "morph": "MSA-MORPH-Verbs-v4-Red",
+                "morph": "MSA-MORPH-Verbs-v4",
                 "passive": {
                     "MSA-LEX-IV": "IV-Patterns"
                 }
@@ -180,7 +180,7 @@
             "pruning": true,
             "specs": {
                 "order": "ORDER-v4-CV",
-                "morph": "MSA-MORPH-Verbs-v4-Red"
+                "morph": "MSA-MORPH-Verbs-v4"
             },
             "lexicon": {
                 "spreadsheet": "msa-verb-lex",
