@@ -111,7 +111,7 @@ def print_errors(errors, results_path):
         gold = pd.DataFrame([e_gold])
         example = pd.concat([gold, pred], axis=1)
         ex_col = pd.DataFrame([(f"{i} {error['word']['info']['word']}",)]*len(example.index))
-        extra_info = pd.DataFrame([(error['word']['info']['sentence'], *error['word']['info']['magold'])] )
+        extra_info = pd.DataFrame([(bw2ar(error['word']['info']['sentence']), *error['word']['info']['magold'])] )
         example = pd.concat([ex_col, example, extra_info], axis=1)
         errors_.append(example)
         i += 1
@@ -259,7 +259,7 @@ def print_comparison(words, analyses_words, status, results_path, bw=False):
     analysis_results.to_csv(results_path, index=False, sep='\t')
 
 
-def evaluate_verbs_analyzer_comparison(data, n, results_path):
+def evaluate_verbs_analyzer_comparison(data, n, results_path, gen_norm=True):
     words, analyses, status = [], [], []
     data = [word for word in list(data) if word]
     pbar = tqdm(total=min(n, len(data)))
@@ -271,9 +271,9 @@ def evaluate_verbs_analyzer_comparison(data, n, results_path):
         word_dediac = bw2ar(word)
         analyses_camel = analyzer_camel.analyze(word_dediac)
         analyses_baseline = analyzer_baseline.analyze(word_dediac)
-        analyses_camel = {_preprocess_analysis(analysis): analysis
+        analyses_camel = {_preprocess_analysis(analysis, gen_norm=gen_norm): analysis
                           for analysis in analyses_camel if analysis['pos'] == 'verb'}
-        analyses_baseline = {_preprocess_analysis(analysis): analysis
+        analyses_baseline = {_preprocess_analysis(analysis, gen_norm=gen_norm): analysis
                              for analysis in analyses_baseline if analysis['pos'] == 'verb'}
         analyses_camel_set, analyses_baseline_set = set(analyses_camel), set(analyses_baseline)
         
@@ -393,6 +393,8 @@ if __name__ == "__main__":
                         type=str, help="What evaluation to perform.")
     parser.add_argument("-results_path", required=True,
                         type=str, help="Path of the output file containing the comparison/recall results.")
+    parser.add_argument("-gen_norm", default=True,
+                        action='store_true', help="Whether or not to perform gender normalization (u -> m).")
     parser.add_argument("-n", default=100,
                         type=int, help="Number of verbs to input to the two compared systems.")
     parser.add_argument("-camel_tools", default='',
@@ -434,7 +436,7 @@ if __name__ == "__main__":
     if args.eval_mode == 'recall':
         evaluate_verbs_recall(data, args.results_path)
     elif args.eval_mode == 'compare':
-        evaluate_verbs_analyzer_comparison(data, args.n, args.results_path)
+        evaluate_verbs_analyzer_comparison(data, args.n, args.results_path, args.gen_norm)
     elif args.eval_mode == 'compare_stats':
         with open('eval/status_compare.tsv') as f:
             compare_results = [line.strip().split('\t') for line in f.readlines()]
