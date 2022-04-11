@@ -86,9 +86,12 @@ def read_morph_specs(config, config_name):
                 LEXICON_.append(row.to_dict())
         LEXICON = pd.DataFrame(LEXICON_)
 
+    exclusions = local_specs['specs'].get('exclude', [])
     #Process all the components:
     ORDER = ORDER[ORDER.DEFINE == 'ORDER']  # skip comments & empty lines
     ORDER = ORDER.replace(nan, '', regex=True)
+    for exclusion in exclusions:
+        ORDER = ORDER[~ORDER.EXCLUDE.str.contains(exclusion)]
 
     # Dictionary which groups conditions into classes (used later to
     # do partial compatibility which is useful from pruning out incoherent
@@ -116,6 +119,8 @@ def read_morph_specs(config, config_name):
         MORPH_prev = pd.read_pickle('morph_cache/morph_sheet_prev.pkl')
         if MORPH.equals(MORPH_prev):
             MORPH = pd.read_pickle('morph_cache/morph_sheet_processed.pkl')
+            for exclusion in exclusions:
+                MORPH = MORPH[~MORPH.EXCLUDE.str.contains(exclusion)]
             SHEETS = dict(about=ABOUT, header=HEADER, order=ORDER, morph=MORPH,
                           lexicon=LEXICON, backoff=BACKOFF, postregex=POSTREGEX)
             return SHEETS, cond2class
@@ -214,6 +219,8 @@ def read_morph_specs(config, config_name):
                 MORPH.loc[idx, 'COND-T'] = ' '.join(cond_t_almrph)
                 MORPH.loc[idx, 'COND-F'] = ' '.join(cond_f_almrph)
     MORPH.to_pickle('morph_cache/morph_sheet_processed.pkl')
+    for exclusion in exclusions:
+        MORPH = MORPH[~MORPH.EXCLUDE.str.contains(exclusion)]
     SHEETS = dict(about=ABOUT, header=HEADER, order=ORDER, morph=MORPH,
                   lexicon=LEXICON, backoff=BACKOFF, postregex=POSTREGEX)
     return SHEETS, cond2class

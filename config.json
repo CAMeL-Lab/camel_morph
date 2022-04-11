@@ -18,7 +18,10 @@
                 "passive": {
                     "MSA-LEX-PV": "PV-Patterns",
                     "MSA-LEX-IV": "IV-Patterns"
-                }
+                },
+                "exclude": [
+                    "RED"
+                ]
             },
             "lexicon": {
                 "spreadsheet": "msa-verb-lex",
@@ -68,14 +71,47 @@
                 "gloss"
             ]
         },
-        "pv_msa_order-v4_red": {
+        "pv_msa_order-v4": {
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4-PV",
+                "order": "ORDER-v4",
                 "morph": "MSA-MORPH-Verbs-v4",
                 "passive": {
                     "MSA-LEX-PV": "PV-Patterns"
+                },
+                "exclude": [
+                    "IV",
+                    "CV"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "msa-verb-lex",
+                "sheets": [
+                    "MSA-LEX-PV"
+                ],
+                "backoff": {
+                    "MSA-LEX-PV": "MSA-LEX-PV-ABSTRACT"
                 }
+            },
+            "output": "XYZ_msa_pv_v1.0.db",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        },
+        "pv_msa_order-v4_red": {
+            "pruning": true,
+            "specs": {
+                "order": "ORDER-v4",
+                "morph": "MSA-MORPH-Verbs-v4",
+                "passive": {
+                    "MSA-LEX-PV": "PV-Patterns"
+                },
+                "exclude": [
+                    "RED",
+                    "IV",
+                    "CV"
+                ]
             },
             "lexicon": {
                 "spreadsheet": "msa-verb-lex",
@@ -95,8 +131,13 @@
         "pv_msa_no_pass": {
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4-PV",
-                "morph": "MSA-MORPH-Verbs-v4"
+                "order": "ORDER-v4",
+                "morph": "MSA-MORPH-Verbs-v4",
+                "exclude": [
+                    "RED",
+                    "IV",
+                    "CV"
+                ]
             },
             "lexicon": {
                 "spreadsheet": "msa-verb-lex",
@@ -120,7 +161,12 @@
                 "morph": "MSA-MORPH-Verbs-v4",
                 "passive": {
                     "MSA-LEX-IV": "IV-Patterns"
-                }
+                },
+                "exclude": [
+                    "RED",
+                    "PV",
+                    "CV"
+                ]
             },
             "lexicon": {
                 "spreadsheet": "msa-verb-lex",
@@ -137,8 +183,13 @@
         "iv_msa_no_pass": {
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4-IV",
-                "morph": "MSA-MORPH-Verbs-v4"
+                "order": "ORDER-v4",
+                "morph": "MSA-MORPH-Verbs-v4",
+                "exclude": [
+                    "RED",
+                    "PV",
+                    "CV"
+                ]
             },
             "lexicon": {
                 "spreadsheet": "msa-verb-lex",
@@ -152,14 +203,47 @@
                 "gloss"
             ]
         },
-        "iv_msa_order-v4_red": {
+        "iv_msa_order-v4": {
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4-IV",
+                "order": "ORDER-v4",
                 "morph": "MSA-MORPH-Verbs-v4",
                 "passive": {
                     "MSA-LEX-IV": "IV-Patterns"
+                },
+                "exclude": [
+                    "PV",
+                    "CV"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "msa-verb-lex",
+                "sheets": [
+                    "MSA-LEX-IV"
+                ],
+                "backoff": {
+                    "MSA-LEX-IV": "MSA-LEX-IV-ABSTRACT"
                 }
+            },
+            "output": "XYZ_msa_iv_v1.0.db",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        },
+        "iv_msa_order-v4_red": {
+            "pruning": true,
+            "specs": {
+                "order": "ORDER-v4",
+                "morph": "MSA-MORPH-Verbs-v4",
+                "passive": {
+                    "MSA-LEX-IV": "IV-Patterns"
+                },
+                "exclude": [
+                    "RED",
+                    "PV",
+                    "CV"
+                ]
             },
             "lexicon": {
                 "spreadsheet": "msa-verb-lex",
@@ -176,11 +260,41 @@
                 "gloss"
             ]
         },
+        "cv_msa_order-v4": {
+            "pruning": true,
+            "specs": {
+                "order": "ORDER-v4",
+                "morph": "MSA-MORPH-Verbs-v4",
+                "exclude":[
+                    "PV",
+                    "IV"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "msa-verb-lex",
+                "sheets": [
+                    "MSA-LEX-CV"
+                ],
+                "backoff": {
+                    "MSA-LEX-CV": "MSA-LEX-CV-ABSTRACT"
+                }
+            },
+            "output": "XYZ_msa_cv_v1.0.db",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        },
         "cv_msa_order-v4_red": {
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4-CV",
-                "morph": "MSA-MORPH-Verbs-v4"
+                "order": "ORDER-v4",
+                "morph": "MSA-MORPH-Verbs-v4",
+                "exclude": [
+                    "RED",
+                    "PV",
+                    "IV"
+                ]
             },
             "lexicon": {
                 "spreadsheet": "msa-verb-lex",
@@ -251,12 +365,40 @@
                 "gloss"
             ]
         },
+        "pv_egy_order-v4": {
+            "pruning": true,
+            "specs": {
+                "order": "ORDER-v4-EGY",
+                "morph": "EGY-MORPH-Verbs-v4",
+                "postregex": "PostRegex",
+                "exclude": [
+                    "IV",
+                    "CV"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "egy-verb-lex",
+                "sheets": [
+                    "EGY-LEX-PV"
+                ]
+            },
+            "output": "XYZ_egy_pv_v1.0.db",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        },
         "pv_egy_order-v4_red": {
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4-EGY-PV",
-                "morph": "EGY-MORPH-Verbs-v4-Red",
-                "postregex": "PostRegex"
+                "order": "ORDER-v4-EGY",
+                "morph": "EGY-MORPH-Verbs-v4",
+                "postregex": "PostRegex",
+                "exclude": [
+                    "RED",
+                    "IV",
+                    "CV"
+                ]
             },
             "lexicon": {
                 "spreadsheet": "egy-verb-lex",
@@ -270,12 +412,40 @@
                 "gloss"
             ]
         },
+        "iv_egy_order-v4": {
+            "pruning": true,
+            "specs": {
+                "order": "ORDER-v4-EGY",
+                "morph": "EGY-MORPH-Verbs-v4",
+                "postregex": "PostRegex",
+                "exclude": [
+                    "PV",
+                    "CV"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "egy-verb-lex",
+                "sheets": [
+                    "EGY-LEX-IV"
+                ]
+            },
+            "output": "XYZ_egy_iv_v1.0.db",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        },
         "iv_egy_order-v4_red": {
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4-EGY-IV",
-                "morph": "EGY-MORPH-Verbs-v4-Red",
-                "postregex": "PostRegex"
+                "order": "ORDER-v4-EGY",
+                "morph": "EGY-MORPH-Verbs-v4",
+                "postregex": "PostRegex",
+                "exclude": [
+                    "RED",
+                    "PV",
+                    "CV"
+                ]
             },
             "lexicon": {
                 "spreadsheet": "egy-verb-lex",
@@ -289,12 +459,40 @@
                 "gloss"
             ]
         },
+        "cv_egy_order-v4": {
+            "pruning": true,
+            "specs": {
+                "order": "ORDER-v4-EGY",
+                "morph": "EGY-MORPH-Verbs-v4",
+                "postregex": "PostRegex",
+                "exclude": [
+                    "PV",
+                    "IV"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "egy-verb-lex",
+                "sheets": [
+                    "EGY-LEX-CV"
+                ]
+            },
+            "output": "XYZ_egy_cv_v1.0.db",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        },
         "cv_egy_order-v4_red": {
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4-EGY-CV",
-                "morph": "EGY-MORPH-Verbs-v4-Red",
-                "postregex": "PostRegex"
+                "order": "ORDER-v4-EGY",
+                "morph": "EGY-MORPH-Verbs-v4",
+                "postregex": "PostRegex",
+                "exclude": [
+                    "RED",
+                    "PV",
+                    "IV"
+                ]
             },
             "lexicon": {
                 "spreadsheet": "egy-verb-lex",
