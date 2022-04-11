@@ -9,15 +9,24 @@ import os
 import gspread
 
 from utils import assign_pattern
+from download_sheets import download_sheets
 
-def add_check_mark_online(verbs, error_cases):
-    filtered = verbs[verbs['LEMMA'].isin(error_cases)]
-    sa = gspread.service_account(
-        "/Users/chriscay/.config/gspread/service_account.json")
-    sh = sa.open('egy-verb-lex')
-    worksheet = sh.worksheet(title='EGY-LEX-IV')
-    worksheet.update(f'Q2:{len(verbs.index) + 1}', [['CHECK'] if i in filtered.index else [
-                     'OK'] for i in range(len(verbs['LEMMA']))])
+
+def add_check_mark_online(verbs, sheet, error_cases=None, indexes=None):
+    if error_cases is not None:
+        filtered = verbs[verbs['LEMMA'].isin(error_cases)]
+        indexes = filtered.index
+
+    worksheet = sh.worksheet(title=sheet)
+    header = worksheet.row_values(1)
+    assert header.count('STATUS') == 1
+    status_column_index = header.index('STATUS')
+    column_letter = chr(ord('A') + status_column_index)
+    status = worksheet.col_values(status_column_index + 1)[1:]
+    assert len(status) == len(verbs['LEMMA']) and set(status) <= {'CHECK', 'OK'}
+    worksheet.update(f'{column_letter}2:{len(verbs.index) + 1}',
+                     [['CHECK'] if i in indexes else (['OK'] if status[i] != 'CHECK' else ['CHECK'])
+                        for i in range(len(verbs['LEMMA']))])
 
 def two_stem_lemma_well_formedness(lemma, rows, iv=None):
     stems_cond_t_sorted = tuple(sorted([row['cond-t'] for row in rows]))
@@ -64,7 +73,7 @@ def two_stem_lemma_well_formedness(lemma, rows, iv=None):
             return True, 'legit'
     return False, 'error'
 
-def well_formedness_check(verbs, lemma2info):
+def well_formedness_check(verbs, lemma2info, sheet=None):
     elementary_feats = ['lemma', 'form', 'gloss', 'feats', 'cond-s', 'cond-t']
     # Duplicate entries are not allowed
     error_cases = {}
@@ -73,14 +82,14 @@ def well_formedness_check(verbs, lemma2info):
             uniq_entries = set([tuple([row[k] for k in elementary_feats]) for row in info[2]])
             if len(uniq_entries) != info[0]:
                 error_cases[lemma] = info
-    assert len(error_cases) == 0, add_check_mark_online(verbs, error_cases)
+    assert len(error_cases) == 0, add_check_mark_online(verbs, sheet, error_cases)
     
     # No entry contains a double diactric lemma (inherited from BW)
     error_cases = {}
     for lemma, info in lemma2info.items():
         if re.search(r'-[uia]{2,}', lemma):
             error_cases[lemma] = info
-    assert len(error_cases) == 0, add_check_mark_online(verbs, error_cases)
+    assert len(error_cases) == 0, add_check_mark_online(verbs, sheet, error_cases)
 
     # COND-S must contain transitivity information
     error_cases = {}
@@ -89,7 +98,7 @@ def well_formedness_check(verbs, lemma2info):
                         for row in info[2]]):
             continue
         error_cases[lemma] = info
-    assert len(error_cases) == 0, add_check_mark_online(verbs, error_cases)
+    assert len(error_cases) == 0, add_check_mark_online(verbs, sheet, error_cases)
 
     # If exactly one stem is associated to a lemma, then its COND-T must be empty.
     error_cases = {}
@@ -98,7 +107,7 @@ def well_formedness_check(verbs, lemma2info):
             if not info[2][0]['cond-t']:
                 continue
             error_cases[lemma] = info
-    assert len(error_cases) == 0, add_check_mark_online(verbs, error_cases)
+    assert len(error_cases) == 0, add_check_mark_online(verbs, sheet, error_cases)
 
     # If exactly two stems are associated to a lemma, then they must be 
     # one c-suff, one v-suff stem, and have the same gloss (e.g., mad~, madad).
@@ -108,7 +117,7 @@ def well_formedness_check(verbs, lemma2info):
             if two_stem_lemma_well_formedness(lemma, info[2])[0]:
                 continue
             error_cases[lemma] = info
-    assert len(error_cases) == 0, add_check_mark_online(verbs, error_cases)
+    assert len(error_cases) == 0, add_check_mark_online(verbs, sheet, error_cases)
     
     # If more than two stems are associated to a lemma, then they must be 
     # two c-suff and one v-suff PV stem as this does not happend in IV and CV
@@ -131,7 +140,7 @@ def well_formedness_check(verbs, lemma2info):
                             continue
                 error_cases[lemma] = info
                 break
-    assert len(error_cases) == 0, add_check_mark_online(verbs, error_cases)
+    assert len(error_cases) == 0, add_check_mark_online(verbs, sheet, error_cases)
 
     # All COND-S associated to a lemma must belong to the stem condition categories
     # and they must be unique
@@ -144,7 +153,8 @@ def well_formedness_check(verbs, lemma2info):
                         for row in info[2]])):
             continue
         error_cases[lemma] = info
-    assert len(error_cases) == 0, add_check_mark_online(verbs, error_cases)
+    assert len(error_cases) == 0, add_check_mark_online(
+        verbs, sheet, error_cases)
 
     #TODO: add root/pattern/form concordance check
     #TODO: check that there are no letters other than defective letters in patterns
@@ -194,7 +204,7 @@ def form_pattern_well_formedness(verbs):
     return
 
 
-def well_formedness_all_aspects(verbs, strictness):
+def well_formedness_all_aspects(verbs, strictness, sheets=None):
     iv, cv = verbs.get('iv'), verbs.get('cv')
     if iv is not None and cv is not None:
         assert len(iv.index) == len(cv.index)
@@ -203,7 +213,7 @@ def well_formedness_all_aspects(verbs, strictness):
     extlemma2infos = {}
     for asp, verbs_asp in verbs.items():
         lemma2info = get_lemma2info(verbs_asp)
-        well_formedness_check(verbs_asp, lemma2info)
+        well_formedness_check(verbs_asp, lemma2info, sheets[asp])
         merge_indexes[asp], merging_info[asp] = merge_same_feats_diff_gloss_lemmas(lemma2info, iv)
         extlemma2infos_asp = extlemma2infos.setdefault(asp, {})
         for lemma, info in lemma2info.items():
@@ -284,20 +294,24 @@ def merge_same_feats_diff_gloss_lemmas(lemma2info, iv=None):
     
     return row_indexes_to_merge, lemmas_info
 
-def msa_verbs_lexicon_well_formedness(verbs, strictness):
+def msa_verbs_lexicon_well_formedness(verbs, strictness, sheets=None, fix_mode='manual'):
     # for verbs in [verbs['pv'], verbs['iv'], verbs['cv']]:
     #     form_pattern_well_formedness(verbs)
     
-    merge_indexes = well_formedness_all_aspects(verbs, strictness)
-
-    for asp, merging_indexes_asp in merge_indexes.items():
-        for merge_indexes_tuple in merging_indexes_asp:
-            index_to_keep = merge_indexes_tuple[0]
-            for merge_index in merge_indexes_tuple[1:]:
-                verbs[asp].at[index_to_keep, 'GLOSS'] += f";{verbs[asp].at[merge_index, 'GLOSS']}"
-                verbs[asp] = verbs[asp].drop([merge_index])
-
-    merge_indexes = well_formedness_all_aspects(verbs, strictness)
+    merge_indexes = well_formedness_all_aspects(verbs, strictness, sheets)
+    if fix_mode == 'manual':
+        for asp, merging_indexes_asp in merge_indexes.items():
+            indexes = [index for indexes in merge_indexes[asp] for index in indexes]
+            assert len(merging_indexes_asp) == 0, add_check_mark_online(verbs[asp], sheets[asp], indexes=indexes)
+    elif fix_mode == 'automatic':
+        for asp, merging_indexes_asp in merge_indexes.items():
+            for merge_indexes_tuple in merging_indexes_asp:
+                index_to_keep = merge_indexes_tuple[0]
+                for merge_index in merge_indexes_tuple[1:]:
+                    verbs[asp].at[index_to_keep, 'GLOSS'] += f";{verbs[asp].at[merge_index, 'GLOSS']}"
+                    verbs[asp] = verbs[asp].drop([merge_index])
+    
+        merge_indexes = well_formedness_all_aspects(verbs, strictness, sheets)
 
     for verbs_asp in verbs.values():
         verbs_asp['#LEMMA_AR'] = verbs_asp['LEMMA'].apply(bw2ar)
@@ -317,10 +331,14 @@ if __name__ == "__main__":
                         type=str, help="Path of the directory where the sheets are.")
     parser.add_argument("-strictness", default='low', choices=['low', 'high'],
                         type=str, help="Strictness level of the check.")
-    parser.add_argument("-output_path", default='EGY-LEX-PV',
-                        type=str, help="Path of the CV verbs.")
+    parser.add_argument("-output_path", default='',
+                        type=str, help="Path to output the new sheet to.")
     parser.add_argument("-camel_tools", default='',
-                    type=str, help="Path of the directory containing the camel_tools modules.")
+                        type=str, help="Path of the directory containing the camel_tools modules.")
+    parser.add_argument("-fix_mode", default='manual', choices=['manual', 'automatic'],
+                        type=str, help="Mode to specify how things should be fixed (manually with status filling or automatically).")
+    parser.add_argument("-service_account", default='',
+                        type=str, help="Path of the JSON file containing the information about the service account used for the Google API.")
     args = parser.parse_args()
 
     if args.camel_tools:
@@ -334,16 +352,23 @@ if __name__ == "__main__":
     if args.config_file and args.config_name:
         with open(args.config_file) as f:
             config = json.load(f)['local'][args.config_name]
-        lexicon_paths = [os.path.join(args.data_dir, f'{sheet}.csv') for sheet in config['lexicon']['sheets']]
+        lexicon_sheets = config['lexicon']['sheets']
     else:
-        lexicon_paths = args.lex
+        lexicon_sheets = args.lex
 
-    verbs = {}
-    for path in lexicon_paths:
-        asp = re.search(r'[cip]v', path, re.I).group().lower()
-        verbs[asp] = pd.read_csv(path)
+    sa = gspread.service_account(args.service_account)
+    sh = sa.open(config['lexicon']['spreadsheet'])
+    download_sheets(lex=None, specs=None, save_dir=args.data_dir,
+                    config_file=args.config_file, config_name=args.config_name,
+                    service_account=sa)
+
+    verbs, sheets = {}, {}
+    for sheet in lexicon_sheets:
+        asp = re.search(r'[cip]v', sheet, re.I).group().lower()
+        verbs[asp] = pd.read_csv(os.path.join(args.data_dir, f'{sheet}.csv'))
         verbs[asp] = verbs[asp].replace(nan, '', regex=True)
         verbs[asp] = verbs[asp][verbs[asp].DEFINE == 'LEXICON']
+        sheets[asp] = sheet
 
     morph = pd.read_csv(os.path.join(args.data_dir, f"{config['specs']['morph']}.csv"))
     class2cond = morph[morph.DEFINE == 'CONDITIONS']
@@ -358,7 +383,10 @@ if __name__ == "__main__":
         for cond_class, cond_s in class2cond.items()
         for i, cond in enumerate(cond_s)}
 
-    verbs_ = msa_verbs_lexicon_well_formedness(verbs=verbs, strictness=args.strictness)
+    verbs_ = msa_verbs_lexicon_well_formedness(verbs=verbs,
+                                               strictness=args.strictness,
+                                               sheets=sheets,
+                                               fix_mode=args.fix_mode)
 
     if args.output_path:
         verbs_.to_csv(args.output_path)
