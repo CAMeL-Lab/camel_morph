@@ -97,8 +97,8 @@ def get_highest_prob_lemmas(pos_type, uniq_lemma_classes, lemmas_stripped_uniq, 
         lemma2prob = {}
         for lemmas_cond_sig, lemmas_info in uniq_lemma_classes.items():
             for info in lemmas_info['lemmas']:
-                lemma = info['lemma']
-                lemma_ar = bw2ar(strip_lex(lemma))
+                lemma_stripped = strip_lex(info['lemma'])
+                lemma_ar = bw2ar(lemma_stripped)
                 normalized_lemma_ar = DEFAULT_NORMALIZE_MAP(dediac_ar(lemma_ar))
                 matches = db.stem_hash.get(normalized_lemma_ar, [])
                 db_entries = [db_entry[1] for db_entry in matches]
@@ -112,25 +112,26 @@ def get_highest_prob_lemmas(pos_type, uniq_lemma_classes, lemmas_stripped_uniq, 
                         if e['lex'] == lemma_ar and e['pos'] == info['pos'][1:-1]]
 
                 if len(entries_filtered) >= 1:
-                    lemma2prob[info['lemma']] = max([float(a['pos_lex_logprob']) for a in db_entries])
+                    lemma2prob[lemma_stripped] = max([float(a['pos_lex_logprob']) for a in db_entries])
                 else:
-                    lemma2prob[info['lemma']] = -99.0
+                    lemma2prob[lemma_stripped] = -99.0
     else:
+        lemma2prob = {strip_lex(lemma): prob for lemma, prob in lemma2prob.items()}
         for lemmas_cond_sig, lemmas_info in uniq_lemma_classes.items():
             for info in lemmas_info['lemmas']:
-                if info['lemma'] not in lemma2prob:
-                    lemma2prob[info['lemma']] = 0
+                lemma_stripped = strip_lex(info['lemma'])
+                if lemma_stripped not in lemma2prob:
+                    lemma2prob[lemma_stripped] = 0
 
     if bank is not None:
-        old_lemmas = set([re.sub(r'_\d', '', entry[1]) for entry in bank._bank])
+        old_lemmas = set([strip_lex(entry[1]) for entry in bank._bank])
 
     uniq_lemma_classes_ = {}
     for lemmas_cond_sig, lemmas_info in uniq_lemma_classes.items():
-        lemmas = [info['lemma'] for info in lemmas_info['lemmas']]
-        lemmas_ = lemmas
+        lemmas = [strip_lex(info['lemma']) for info in lemmas_info['lemmas']]
         done = False
         if bank is not None:
-            common_lemmas = old_lemmas.intersection(set(lemmas_))
+            common_lemmas = old_lemmas.intersection(set(lemmas))
             if common_lemmas:
                 uniq_lemma_classes_[lemmas_cond_sig] = [info for info in lemmas_info['lemmas']
                                                         if info['lemma'] in common_lemmas][0]
