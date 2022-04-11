@@ -43,22 +43,21 @@
 41,CHECK,diac,EGY,nisi#yt,nisiyt,TRUE,nisi#yt,nisiyt
 42,CHECK,diac,EGY,nisi#yit,nisyit,TRUE,nisi#yit,nisyit
 43,CHECK,diac,EGY,Aisotazadtiy,Aisotazadtiy,TRUE,Aisotazadtiy,Aisotazadtiy
-44,,,,,,,,
-45,,,,,,,,
+44,CHECK,diac,EGY,tAku#luwA,,FALSE,tAku#luwA,tAkluwA
+45,CHECK,diac,EGY,nAku#l,,FALSE,nAku#l,nAkul
 46,,,,,,,,
 47,,,,,,,,
 48,,,,,,,,
-49,,,,,,,,
-50,Postregex files. used byt the CamelDBMaker,,,,,,,
-51,DEFINE,FIELD,VAR,Match,Replace,Linguistic Rule,,
-52,#POSTREGEX,diac,EGY,Al\#+\S[SD],al,,,
+49,Postregex files. used byt the CamelDBMaker,,,,,,,
+50,DEFINE,FIELD,VAR,Match,Replace,Linguistic Rule,,
+51,#POSTREGEX,diac,EGY,Al\#+\S[SD],al,,,
+52,,,,,,,,
 53,,,,,,,,
 54,,,,,,,,
 55,,,,,,,,
 56,,,,,,,,
 57,,,,,,,,
-58,,,,,,,,
-59,OUTPUT in DB should look like:,,,,,,,
-60,###POSTREGEX###,,,,,,,
-61,diac,1,#\\+*([\u062a\u062b\u062f\u0630\u0631\u0632\u0633\u0634\u0635\u0636\u0637\u0638\u0644]),\u2432,,,,
-62,diac,1,#\+*[شسيببيلي],ال,,,,
+58,OUTPUT in DB should look like:,,,,,,,
+59,###POSTREGEX###,,,,,,,
+60,diac,1,#\\+*([\u062a\u062b\u062f\u0630\u0631\u0632\u0633\u0634\u0635\u0636\u0637\u0638\u0644]),\u2432,,,,
+61,diac,1,#\+*[شسيببيلي],ال,,,,
