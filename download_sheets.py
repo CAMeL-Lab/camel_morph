@@ -8,7 +8,10 @@ import gspread
 import pandas as pd
 
 def download_sheets(lex, specs, save_dir, config_file, config_name, service_account):
-    sa = gspread.service_account(service_account)
+    if type(service_account) is str:
+        sa = gspread.service_account(service_account)
+    else:
+        sa = service_account
 
     if not os.path.exists(save_dir):
         os.mkdir(save_dir)
