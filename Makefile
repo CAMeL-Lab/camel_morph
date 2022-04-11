@@ -94,18 +94,18 @@ conj_nom_msa:
 	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_nom_msa.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_msa_nom_v1.0_red.db -db_dir db_iterations_local -pos_type nominal -dialect msa -output_name conj_nom_msa_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
 
 conj_pv_glf:
-	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_pv_glf.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_glf_pv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp p -dialect glf -output_name conj_pv_glf_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
+	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_pv_glf.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_glf_pv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp p -mod i -dialect glf -output_name conj_pv_glf_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
 conj_iv_glf:	
-	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_iv_glf.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_glf_iv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp i -dialect glf -output_name conj_iv_glf_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
+	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_iv_glf.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_glf_iv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp i -mod i -dialect glf -output_name conj_iv_glf_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
 conj_cv_glf:	
-	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_cv_glf.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_glf_cv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp c -dialect glf -output_name conj_cv_glf_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
+	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_cv_glf.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_glf_cv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp c -mod i -dialect glf -output_name conj_cv_glf_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
 
 conj_pv_egy:
-	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_pv_egy.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_egy_pv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp p -dialect egy -output_name conj_pv_egy_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
+	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_pv_egy.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_egy_pv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp p -mod i -dialect egy -output_name conj_pv_egy_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
 conj_iv_egy:	
-	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_iv_egy.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_egy_iv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp i -dialect egy -output_name conj_iv_egy_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
+	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_iv_egy.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_egy_iv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp i -mod i -dialect egy -output_name conj_iv_egy_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
 conj_cv_egy:	
-	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_cv_egy.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_egy_cv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp c -dialect egy -output_name conj_cv_egy_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
+	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_cv_egy.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_egy_cv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp c -mod i -dialect egy -output_name conj_cv_egy_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
 
 download_specs:
 	python download_sheets.py -specs header-morph-order-sheets MSA-MORPH-Verbs-v4-Red -service_account $(service_account)
@@ -294,6 +294,14 @@ egy_iv_bank_upload:
 egy_iv_auto_qc_upload:
 	python format_conj_gsheets.py -dir conjugation_local/paradigm_debugging -file_name paradigm_debug_iv_egy_v1.0.tsv -spreadsheet_name Paradigm-Debugging-Dialects -gsheet_name EGY-IV -formatting conj_tables -mode backup
 egy_iv_debug: download_egy_iv repr_lemmas_iv_egy make_db_iv_egy conj_iv_egy egy_iv_bank_annotation egy_iv_bank_upload egy_iv_auto_qc_upload
+
+egy_cv_bank_annotation:
+	python paradigm_debugging.py -output_name paradigm_debug_cv_egy_v1.0.tsv -output_dir conjugation_local/paradigm_debugging -gsheet EGY-CV -spreadsheet Paradigm-Debugging-Dialects -bank_dir conjugation_local/banks -bank_name EGY-CV-Bank -new_conj conjugation_local/tables/conj_cv_egy_v1.0.tsv -camel_tools $(camel_tools)
+egy_cv_bank_upload:
+	python format_conj_gsheets.py -dir conjugation_local/banks -file_name EGY-CV-Bank.tsv -spreadsheet_name Paradigm-Banks -gsheet_name EGY-CV-Bank -formatting bank -mode backup
+egy_cv_auto_qc_upload:
+	python format_conj_gsheets.py -dir conjugation_local/paradigm_debugging -file_name paradigm_debug_cv_egy_v1.0.tsv -spreadsheet_name Paradigm-Debugging-Dialects -gsheet_name EGY-CV -formatting conj_tables -mode backup
+egy_cv_debug: download_egy_cv repr_lemmas_cv_egy make_db_cv_egy conj_cv_egy egy_cv_bank_annotation egy_cv_bank_upload egy_cv_auto_qc_upload
 
 eval_camel_tb_compare:
 	python eval/evaluate_camel_morph.py -data_path eval/camel_tb_uniq_types.txt -preprocessing camel_tb -db_dir db_iterations_local -config_file config.json -config_name all_msa_order-v4 -camel_tools $(camel_tools) -baseline_db eval/calima-msa-s31_0.4.2.utf8.db -eval_mode compare -results_path eval/camel_tb_compare.tsv -n 100000
