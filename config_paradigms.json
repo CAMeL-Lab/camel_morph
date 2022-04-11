@@ -313,46 +313,46 @@
     },
     "glf": {
         "verbal": {
-            "asp:p": {
+            "asp:p mod:i": {
                 "proclitics": false,
                 "enclitics": true,
                 "passive": false,
                 "paradigm": [
-                    "VERB.P1S.A",
-                    "VERB.P1Q.A",
-                    "VERB.P2MS.A",
-                    "VERB.P2FS.A",
-                    "VERB.P2Q.A",
-                    "VERB.P2FQ.A",
-                    "VERB.P3MS.A",
-                    "VERB.P3FS.A",
-                    "VERB.P3Q.A"
+                    "VERB.P1S.AI",
+                    "VERB.P1Q.AI",
+                    "VERB.P2MS.AI",
+                    "VERB.P2FS.AI",
+                    "VERB.P2Q.AI",
+                    "VERB.P2FQ.AI",
+                    "VERB.P3MS.AI",
+                    "VERB.P3FS.AI",
+                    "VERB.P3Q.AI"
                 ]
             },
-            "asp:i": {
+            "asp:i mod:i": {
                 "proclitics": false,
                 "enclitics": true,
                 "passive": false,
                 "paradigm": [
-                    "VERB.I1S.A",
-                    "VERB.I1Q.A",
-                    "VERB.I2MS.A",
-                    "VERB.I2FS.A",
-                    "VERB.I2Q.A",
-                    "VERB.I2FQ.A",
-                    "VERB.I3MS.A",
-                    "VERB.I3FS.A",
-                    "VERB.I3Q.A"
+                    "VERB.I1S.AI",
+                    "VERB.I1Q.AI",
+                    "VERB.I2MS.AI",
+                    "VERB.I2FS.AI",
+                    "VERB.I2Q.AI",
+                    "VERB.I2FQ.AI",
+                    "VERB.I3MS.AI",
+                    "VERB.I3FS.AI",
+                    "VERB.I3Q.AI"
                 ]
             },
-            "asp:c": {
+            "asp:c mod:i": {
                 "proclitics": false,
                 "enclitics": true,
                 "passive": false,
                 "paradigm": [
-                    "VERB.C2MS",
-                    "VERB.C2FS",
-                    "VERB.C2Q"
+                    "VERB.C2MS.AI",
+                    "VERB.C2FS.AI",
+                    "VERB.C2Q.AI"
                 ]
             }
         },
@@ -360,44 +360,44 @@
     },
     "egy": {
         "verbal": {
-            "asp:p": {
+            "asp:p mod:i": {
                 "proclitics": false,
                 "enclitics": true,
                 "passive": false,
                 "paradigm": [
-                    "VERB.P1S.A",
-                    "VERB.P1Q.A",
-                    "VERB.P2MS.A",
-                    "VERB.P2FS.A",
-                    "VERB.P2Q.A",
-                    "VERB.P3MS.A",
-                    "VERB.P3FS.A",
-                    "VERB.P3Q.A"
+                    "VERB.P1S.AI",
+                    "VERB.P1Q.AI",
+                    "VERB.P2MS.AI",
+                    "VERB.P2FS.AI",
+                    "VERB.P2Q.AI",
+                    "VERB.P3MS.AI",
+                    "VERB.P3FS.AI",
+                    "VERB.P3Q.AI"
                 ]
             },
-            "asp:i": {
+            "asp:i mod:i": {
                 "proclitics": false,
                 "enclitics": true,
                 "passive": false,
                 "paradigm": [
-                    "VERB.I1S.A",
-                    "VERB.I1Q.A",
-                    "VERB.I2MS.A",
-                    "VERB.I2FS.A",
-                    "VERB.I2Q.A",
-                    "VERB.I3MS.A",
-                    "VERB.I3FS.A",
-                    "VERB.I3Q.A"
+                    "VERB.I1S.AI",
+                    "VERB.I1Q.AI",
+                    "VERB.I2MS.AI",
+                    "VERB.I2FS.AI",
+                    "VERB.I2Q.AI",
+                    "VERB.I3MS.AI",
+                    "VERB.I3FS.AI",
+                    "VERB.I3Q.AI"
                 ]
             },
-            "asp:c": {
+            "asp:c mod:i": {
                 "proclitics": false,
                 "enclitics": true,
                 "passive": false,
                 "paradigm": [
-                    "VERB.C2MS",
-                    "VERB.C2FS",
-                    "VERB.C2Q"
+                    "VERB.C2MS.AI",
+                    "VERB.C2FS.AI",
+                    "VERB.C2Q.AI"
                 ]
             }
         },

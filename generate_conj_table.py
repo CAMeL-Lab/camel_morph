@@ -364,10 +364,7 @@ if __name__ == "__main__":
     
     paradigm_key = ''
     if args.pos_type == 'verbal':
-        if args.dialect == 'msa':
-            paradigm_key = f"asp:{args.asp} mod:{args.mod}"
-        elif args.dialect == 'egy':
-            paradigm_key = f"asp:{args.asp}"
+        paradigm_key = f"asp:{args.asp} mod:{args.mod}"
 
     if args.lemma_debug:
         lemma_debug = args.lemma_debug[0].split()
