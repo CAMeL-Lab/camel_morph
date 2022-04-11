@@ -27,7 +27,7 @@ class AnnotationBank:
         if gsheet_info is not None:
             self._gsheet_name = gsheet_info['gsheet_name']
             self._spreadsheet = gsheet_info['spreadsheet']
-        self._bank = OrderedDict()
+        self._bank, self._unkowns = OrderedDict(), OrderedDict()
 
         if not download_bank:
             if os.path.exists(bank_path):
@@ -81,6 +81,8 @@ class AnnotationBank:
                             del self._bank[key_bank]
                 self._bank[key_annot] = {h: row.get(h, '') for h in [h for h in AnnotationBank.HEADER_INFO if h != 'STATUS']}
                 self._bank[key_annot]['STATUS'] = ''
+            else:
+                self._unkowns[key_annot] = {h: row.get(h, '') for h in [h for h in AnnotationBank.HEADER_INFO if h != 'STATUS']}
 
         self._save_bank()
 
@@ -157,7 +159,12 @@ def automatic_bank_annotation(bank_path, annotated_paradigms, new_conj_tables, p
                     break
             else:
                 row['QC'] = AnnotationBank.UNKOWN
-        row['COMMENTS'] = info['COMMENTS']
+        comment = bank._unkowns.get(key)
+        if comment is None:
+            comment = info['COMMENTS']
+        else:
+            comment = comment['COMMENTS']
+        row['COMMENTS'] = comment
 
         output_ordered = OrderedDict()
         for k in header:
