@@ -98,8 +98,6 @@ def generate_abstract_stem(row, get_patterns_from_sheet):
         else:
             assert n0 == n1 == form_pattern.count(str(index))
     
-    match_form, n = re.subn(r'^A', '[^wy]', match_form)
-    
     n0 = 0
     not_t_n = '#t' not in cond_s and '#n' not in cond_s
     generic_last_radical = max_form_digit == len(index2radical) and ('gem' in cond_s or True)
@@ -220,8 +218,9 @@ def generate_abstract_lexicon(lexicon, spreadsheet, sheet, get_patterns_from_she
         except:
             errors_indexes.append(row_index)
 
-    add_check_mark_online(lexicon, spreadsheet, sheet,
-                          indexes=errors_indexes, mode='backoff')
+    if errors_indexes:
+        add_check_mark_online(lexicon, spreadsheet, sheet,
+                            indexes=errors_indexes, mode='backoff')
 
     entry2freq = Counter(
         [tuple([entry.get(h) for h in header]) for entry in abstract_entries])
