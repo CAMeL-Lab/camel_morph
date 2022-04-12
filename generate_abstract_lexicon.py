@@ -6,10 +6,12 @@ from collections import Counter
 from tqdm import tqdm
 import sys
 
+import gspread
 import pandas as pd
 from numpy import nan
 
-from utils import assign_pattern
+from utils import assign_pattern, add_check_mark_online
+from download_sheets import download_sheets
 import db_maker_utils
 
 header = ['PATTERN_ABS', 'PATTERN_DEF', 'ROOT', 'ROOT_SUB', 'DEFINE', 'CLASS', 'PATTERN',
@@ -31,183 +33,195 @@ def generate_substitution_regex(pattern, gem_c_suff_form=False):
     sub = ''.join(sub)
     return sub, radicalindex2grp
 
-def generate_abstract_lexicon(lexicon, get_patterns_from_sheet):
-    abstract_entries = []
-    for row_index, row in tqdm(lexicon.iterrows(), total=len(lexicon.index)):
-        columns = {}
-        columns['DEFINE'] = 'BACKOFF'
-        columns['CLASS'] = row['CLASS']
-        cond_t = ' '.join(sorted(row['COND-T'].split()))
-        columns['COND-T'] = cond_t
-        cond_s = re.sub('intrans', 'trans', row['COND-S']) if 'vox:p' not in row['FEAT'] else row['COND-S']
-        cond_s = ' '.join(sorted([cond for cond in cond_s.split()]))
-        columns['COND-S'] = cond_s
-        columns['PATTERN'] = row['PATTERN']
-        columns['FEAT'] = row['FEAT']
-        columns['GLOSS'] = 'na'
+def generate_abstract_stem(row, get_patterns_from_sheet):
+    columns = {}
+    columns['DEFINE'] = 'BACKOFF'
+    columns['CLASS'] = row['CLASS']
+    cond_t = ' '.join(sorted(row['COND-T'].split()))
+    columns['COND-T'] = cond_t
+    cond_s = re.sub('intrans', 'trans', row['COND-S']) if 'vox:p' not in row['FEAT'] else row['COND-S']
+    cond_s = ' '.join(sorted([cond for cond in cond_s.split()]))
+    columns['COND-S'] = cond_s
+    columns['PATTERN'] = row['PATTERN']
+    columns['FEAT'] = row['FEAT']
+    columns['GLOSS'] = 'na'
 
-        t_explicit = True if 'asp:p' in row['FEAT'] else False
+    t_explicit = True if 'asp:p' in row['FEAT'] else False
 
-        lemma_ex_stripped = strip_lex(row['LEMMA']).split('lex:')[1]
-        if not get_patterns_from_sheet:
-            result = assign_pattern(
-                lemma_ex_stripped, root=row['ROOT'].split('.'))
-            lemma_pattern_surf = result['pattern_surf']
-            abstract_pattern = result['pattern_abstract']
+    lemma_ex_stripped = strip_lex(row['LEMMA']).split('lex:')[1]
+    if not get_patterns_from_sheet:
+        result = assign_pattern(
+            lemma_ex_stripped, root=row['ROOT'].split('.'))
+        lemma_pattern_surf = result['pattern_surf']
+        abstract_pattern = result['pattern_abstract']
+    else:
+        lemma_pattern_surf = row['PATTERN_LEMMA']
+        abstract_pattern = row['PATTERN_ABSTRACT']
+    # FORM ##########################################################
+    index2radical = row['ROOT'].split('.')
+    radical2index = {}
+    for i, r in enumerate(index2radical, start=1):
+        radical2index.setdefault(r, []).append(i)
+    
+    form_pattern_dediac, form_pattern = row['PATTERN'], row['PATTERN']
+    form_reconstructed = []
+    for c in row['PATTERN']:
+        form_reconstructed.append(index2radical[int(c) - 1] if c.isdigit() else c)
+    form_reconstructed = ''.join(form_reconstructed)
+    assert form_reconstructed == row['FORM']
+    form_dediac = normalize_map(row['FORM'])
+    form_dediac = re.sub(r"[uioa~]", '', form_dediac)
+    form_pattern_dediac = normalize_map(form_pattern_dediac)
+    form_pattern_dediac = re.sub(r"[uioa~]", '', form_pattern_dediac)
+
+    match_form, match_form_diac = form_pattern_dediac, form_pattern
+    max_form_digit = re.findall(r'\d', match_form)
+    max_form_digit = max(int(d) for d in max_form_digit) if max_form_digit else None
+    n_t = re.search(r'[nt]~?$', lemma_ex_stripped) if t_explicit else re.search(r'[n]~?$', lemma_ex_stripped)
+    if n_t:
+        if lemma_ex_stripped[-1] != '~':
+            r = lemma_ex_stripped[-1]
+            index = radical2index[r][-1]
         else:
-            lemma_pattern_surf = row['PATTERN_LEMMA']
-            abstract_pattern = row['PATTERN_ABSTRACT']
-        # FORM ##########################################################
-        index2radical = row['ROOT'].split('.')
-        radical2index = {}
-        for i, r in enumerate(index2radical, start=1):
-            radical2index.setdefault(r, []).append(i)
-        
-        form_pattern_dediac, form_pattern = row['PATTERN'], row['PATTERN']
-        form_reconstructed = []
-        for c in row['PATTERN']:
-            form_reconstructed.append(index2radical[int(c) - 1] if c.isdigit() else c)
-        form_reconstructed = ''.join(form_reconstructed)
-        assert form_reconstructed == row['FORM']
-        form_dediac = normalize_map(row['FORM'])
-        form_dediac = re.sub(r"[uioa~]", '', form_dediac)
-        form_pattern_dediac = normalize_map(form_pattern_dediac)
-        form_pattern_dediac = re.sub(r"[uioa~]", '', form_pattern_dediac)
-
-        match_form, match_form_diac = form_pattern_dediac, form_pattern
-        max_form_digit = re.findall(r'\d', match_form)
-        max_form_digit = max(int(d) for d in max_form_digit) if max_form_digit else None
-        n_t = re.search(r'[nt]~?$', lemma_ex_stripped) if t_explicit else re.search(r'[n]~?$', lemma_ex_stripped)
-        if n_t:
-            if lemma_ex_stripped[-1] != '~':
-                r = lemma_ex_stripped[-1]
+            r = lemma_ex_stripped[-2]
+            # c-suff
+            if form_pattern[-1] == '~' and abstract_pattern != '{i1o2a3~':
+                index = radical2index[r][-2] if len(radical2index[r]) > 1 else radical2index[r][-1]
+            # v-suff
+            else:
                 index = radical2index[r][-1]
-            else:
-                r = lemma_ex_stripped[-2]
-                # c-suff
-                if form_pattern[-1] == '~' and abstract_pattern != '{i1o2a3~':
-                    index = radical2index[r][-2] if len(radical2index[r]) > 1 else radical2index[r][-1]
-                # v-suff
+        
+        match_form, n0 = re.subn(str(index), r, match_form)
+        match_form_diac, n1 = re.subn(str(index), r, form_pattern)
+        if form_pattern[-1] == '~':
+            assert n0 == n1 == 1
+        else:
+            assert n0 == n1 == form_pattern.count(str(index))
+    
+    match_form, n = re.subn(r'^A', '[^wy]', match_form)
+    
+    n0 = 0
+    not_t_n = '#t' not in cond_s and '#n' not in cond_s
+    generic_last_radical = max_form_digit == len(index2radical) and ('gem' in cond_s or True)
+    gem_c_suff = True if 'c-suff' in cond_t and 'gem' in cond_s else False
+    form_sub, radicalindex2grp = generate_substitution_regex(
+        match_form_diac, gem_c_suff_form=not_t_n and generic_last_radical and gem_c_suff)
+    
+    if not_t_n and generic_last_radical and len(radicalindex2grp) >= 2:
+        regex_match = r'\d$' if not gem_c_suff else r'\d\d$'
+        regex_replace = '([^ntwyA}&])' if t_explicit else '([^nwyA}&])'
+        if gem_c_suff:
+            penultimate_replace_grp = re.findall(r'\d', form_sub)[-2]
+        regex_replace = regex_replace if not gem_c_suff else f"{regex_replace}\\\{penultimate_replace_grp}"
+        match_form, n0 = re.subn(regex_match, regex_replace, match_form)
+        if n0 == 1 and gem_c_suff:
+            n0 = 2
+        else:
+            assert n0 == 1
+
+    match_form, n1 = re.subn(r'(?<!\\)\d', '([^wyA}&])', match_form)
+    n_match = n0 + n1
+    columns['MATCH'] = f"^{match_form}$"
+    
+    match_form_diac_parenth = re.escape(match_form_diac)
+    match_form_diac_parenth = re.sub(r'\d', '(.)', match_form_diac_parenth)
+
+    digits = [int(d) for d in re.findall(r'\d', form_sub)]
+    max_digit = max(digits) if digits else 0
+    assert max_digit <= n_match
+    
+    form_gen, n = re.subn(match_form_diac_parenth, form_sub, row['FORM'])
+    assert n == 1 and form_gen == row['FORM']
+    form_gen, n = re.subn(match_form, form_sub, form_dediac)
+    assert n == 1 and normalize_map(form_gen) == normalize_map(row['FORM'])
+    columns['FORM_SUB'] = form_sub
+    columns['FORM'] = match_form_diac
+    columns['FORM_EX'] = row['FORM']
+
+    columns['BW'] = f"{match_form_diac}/{row['BW'].split('/')[1]}"
+    columns['BW_SUB'] = f"{form_sub}/{row['BW'].split('/')[1]}"
+
+    # LEMMA #########################################################
+    columns['PATTERN_DEF'] = lemma_pattern_surf
+    columns['PATTERN_ABS'] = abstract_pattern
+    lemma_reconstructed = []
+    for c in lemma_pattern_surf:
+        lemma_reconstructed.append(index2radical[int(c) - 1] if c.isdigit() else c)
+    lemma_reconstructed = ''.join(lemma_reconstructed)
+    assert lemma_reconstructed == lemma_ex_stripped
+
+    if n_t:
+        lemma_pattern_surf = re.sub(str(index), r, lemma_pattern_surf)
+
+    match_lemma_parenth = re.escape(lemma_pattern_surf)
+    match_lemma_parenth = re.sub(r'\d', '(.)', match_lemma_parenth)
+    lemma_sub, radicalindex2grp = generate_substitution_regex(lemma_pattern_surf)
+    digits = [int(d) for d in re.findall(r'\d', lemma_sub)]
+    max_digit = max(digits) if digits else 0
+    assert max_digit <= n_match
+    
+    lemma_gen, n = re.subn(match_lemma_parenth, lemma_sub, lemma_ex_stripped)
+    assert n == 1 and lemma_gen == lemma_ex_stripped
+    lemma_gen, n = re.subn(match_form, lemma_sub, form_dediac)
+    assert n == 1 and normalize_map(lemma_gen) == normalize_map(lemma_ex_stripped)
+    columns['LEMMA_SUB'] = f"lex:{lemma_sub}"
+    columns['LEMMA'] = f"lex:{lemma_pattern_surf}"
+    columns['LEMMA_EX'] = row['LEMMA']
+
+    # ROOT ##########################################################
+    root, root_sub = [], []
+    root_split = row['ROOT'].split('.')
+    for i, r in enumerate(root_split, start=1):
+        radical_nt = r in ['n', 't'] if t_explicit else r == 'n'
+        if r in ['>', 'w', 'y'] or i == len(root_split) and radical_nt or \
+                i == len(root_split) - 1 and root_split[i - 1] == root_split[i] and 'gem' in cond_s and radical_nt:
+            root.append(r)
+            root_sub.append(r)
+        else:
+            root.append(str(i))
+            grp = radicalindex2grp.get(i)
+            if grp is None:
+                if r == root_split[i - 2]:
+                    grp = radicalindex2grp.get(i - 1)
                 else:
-                    index = radical2index[r][-1]
-            
-            match_form, n0 = re.subn(str(index), r, match_form)
-            match_form_diac, n1 = re.subn(str(index), r, form_pattern)
-            if form_pattern[-1] == '~':
-                assert n0 == n1 == 1
-            else:
-                assert n0 == n1 == form_pattern.count(str(index))
-        
-        match_form, n = re.subn(r'^A', '[^wy]', match_form)
-        
-        n0 = 0
-        not_t_n = '#t' not in cond_s and '#n' not in cond_s
-        generic_last_radical = max_form_digit == len(index2radical) and ('gem' in cond_s or True)
-        gem_c_suff = True if 'c-suff' in cond_t and 'gem' in cond_s else False
-        form_sub, radicalindex2grp = generate_substitution_regex(
-            match_form_diac, gem_c_suff_form=not_t_n and generic_last_radical and gem_c_suff)
-        
-        if not_t_n and generic_last_radical and len(radicalindex2grp) >= 2:
-            regex_match = r'\d$' if not gem_c_suff else r'\d\d$'
-            regex_replace = '([^ntwyA}&])' if t_explicit else '([^nwyA}&])'
-            if gem_c_suff:
-                penultimate_replace_grp = re.findall(r'\d', form_sub)[-2]
-            regex_replace = regex_replace if not gem_c_suff else f"{regex_replace}\\\{penultimate_replace_grp}"
-            match_form, n0 = re.subn(regex_match, regex_replace, match_form)
-            if n0 == 1 and gem_c_suff:
-                n0 = 2
-            else:
-                assert n0 == 1
+                    raise NotImplementedError
+            root_sub.append(f'\{grp}')
 
-        match_form, n1 = re.subn(r'(?<!\\)\d', '([^wyA}&])', match_form)
-        n_match = n0 + n1
-        columns['MATCH'] = f"^{match_form}$"
-        
-        match_form_diac_parenth = re.escape(match_form_diac)
-        match_form_diac_parenth = re.sub(r'\d', '(.)', match_form_diac_parenth)
-
-        digits = [int(d) for d in re.findall(r'\d', form_sub)]
-        max_digit = max(digits) if digits else 0
-        assert max_digit <= n_match
-        
-        form_gen, n = re.subn(match_form_diac_parenth, form_sub, row['FORM'])
-        assert n == 1 and form_gen == row['FORM']
-        form_gen, n = re.subn(match_form, form_sub, form_dediac)
-        assert n == 1 and normalize_map(form_gen) == normalize_map(row['FORM'])
-        columns['FORM_SUB'] = form_sub
-        columns['FORM'] = match_form_diac
-        columns['FORM_EX'] = row['FORM']
-
-        columns['BW'] = f"{match_form_diac}/{row['BW'].split('/')[1]}"
-        columns['BW_SUB'] = f"{form_sub}/{row['BW'].split('/')[1]}"
-
-        # LEMMA #########################################################
-        columns['PATTERN_DEF'] = lemma_pattern_surf
-        columns['PATTERN_ABS'] = abstract_pattern
-        lemma_reconstructed = []
-        for c in lemma_pattern_surf:
-            lemma_reconstructed.append(index2radical[int(c) - 1] if c.isdigit() else c)
-        lemma_reconstructed = ''.join(lemma_reconstructed)
-        assert lemma_reconstructed == lemma_ex_stripped
-
-        if n_t:
-            lemma_pattern_surf = re.sub(str(index), r, lemma_pattern_surf)
-
-        match_lemma_parenth = re.escape(lemma_pattern_surf)
-        match_lemma_parenth = re.sub(r'\d', '(.)', match_lemma_parenth)
-        lemma_sub, radicalindex2grp = generate_substitution_regex(lemma_pattern_surf)
-        digits = [int(d) for d in re.findall(r'\d', lemma_sub)]
-        max_digit = max(digits) if digits else 0
-        assert max_digit <= n_match
-        
-        lemma_gen, n = re.subn(match_lemma_parenth, lemma_sub, lemma_ex_stripped)
-        assert n == 1 and lemma_gen == lemma_ex_stripped
-        lemma_gen, n = re.subn(match_form, lemma_sub, form_dediac)
-        assert n == 1 and normalize_map(lemma_gen) == normalize_map(lemma_ex_stripped)
-        columns['LEMMA_SUB'] = f"lex:{lemma_sub}"
-        columns['LEMMA'] = f"lex:{lemma_pattern_surf}"
-        columns['LEMMA_EX'] = row['LEMMA']
-
-        # ROOT ##########################################################
-        root, root_sub = [], []
-        root_split = row['ROOT'].split('.')
-        for i, r in enumerate(root_split, start=1):
-            radical_nt = r in ['n', 't'] if t_explicit else r == 'n'
-            if r in ['>', 'w', 'y'] or i == len(root_split) and radical_nt or \
-                    i == len(root_split) - 1 and root_split[i - 1] == root_split[i] and 'gem' in cond_s and radical_nt:
-                root.append(r)
-                root_sub.append(r)
-            else:
-                root.append(str(i))
-                grp = radicalindex2grp.get(i)
-                if grp is None:
-                    if r == root_split[i - 2]:
-                        grp = radicalindex2grp.get(i - 1)
-                    else:
-                        raise NotImplementedError
-                root_sub.append(f'\{grp}')
-
-        root = '.'.join(root)
-        root_sub = '.'.join(root_sub)
-        match_root_parenth = re.escape(root)
-        match_root_parenth = re.sub(r'\d', '(.)', match_root_parenth)
-        digits = [int(d) for d in re.findall(r'\d', root_sub)]
-        max_digit = max(digits) if digits else 0
-        assert max_digit <= n_match
+    root = '.'.join(root)
+    root_sub = '.'.join(root_sub)
+    match_root_parenth = re.escape(root)
+    match_root_parenth = re.sub(r'\d', '(.)', match_root_parenth)
+    digits = [int(d) for d in re.findall(r'\d', root_sub)]
+    max_digit = max(digits) if digits else 0
+    assert max_digit <= n_match
+    try:
+        root_gen, n = re.subn(match_root_parenth, root_sub, row['ROOT'])
+    except:
         try:
-            root_gen, n = re.subn(match_root_parenth, root_sub, row['ROOT'])
+            root_gen, n = re.subn(match_form, root_sub, form_dediac)
         except:
-            try:
-                root_gen, n = re.subn(match_form, root_sub, form_dediac)
-            except:
-                raise NotImplementedError
-        assert n == 1 and root_gen == row['ROOT']
+            raise NotImplementedError
+    assert n == 1 and root_gen == row['ROOT']
 
-        columns['ROOT_SUB'] = root_sub
-        columns['ROOT'] = root
-        columns['ROOT_EX'] = row['ROOT']
+    columns['ROOT_SUB'] = root_sub
+    columns['ROOT'] = root
+    columns['ROOT_EX'] = row['ROOT']
 
-        abstract_entries.append(columns)
+    return columns
+
+
+def generate_abstract_lexicon(lexicon, spreadsheet, sheet, get_patterns_from_sheet):
+    abstract_entries = []
+    errors_indexes = []
+    for row_index, row in tqdm(lexicon.iterrows(), total=len(lexicon.index)):
+        try:
+            columns = generate_abstract_stem(row, get_patterns_from_sheet)
+            abstract_entries.append(columns)
+        except:
+            errors_indexes.append(row_index)
+
+    add_check_mark_online(lexicon, spreadsheet, sheet,
+                          indexes=errors_indexes, mode='backoff')
 
     entry2freq = Counter(
         [tuple([entry.get(h) for h in header]) for entry in abstract_entries])
@@ -238,6 +252,8 @@ if __name__ == "__main__":
                         type=str, help="Name of the file to output the abstract lexicon to.")
     parser.add_argument("-camel_tools", default='',
                         type=str, help="Path of the directory containing the camel_tools modules.")
+    parser.add_argument("-service_account", default='',
+                        type=str, help="Path of the JSON file containing the information about the service account used for the Google API.")
     args = parser.parse_args()
 
     if args.camel_tools:
@@ -255,6 +271,13 @@ if __name__ == "__main__":
     if args.config_file:
         with open(args.config_file) as f:
             config = json.load(f)
+
+        sa = gspread.service_account(args.service_account)
+        sh = sa.open(config['local'][args.config_name]['lexicon']['spreadsheet'])
+        download_sheets(lex=None, specs=None, save_dir=args.data_dir,
+                        config_file=args.config_file, config_name=args.config_name,
+                        service_account=sa)
+
         SHEETS, _ = db_maker_utils.read_morph_specs(config, args.config_name)
         SHEETS['lexicon']['COND-S'] = SHEETS['lexicon'].apply(
             lambda row: re.sub(r'hamzated|hollow|defective', '', row['COND-S']), axis=1)
@@ -271,6 +294,7 @@ if __name__ == "__main__":
     lexicon['ROOT'] = lexicon['ROOT'].replace(r'\\', '', regex=True)
 
     abstract_lexicon = generate_abstract_lexicon(lexicon,
+                                                 sh, config['local'][args.config_name]['lexicon']['sheets'][0],
                                                  args.get_patterns_from_sheet)
 
     abstract_lexicon.to_csv(os.path.join(args.output_dir, args.output_name))
