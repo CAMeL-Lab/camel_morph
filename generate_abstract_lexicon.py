@@ -76,7 +76,14 @@ def generate_abstract_stem(row, get_patterns_from_sheet, t_explicit, n_explicit)
     match_form, match_form_diac = form_pattern_dediac, form_pattern
     max_form_digit = re.findall(r'\d', match_form)
     max_form_digit = max(int(d) for d in max_form_digit) if max_form_digit else None
-    n_t = re.search(r'[nt]~?$', lemma_ex_stripped) if t_explicit else re.search(r'[n]~?$', lemma_ex_stripped)
+    if not t_explicit and not n_explicit:
+        n_t = None
+    elif not t_explicit and n_explicit:
+        n_t = re.search(r'[n]~?$', lemma_ex_stripped)
+    elif t_explicit and not n_explicit:
+        n_t = re.search(r'[t]~?$', lemma_ex_stripped)
+    else:
+        n_t = re.search(r'[nt]~?$', lemma_ex_stripped)
     if n_t:
         if lemma_ex_stripped[-1] != '~':
             r = lemma_ex_stripped[-1]
@@ -107,8 +114,13 @@ def generate_abstract_stem(row, get_patterns_from_sheet, t_explicit, n_explicit)
         match_form_diac, gem_c_suff_form=not_t_n and generic_last_radical and gem_c_suff)
     
     if not_t_n and generic_last_radical and len(radicalindex2grp) >= 2:
+        if not t_explicit and n_explicit:
+            regex_replace = '([^nwyA}&])'
+        elif t_explicit and not n_explicit:
+            regex_replace = '([^twyA}&])'
+        else:
+            regex_replace = '([^ntwyA}&])'
         regex_match = r'\d$' if not gem_c_suff else r'\d\d$'
-        regex_replace = '([^ntwyA}&])' if t_explicit else '([^nwyA}&])'
         if gem_c_suff:
             penultimate_replace_grp = re.findall(r'\d', form_sub)[-2]
         regex_replace = regex_replace if not gem_c_suff else f"{regex_replace}\\\{penultimate_replace_grp}"
@@ -180,7 +192,15 @@ def generate_abstract_stem(row, get_patterns_from_sheet, t_explicit, n_explicit)
     root, root_sub = [], []
     root_split = row['ROOT'].split('.')
     for i, r in enumerate(root_split, start=1):
-        radical_nt = r in ['n', 't'] if t_explicit else r == 'n'
+        if not t_explicit and not n_explicit:
+            radical_nt = False
+        elif not t_explicit and n_explicit:
+            radical_nt = (r == 'n')
+        elif t_explicit and not n_explicit:
+            radical_nt = (r == 't')
+        else:
+            radical_nt = (r in ['n', 't'])
+
         if r in ['>', 'w', 'y'] or i == len(root_split) and radical_nt or \
                 i == len(root_split) - 1 and root_split[i - 1] == root_split[i] and 'gem' in cond_s and radical_nt:
             root.append(r)
@@ -235,7 +255,8 @@ def generate_abstract_lexicon(lexicon, spreadsheet, sheet, get_patterns_from_she
 
     if errors_indexes:
         add_check_mark_online(lexicon, spreadsheet, sheet,
-                            indexes=errors_indexes, mode='backoff')
+                              indexes=errors_indexes, mode='backoff',
+                              status_col_name='STATUS_CHRIS')
 
     entry2freq = Counter(
         [tuple([entry.get(h) for h in header]) for entry in abstract_entries])
