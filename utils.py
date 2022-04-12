@@ -339,7 +339,13 @@ def analyze_pattern_egy(root, stem):
     return tmp_stem
 
 
-def add_check_mark_online(verbs, spreadsheet, sheet, error_cases=None, indexes=None, mode=None):
+def add_check_mark_online(verbs,
+                          spreadsheet,
+                          sheet,
+                          error_cases=None,
+                          indexes=None,
+                          mode=None,
+                          status_col_name='STATUS'):
     assert bool(error_cases) ^ bool(indexes)
     if error_cases is not None:
         filtered = verbs[verbs['LEMMA'].isin(error_cases)]
@@ -347,15 +353,15 @@ def add_check_mark_online(verbs, spreadsheet, sheet, error_cases=None, indexes=N
 
     worksheet = spreadsheet.worksheet(title=sheet)
     header = worksheet.row_values(1)
-    assert header.count('STATUS') == 1
-    status_column_index = header.index('STATUS')
+    assert header.count(status_col_name) == 1
+    status_column_index = header.index(status_col_name)
     column_letter = chr(ord('A') + status_column_index)
     status = worksheet.col_values(status_column_index + 1)[1:]
     if mode:
         check, ok = f'{mode}:CHECK', f'{mode}:OK'
     else:
         check, ok = 'CHECK', 'OK'
-    assert len(status) == len(verbs['LEMMA']) and set(status) <= {check, ok}
+    assert len(status) == len(verbs['LEMMA']) and set(status) <= {check, ok, ''}
     worksheet.update(f'{column_letter}2:{len(verbs.index) + 1}',
                      [[check] if i in indexes else ([ok] if status[i] != check else [check])
                         for i in range(len(verbs['LEMMA']))])
