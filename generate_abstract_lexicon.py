@@ -31,9 +31,9 @@ def generate_substitution_regex(pattern, gem_c_suff_form=False):
     sub = ''.join(sub)
     return sub, radicalindex2grp
 
-def generate_abstract_lexicon(lexicon):
+def generate_abstract_lexicon(lexicon, get_patterns_from_sheet):
     abstract_entries = []
-    for _, row in tqdm(lexicon.iterrows(), total=len(lexicon.index)):
+    for row_index, row in tqdm(lexicon.iterrows(), total=len(lexicon.index)):
         columns = {}
         columns['DEFINE'] = 'BACKOFF'
         columns['CLASS'] = row['CLASS']
@@ -49,10 +49,14 @@ def generate_abstract_lexicon(lexicon):
         t_explicit = True if 'asp:p' in row['FEAT'] else False
 
         lemma_ex_stripped = strip_lex(row['LEMMA']).split('lex:')[1]
-        result = assign_pattern(
-            lemma_ex_stripped, root=row['ROOT'].split('.'))
-        lemma_pattern_surf = result['pattern_surf']
-        abstract_pattern = result['pattern_abstract']
+        if not get_patterns_from_sheet:
+            result = assign_pattern(
+                lemma_ex_stripped, root=row['ROOT'].split('.'))
+            lemma_pattern_surf = result['pattern_surf']
+            abstract_pattern = result['pattern_abstract']
+        else:
+            lemma_pattern_surf = row['PATTERN_LEMMA']
+            abstract_pattern = row['PATTERN_ABSTRACT']
         # FORM ##########################################################
         index2radical = row['ROOT'].split('.')
         radical2index = {}
@@ -94,9 +98,11 @@ def generate_abstract_lexicon(lexicon):
             else:
                 assert n0 == n1 == form_pattern.count(str(index))
         
+        match_form, n = re.subn(r'^A', '[^wy]', match_form)
+        
         n0 = 0
         not_t_n = '#t' not in cond_s and '#n' not in cond_s
-        generic_last_radical = 'gem' in cond_s or max_form_digit == len(index2radical)
+        generic_last_radical = max_form_digit == len(index2radical) and ('gem' in cond_s or True)
         gem_c_suff = True if 'c-suff' in cond_t and 'gem' in cond_s else False
         form_sub, radicalindex2grp = generate_substitution_regex(
             match_form_diac, gem_c_suff_form=not_t_n and generic_last_radical and gem_c_suff)
@@ -222,6 +228,10 @@ if __name__ == "__main__":
                         type=str, help="Name of the configuration to load from the config file.")
     parser.add_argument("-lexicon_path", default='',
                         type=str, help="Path of the lexicon to load.")
+    parser.add_argument("-data_dir", default="data",
+                        type=str, help="Path of the directory where the sheets are.")
+    parser.add_argument("-get_patterns_from_sheet", default=False,
+                        action='store_true', help="Get patterns from sheet instead of generating them on the fly.")
     parser.add_argument("-output_dir", default='data',
                         type=str, help="Path of the directory to output the lemmas to.")
     parser.add_argument("-output_name", default='ABSTRACT-LEX.csv',
@@ -257,7 +267,10 @@ if __name__ == "__main__":
         lexicon = lexicon.replace(nan, '', regex=True)
     else:
         raise NotImplementedError
+    
+    lexicon['ROOT'] = lexicon['ROOT'].replace(r'\\', '', regex=True)
 
-    abstract_lexicon = generate_abstract_lexicon(lexicon)
+    abstract_lexicon = generate_abstract_lexicon(lexicon,
+                                                 args.get_patterns_from_sheet)
 
     abstract_lexicon.to_csv(os.path.join(args.output_dir, args.output_name))
