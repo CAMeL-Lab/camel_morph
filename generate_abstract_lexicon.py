@@ -171,8 +171,9 @@ def generate_abstract_stem(row, get_patterns_from_sheet, t_explicit, n_explicit)
     lemma_gen, n = re.subn(match_form, lemma_sub, form_dediac)
     if not (n == 1 and normalize_map(lemma_gen) == normalize_map(lemma_ex_stripped)):
         return 'Error 11'
-    columns['LEMMA_SUB'] = f"lex:{lemma_sub}"
-    columns['LEMMA'] = f"lex:{lemma_pattern_surf}"
+    Eayn_diac = re.search(r'-.', row['LEMMA'])
+    columns['LEMMA_SUB'] = f"lex:{lemma_sub}{Eayn_diac.group() if Eayn_diac else ''}"
+    columns['LEMMA'] = f"lex:{lemma_pattern_surf}{Eayn_diac.group() if Eayn_diac else ''}"
     columns['LEMMA_EX'] = row['LEMMA']
 
     # ROOT ##########################################################
