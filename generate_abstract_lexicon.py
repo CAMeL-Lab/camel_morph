@@ -33,7 +33,7 @@ def generate_substitution_regex(pattern, gem_c_suff_form=False):
     sub = ''.join(sub)
     return sub, radicalindex2grp
 
-def generate_abstract_stem(row, get_patterns_from_sheet):
+def generate_abstract_stem(row, get_patterns_from_sheet, t_explicit, n_explicit):
     columns = {}
     columns['DEFINE'] = 'BACKOFF'
     columns['CLASS'] = row['CLASS']
@@ -45,8 +45,6 @@ def generate_abstract_stem(row, get_patterns_from_sheet):
     columns['PATTERN'] = row['PATTERN']
     columns['FEAT'] = row['FEAT']
     columns['GLOSS'] = 'na'
-
-    t_explicit = True if 'asp:p' in row['FEAT'] else False
 
     lemma_ex_stripped = strip_lex(row['LEMMA']).split('lex:')[1]
     if not get_patterns_from_sheet:
@@ -68,7 +66,8 @@ def generate_abstract_stem(row, get_patterns_from_sheet):
     for c in row['PATTERN']:
         form_reconstructed.append(index2radical[int(c) - 1] if c.isdigit() else c)
     form_reconstructed = ''.join(form_reconstructed)
-    assert form_reconstructed == row['FORM']
+    if not (form_reconstructed == row['FORM']):
+        return 'Error 1'
     form_dediac = normalize_map(row['FORM'])
     form_dediac = re.sub(r"[uioa~]", '', form_dediac)
     form_pattern_dediac = normalize_map(form_pattern_dediac)
@@ -94,9 +93,11 @@ def generate_abstract_stem(row, get_patterns_from_sheet):
         match_form, n0 = re.subn(str(index), r, match_form)
         match_form_diac, n1 = re.subn(str(index), r, form_pattern)
         if form_pattern[-1] == '~':
-            assert n0 == n1 == 1
+            if not (n0 == n1 == 1):
+                return 'Error 2'
         else:
-            assert n0 == n1 == form_pattern.count(str(index))
+            if not (n0 == n1 == form_pattern.count(str(index))):
+                return 'Error 3'
     
     n0 = 0
     not_t_n = '#t' not in cond_s and '#n' not in cond_s
@@ -115,7 +116,8 @@ def generate_abstract_stem(row, get_patterns_from_sheet):
         if n0 == 1 and gem_c_suff:
             n0 = 2
         else:
-            assert n0 == 1
+            if not (n0 == 1):
+                return 'Error 4'
 
     match_form, n1 = re.subn(r'(?<!\\)\d', '([^wyA}&])', match_form)
     n_match = n0 + n1
@@ -126,12 +128,15 @@ def generate_abstract_stem(row, get_patterns_from_sheet):
 
     digits = [int(d) for d in re.findall(r'\d', form_sub)]
     max_digit = max(digits) if digits else 0
-    assert max_digit <= n_match
+    if not (max_digit <= n_match):
+        return 'Error 5'
     
     form_gen, n = re.subn(match_form_diac_parenth, form_sub, row['FORM'])
-    assert n == 1 and form_gen == row['FORM']
+    if not (n == 1 and form_gen == row['FORM']):
+        return 'Error 6'
     form_gen, n = re.subn(match_form, form_sub, form_dediac)
-    assert n == 1 and normalize_map(form_gen) == normalize_map(row['FORM'])
+    if not (n == 1 and normalize_map(form_gen) == normalize_map(row['FORM'])):
+        return 'Error 7'
     columns['FORM_SUB'] = form_sub
     columns['FORM'] = match_form_diac
     columns['FORM_EX'] = row['FORM']
@@ -146,7 +151,8 @@ def generate_abstract_stem(row, get_patterns_from_sheet):
     for c in lemma_pattern_surf:
         lemma_reconstructed.append(index2radical[int(c) - 1] if c.isdigit() else c)
     lemma_reconstructed = ''.join(lemma_reconstructed)
-    assert lemma_reconstructed == lemma_ex_stripped
+    if not (lemma_reconstructed == lemma_ex_stripped):
+        return 'Error 8'
 
     if n_t:
         lemma_pattern_surf = re.sub(str(index), r, lemma_pattern_surf)
@@ -156,12 +162,15 @@ def generate_abstract_stem(row, get_patterns_from_sheet):
     lemma_sub, radicalindex2grp = generate_substitution_regex(lemma_pattern_surf)
     digits = [int(d) for d in re.findall(r'\d', lemma_sub)]
     max_digit = max(digits) if digits else 0
-    assert max_digit <= n_match
+    if not (max_digit <= n_match):
+        return 'Error 9'
     
     lemma_gen, n = re.subn(match_lemma_parenth, lemma_sub, lemma_ex_stripped)
-    assert n == 1 and lemma_gen == lemma_ex_stripped
+    if not (n == 1 and lemma_gen == lemma_ex_stripped):
+        return 'Error 10'
     lemma_gen, n = re.subn(match_form, lemma_sub, form_dediac)
-    assert n == 1 and normalize_map(lemma_gen) == normalize_map(lemma_ex_stripped)
+    if not (n == 1 and normalize_map(lemma_gen) == normalize_map(lemma_ex_stripped)):
+        return 'Error 11'
     columns['LEMMA_SUB'] = f"lex:{lemma_sub}"
     columns['LEMMA'] = f"lex:{lemma_pattern_surf}"
     columns['LEMMA_EX'] = row['LEMMA']
@@ -191,7 +200,8 @@ def generate_abstract_stem(row, get_patterns_from_sheet):
     match_root_parenth = re.sub(r'\d', '(.)', match_root_parenth)
     digits = [int(d) for d in re.findall(r'\d', root_sub)]
     max_digit = max(digits) if digits else 0
-    assert max_digit <= n_match
+    if not (max_digit <= n_match):
+        return 'Error 12'
     try:
         root_gen, n = re.subn(match_root_parenth, root_sub, row['ROOT'])
     except:
@@ -199,7 +209,8 @@ def generate_abstract_stem(row, get_patterns_from_sheet):
             root_gen, n = re.subn(match_form, root_sub, form_dediac)
         except:
             raise NotImplementedError
-    assert n == 1 and root_gen == row['ROOT']
+    if not (n == 1 and root_gen == row['ROOT']):
+        return 'Error 13'
 
     columns['ROOT_SUB'] = root_sub
     columns['ROOT'] = root
@@ -211,11 +222,14 @@ def generate_abstract_stem(row, get_patterns_from_sheet):
 def generate_abstract_lexicon(lexicon, spreadsheet, sheet, get_patterns_from_sheet):
     abstract_entries = []
     errors_indexes = []
+    t_explicit = bool(lexicon['COND-S'].str.contains('#t').any())
+    n_explicit = bool(lexicon['COND-S'].str.contains('#n').any())
     for row_index, row in tqdm(lexicon.iterrows(), total=len(lexicon.index)):
-        try:
-            columns = generate_abstract_stem(row, get_patterns_from_sheet)
+        columns = generate_abstract_stem(row, get_patterns_from_sheet,
+                                            t_explicit, n_explicit)
+        if type(columns) is dict:
             abstract_entries.append(columns)
-        except:
+        else:
             errors_indexes.append(row_index)
 
     if errors_indexes:
