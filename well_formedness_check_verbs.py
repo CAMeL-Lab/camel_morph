@@ -8,25 +8,9 @@ import os
 
 import gspread
 
-from utils import assign_pattern
+from utils import assign_pattern, add_check_mark_online
 from download_sheets import download_sheets
 
-
-def add_check_mark_online(verbs, sheet, error_cases=None, indexes=None):
-    if error_cases is not None:
-        filtered = verbs[verbs['LEMMA'].isin(error_cases)]
-        indexes = filtered.index
-
-    worksheet = sh.worksheet(title=sheet)
-    header = worksheet.row_values(1)
-    assert header.count('STATUS') == 1
-    status_column_index = header.index('STATUS')
-    column_letter = chr(ord('A') + status_column_index)
-    status = worksheet.col_values(status_column_index + 1)[1:]
-    assert len(status) == len(verbs['LEMMA']) and set(status) <= {'CHECK', 'OK'}
-    worksheet.update(f'{column_letter}2:{len(verbs.index) + 1}',
-                     [['CHECK'] if i in indexes else (['OK'] if status[i] != 'CHECK' else ['CHECK'])
-                        for i in range(len(verbs['LEMMA']))])
 
 def two_stem_lemma_well_formedness(lemma, rows, iv=None):
     stems_cond_t_sorted = tuple(sorted([row['cond-t'] for row in rows]))
@@ -73,7 +57,7 @@ def two_stem_lemma_well_formedness(lemma, rows, iv=None):
             return True, 'legit'
     return False, 'error'
 
-def well_formedness_check(verbs, lemma2info, sheet=None):
+def well_formedness_check(verbs, lemma2info, spreadsheet=None, sheet=None):
     elementary_feats = ['lemma', 'form', 'gloss', 'feats', 'cond-s', 'cond-t']
     # Duplicate entries are not allowed
     error_cases = {}
@@ -82,14 +66,14 @@ def well_formedness_check(verbs, lemma2info, sheet=None):
             uniq_entries = set([tuple([row[k] for k in elementary_feats]) for row in info[2]])
             if len(uniq_entries) != info[0]:
                 error_cases[lemma] = info
-    assert len(error_cases) == 0, add_check_mark_online(verbs, sheet, error_cases)
+    assert len(error_cases) == 0, add_check_mark_online(verbs, spreadsheet, sheet, error_cases, mode='well-formedness')
     
     # No entry contains a double diactric lemma (inherited from BW)
     error_cases = {}
     for lemma, info in lemma2info.items():
         if re.search(r'-[uia]{2,}', lemma):
             error_cases[lemma] = info
-    assert len(error_cases) == 0, add_check_mark_online(verbs, sheet, error_cases)
+    assert len(error_cases) == 0, add_check_mark_online(verbs, spreadsheet, sheet, error_cases, mode='well-formedness')
 
     # COND-S must contain transitivity information
     error_cases = {}
@@ -98,7 +82,7 @@ def well_formedness_check(verbs, lemma2info, sheet=None):
                         for row in info[2]]):
             continue
         error_cases[lemma] = info
-    assert len(error_cases) == 0, add_check_mark_online(verbs, sheet, error_cases)
+    assert len(error_cases) == 0, add_check_mark_online(verbs, spreadsheet, sheet, error_cases, mode='well-formedness')
 
     # If exactly one stem is associated to a lemma, then its COND-T must be empty.
     error_cases = {}
@@ -107,7 +91,7 @@ def well_formedness_check(verbs, lemma2info, sheet=None):
             if not info[2][0]['cond-t']:
                 continue
             error_cases[lemma] = info
-    assert len(error_cases) == 0, add_check_mark_online(verbs, sheet, error_cases)
+    assert len(error_cases) == 0, add_check_mark_online(verbs, spreadsheet, sheet, error_cases, mode='well-formedness')
 
     # If exactly two stems are associated to a lemma, then they must be 
     # one c-suff, one v-suff stem, and have the same gloss (e.g., mad~, madad).
@@ -117,7 +101,7 @@ def well_formedness_check(verbs, lemma2info, sheet=None):
             if two_stem_lemma_well_formedness(lemma, info[2])[0]:
                 continue
             error_cases[lemma] = info
-    assert len(error_cases) == 0, add_check_mark_online(verbs, sheet, error_cases)
+    assert len(error_cases) == 0, add_check_mark_online(verbs, spreadsheet, sheet, error_cases, mode='well-formedness')
     
     # If more than two stems are associated to a lemma, then they must be 
     # two c-suff and one v-suff PV stem as this does not happend in IV and CV
@@ -140,7 +124,7 @@ def well_formedness_check(verbs, lemma2info, sheet=None):
                             continue
                 error_cases[lemma] = info
                 break
-    assert len(error_cases) == 0, add_check_mark_online(verbs, sheet, error_cases)
+    assert len(error_cases) == 0, add_check_mark_online(verbs, spreadsheet, sheet, error_cases, mode='well-formedness')
 
     # All COND-S associated to a lemma must belong to the stem condition categories
     # and they must be unique
@@ -153,8 +137,7 @@ def well_formedness_check(verbs, lemma2info, sheet=None):
                         for row in info[2]])):
             continue
         error_cases[lemma] = info
-    assert len(error_cases) == 0, add_check_mark_online(
-        verbs, sheet, error_cases)
+    assert len(error_cases) == 0, add_check_mark_online(verbs, spreadsheet, sheet, error_cases, mode='well-formedness')
 
     #TODO: add root/pattern/form concordance check
     #TODO: check that there are no letters other than defective letters in patterns
@@ -204,7 +187,7 @@ def form_pattern_well_formedness(verbs):
     return
 
 
-def well_formedness_all_aspects(verbs, strictness, sheets=None):
+def well_formedness_all_aspects(verbs, strictness, spreadsheet=None, sheets=None):
     iv, cv = verbs.get('iv'), verbs.get('cv')
     if iv is not None and cv is not None:
         assert len(iv.index) == len(cv.index)
@@ -213,7 +196,7 @@ def well_formedness_all_aspects(verbs, strictness, sheets=None):
     extlemma2infos = {}
     for asp, verbs_asp in verbs.items():
         lemma2info = get_lemma2info(verbs_asp)
-        well_formedness_check(verbs_asp, lemma2info, sheets[asp])
+        well_formedness_check(verbs_asp, lemma2info, spreadsheet, sheets[asp])
         merge_indexes[asp], merging_info[asp] = merge_same_feats_diff_gloss_lemmas(lemma2info, iv)
         extlemma2infos_asp = extlemma2infos.setdefault(asp, {})
         for lemma, info in lemma2info.items():
@@ -294,15 +277,16 @@ def merge_same_feats_diff_gloss_lemmas(lemma2info, iv=None):
     
     return row_indexes_to_merge, lemmas_info
 
-def msa_verbs_lexicon_well_formedness(verbs, strictness, sheets=None, fix_mode='manual'):
+def msa_verbs_lexicon_well_formedness(verbs, strictness, spreadsheet=None, sheets=None, fix_mode='manual'):
     # for verbs in [verbs['pv'], verbs['iv'], verbs['cv']]:
     #     form_pattern_well_formedness(verbs)
     
-    merge_indexes = well_formedness_all_aspects(verbs, strictness, sheets)
+    merge_indexes = well_formedness_all_aspects(verbs, strictness, spreadsheet, sheets)
     if fix_mode == 'manual':
         for asp, merging_indexes_asp in merge_indexes.items():
             indexes = [index for indexes in merge_indexes[asp] for index in indexes]
-            assert len(merging_indexes_asp) == 0, add_check_mark_online(verbs[asp], sheets[asp], indexes=indexes)
+            assert len(merging_indexes_asp) == 0, add_check_mark_online(
+                verbs[asp], spreadsheet, sheets[asp], indexes=indexes, mode='well-formedness')
     elif fix_mode == 'automatic':
         for asp, merging_indexes_asp in merge_indexes.items():
             for merge_indexes_tuple in merging_indexes_asp:
@@ -311,7 +295,7 @@ def msa_verbs_lexicon_well_formedness(verbs, strictness, sheets=None, fix_mode='
                     verbs[asp].at[index_to_keep, 'GLOSS'] += f";{verbs[asp].at[merge_index, 'GLOSS']}"
                     verbs[asp] = verbs[asp].drop([merge_index])
     
-        merge_indexes = well_formedness_all_aspects(verbs, strictness, sheets)
+        merge_indexes = well_formedness_all_aspects(verbs, strictness, spreadsheet, sheets)
 
     for verbs_asp in verbs.values():
         verbs_asp['#LEMMA_AR'] = verbs_asp['LEMMA'].apply(bw2ar)
@@ -385,6 +369,7 @@ if __name__ == "__main__":
 
     verbs_ = msa_verbs_lexicon_well_formedness(verbs=verbs,
                                                strictness=args.strictness,
+                                               spreadsheet=sh,
                                                sheets=sheets,
                                                fix_mode=args.fix_mode)
 
