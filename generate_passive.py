@@ -64,7 +64,7 @@ def generate_passive(LEXICON, patterns_path):
     LEXICON_PASS = LEXICON_PASS[LEXICON_PASS['PATTERN-DEF'].notna()]
     LEXICON_PASS['COND-T'] = LEXICON_PASS['COND-T'].str.strip()
     LEXICON_PASS['COND-S-ESSENTIAL'] = LEXICON_PASS.apply(
-        lambda row: re.sub(r'trans|intrans|gem|hamzated|hollow|defective', '', row['COND-S']), axis=1)
+        lambda row: re.sub(r'ditrans|trans|intrans|gem|hamzated|hollow|defective', '', row['COND-S']), axis=1)
     LEXICON_PASS['COND-S-ESSENTIAL'] = LEXICON_PASS['COND-S-ESSENTIAL'].str.strip()
     LEXICON_PASS['PATTERN-MAP'] = LEXICON_PASS.apply(get_info, axis=1)
     LEXICON_PASS = LEXICON_PASS[LEXICON_PASS['PATTERN-MAP'].notna()]
