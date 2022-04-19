@@ -365,6 +365,35 @@
                 "gloss"
             ]
         },
+        "all_egy_order-v4": {
+            "dialect": "egy",
+            "pruning": true,
+            "specs": {
+                "order": "ORDER-v4-EGY",
+                "morph": "EGY-MORPH-Verbs-v4",
+                "postregex": "PostRegex"
+            },
+            "lexicon": {
+                "spreadsheet": "egy-verb-lex",
+                "sheets": [
+                    "EGY-LEX-PV",
+                    "EGY-LEX-IV",
+                    "EGY-LEX-CV"
+                ],
+                "backoff": {
+                    "EGY-LEX-PV": "EGY-LEX-PV-ABSTRACT",
+                    "EGY-LEX-IV": "EGY-LEX-IV-ABSTRACT",
+                    "EGY-LEX-CV": "EGY-LEX-CV-ABSTRACT"
+                },
+                "get_patterns_from_sheet": true,
+                "override_explicit": true
+            },
+            "output": "XYZ_egy_all_v1.0.db",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        },
         "pv_egy_order-v4": {
             "pruning": true,
             "specs": {
@@ -380,7 +409,9 @@
                 "spreadsheet": "egy-verb-lex",
                 "sheets": [
                     "EGY-LEX-PV"
-                ]
+                ],
+                "get_patterns_from_sheet": true,
+                "override_explicit": true
             },
             "output": "XYZ_egy_pv_v1.0.db",
             "extended_lemma_keys": [
@@ -404,7 +435,9 @@
                 "spreadsheet": "egy-verb-lex",
                 "sheets": [
                     "EGY-LEX-PV"
-                ]
+                ],
+                "get_patterns_from_sheet": true,
+                "override_explicit": true
             },
             "output": "XYZ_egy_pv_v1.0_red.db",
             "extended_lemma_keys": [
@@ -427,7 +460,9 @@
                 "spreadsheet": "egy-verb-lex",
                 "sheets": [
                     "EGY-LEX-IV"
-                ]
+                ],
+                "get_patterns_from_sheet": true,
+                "override_explicit": true
             },
             "output": "XYZ_egy_iv_v1.0.db",
             "extended_lemma_keys": [
@@ -451,7 +486,9 @@
                 "spreadsheet": "egy-verb-lex",
                 "sheets": [
                     "EGY-LEX-IV"
-                ]
+                ],
+                "get_patterns_from_sheet": true,
+                "override_explicit": true
             },
             "output": "XYZ_egy_iv_v1.0_red.db",
             "extended_lemma_keys": [
@@ -474,7 +511,9 @@
                 "spreadsheet": "egy-verb-lex",
                 "sheets": [
                     "EGY-LEX-CV"
-                ]
+                ],
+                "get_patterns_from_sheet": true,
+                "override_explicit": true
             },
             "output": "XYZ_egy_cv_v1.0.db",
             "extended_lemma_keys": [
@@ -498,7 +537,9 @@
                 "spreadsheet": "egy-verb-lex",
                 "sheets": [
                     "EGY-LEX-CV"
-                ]
+                ],
+                "get_patterns_from_sheet": true,
+                "override_explicit": true
             },
             "output": "XYZ_egy_cv_v1.0_red.db",
             "extended_lemma_keys": [

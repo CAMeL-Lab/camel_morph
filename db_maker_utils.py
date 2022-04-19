@@ -86,6 +86,8 @@ def read_morph_specs(config, config_name):
                 LEXICON_.append(row.to_dict())
         LEXICON = pd.DataFrame(LEXICON_)
 
+    LEXICON['ROOT'] = LEXICON['ROOT'].replace(r'\\', '', regex=True)
+
     exclusions = local_specs['specs'].get('exclude', [])
     #Process all the components:
     ORDER = ORDER[ORDER.DEFINE == 'ORDER']  # skip comments & empty lines
