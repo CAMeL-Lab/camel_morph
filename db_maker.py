@@ -46,7 +46,7 @@ ar2bw = CharMapper.builtin_mapper('ar2bw')
 
 _required_verb_stem_feats = ['pos', 'asp', 'per', 'gen', 'num', 'vox', 'mod']
 _required_nom_stem_feats = ['pos', 'form_gen', 'form_num', 'gen', 'num', 'stt', 'cas']
-_clitic_feats = ['enc0', 'prc0', 'prc1', 'prc2', 'prc3']
+_clitic_feats = ['enc0', 'enc1', 'enc2', 'prc0', 'prc1', 'prc1.5', 'prc2', 'prc3']
 
 ###########################################
 #Input File: XLSX containing specific worksheets: About, Header, Order, Morph, Lexicon
@@ -357,7 +357,7 @@ def _read_affix(affix):
     affix_feat = {feat.split(':')[0]: feat.split(':')[1]
              for m in affix for feat in m['FEAT'].split()}
     affix_match = normalize_alef_bw(normalize_alef_maksura_bw(
-        normalize_teh_marbuta_bw(dediac_bw(affix_diac))))
+        normalize_teh_marbuta_bw(dediac_bw(affix_diac.replace('#', '')))))
     return affix_match, affix_diac, affix_gloss, affix_feat, affix_bw
 
 def _read_stem(stem):
@@ -376,13 +376,17 @@ def _read_stem(stem):
     if not any([s['DEFINE'] == 'BACKOFF' for s in stem]):
         stem_diac = ''.join([s['FORM']for s in stem if s['FORM'] != '_'])
         stem_match = normalize_alef_bw(normalize_alef_maksura_bw(
-            normalize_teh_marbuta_bw(dediac_bw(stem_diac))))
+            normalize_teh_marbuta_bw(dediac_bw(stem_diac.replace('#', '')))))
     else:
         backoff = True
         stem_diac = ''.join([s['FORM_SUB'] if s['DEFINE'] == 'BACKOFF' else s['FORM']
                              for s in stem if s['FORM'] != '_'])
-        stem_match = ''.join([s['MATCH'] if s['DEFINE'] == 'BACKOFF' else s['FORM']
+        stem_match = ''.join([re.sub(r'^\^|\$$', '', s['MATCH']).replace('#', '')
+                              if s['DEFINE'] == 'BACKOFF' else \
+                                normalize_alef_bw(normalize_alef_maksura_bw(
+                                normalize_teh_marbuta_bw(dediac_bw(s['FORM'].replace('#', '')))))
                               for s in stem if s['FORM'] != '_'])
+        stem_match = f'^{stem_match}$'
 
     return stem_match, stem_diac, stem_lex, stem_gloss, stem_feat, stem_bw, root, backoff
 

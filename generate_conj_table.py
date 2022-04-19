@@ -85,7 +85,12 @@ sig2feat = {
     'feats4': {
         'enc0': {
             'VERB':['3ms_dobj'],
-            'NOM': ['3ms_poss']}
+            'NOM': ['3ms_poss']
+        },
+        'enc1': {
+            'VERB':['3ms_dobj'],
+            'NOM': ['3ms_poss']
+        }
     }
 }
 
