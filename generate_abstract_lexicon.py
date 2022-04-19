@@ -33,7 +33,8 @@ def generate_substitution_regex(pattern, gem_c_suff_form=False):
     sub = ''.join(sub)
     return sub, radicalindex2grp
 
-def generate_abstract_stem(row, get_patterns_from_sheet, t_explicit, n_explicit):
+
+def generate_abstract_stem(row, get_patterns_from_sheet, t_explicit, n_explicit, override_explicit):
     columns = {}
     columns['DEFINE'] = 'BACKOFF'
     columns['CLASS'] = row['CLASS']
@@ -79,11 +80,11 @@ def generate_abstract_stem(row, get_patterns_from_sheet, t_explicit, n_explicit)
     if not t_explicit and not n_explicit:
         n_t = None
     elif not t_explicit and n_explicit:
-        n_t = re.search(r'[n]~?$', lemma_ex_stripped)
+        n_t = '#n' in cond_s
     elif t_explicit and not n_explicit:
-        n_t = re.search(r'[t]~?$', lemma_ex_stripped)
+        n_t = '#t' in cond_s
     else:
-        n_t = re.search(r'[nt]~?$', lemma_ex_stripped)
+        n_t = '#n' in cond_s or '#t' in cond_s
     if n_t:
         if lemma_ex_stripped[-1] != '~':
             r = lemma_ex_stripped[-1]
@@ -113,8 +114,11 @@ def generate_abstract_stem(row, get_patterns_from_sheet, t_explicit, n_explicit)
     form_sub, radicalindex2grp = generate_substitution_regex(
         match_form_diac, gem_c_suff_form=not_t_n and generic_last_radical and gem_c_suff)
     
+    override_n_t = override_explicit and 'gem' in cond_s and bool(re.search(r'[nt]~?$', lemma_ex_stripped))
     if not_t_n and generic_last_radical and len(radicalindex2grp) >= 2:
-        if not t_explicit and n_explicit:
+        if not t_explicit and not n_explicit or override_n_t:
+            regex_replace = '([^wyA}&])'
+        elif not t_explicit and n_explicit:
             regex_replace = '([^nwyA}&])'
         elif t_explicit and not n_explicit:
             regex_replace = '([^twyA}&])'
@@ -212,7 +216,7 @@ def generate_abstract_stem(row, get_patterns_from_sheet, t_explicit, n_explicit)
                 if r == root_split[i - 2]:
                     grp = radicalindex2grp.get(i - 1)
                 else:
-                    raise NotImplementedError
+                    return 'Error 12'
             root_sub.append(f'\{grp}')
 
     root = '.'.join(root)
@@ -222,16 +226,16 @@ def generate_abstract_stem(row, get_patterns_from_sheet, t_explicit, n_explicit)
     digits = [int(d) for d in re.findall(r'\d', root_sub)]
     max_digit = max(digits) if digits else 0
     if not (max_digit <= n_match):
-        return 'Error 12'
+        return 'Error 13'
     try:
         root_gen, n = re.subn(match_root_parenth, root_sub, row['ROOT'])
     except:
         try:
             root_gen, n = re.subn(match_form, root_sub, form_dediac)
         except:
-            raise NotImplementedError
+            return 'Error 14'
     if not (n == 1 and root_gen == row['ROOT']):
-        return 'Error 13'
+        return 'Error 15'
 
     columns['ROOT_SUB'] = root_sub
     columns['ROOT'] = root
@@ -240,14 +244,14 @@ def generate_abstract_stem(row, get_patterns_from_sheet, t_explicit, n_explicit)
     return columns
 
 
-def generate_abstract_lexicon(lexicon, spreadsheet, sheet, get_patterns_from_sheet):
+def generate_abstract_lexicon(lexicon, spreadsheet, sheet, get_patterns_from_sheet, override_explicit):
     abstract_entries = []
     errors_indexes = []
     t_explicit = bool(lexicon['COND-S'].str.contains('#t').any())
     n_explicit = bool(lexicon['COND-S'].str.contains('#n').any())
     for row_index, row in tqdm(lexicon.iterrows(), total=len(lexicon.index)):
         columns = generate_abstract_stem(row, get_patterns_from_sheet,
-                                            t_explicit, n_explicit)
+                                         t_explicit, n_explicit, override_explicit)
         if type(columns) is dict:
             abstract_entries.append(columns)
         else:
@@ -320,16 +324,17 @@ if __name__ == "__main__":
             lambda row: re.sub(r' +', ' ', row['COND-S']), axis=1)
         lexicon = SHEETS['lexicon']
         lexicon = lexicon[lexicon['FORM'] != 'DROP']
+        get_patterns_from_sheet = config['local'][args.config_name]['lexicon'].get('get_patterns_from_sheet')
+        override_explicit = config['local'][args.config_name]['lexicon'].get('override_explicit')
     elif args.lexicon_path:
         lexicon = pd.read_csv(args.lexicon_path)
         lexicon = lexicon.replace(nan, '', regex=True)
     else:
         raise NotImplementedError
-    
-    lexicon['ROOT'] = lexicon['ROOT'].replace(r'\\', '', regex=True)
 
     abstract_lexicon = generate_abstract_lexicon(lexicon,
                                                  sh, config['local'][args.config_name]['lexicon']['sheets'][0],
-                                                 args.get_patterns_from_sheet)
+                                                 get_patterns_from_sheet,
+                                                 override_explicit)
 
     abstract_lexicon.to_csv(os.path.join(args.output_dir, args.output_name))
