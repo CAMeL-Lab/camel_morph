@@ -4,6 +4,7 @@ import os
 import csv
 import sys
 import re
+import json
 
 import gspread
 import pandas as pd
@@ -236,6 +237,12 @@ def _add_check_mark_online(bank, error_cases):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    parser.add_argument("-config_file", default='config.json',
+                        type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
+    parser.add_argument("-config_name", required=True,
+                        type=str, help="Name of the configuration to load from the config file.")
+    parser.add_argument("-feats", required=True,
+                        type=str, help="Features to generate the conjugation tables for.")
     parser.add_argument("-gsheet", default='',
                         type=str, help="Name of the manually annotated paradigms gsheet, the annotations of which will go in the bank.")
     parser.add_argument("-spreadsheet", default='',
@@ -258,21 +265,32 @@ if __name__ == "__main__":
                         type=str, help="Path of the directory to output the paradigm tables to.")
     parser.add_argument("-process_key", default='', choices=['', 'extra_energetic'],
                         type=str, help="Flag used to process the key before cross-checking it with bank entries while performing automatic bank annotation. Useful in cases like energetic and extra energetic when same diacs are shared by multiple paradigm slots.")
-    parser.add_argument("-camel_tools", default='',
+    parser.add_argument("-camel_tools", default='local', choices=['local', 'official'],
                         type=str, help="Path of the directory containing the camel_tools modules.")
+    parser.add_argument("-service_account", default='',
+                        type=str, help="Path of the JSON file containing the information about the service account used for the Google API.")
     args = parser.parse_args()
 
-    if args.camel_tools:
-        sys.path.insert(0, args.camel_tools)
+    with open(args.config_file) as f:
+        config = json.load(f)
+    config_local = config['local'][args.config_name]
+    config_global = config['global']
+
+    if args.camel_tools == 'local':
+        camel_tools_dir = config_global['camel_tools']
+        sys.path.insert(0, camel_tools_dir)
         
     from camel_tools.morphology.utils import strip_lex
     
-    bank_path = os.path.join(args.bank_dir, f"{args.bank_name}.tsv")
+    bank_dir = args.bank_dir if args.bank_dir else config_global['banks_dir']
+    bank_name = args.bank_name if args.bank_name else config_local['debugging']['feats'][args.feats]['bank']
+    bank_path = os.path.join(bank_dir, bank_name)
 
     if args.mode == 'bank_cleanup':
+        bank_spreadsheet = args.bank_spreadsheet if args.bank_spreadsheet else config_global['banks_spreadsheet']
         gsheet_info = {
             'gsheet_name': bank_path.split('/')[-1].split('.')[0],
-            'spreadsheet': args.bank_spreadsheet}
+            'spreadsheet': bank_spreadsheet}
         bank_cleanup_checker(bank_path, gsheet_info)
         sys.exit()
 
@@ -284,25 +302,36 @@ if __name__ == "__main__":
         elif not os.path.exists(directory):
             os.mkdir(directory)
 
+    output_dir = args.output_dir if args.output_dir else config_global['paradigm_debugging_dir']
+    output_name = args.output_name if args.output_name else config_local['debugging']['feats'][args.feats]['paradigm_debugging']
+    output_path = os.path.join(output_dir, output_name)
     if args.use_local:
         create_dir_if_does_not_exist(args.use_local)
-    create_dir_if_does_not_exist(args.bank_dir)
-    create_dir_if_does_not_exist(args.output_dir)
+    create_dir_if_does_not_exist(bank_dir)
+    create_dir_if_does_not_exist(output_dir)
 
-    sa = gspread.service_account(
-                "/Users/chriscay/.config/gspread/service_account.json")
-    sh = sa.open(args.spreadsheet)
+    service_account = args.service_account if args.service_account else config_global['service_account']
+    sa = gspread.service_account(service_account)
+    spreadsheet = args.spreadsheet if args.spreadsheet else config_local['debugging']['debugging_spreadsheet']
+    sh = sa.open(spreadsheet)
 
     if args.use_local:
         print('Using local sheet...')
         annotated_paradigms = pd.read_csv(args.use_local, delimiter='\t')
         annotated_paradigms = annotated_paradigms.replace(nan, '', regex=True)
     else:
-        worksheet = sh.worksheet(title=args.gsheet)
+        gsheet = args.gsheet if args.gsheet else config_local['debugging']['feats'][args.feats]['debugging_sheet']
+        worksheet = sh.worksheet(title=gsheet)
         annotated_paradigms = pd.DataFrame(worksheet.get_all_records())
-        annotated_paradigms.to_csv(os.path.join(args.output_dir, args.output_name))
+        annotated_paradigms.to_csv(output_path)
 
-    new_conj_tables = pd.read_csv(args.new_conj, delimiter='\t')
+    if args.new_conj:
+        new_conj_path = args.new_conj
+    else:
+        new_conj = config_local['debugging']['feats'][args.feats]['conj_tables']
+        new_conj_path = os.path.join(config_global['tables_dir'], new_conj)
+    
+    new_conj_tables = pd.read_csv(new_conj_path, delimiter='\t')
     new_conj_tables = new_conj_tables.replace(nan, '', regex=True)
 
     outputs = automatic_bank_annotation(bank_path=bank_path,
@@ -310,7 +339,6 @@ if __name__ == "__main__":
                                         new_conj_tables=new_conj_tables,
                                         process_key=args.process_key)
 
-    output_path = os.path.join(args.output_dir, args.output_name)
     with open(output_path, 'w') as f:
         for output in outputs:
             print(*output.values(), sep='\t', file=f)

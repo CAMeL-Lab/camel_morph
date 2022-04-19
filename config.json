@@ -6,11 +6,21 @@
             "sheets": [
                 "About",
                 "Header"]
-            }
+            },
+        "db_dir": "db_iterations_local",
+        "repr_lemmas_dir": "conjugation_local/repr_lemmas",
+        "tables_dir": "conjugation_local/tables",
+        "paradigm_debugging_dir": "conjugation_local/paradigm_debugging",
+        "banks_dir": "conjugation_local/banks",
+        "camel_tools": "/Users/chriscay/Library/Mobile Documents/com~apple~CloudDocs/NYUAD/camel_tools",
+        "service_account": "/Users/chriscay/.config/gspread/service_account.json",
+        "paradigms_config": "config_paradigms.json",
+        "banks_spreadsheet": "Paradigm-Banks"
     },
 
     "local": {
         "all_msa_order-v4_red": {
+            "dialect": "msa",
             "pruning": true,
             "specs": {
                 "order": "ORDER-v4",
@@ -37,12 +47,14 @@
                 }
             },
             "output": "XYZ_msa_all_v1.0_red.db",
+            "pos_type": "verbal",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
             ]
         },
         "all_msa_order-v4": {
+            "dialect": "msa",
             "pruning": true,
             "specs": {
                 "order": "ORDER-v4",
@@ -66,12 +78,14 @@
                 }
             },
             "output": "XYZ_msa_all_v1.0.db",
+            "pos_type": "verbal",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
             ]
         },
         "pv_msa_order-v4": {
+            "dialect": "msa",
             "pruning": true,
             "specs": {
                 "order": "ORDER-v4",
@@ -94,12 +108,27 @@
                 }
             },
             "output": "XYZ_msa_pv_v1.0.db",
+            "repr_lemmas": "repr_lemmas_pv_msa.pkl",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging",
+                "feats": {
+                    "asp:p mod:i": {
+                        "conj_tables": "conj_pv_msa_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_pv_msa_v1.0.tsv",
+                        "bank": "MSA-PV-Bank.tsv",
+                        "debugging_sheet": "MSA-PV"
+                    }
+                }
+            },
+            "bank": "MSA-PV-Bank.tsv",
+            "pos_type": "verbal",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
             ]
         },
         "pv_msa_order-v4_red": {
+            "dialect": "msa",
             "pruning": true,
             "specs": {
                 "order": "ORDER-v4",
@@ -123,12 +152,15 @@
                 }
             },
             "output": "XYZ_msa_pv_v1.0_red.db",
+            "repr_lemmas": "repr_lemmas_pv_msa.pkl",
+            "pos_type": "verbal",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
             ]
         },
         "pv_msa_no_pass": {
+            "dialect": "msa",
             "pruning": true,
             "specs": {
                 "order": "ORDER-v4",
@@ -149,12 +181,16 @@
                 }
             },
             "output": "XYZ_msa_pv_v1.0_red.db",
+            "repr_lemmas": "repr_lemmas_pv_msa.pkl",
+            "bank": "MSA-PV-Bank.tsv",
+            "pos_type": "verbal",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
             ]
         },
         "iv_msa_order-v3": {
+            "dialect": "msa",
             "pruning": true,
             "specs": {
                 "order": "ORDER-v3-IV",
@@ -175,12 +211,16 @@
                 ]
             },
             "output": "XYZ_msa_pv_v1.0_red.db",
+            "repr_lemmas": "repr_lemmas_iv_msa.pkl",
+            "bank": "MSA-IV-Ind-Bank.tsv",
+            "pos_type": "verbal",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
             ]
         },
         "iv_msa_no_pass": {
+            "dialect": "msa",
             "pruning": true,
             "specs": {
                 "order": "ORDER-v4",
@@ -198,12 +238,15 @@
                 ]
             },
             "output": "XYZ_msa_iv_v1.0.db",
+            "repr_lemmas": "repr_lemmas_iv_msa.pkl",
+            "pos_type": "verbal",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
             ]
         },
         "iv_msa_order-v4": {
+            "dialect": "msa",
             "pruning": true,
             "specs": {
                 "order": "ORDER-v4",
@@ -226,12 +269,50 @@
                 }
             },
             "output": "XYZ_msa_iv_v1.0.db",
+            "repr_lemmas": "repr_lemmas_iv_msa.pkl",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging",
+                "feats": {
+                    "asp:i mod:i": {
+                        "conj_tables": "conj_iv-i_msa_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_iv-i_msa_v1.0.tsv",
+                        "bank": "MSA-IV-Ind-Bank.tsv",
+                        "debugging_sheet": "MSA-IV-Ind"
+                    },
+                    "asp:i mod:s": {
+                        "conj_tables": "conj_iv-s_msa_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_iv-s_msa_v1.0.tsv",
+                        "bank": "MSA-IV-Sub-Bank.tsv",
+                        "debugging_sheet": "MSA-IV-Sub"
+                    },
+                    "asp:i mod:j": {
+                        "conj_tables": "conj_iv-j_msa_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_iv-j_msa_v1.0.tsv",
+                        "bank": "MSA-IV-Jus-Bank.tsv",
+                        "debugging_sheet": "MSA-IV-Jus"
+                    },
+                    "asp:i mod:e": {
+                        "conj_tables": "conj_iv-e_msa_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_iv-e_msa_v1.0.tsv",
+                        "bank": "MSA-IV-(X)Ener-Bank.tsv",
+                        "debugging_sheet": "MSA-IV-Ener"
+                    },
+                    "asp:i mod:x": {
+                        "conj_tables": "conj_iv-x_msa_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_iv-x_msa_v1.0.tsv",
+                        "bank": "MSA-IV-(X)Ener-Bank.tsv",
+                        "debugging_sheet": "MSA-IV-XEner"
+                    }
+                }
+            },
+            "pos_type": "verbal",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
             ]
         },
         "iv_msa_order-v4_red": {
+            "dialect": "msa",
             "pruning": true,
             "specs": {
                 "order": "ORDER-v4",
@@ -255,12 +336,16 @@
                 }
             },
             "output": "XYZ_msa_iv_v1.0_red.db",
+            "repr_lemmas": "repr_lemmas_iv_msa.pkl",
+            "bank": "MSA-IV-Ind-Bank.tsv",
+            "pos_type": "verbal",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
             ]
         },
         "cv_msa_order-v4": {
+            "dialect": "msa",
             "pruning": true,
             "specs": {
                 "order": "ORDER-v4",
@@ -280,12 +365,39 @@
                 }
             },
             "output": "XYZ_msa_cv_v1.0.db",
+            "repr_lemmas": "repr_lemmas_cv_msa.pkl",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging",
+                "feats": {
+                    "asp:c mod:i": {
+                        "conj_tables": "conj_cv-i_msa_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_cv-i_msa_v1.0.tsv",
+                        "bank": "MSA-CV-Ind-Bank.tsv",
+                        "debugging_sheet": "MSA-CV-Ind"
+                    },
+                    "asp:c mod:e": {
+                        "conj_tables": "conj_cv-e_msa_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_cv-e_msa_v1.0.tsv",
+                        "bank": "MSA-CV-(X)Ener-Bank.tsv",
+                        "debugging_sheet": "MSA-CV-Ener"
+                    },
+                    "asp:c mod:x": {
+                        "conj_tables": "conj_cv-x_msa_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_cv-x_msa_v1.0.tsv",
+                        "bank": "MSA-CV-(X)Ener-Bank.tsv",
+                        "debugging_sheet": "MSA-CV-XEner"
+                    }
+                }
+            },
+            "pos_type": "verbal",
+            "bank": "MSA-CV-Ind-Bank.tsv",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
             ]
         },
         "cv_msa_order-v4_red": {
+            "dialect": "msa",
             "pruning": true,
             "specs": {
                 "order": "ORDER-v4",
@@ -306,12 +418,16 @@
                 }
             },
             "output": "XYZ_msa_cv_v1.0_red.db",
+            "repr_lemmas": "repr_lemmas_cv_msa.pkl",
+            "bank": "MSA-CV-Ind-Bank.tsv",
+            "pos_type": "verbal",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
             ]
         },
         "pv_glf_order-v4_red": {
+            "dialect": "glf",
             "pruning": true,
             "specs": {
                 "order": "ORDER-v4-GLF-PV",
@@ -324,12 +440,28 @@
                 ]
             },
             "output": "XYZ_glf_pv_v1.0_red.db",
+            "repr_lemmas": "repr_lemmas_pv_glf.pkl",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
+                "feats": {
+                    "asp:p mod:i": {
+                        "conj_tables": "conj_pv_glf_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_pv_glf_v1.0.tsv",
+                        "bank": "GLF-PV-Bank.tsv",
+                        "debugging_sheet": "GLF-PV"
+                    }
+                }
+            },
+            "lexprob": "data/glf_verbs_lexprob.tsv",
+            "pos_type": "verbal",
+            "bank": "GLF-PV-Bank.tsv",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
             ]
         },
         "iv_glf_order-v4_red": {
+            "dialect": "glf",
             "pruning": true,
             "specs": {
                 "order": "ORDER-v4-GLF-IV",
@@ -342,12 +474,28 @@
                 ]
             },
             "output": "XYZ_glf_iv_v1.0_red.db",
+            "repr_lemmas": "repr_lemmas_iv_glf.pkl",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
+                "feats": {
+                    "asp:p mod:i": {
+                        "conj_tables": "conj_iv_glf_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_iv_glf_v1.0.tsv",
+                        "bank": "GLF-IV-Bank.tsv",
+                        "debugging_sheet": "GLF-IV"
+                    }
+                }
+            },
+            "lexprob": "data/glf_verbs_lexprob.tsv",
+            "pos_type": "verbal",
+            "bank": "GLF-IV-Bank.tsv",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
             ]
         },
         "cv_glf_order-v4_red": {
+            "dialect": "glf",
             "pruning": true,
             "specs": {
                 "order": "ORDER-v4-GLF-CV",
@@ -360,6 +508,21 @@
                 ]
             },
             "output": "XYZ_glf_cv_v1.0_red.db",
+            "repr_lemmas": "repr_lemmas_cv_glf.pkl",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
+                "feats": {
+                    "asp:p mod:i": {
+                        "conj_tables": "conj_cv_glf_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_cv_glf_v1.0.tsv",
+                        "bank": "GLF-CV-Bank.tsv",
+                        "debugging_sheet": "GLF-CV"
+                    }
+                }
+            },
+            "lexprob": "data/glf_verbs_lexprob.tsv",
+            "pos_type": "verbal",
+            "bank": "GLF-CV-Bank.tsv",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
@@ -395,6 +558,7 @@
             ]
         },
         "pv_egy_order-v4": {
+            "dialect": "egy",
             "pruning": true,
             "specs": {
                 "order": "ORDER-v4-EGY",
@@ -414,12 +578,28 @@
                 "override_explicit": true
             },
             "output": "XYZ_egy_pv_v1.0.db",
+            "repr_lemmas": "repr_lemmas_pv_egy.pkl",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
+                "feats": {
+                    "asp:p mod:i": {
+                        "conj_tables": "conj_pv_egy_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_pv_egy_v1.0.tsv",
+                        "bank": "EGY-PV-Bank.tsv",
+                        "debugging_sheet": "EGY-PV"
+                    }
+                }
+            },
+            "lexprob": "data/egy_verbs_lexprob.tsv",
+            "pos_type": "verbal",
+            "bank": "EGY-PV-Bank.tsv",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
             ]
         },
         "pv_egy_order-v4_red": {
+            "dialect": "egy",
             "pruning": true,
             "specs": {
                 "order": "ORDER-v4-EGY",
@@ -440,12 +620,16 @@
                 "override_explicit": true
             },
             "output": "XYZ_egy_pv_v1.0_red.db",
+            "repr_lemmas": "repr_lemmas_pv_egy.pkl",
+            "lexprob": "data/egy_verbs_lexprob.tsv",
+            "pos_type": "verbal",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
             ]
         },
         "iv_egy_order-v4": {
+            "dialect": "egy",
             "pruning": true,
             "specs": {
                 "order": "ORDER-v4-EGY",
@@ -465,12 +649,28 @@
                 "override_explicit": true
             },
             "output": "XYZ_egy_iv_v1.0.db",
+            "repr_lemmas": "repr_lemmas_iv_egy.pkl",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
+                "feats": {
+                    "asp:p mod:i": {
+                        "conj_tables": "conj_iv_egy_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_iv_egy_v1.0.tsv",
+                        "bank": "EGY-IV-Bank.tsv",
+                        "debugging_sheet": "EGY-IV"
+                    }
+                }
+            },
+            "lexprob": "data/egy_verbs_lexprob.tsv",
+            "pos_type": "verbal",
+            "bank": "EGY-IV-Bank.tsv",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
             ]
         },
         "iv_egy_order-v4_red": {
+            "dialect": "egy",
             "pruning": true,
             "specs": {
                 "order": "ORDER-v4-EGY",
@@ -491,12 +691,16 @@
                 "override_explicit": true
             },
             "output": "XYZ_egy_iv_v1.0_red.db",
+            "repr_lemmas": "repr_lemmas_iv_egy.pkl",
+            "lexprob": "data/egy_verbs_lexprob.tsv",
+            "pos_type": "verbal",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
             ]
         },
         "cv_egy_order-v4": {
+            "dialect": "egy",
             "pruning": true,
             "specs": {
                 "order": "ORDER-v4-EGY",
@@ -516,12 +720,28 @@
                 "override_explicit": true
             },
             "output": "XYZ_egy_cv_v1.0.db",
+            "repr_lemmas": "repr_lemmas_cv_egy.pkl",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
+                "feats": {
+                    "asp:p mod:i": {
+                        "conj_tables": "conj_cv_egy_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_cv_egy_v1.0.tsv",
+                        "bank": "EGY-CV-Bank.tsv",
+                        "debugging_sheet": "EGY-CV"
+                    }
+                }
+            },
+            "lexprob": "data/egy_verbs_lexprob.tsv",
+            "pos_type": "verbal",
+            "bank": "EGY-CV-Bank.tsv",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
             ]
         },
         "cv_egy_order-v4_red": {
+            "dialect": "egy",
             "pruning": true,
             "specs": {
                 "order": "ORDER-v4-EGY",
@@ -542,12 +762,18 @@
                 "override_explicit": true
             },
             "output": "XYZ_egy_cv_v1.0_red.db",
+            "repr_lemmas": "repr_lemmas_cv_egy.pkl",
+            "conj_tables": "conj_cv_egy_v1.0.tsv",
+            "lexprob": "data/egy_verbs_lexprob.tsv",
+            "pos_type": "verbal",
+            "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
             ]
         },
         "nom_msa_red": {
+            "dialect": "msa",
             "pruning": false,
             "specs": {
                 "order": "ORDER-MSA-Nom",
@@ -560,6 +786,10 @@
                 ]
             },
             "output": "XYZ_msa_nom_v1.0_red.db",
+            "repr_lemmas": "repr_lemmas_nom_msa.pkl",
+            "bank": "MSA-Nom-Bank.tsv",
+            "pos_type": "nominal",
+            "debugging_spreadsheet": "Paradigm-Debugging-Nominals",
             "class_keys": [
                 "cond_t",
                 "cond_s",
@@ -577,6 +807,7 @@
             ]
         },
         "nom_msa_split": {
+            "dialect": "msa",
             "pruning": false,
             "split_or": true,
             "specs": {
@@ -590,6 +821,10 @@
                 ]
             },
             "output": "XYZ_msa_nom_v1.0_red.db",
+            "repr_lemmas": "repr_lemmas_nom_msa.pkl",
+            "bank": "MSA-Nom-Bank.tsv",
+            "pos_type": "nominal",
+            "debugging_spreadsheet": "Paradigm-Debugging-Nominals",
             "class_keys": [
                 "cond_t",
                 "cond_s",

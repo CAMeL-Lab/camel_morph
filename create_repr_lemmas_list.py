@@ -165,30 +165,36 @@ def get_highest_prob_lemmas(pos_type, uniq_lemma_classes, lemmas_stripped_uniq, 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-config_file", required=True,
+    parser.add_argument("-config_file", default='config.json',
                         type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
     parser.add_argument("-config_name", required=True,
                         type=str, help="Name of the configuration to load from the config file.")
-    parser.add_argument("-output_dir", default='conjugation/repr_lemmas',
+    parser.add_argument("-output_dir", default='',
                         type=str, help="Path of the directory to output the lemmas to.")
-    parser.add_argument("-output_name", required=True,
+    parser.add_argument("-output_name", default='',
                         type=str, help="Name of the file to output the representative lemmas to. File will be placed in a directory called conjugation/repr_lemmas/")
-    parser.add_argument("-pos_type", required=True, choices=['verbal', 'nominal'],
+    parser.add_argument("-pos_type", default='', choices=['verbal', 'nominal', ''],
                         type=str, help="POS type of the lemmas.")
-    parser.add_argument("-bank_dir",  default='conjugation_local/banks',
+    parser.add_argument("-banks_dir",  default='',
                         type=str, help="Directory in which the annotation banks are.")
-    parser.add_argument("-bank_name",  default='',
+    parser.add_argument("-bank",  default='',
                         type=str, help="Name of the annotation bank to use.")
     parser.add_argument("-lexprob",  default='',
                         type=str, help="Custom lexical probabilities file which contains two columns (lemma, frequency).")
     parser.add_argument("-display_format", default='compact', choices=['compact', 'expanded'],
                         type=str, help="Display format of the debug info for each representative lemma.")
-    parser.add_argument("-camel_tools", default='',
+    parser.add_argument("-camel_tools", default='local', choices=['local', 'official'],
                         type=str, help="Path of the directory containing the camel_tools modules.")
     args = parser.parse_args([] if "__file__" not in globals() else None)
 
-    if args.camel_tools:
-        sys.path.insert(0, args.camel_tools)
+    with open(args.config_file) as f:
+        config = json.load(f)
+    config_local = config['local'][args.config_name]
+    config_global = config['global']
+
+    if args.camel_tools == 'local':
+        camel_tools_dir = config_global['camel_tools']
+        sys.path.insert(0, camel_tools_dir)
 
     from camel_tools.utils.charmap import CharMapper
     from camel_tools.morphology.utils import strip_lex
@@ -199,35 +205,34 @@ if __name__ == "__main__":
     ar2bw = CharMapper.builtin_mapper('ar2bw')
     bw2ar = CharMapper.builtin_mapper('bw2ar')
 
-    conj_dir = args.output_dir.split('/')[0]
+    output_dir = args.output_dir if args.output_dir else config_global['repr_lemmas_dir']
+    conj_dir = output_dir.split('/')[0] 
     if not os.path.exists(conj_dir):
         os.mkdir(conj_dir)
-        os.mkdir(args.output_dir)
-    elif not os.path.exists(args.output_dir):
-        os.mkdir(args.output_dir)
+        os.mkdir(output_dir)
+    elif not os.path.exists(output_dir):
+        os.mkdir(output_dir)
 
-    with open(args.config_file) as f:
-        config = json.load(f)
     SHEETS, _ = db_maker_utils.read_morph_specs(config, args.config_name)
     SHEETS['lexicon']['COND-S'] = SHEETS['lexicon'].apply(
         lambda row: re.sub(r'hamzated|hollow|defective', '', row['COND-S']), axis=1)
     SHEETS['lexicon']['COND-S'] = SHEETS['lexicon'].apply(
         lambda row: re.sub(r' +', ' ', row['COND-S']), axis=1)
 
-    class_keys = config['local'][args.config_name].get('class_keys')
-    extended_lemma_keys = config['local'][args.config_name].get('extended_lemma_keys')
+    class_keys = config_local.get('class_keys')
+    extended_lemma_keys = config_local.get('extended_lemma_keys')
     if class_keys == None:
         class_keys = ['cond_t', 'cond_s']
     if extended_lemma_keys == None:
         extended_lemma_keys = ['lemma']
 
-    bank = None
-    if args.bank_name:
-        bank = AnnotationBank(bank_path=os.path.join(args.bank_dir, f"{args.bank_name}.tsv"))
+    banks_dir = args.banks_dir if args.banks_dir else config_global['banks_dir']
+    bank = args.bank if args.bank else config_local['bank']
+    bank = AnnotationBank(bank_path=os.path.join(banks_dir, bank))
 
     lemma2prob = None
-    if args.lexprob:
-        with open(args.lexprob) as f:
+    if config_local.get('lexprob'):
+        with open(config_local['lexprob']) as f:
             lemma2prob = dict(map(lambda x: (x[0], int(x[1])),
                                   [line.strip().split('\t') for line in f.readlines()]))
             total = sum(lemma2prob.values())
@@ -236,12 +241,13 @@ if __name__ == "__main__":
     uniq_lemma_classes = create_repr_lemmas_list(lexicon=SHEETS['lexicon'],
                                                  class_keys=class_keys,
                                                  extended_lemma_keys=extended_lemma_keys,
-                                                 pos_type=args.pos_type,
+                                                 pos_type=args.pos_type if args.pos_type else config_local['pos_type'],
                                                  bank=bank,
                                                  info_display_format=args.display_format,
                                                  lemma2prob=lemma2prob)
 
-    output_path = os.path.join(args.output_dir, args.output_name)
+    output_name = args.output_name if args.output_name else config_local['repr_lemmas']
+    output_path = os.path.join(output_dir, output_name)
     with open(output_path, 'wb') as f:
         pickle.dump(uniq_lemma_classes, f)
         

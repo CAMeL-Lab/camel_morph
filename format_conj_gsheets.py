@@ -2,6 +2,7 @@ import os
 import argparse
 import re
 import sys
+import json
 
 import gspread
 import gspread_formatting
@@ -10,27 +11,45 @@ from numpy import nan
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-dir", default='conjugation/tables',
+    parser.add_argument("-dir", default='',
                         type=str, help="Directory in which local sheet is contained (in CSV format).")
-    parser.add_argument("-file_name", required=True,
+    parser.add_argument("-config_file", default='config.json',
+                        type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
+    parser.add_argument("-config_name", default='',
+                        type=str, help="Name of the configuration to load from the config file.")
+    parser.add_argument("-feats", default='',
+                        type=str, help="Features to generate the conjugation tables for.")
+    parser.add_argument("-file_name", default='',
                         type=str, help="Name of the CSV file to write to the cloud.")
-    parser.add_argument("-spreadsheet_name", required=True,
+    parser.add_argument("-spreadsheet_name", default='',
                         type=str, help="Name of the spreadsheet to write the CSV file to (and to format).")
-    parser.add_argument("-gsheet_name", required=True,
+    parser.add_argument("-gsheet_name", default='',
                         type=str, help="Name of the gsheet to write the CSV file to (and to format).")
     parser.add_argument("-formatting", default='', choices=['conj_tables', 'bank'],
                         type=str, help="How to format the sheet.")
     parser.add_argument("-mode", default='prompt', choices=['backup', 'overwrite', 'prompt'],
                         type=str, help="Mode that decides what to do if sheet which is being uploaded already exists.")
+    parser.add_argument("-service_account", default='',
+                        type=str, help="Path of the JSON file containing the information about the service account used for the Google API.")
     args = parser.parse_args()
+    
+    with open(args.config_file) as f:
+        config = json.load(f)
+    if args.config_name:
+        config_local = config['local'][args.config_name]
+    config_global = config['global']
 
-    sheet_csv = pd.read_csv(os.path.join(args.dir, args.file_name), sep='\t')
+    input_dir = args.dir if args.dir else config_global['tables_dir']
+    file_name = args.file_name if args.file_name else config_local['debugging'][args.feats]['conj_tables']
+    gsheet_name = args.gsheet_name if args.gsheet_name else config_local['debugging'][args.feats]['debugging_sheet']
+    sheet_csv = pd.read_csv(os.path.join(input_dir, file_name), sep='\t')
     sheet_csv = sheet_csv.replace(nan, '', regex=True)
-    sa = gspread.service_account(
-        "/Users/chriscay/.config/gspread/service_account.json")
+    service_account = args.service_account if args.service_account else config_global['service_account']
+    sa = gspread.service_account(service_account)
+    spreadsheet_name = args.spreadsheet_name if args.spreadsheet_name else config_local['debugging']['debugging_spreadsheet']
     sh = sa.open(args.spreadsheet_name)
     try:
-        worksheet = sh.add_worksheet(title=args.gsheet_name, rows="100", cols="20")
+        worksheet = sh.add_worksheet(title=gsheet_name, rows="100", cols="20")
     except gspread.exceptions.APIError as e:
         if re.search(r'name.*already exists', e.args[0]['message']):
             if args.mode == 'prompt':
@@ -39,10 +58,10 @@ if __name__ == "__main__":
                 response = 'y'
             elif args.mode == 'backup':
                 response = 'b'
-                gsheet_name_bu = args.gsheet_name + '-Backup'
+                gsheet_name_bu = gsheet_name + '-Backup'
 
             if response == 'y':
-                worksheet = sh.worksheet(title=args.gsheet_name)
+                worksheet = sh.worksheet(title=gsheet_name)
                 worksheet.clear()
                 print('Sheet content will be overwritten.')
             elif response == 'b':
@@ -50,7 +69,7 @@ if __name__ == "__main__":
                 if gsheet_name_bu in [sheet.title for sheet in sh.worksheets()]:
                     worksheet_bu = sh.worksheet(title=gsheet_name_bu)
                     sh.del_worksheet(worksheet_bu)
-                worksheet = sh.worksheet(title=args.gsheet_name)
+                worksheet = sh.worksheet(title=gsheet_name)
                 sh.duplicate_sheet(source_sheet_id=worksheet.id,
                                    insert_sheet_index=worksheet.index + 1,
                                    new_sheet_name=gsheet_name_bu)

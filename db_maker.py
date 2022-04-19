@@ -8,6 +8,10 @@
 #
 ###########################################
 
+import db_maker_utils
+from camel_tools.utils.normalize import normalize_alef_bw, normalize_alef_maksura_bw, normalize_teh_marbuta_bw
+from camel_tools.utils.charmap import CharMapper
+from camel_tools.utils.dediac import dediac_bw
 import re
 import os
 from tqdm import tqdm
@@ -18,31 +22,6 @@ from time import strftime, gmtime, process_time
 from functools import partial
 import cProfile, pstats
 import sys
-
-parser = argparse.ArgumentParser()
-parser.add_argument("-config_file", required=True,
-                    type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
-parser.add_argument("-config_name", required=True,
-                    type=str, help="Name of the configuration to load from the config file.")
-parser.add_argument("-output_dir", default='db_iterations',
-                    type=str, help="Path of the directory to output the DBs to.")
-parser.add_argument("-run_profiling", default=False,
-                    action='store_true', help="Run execution time profiling for the make_db().")
-parser.add_argument("-camel_tools", default='',
-                    type=str, help="Path of the directory containing the camel_tools modules.")
-args = parser.parse_args()
-
-if args.camel_tools:
-    sys.path.insert(0, args.camel_tools)
-
-from camel_tools.utils.dediac import dediac_bw
-from camel_tools.utils.charmap import CharMapper
-from camel_tools.utils.normalize import normalize_alef_bw, normalize_alef_maksura_bw, normalize_teh_marbuta_bw
-
-import db_maker_utils
-
-bw2ar = CharMapper.builtin_mapper('bw2ar')
-ar2bw = CharMapper.builtin_mapper('ar2bw')
 
 _required_verb_stem_feats = ['pos', 'asp', 'per', 'gen', 'num', 'vox', 'mod']
 _required_nom_stem_feats = ['pos', 'form_gen', 'form_num', 'gen', 'num', 'stt', 'cas']
@@ -55,14 +34,12 @@ _clitic_feats = ['enc0', 'enc1', 'enc2', 'prc0', 'prc1', 'prc1.5', 'prc2', 'prc3
 # e.g. make_db("CamelMorphDB-Nov-2021.xlsx", "config_pv_msa_order-v4")
 ###########################################
 
-def make_db(config_file, config_name, output_dir):
+def make_db(config, config_name, output_dir):
     """Initializes `ABOUT`, `HEADER`, `ORDER`, `MORPH`, and `LEXICON`"""
     c0 = process_time()
     
     print("\nLoading and processing sheets... [1/3]")
     #Config file specifies which sheets to read in the xlsx spreadsheet
-    with open(config_file) as f:
-        config = json.load(f)
     SHEETS, cond2class = db_maker_utils.read_morph_specs(config, config_name)
     
     print("\nValidating combinations... [2/3]")
@@ -607,15 +584,42 @@ def _choose_required_feats(pos_type):
         raise NotImplementedError
     return required_feats
 
+
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-config_file", default='config.json',
+                        type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
+    parser.add_argument("-config_name", required=True,
+                        type=str, help="Name of the configuration to load from the config file.")
+    parser.add_argument("-output_dir", default='',
+                        type=str, help="Path of the directory to output the DBs to.")
+    parser.add_argument("-run_profiling", default=False,
+                        action='store_true', help="Run execution time profiling for the make_db().")
+    parser.add_argument("-camel_tools", default='local', choices=['local', 'official'],
+                        type=str, help="Path of the directory containing the camel_tools modules.")
+    args = parser.parse_args()
+
+    with open(args.config_file) as f:
+        config = json.load(f)
+    config_local =  config['local'][args.config_name]
+    config_global =  config['global']
+
+    if args.camel_tools == 'local':
+        camel_tools_dir = config_global['camel_tools']
+        sys.path.insert(0, camel_tools_dir)
+
+    bw2ar = CharMapper.builtin_mapper('bw2ar')
+    ar2bw = CharMapper.builtin_mapper('ar2bw')
+
     if args.run_profiling:
         profiler = cProfile.Profile()
         profiler.enable()
     
-    if not os.path.exists(args.output_dir):
-        os.mkdir(args.output_dir)
+    output_dir = args.output_dir if args.output_dir else config_global['db_dir']
+    if not os.path.exists(output_dir):
+        os.mkdir(output_dir)
 
-    make_db(args.config_file, args.config_name, args.output_dir)
+    make_db(config, args.config_name, output_dir)
     
     if args.run_profiling:
         profiler.disable()
