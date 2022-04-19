@@ -18,12 +18,16 @@ make_db_iv_glf:
 	python db_maker.py -config_file config.json -config_name iv_glf_order-v4_red -output_dir db_iterations_local -camel_tools $(camel_tools)
 make_db_cv_glf:	
 	python db_maker.py -config_file config.json -config_name cv_glf_order-v4_red -output_dir db_iterations_local -camel_tools $(camel_tools)
+
 make_db_pv_egy:	
 	python db_maker.py -config_file config.json -config_name pv_egy_order-v4_red -output_dir db_iterations_local -camel_tools $(camel_tools)
 make_db_iv_egy:	
 	python db_maker.py -config_file config.json -config_name iv_egy_order-v4_red -output_dir db_iterations_local -camel_tools $(camel_tools)
 make_db_cv_egy:	
 	python db_maker.py -config_file config.json -config_name cv_egy_order-v4_red -output_dir db_iterations_local -camel_tools $(camel_tools)
+make_db_all_egy:	
+	python db_maker.py -config_file config.json -config_name all_egy_order-v4 -output_dir db_iterations_local -camel_tools $(camel_tools)
+
 make_db_nom_msa:	
 	python db_maker.py -config_file config.json -config_name nom_msa_red -output_dir db_iterations_local -camel_tools $(camel_tools)
 
@@ -107,6 +111,13 @@ conj_iv_egy:
 conj_cv_egy:	
 	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_cv_egy.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_egy_cv_v1.0_red.db -db_dir db_iterations_local -pos_type verbal -asp c -mod i -dialect egy -output_name conj_cv_egy_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
 
+conj_pv_egy_db_full:
+	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_pv_egy.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_egy_all_v1.0.db -db_dir db_iterations_local -pos_type verbal -asp p -mod i -dialect egy -output_name conj_pv_egy_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
+conj_iv_egy_db_full:	
+	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_iv_egy.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_egy_all_v1.0.db -db_dir db_iterations_local -pos_type verbal -asp i -mod i -dialect egy -output_name conj_iv_egy_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
+conj_cv_egy_db_full:	
+	python generate_conj_table.py -paradigms config_paradigms.json -repr_lemmas repr_lemmas_cv_egy.pkl -lemmas_dir conjugation_local/repr_lemmas -db XYZ_egy_all_v1.0.db -db_dir db_iterations_local -pos_type verbal -asp c -mod i -dialect egy -output_name conj_cv_egy_v1.0.tsv -output_dir conjugation_local/tables -camel_tools $(camel_tools)
+
 download_specs:
 	python download_sheets.py -specs header-morph-order-sheets MSA-MORPH-Verbs-v4-Red -service_account $(service_account)
 download_msa_pv:	
@@ -128,12 +139,16 @@ download_glf_iv:
 	python download_sheets.py -config_file config.json -config_name iv_glf_order-v4_red -service_account $(service_account)
 download_glf_cv:	
 	python download_sheets.py -config_file config.json -config_name cv_glf_order-v4_red -service_account $(service_account)
+
 download_egy_pv:	
 	python download_sheets.py -config_file config.json -config_name pv_egy_order-v4_red -service_account $(service_account)
 download_egy_iv:	
 	python download_sheets.py -config_file config.json -config_name iv_egy_order-v4_red -service_account $(service_account)
 download_egy_cv:	
 	python download_sheets.py -config_file config.json -config_name cv_egy_order-v4_red -service_account $(service_account)
+download_egy_all:	
+	python download_sheets.py -config_file config.json -config_name all_egy_order-v4 -service_account $(service_account)
+
 download_msa_nom:	
 	python download_sheets.py -config_file config.json -config_name nom_msa_red -service_account $(service_account)
 
@@ -286,6 +301,8 @@ egy_pv_bank_upload:
 egy_pv_auto_qc_upload:
 	python format_conj_gsheets.py -dir conjugation_local/paradigm_debugging -file_name paradigm_debug_pv_egy_v1.0.tsv -spreadsheet_name Paradigm-Debugging-Dialects -gsheet_name EGY-PV -formatting conj_tables -mode backup
 egy_pv_debug: download_egy_pv repr_lemmas_pv_egy make_db_pv_egy conj_pv_egy egy_pv_bank_annotation egy_pv_bank_upload egy_pv_auto_qc_upload
+egy_pv_debug_db_full: download_egy_all repr_lemmas_pv_egy make_db_all_egy conj_pv_egy_db_full egy_pv_bank_annotation egy_pv_bank_upload egy_pv_auto_qc_upload
+egy_pv_debug_db_full_no_build: conj_pv_egy_db_full egy_pv_bank_annotation egy_pv_bank_upload egy_pv_auto_qc_upload
 
 egy_iv_bank_annotation:
 	python paradigm_debugging.py -output_name paradigm_debug_iv_egy_v1.0.tsv -output_dir conjugation_local/paradigm_debugging -gsheet EGY-IV -spreadsheet Paradigm-Debugging-Dialects -bank_dir conjugation_local/banks -bank_name EGY-IV-Bank -new_conj conjugation_local/tables/conj_iv_egy_v1.0.tsv -camel_tools $(camel_tools)
@@ -294,6 +311,8 @@ egy_iv_bank_upload:
 egy_iv_auto_qc_upload:
 	python format_conj_gsheets.py -dir conjugation_local/paradigm_debugging -file_name paradigm_debug_iv_egy_v1.0.tsv -spreadsheet_name Paradigm-Debugging-Dialects -gsheet_name EGY-IV -formatting conj_tables -mode backup
 egy_iv_debug: download_egy_iv repr_lemmas_iv_egy make_db_iv_egy conj_iv_egy egy_iv_bank_annotation egy_iv_bank_upload egy_iv_auto_qc_upload
+egy_iv_debug_db_full: download_egy_all repr_lemmas_iv_egy make_db_all_egy conj_iv_egy_db_full egy_iv_bank_annotation egy_iv_bank_upload egy_iv_auto_qc_upload
+egy_iv_debug_db_full_no_build: conj_iv_egy_db_full egy_iv_bank_annotation egy_iv_bank_upload egy_iv_auto_qc_upload
 
 egy_cv_bank_annotation:
 	python paradigm_debugging.py -output_name paradigm_debug_cv_egy_v1.0.tsv -output_dir conjugation_local/paradigm_debugging -gsheet EGY-CV -spreadsheet Paradigm-Debugging-Dialects -bank_dir conjugation_local/banks -bank_name EGY-CV-Bank -new_conj conjugation_local/tables/conj_cv_egy_v1.0.tsv -camel_tools $(camel_tools)
@@ -302,6 +321,8 @@ egy_cv_bank_upload:
 egy_cv_auto_qc_upload:
 	python format_conj_gsheets.py -dir conjugation_local/paradigm_debugging -file_name paradigm_debug_cv_egy_v1.0.tsv -spreadsheet_name Paradigm-Debugging-Dialects -gsheet_name EGY-CV -formatting conj_tables -mode backup
 egy_cv_debug: download_egy_cv repr_lemmas_cv_egy make_db_cv_egy conj_cv_egy egy_cv_bank_annotation egy_cv_bank_upload egy_cv_auto_qc_upload
+egy_cv_debug_db_full: download_egy_all repr_lemmas_cv_egy make_db_all_egy conj_cv_egy_db_full egy_cv_bank_annotation egy_cv_bank_upload egy_cv_auto_qc_upload
+egy_cv_debug_db_full_no_build: conj_cv_egy_db_full egy_cv_bank_annotation egy_cv_bank_upload egy_cv_auto_qc_upload
 
 eval_camel_tb_compare:
 	python eval/evaluate_camel_morph.py -data_path eval/camel_tb_uniq_types.txt -preprocessing camel_tb -db_dir db_iterations_local -config_file config.json -config_name all_msa_order-v4 -camel_tools $(camel_tools) -baseline_db eval/calima-msa-s31_0.4.2.utf8.db -eval_mode compare -results_path eval/camel_tb_compare.tsv -n 100000
@@ -309,3 +330,13 @@ eval_camel_tb_compare:
 msa_all_debug_db_full: msa_pv_debug_db_full msa_iv_i_debug_db_full msa_iv_s_debug_db_full msa_iv_j_debug_db_full msa_iv_e_debug_db_full msa_iv_x_debug_db_full msa_cv_i_debug_db_full msa_cv_e_debug_db_full msa_cv_x_debug_db_full
 msa_all_debug_db_full_build: download_msa_all repr_lemmas_pv_msa repr_lemmas_iv_msa repr_lemmas_cv_msa make_db_all_msa
 msa_all_debug_db_full_no_build: msa_pv_debug_db_full_no_build msa_iv_i_debug_db_full_no_build msa_iv_s_debug_db_full_no_build msa_iv_j_debug_db_full_no_build msa_iv_e_debug_db_full_no_build msa_iv_x_debug_db_full_no_build msa_cv_i_debug_db_full_no_build msa_cv_e_debug_db_full_no_build msa_cv_x_debug_db_full_no_build
+
+egy_all_debug_db_full: egy_pv_debug_db_full egy_iv_debug_db_full egy_cv_debug_db_full
+egy_all_debug_db_full_build: download_egy_all repr_lemmas_pv_egy repr_lemmas_iv_egy repr_lemmas_cv_egy make_db_all_egy
+egy_all_debug_db_full_no_build: egy_pv_debug_db_full_no_build egy_iv_debug_db_full_no_build egy_cv_debug_db_full_no_build
+
+eval_camel_tb_backoff:
+	python eval/evaluate_camel_morph.py -data_path eval/ATB123-train.102312.calima-msa-s31_0.3.0.magold -preprocessing magold -eval_mode recall_backoff -results_path eval/ATB-Recall-Backoff.tsv -n 100000 -db_dir db_iterations_local -config_file config.json -config_name all_msa_order-v4 -camel_tools $(camel_tools) -baseline_db eval/calima-egy-c044_0.2.0.utf8.db
+
+eval_arz_recall:
+	python eval/evaluate_camel_morph.py -data_path eval/ARZ-All-train.113012.magold -preprocessing magold -eval_mode recall -results_path eval/ARZ-Recall-v5.tsv -n 100000 -db_dir db_iterations_local -config_file config.json -config_name all_egy_order-v4 -camel_tools $(camel_tools) -baseline_db eval/calima-egy-c044_0.2.0.utf8.db -msa_analysis_union_config_name all_msa_order-v4 -input_source ldc_dediac_processed
