@@ -134,7 +134,7 @@ def get_highest_prob_lemmas(pos_type, uniq_lemma_classes, lemmas_stripped_uniq, 
             common_lemmas = old_lemmas.intersection(set(lemmas))
             if common_lemmas:
                 uniq_lemma_classes_[lemmas_cond_sig] = [info for info in lemmas_info['lemmas']
-                                                        if info['lemma'] in common_lemmas][0]
+                                                        if strip_lex(info['lemma']) in common_lemmas][0]
                 uniq_lemma_classes_[lemmas_cond_sig]['freq'] = lemmas_info['freq']
                 done = True
 
