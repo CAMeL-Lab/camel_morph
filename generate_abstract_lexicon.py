@@ -34,6 +34,36 @@ def generate_substitution_regex(pattern, gem_c_suff_form=False):
     return sub, radicalindex2grp
 
 
+def generate_root_substitution_regex(row, t_explicit, n_explicit, cond_s, radicalindex2grp):
+    root, root_sub = [], []
+    root_split = row['ROOT'].split('.')
+    for i, r in enumerate(root_split, start=1):
+        if not t_explicit and not n_explicit:
+            radical_nt = False
+        elif not t_explicit and n_explicit:
+            radical_nt = (r == 'n')
+        elif t_explicit and not n_explicit:
+            radical_nt = (r == 't')
+        else:
+            radical_nt = (r in ['n', 't'])
+
+        if r in ['>', 'w', 'y'] or i == len(root_split) and radical_nt or \
+                i == len(root_split) - 1 and root_split[i - 1] == root_split[i] and 'gem' in cond_s and radical_nt:
+            root.append(r)
+            root_sub.append(r)
+        else:
+            root.append(str(i))
+            grp = radicalindex2grp.get(i)
+            if grp is None:
+                if r == root_split[i - 2]:
+                    grp = radicalindex2grp.get(i - 1)
+                else:
+                    return 'Error 12'
+            root_sub.append(f'\{grp}')
+
+    return '.'.join(root), '.'.join(root_sub)
+
+
 def generate_abstract_stem(row, get_patterns_from_sheet, t_explicit, n_explicit, override_explicit):
     columns = {}
     columns['DEFINE'] = 'BACKOFF'
@@ -78,7 +108,7 @@ def generate_abstract_stem(row, get_patterns_from_sheet, t_explicit, n_explicit,
     max_form_digit = re.findall(r'\d', match_form)
     max_form_digit = max(int(d) for d in max_form_digit) if max_form_digit else None
     if not t_explicit and not n_explicit:
-        n_t = None
+        n_t = False
     elif not t_explicit and n_explicit:
         n_t = '#n' in cond_s
     elif t_explicit and not n_explicit:
@@ -108,14 +138,13 @@ def generate_abstract_stem(row, get_patterns_from_sheet, t_explicit, n_explicit,
                 return 'Error 3'
     
     n0 = 0
-    not_t_n = '#t' not in cond_s and '#n' not in cond_s
     generic_last_radical = max_form_digit == len(index2radical) and ('gem' in cond_s or True)
     gem_c_suff = True if 'c-suff' in cond_t and 'gem' in cond_s else False
     form_sub, radicalindex2grp = generate_substitution_regex(
-        match_form_diac, gem_c_suff_form=not_t_n and generic_last_radical and gem_c_suff)
+        match_form_diac, gem_c_suff_form=not n_t and generic_last_radical and gem_c_suff)
     
     override_n_t = override_explicit and 'gem' in cond_s and bool(re.search(r'[nt]~?$', lemma_ex_stripped))
-    if not_t_n and generic_last_radical and len(radicalindex2grp) >= 2:
+    if not n_t and generic_last_radical and len(radicalindex2grp) >= 2:
         if not t_explicit and not n_explicit or override_n_t:
             regex_replace = '([^wyA}&])'
         elif not t_explicit and n_explicit:
@@ -193,34 +222,7 @@ def generate_abstract_stem(row, get_patterns_from_sheet, t_explicit, n_explicit,
     columns['LEMMA_EX'] = row['LEMMA']
 
     # ROOT ##########################################################
-    root, root_sub = [], []
-    root_split = row['ROOT'].split('.')
-    for i, r in enumerate(root_split, start=1):
-        if not t_explicit and not n_explicit:
-            radical_nt = False
-        elif not t_explicit and n_explicit:
-            radical_nt = (r == 'n')
-        elif t_explicit and not n_explicit:
-            radical_nt = (r == 't')
-        else:
-            radical_nt = (r in ['n', 't'])
-
-        if r in ['>', 'w', 'y'] or i == len(root_split) and radical_nt or \
-                i == len(root_split) - 1 and root_split[i - 1] == root_split[i] and 'gem' in cond_s and radical_nt:
-            root.append(r)
-            root_sub.append(r)
-        else:
-            root.append(str(i))
-            grp = radicalindex2grp.get(i)
-            if grp is None:
-                if r == root_split[i - 2]:
-                    grp = radicalindex2grp.get(i - 1)
-                else:
-                    return 'Error 12'
-            root_sub.append(f'\{grp}')
-
-    root = '.'.join(root)
-    root_sub = '.'.join(root_sub)
+    root, root_sub = generate_root_substitution_regex(t_explicit, n_explicit, cond_s, radicalindex2grp)
     match_root_parenth = re.escape(root)
     match_root_parenth = re.sub(r'\d', '(.)', match_root_parenth)
     digits = [int(d) for d in re.findall(r'\d', root_sub)]
