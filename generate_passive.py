@@ -53,6 +53,11 @@ def generate_passive(LEXICON, patterns_path):
             missing.setdefault((row['PATTERN-DEF'], row['COND-T'], row['COND-S-ESSENTIAL']), []).append(row.to_dict())
             return nan
 
+    def get_pattern(row):
+        return re.sub(row['PATTERN-MAP']['regex_match'],
+                      row['PATTERN-MAP']['regex_sub'],
+                      row['PATTERN'])
+
     def get_soundness(row):
         match = soundness_pattern.search(row['COND-S'])
         return match.group(1) if match else ''
@@ -72,10 +77,7 @@ def generate_passive(LEXICON, patterns_path):
         lambda row: re.sub(row['PATTERN-MAP']['regex_match'],
                            row['PATTERN-MAP']['regex_sub'],
                            row['FORM']), axis=1)
-    LEXICON_PASS['PATTERN'] = LEXICON_PASS.apply(
-        lambda row: re.sub(row['PATTERN-MAP']['regex_match'],
-                           row['PATTERN-MAP']['regex_sub'],
-                           row['PATTERN']), axis=1)
+    LEXICON_PASS['PATTERN'] = LEXICON_PASS.apply(get_pattern, axis=1)
     LEXICON_PASS['SOUND'] = LEXICON_PASS.apply(get_soundness, axis=1)
     # All passive forms should be intransitive
     LEXICON_PASS['COND-T'] = LEXICON_PASS.apply(

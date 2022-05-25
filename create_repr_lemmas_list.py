@@ -7,7 +7,6 @@ import re
 import sys
 
 from paradigm_debugging import AnnotationBank
-
 import db_maker_utils
 
 nominals = ["ABBREV", "ADJ", "ADJ_COMP", "ADJ_NUM", "ADV",
@@ -21,10 +20,11 @@ nominals = [n.lower() for n in nominals]
 def create_repr_lemmas_list(lexicon,
                             class_keys,
                             extended_lemma_keys,
-                            pos_type,
+                            pos,
                             bank=None,
                             info_display_format='compact',
-                            lemma2prob=None):
+                            lemma2prob=None,
+                            db=None):
     lemmas_uniq, lemmas_stripped_uniq = get_extended_lemmas(lexicon, extended_lemma_keys)
     uniq_lemma_classes = {}
     for lemma, stems in lemmas_uniq.items():
@@ -56,7 +56,7 @@ def create_repr_lemmas_list(lexicon,
         uniq_lemma_classes[lemmas_cond_sig]['lemmas'].append(info)
 
     uniq_lemma_classes = get_highest_prob_lemmas(
-        pos_type, uniq_lemma_classes, lemmas_stripped_uniq, bank, lemma2prob)
+        pos, uniq_lemma_classes, lemmas_stripped_uniq, bank, lemma2prob, db)
     
     return uniq_lemma_classes
 
@@ -91,35 +91,35 @@ def get_extended_lemmas(lexicon, extended_lemma_keys):
     return lemmas_uniq, lemmas_stripped_uniq
     
 
-def get_highest_prob_lemmas(pos_type, uniq_lemma_classes, lemmas_stripped_uniq, bank, lemma2prob=None):
+def get_highest_prob_lemmas(pos, uniq_lemma_classes, lemmas_stripped_uniq, bank, lemma2prob=None, db=None):
     if lemma2prob is None:
-        db = MorphologyDB.builtin_db()
         lemma2prob = {}
         for lemmas_cond_sig, lemmas_info in uniq_lemma_classes.items():
             for info in lemmas_info['lemmas']:
-                lemma_stripped = strip_lex(info['lemma'])
+                lemma_stripped = re.sub(r'[aiuo]', '', strip_lex(info['lemma']))
                 lemma_ar = bw2ar(lemma_stripped)
-                normalized_lemma_ar = DEFAULT_NORMALIZE_MAP(dediac_ar(lemma_ar))
+                normalized_lemma_ar = DEFAULT_NORMALIZE_MAP(lemma_ar)
                 matches = db.stem_hash.get(normalized_lemma_ar, [])
                 db_entries = [db_entry[1] for db_entry in matches]
-
-                if pos_type == 'verbal':
-                    entries_filtered = [e  for e in db_entries
-                        if strip_lex(e['lex']) == lemma_ar and e['pos'] == 'verb']
-
-                elif pos_type == 'nominal':
-                    entries_filtered = [e  for e in db_entries
-                        if e['lex'] == lemma_ar and e['pos'] == info['pos'][1:-1]]
-
+                entries_filtered = [e  for e in db_entries
+                    if strip_lex(e['lex']) == lemma_ar and e['pos'] == pos]
                 if len(entries_filtered) >= 1:
                     lemma2prob[lemma_stripped] = max([float(a['pos_lex_logprob']) for a in db_entries])
                 else:
                     lemma2prob[lemma_stripped] = -99.0
     else:
-        lemma2prob = {strip_lex(lemma): prob for lemma, prob in lemma2prob.items()}
+        lemma2prob_ = {}
+        for lemma, prob in lemma2prob.items():
+            lemma = re.sub(r'[aiuo]', '', strip_lex(lemma))
+            if lemma in lemma2prob_:
+                if prob > lemma2prob_[lemma]:
+                    lemma2prob_[lemma] = prob
+            else:
+                lemma2prob_[lemma] = prob
+        lemma2prob = lemma2prob_
         for lemmas_cond_sig, lemmas_info in uniq_lemma_classes.items():
             for info in lemmas_info['lemmas']:
-                lemma_stripped = strip_lex(info['lemma'])
+                lemma_stripped = re.sub(r'[aiuo]', '', strip_lex(info['lemma']))
                 if lemma_stripped not in lemma2prob:
                     lemma2prob[lemma_stripped] = 0
 
@@ -138,7 +138,7 @@ def get_highest_prob_lemmas(pos_type, uniq_lemma_classes, lemmas_stripped_uniq, 
                 uniq_lemma_classes_[lemmas_cond_sig]['freq'] = lemmas_info['freq']
                 done = True
 
-        best_indexes = (-np.array([lemma2prob[lemma] for lemma in lemmas])).argsort()[:len(lemmas)]
+        best_indexes = (-np.array([lemma2prob[re.sub(r'[aiuo]', '', lemma)] for lemma in lemmas])).argsort()[:len(lemmas)]
         for best_index in best_indexes:
             best_lemma_info = lemmas_info['lemmas'][best_index]
             best_lemma_info['freq'] = lemmas_info['freq']
@@ -167,14 +167,20 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-config_file", default='config.json',
                         type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
-    parser.add_argument("-config_name", required=True,
-                        type=str, help="Name of the configuration to load from the config file.")
+    parser.add_argument("-config_name", required=True, nargs='+',
+                        type=str, help="Name of the configuration to load from the config file. If more than one is added, then lemma classes from those will not be counted in the current list.")
     parser.add_argument("-output_dir", default='',
                         type=str, help="Path of the directory to output the lemmas to.")
     parser.add_argument("-output_name", default='',
                         type=str, help="Name of the file to output the representative lemmas to. File will be placed in a directory called conjugation/repr_lemmas/")
     parser.add_argument("-pos_type", default='', choices=['verbal', 'nominal', ''],
                         type=str, help="POS type of the lemmas.")
+    parser.add_argument("-feats", default='',
+                        type=str, help="Features to generate the conjugation tables for.")
+    parser.add_argument("-db", default='',
+                        type=str, help="Path of DB to use to get the lexical/POS probabilities.")
+    parser.add_argument("-pos", default='',
+                        type=str, help="POS of the lemmas.")
     parser.add_argument("-banks_dir",  default='',
                         type=str, help="Directory in which the annotation banks are.")
     parser.add_argument("-bank",  default='',
@@ -189,7 +195,8 @@ if __name__ == "__main__":
 
     with open(args.config_file) as f:
         config = json.load(f)
-    config_local = config['local'][args.config_name]
+    config_name = args.config_name[0]
+    config_local = config['local'][config_name]
     config_global = config['global']
 
     if args.camel_tools == 'local':
@@ -200,7 +207,7 @@ if __name__ == "__main__":
     from camel_tools.morphology.utils import strip_lex
     from camel_tools.morphology.database import MorphologyDB
     from camel_tools.morphology.analyzer import DEFAULT_NORMALIZE_MAP
-    from camel_tools.utils.dediac import dediac_ar
+    from camel_tools.utils.dediac import dediac_ar, dediac_bw
 
     ar2bw = CharMapper.builtin_mapper('ar2bw')
     bw2ar = CharMapper.builtin_mapper('bw2ar')
@@ -213,11 +220,20 @@ if __name__ == "__main__":
     elif not os.path.exists(output_dir):
         os.mkdir(output_dir)
 
-    SHEETS, _ = db_maker_utils.read_morph_specs(config, args.config_name)
-    SHEETS['lexicon']['COND-S'] = SHEETS['lexicon'].apply(
+    SHEETS, _ = db_maker_utils.read_morph_specs(config, config_name)
+    lexicon = SHEETS['lexicon']
+    lexicon['COND-S'] = lexicon.apply(
         lambda row: re.sub(r'hamzated|hollow|defective', '', row['COND-S']), axis=1)
-    SHEETS['lexicon']['COND-S'] = SHEETS['lexicon'].apply(
+    lexicon['COND-S'] = lexicon.apply(
         lambda row: re.sub(r' +', ' ', row['COND-S']), axis=1)
+    
+    pos_type = args.pos_type if args.pos_type else config_local['pos_type']
+    if pos_type == 'verbal':
+        pos = 'verb'
+    elif pos_type == 'nominal':
+        pos = args.pos if args.pos else config_local.get('pos')
+    if pos:
+        lexicon = lexicon[lexicon['FEAT'].str.contains(f'pos:{pos}\\b', regex=True)]
 
     class_keys = config_local.get('class_keys')
     extended_lemma_keys = config_local.get('extended_lemma_keys')
@@ -227,24 +243,46 @@ if __name__ == "__main__":
         extended_lemma_keys = ['lemma']
 
     banks_dir = args.banks_dir if args.banks_dir else config_global['banks_dir']
-    bank = args.bank if args.bank else config_local['bank']
+    bank = args.bank if args.bank else config_local['debugging']['feats'][args.feats]['bank']
     bank = AnnotationBank(bank_path=os.path.join(banks_dir, bank))
 
-    lemma2prob = None
+    lemma2prob, db = None, None
     if config_local.get('lexprob'):
         with open(config_local['lexprob']) as f:
-            lemma2prob = dict(map(lambda x: (x[0], int(x[1])),
-                                  [line.strip().split('\t') for line in f.readlines()]))
-            total = sum(lemma2prob.values())
-            lemma2prob = {lemma: freq / total for lemma, freq in lemma2prob.items()}
+            freq_list_raw = f.readlines()
+            if len(freq_list_raw[0].split('\t')) == 2:
+                pos2lemma2prob = dict(map(lambda x: (x[0], int(x[1])),
+                                    [line.strip().split('\t') for line in freq_list_raw]))
+                pos2lemma2prob = {'verb': pos2lemma2prob}
+            elif len(freq_list_raw[0].split('\t')) == 3:
+                pos2lemma2prob = {}
+                for line in freq_list_raw:
+                    line = line.strip().split('\t')
+                    lemmas = pos2lemma2prob.setdefault(line[1], {})
+                    lemmas[line[0]] = int(line[2])
+            else:
+                raise NotImplementedError
+            total = sum(pos2lemma2prob[pos].values())
+            lemma2prob = {lemma: freq / total for lemma, freq in pos2lemma2prob[pos].items()}
+    elif args.db:
+        db = MorphologyDB(args.db)
+    else:
+        db = MorphologyDB.builtin_db()
 
-    uniq_lemma_classes = create_repr_lemmas_list(lexicon=SHEETS['lexicon'],
+    uniq_lemma_classes = create_repr_lemmas_list(lexicon=lexicon,
                                                  class_keys=class_keys,
                                                  extended_lemma_keys=extended_lemma_keys,
-                                                 pos_type=args.pos_type if args.pos_type else config_local['pos_type'],
+                                                 pos=pos,
                                                  bank=bank,
                                                  info_display_format=args.display_format,
-                                                 lemma2prob=lemma2prob)
+                                                 lemma2prob=lemma2prob,
+                                                 db=db)
+    excluded_classes = set()
+    if len(args.config_name) > 1:
+        for config_name in args.config_name[1:]:
+            with open(os.path.join(output_dir, config['local'][config_name]['repr_lemmas']), 'rb') as f:
+                excluded_classes.update(pickle.load(f).keys())
+    uniq_lemma_classes = {k: v for k, v in uniq_lemma_classes.items() if k not in excluded_classes}
 
     output_name = args.output_name if args.output_name else config_local['repr_lemmas']
     output_path = os.path.join(output_dir, output_name)

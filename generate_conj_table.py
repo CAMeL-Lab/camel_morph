@@ -7,6 +7,8 @@ import os
 import pickle
 import sys
 
+from utils import _strip_brackets
+
 _test_features = ['pos', 'asp', 'vox', 'per', 'gen', 'num',
                  'mod', 'cas', 'enc0', 'prc0', 'prc1', 'prc2', 'prc3']
 # <POS>.<A><P><G><N>.<S><C><V><M>
@@ -35,10 +37,21 @@ sig2feat = {
         'vox': ['A', 'P'],
         'mod': ['S', 'I', 'J', 'E', 'X']},
     'feats3': {
-        'prc0': ['0'],
-        'prc1': ['1'],
-        'prc2': ['2'],
-        'prc3': ['3']
+        'prc0': {
+            'NOM': ['Al_det']
+        },
+        'prc1.5': {
+            'NOM': []
+        },
+        'prc1': {
+            'NOM': []
+        },
+        'prc2': {
+            'NOM': []
+        },
+        'prc3': {
+            'NOM': []
+        },
     },
     'feats4': {
         'enc0': {
@@ -187,6 +200,8 @@ def create_conjugation_tables(lemmas,
             debug_info = dict(analyses=analyses,
                               gloss=gloss,
                               form=form,
+                              gen=gen,
+                              num=num,
                               cond_s=cond_s,
                               cond_t=cond_t,
                               prefix_cats=prefix_cats,
@@ -201,11 +216,6 @@ def create_conjugation_tables(lemmas,
         lemmas_conj.append(outputs)
     
     return lemmas_conj
-
-def _strip_brackets(info):
-    if info[0] == '[' and info[-1] == ']':
-        info = info[1:-1]
-    return info
 
 def process_nom_gen_num_(feat, form_feat,
                          form=None, cond_t=None, cond_s=None, gloss=None,
@@ -257,7 +267,7 @@ def process_outputs(lemmas_conj, pos_type):
                 for i, analysis in enumerate(info['analyses']):
                     if pos_type == 'nominal':
                         stem_bw = f"{bw2ar(form)}/{pos}"
-                        if stem_bw not in analysis['bw']:
+                        if stem_bw not in analysis['bw'] or _strip_brackets(info['gloss']) != analysis['stemgloss']:
                             continue
                     elif pos_type == 'verbal':
                         if info['lemma'] != ar2bw(analysis['lex']) or _strip_brackets(info['gloss']) != analysis['stemgloss']:
@@ -292,7 +302,7 @@ def process_outputs(lemmas_conj, pos_type):
                 zero_check = re.findall(r'intrans|trans', info['cond_s'])
                 if 'E0' in signature and len(set(zero_check)) == 1 and zero_check[0] == 'intrans':
                     output_['status'] = 'OK-ZERO-E0-INTRANS'
-                elif 'E0' in signature and features.get('vox') and features.get('vox') == 'p':
+                elif 'E0' in signature and features.get('vox') == 'p':
                     output_['status'] = 'OK-ZERO-E0-PASS'
                 elif 'C' in signature and features.get('vox') == 'p':
                     output_['status'] = 'OK-ZERO-CV-PASS'
@@ -302,6 +312,8 @@ def process_outputs(lemmas_conj, pos_type):
                     output_['status'] = 'OK-ZERO-FROZEN-PASS'
                 elif features.get('vox') == 'p':
                     output_['status'] = 'CHECK-ZERO-PASS'
+                elif 'E0' in signature and features.get('stt') == 'd':
+                    output_['status'] = 'OK-ZERO-E0-DEFINITE'
                 else:
                     output_['status'] = 'CHECK-ZERO'
                 output_['line'] = line
@@ -328,7 +340,9 @@ if __name__ == "__main__":
                         type=str, help="Name of the DB file which will be used with the generation module.")
     parser.add_argument("-pos_type", default='', choices=['verbal', 'nominal', ''],
                         type=str, help="POS type of the lemmas for which we want to generate a representative sample.")
-    parser.add_argument("-feats", required=True,
+    parser.add_argument("-pos", default='',
+                        type=str, help="POS of the lemmas for which we want to generate a representative sample.")
+    parser.add_argument("-feats", default='',
                         type=str, help="Features to generate the conjugation tables for.")
     parser.add_argument("-dialect", default='', choices=['msa', 'glf', 'egy', ''],
                         type=str, help="Aspect to generate the conjugation tables for.")
@@ -375,7 +389,7 @@ if __name__ == "__main__":
     elif not os.path.exists(output_dir):
         os.mkdir(output_dir)
 
-    db_name = args.db if args.db else config_local['output']
+    db_name = args.db if args.db else config_local['db']
     db_dir = args.db_dir if args.db_dir else config_global['db_dir']
     db = MorphologyDB(os.path.join(db_dir, db_name), flags='g')
     generator = Generator(db)
@@ -405,6 +419,14 @@ if __name__ == "__main__":
         with open(lemmas_path, 'rb') as f:
             lemmas = pickle.load(f)
             lemmas = list(lemmas.values())
+
+    if pos_type == 'verbal':
+        pos = 'verb'
+    elif pos_type == 'nominal':
+        pos = args.pos if args.pos else config_local.get('pos')
+
+    if pos:
+        lemmas = [info for info in lemmas if _strip_brackets(info['pos']) == pos]
         
     lemmas_conj = create_conjugation_tables(lemmas=lemmas,
                                             pos_type=pos_type,

@@ -46,7 +46,7 @@
                     "MSA-LEX-CV": "MSA-LEX-CV-ABSTRACT"
                 }
             },
-            "output": "XYZ_msa_all_v1.0_red.db",
+            "db": "XYZ_msa_all_v1.0_red.db",
             "pos_type": "verbal",
             "extended_lemma_keys": [
                 "lemma",
@@ -77,7 +77,7 @@
                     "MSA-LEX-CV": "MSA-LEX-CV-ABSTRACT"
                 }
             },
-            "output": "XYZ_msa_all_v1.0.db",
+            "db": "XYZ_msa_all_v1.0.db",
             "pos_type": "verbal",
             "extended_lemma_keys": [
                 "lemma",
@@ -107,7 +107,7 @@
                     "MSA-LEX-PV": "MSA-LEX-PV-ABSTRACT"
                 }
             },
-            "output": "XYZ_msa_pv_v1.0.db",
+            "db": "XYZ_msa_pv_v1.0.db",
             "repr_lemmas": "repr_lemmas_pv_msa.pkl",
             "debugging": {
                 "debugging_spreadsheet": "Paradigm-Debugging",
@@ -120,7 +120,6 @@
                     }
                 }
             },
-            "bank": "MSA-PV-Bank.tsv",
             "pos_type": "verbal",
             "extended_lemma_keys": [
                 "lemma",
@@ -151,7 +150,7 @@
                     "MSA-LEX-PV": "MSA-LEX-PV-ABSTRACT"
                 }
             },
-            "output": "XYZ_msa_pv_v1.0_red.db",
+            "db": "XYZ_msa_pv_v1.0_red.db",
             "repr_lemmas": "repr_lemmas_pv_msa.pkl",
             "pos_type": "verbal",
             "extended_lemma_keys": [
@@ -180,9 +179,8 @@
                     "MSA-LEX-PV": "MSA-LEX-PV-ABSTRACT"
                 }
             },
-            "output": "XYZ_msa_pv_v1.0_red.db",
+            "db": "XYZ_msa_pv_v1.0_red.db",
             "repr_lemmas": "repr_lemmas_pv_msa.pkl",
-            "bank": "MSA-PV-Bank.tsv",
             "pos_type": "verbal",
             "extended_lemma_keys": [
                 "lemma",
@@ -210,9 +208,15 @@
                     "MSA-LEX-IV"
                 ]
             },
-            "output": "XYZ_msa_pv_v1.0_red.db",
+            "db": "XYZ_msa_pv_v1.0_red.db",
             "repr_lemmas": "repr_lemmas_iv_msa.pkl",
-            "bank": "MSA-IV-Ind-Bank.tsv",
+            "debugging": {
+                "feats": {
+                    "asp:i mod:i": {
+                        "bank": "MSA-IV-Ind-Bank.tsv"
+                    }
+                }
+            },
             "pos_type": "verbal",
             "extended_lemma_keys": [
                 "lemma",
@@ -237,7 +241,7 @@
                     "MSA-LEX-IV"
                 ]
             },
-            "output": "XYZ_msa_iv_v1.0.db",
+            "db": "XYZ_msa_iv_v1.0.db",
             "repr_lemmas": "repr_lemmas_iv_msa.pkl",
             "pos_type": "verbal",
             "extended_lemma_keys": [
@@ -268,7 +272,7 @@
                     "MSA-LEX-IV": "MSA-LEX-IV-ABSTRACT"
                 }
             },
-            "output": "XYZ_msa_iv_v1.0.db",
+            "db": "XYZ_msa_iv_v1.0.db",
             "repr_lemmas": "repr_lemmas_iv_msa.pkl",
             "debugging": {
                 "debugging_spreadsheet": "Paradigm-Debugging",
@@ -335,9 +339,8 @@
                     "MSA-LEX-IV": "MSA-LEX-IV-ABSTRACT"
                 }
             },
-            "output": "XYZ_msa_iv_v1.0_red.db",
+            "db": "XYZ_msa_iv_v1.0_red.db",
             "repr_lemmas": "repr_lemmas_iv_msa.pkl",
-            "bank": "MSA-IV-Ind-Bank.tsv",
             "pos_type": "verbal",
             "extended_lemma_keys": [
                 "lemma",
@@ -364,7 +367,7 @@
                     "MSA-LEX-CV": "MSA-LEX-CV-ABSTRACT"
                 }
             },
-            "output": "XYZ_msa_cv_v1.0.db",
+            "db": "XYZ_msa_cv_v1.0.db",
             "repr_lemmas": "repr_lemmas_cv_msa.pkl",
             "debugging": {
                 "debugging_spreadsheet": "Paradigm-Debugging",
@@ -390,7 +393,6 @@
                 }
             },
             "pos_type": "verbal",
-            "bank": "MSA-CV-Ind-Bank.tsv",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
@@ -417,9 +419,8 @@
                     "MSA-LEX-CV": "MSA-LEX-CV-ABSTRACT"
                 }
             },
-            "output": "XYZ_msa_cv_v1.0_red.db",
+            "db": "XYZ_msa_cv_v1.0_red.db",
             "repr_lemmas": "repr_lemmas_cv_msa.pkl",
-            "bank": "MSA-CV-Ind-Bank.tsv",
             "pos_type": "verbal",
             "extended_lemma_keys": [
                 "lemma",
@@ -430,8 +431,14 @@
             "dialect": "glf",
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4-GLF-PV",
-                "morph": "GLF-MORPH-Verbs-v4-Red"
+                "order": "ORDER-v4-GLF",
+                "morph": "GLF-MORPH-Verbs-v4",
+                "postregex": "PostRegex",
+                "exclude": [
+                    "IV",
+                    "CV",
+                    "RED"
+                ]
             },
             "lexicon": {
                 "spreadsheet": "glf-verb-lex",
@@ -439,7 +446,7 @@
                     "GLF-LEX-PV"
                 ]
             },
-            "output": "XYZ_glf_pv_v1.0_red.db",
+            "db": "XYZ_glf_pv_v1.0_red.db",
             "repr_lemmas": "repr_lemmas_pv_glf.pkl",
             "debugging": {
                 "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
@@ -454,7 +461,6 @@
             },
             "lexprob": "data/glf_verbs_lexprob.tsv",
             "pos_type": "verbal",
-            "bank": "GLF-PV-Bank.tsv",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
@@ -464,8 +470,14 @@
             "dialect": "glf",
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4-GLF-IV",
-                "morph": "GLF-MORPH-Verbs-v4-Red"
+                "order": "ORDER-v4-GLF",
+                "morph": "GLF-MORPH-Verbs-v4",
+                "postregex": "PostRegex",
+                "exclude": [
+                    "PV",
+                    "CV",
+                    "RED"
+                ]
             },
             "lexicon": {
                 "spreadsheet": "glf-verb-lex",
@@ -473,12 +485,12 @@
                     "GLF-LEX-IV"
                 ]
             },
-            "output": "XYZ_glf_iv_v1.0_red.db",
+            "db": "XYZ_glf_iv_v1.0_red.db",
             "repr_lemmas": "repr_lemmas_iv_glf.pkl",
             "debugging": {
                 "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
                 "feats": {
-                    "asp:p mod:i": {
+                    "asp:i mod:i": {
                         "conj_tables": "conj_iv_glf_v1.0.tsv",
                         "paradigm_debugging": "paradigm_debug_iv_glf_v1.0.tsv",
                         "bank": "GLF-IV-Bank.tsv",
@@ -488,7 +500,6 @@
             },
             "lexprob": "data/glf_verbs_lexprob.tsv",
             "pos_type": "verbal",
-            "bank": "GLF-IV-Bank.tsv",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
@@ -498,8 +509,14 @@
             "dialect": "glf",
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4-GLF-CV",
-                "morph": "GLF-MORPH-Verbs-v4-Red"
+                "order": "ORDER-v4-GLF",
+                "morph": "GLF-MORPH-Verbs-v4",
+                "postregex": "PostRegex",
+                "exclude": [
+                    "PV",
+                    "IV",
+                    "RED"
+                ]
             },
             "lexicon": {
                 "spreadsheet": "glf-verb-lex",
@@ -507,12 +524,12 @@
                     "GLF-LEX-CV"
                 ]
             },
-            "output": "XYZ_glf_cv_v1.0_red.db",
+            "db": "XYZ_glf_cv_v1.0_red.db",
             "repr_lemmas": "repr_lemmas_cv_glf.pkl",
             "debugging": {
                 "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
                 "feats": {
-                    "asp:p mod:i": {
+                    "asp:c mod:i": {
                         "conj_tables": "conj_cv_glf_v1.0.tsv",
                         "paradigm_debugging": "paradigm_debug_cv_glf_v1.0.tsv",
                         "bank": "GLF-CV-Bank.tsv",
@@ -522,7 +539,6 @@
             },
             "lexprob": "data/glf_verbs_lexprob.tsv",
             "pos_type": "verbal",
-            "bank": "GLF-CV-Bank.tsv",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
@@ -551,7 +567,7 @@
                 "get_patterns_from_sheet": true,
                 "override_explicit": true
             },
-            "output": "XYZ_egy_all_v1.0.db",
+            "db": "XYZ_egy_all_v1.0.db",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
@@ -577,7 +593,7 @@
                 "get_patterns_from_sheet": true,
                 "override_explicit": true
             },
-            "output": "XYZ_egy_pv_v1.0.db",
+            "db": "XYZ_egy_pv_v1.0.db",
             "repr_lemmas": "repr_lemmas_pv_egy.pkl",
             "debugging": {
                 "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
@@ -592,7 +608,6 @@
             },
             "lexprob": "data/egy_verbs_lexprob.tsv",
             "pos_type": "verbal",
-            "bank": "EGY-PV-Bank.tsv",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
@@ -619,7 +634,7 @@
                 "get_patterns_from_sheet": true,
                 "override_explicit": true
             },
-            "output": "XYZ_egy_pv_v1.0_red.db",
+            "db": "XYZ_egy_pv_v1.0_red.db",
             "repr_lemmas": "repr_lemmas_pv_egy.pkl",
             "lexprob": "data/egy_verbs_lexprob.tsv",
             "pos_type": "verbal",
@@ -648,7 +663,7 @@
                 "get_patterns_from_sheet": true,
                 "override_explicit": true
             },
-            "output": "XYZ_egy_iv_v1.0.db",
+            "db": "XYZ_egy_iv_v1.0.db",
             "repr_lemmas": "repr_lemmas_iv_egy.pkl",
             "debugging": {
                 "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
@@ -663,7 +678,6 @@
             },
             "lexprob": "data/egy_verbs_lexprob.tsv",
             "pos_type": "verbal",
-            "bank": "EGY-IV-Bank.tsv",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
@@ -690,7 +704,7 @@
                 "get_patterns_from_sheet": true,
                 "override_explicit": true
             },
-            "output": "XYZ_egy_iv_v1.0_red.db",
+            "db": "XYZ_egy_iv_v1.0_red.db",
             "repr_lemmas": "repr_lemmas_iv_egy.pkl",
             "lexprob": "data/egy_verbs_lexprob.tsv",
             "pos_type": "verbal",
@@ -719,7 +733,7 @@
                 "get_patterns_from_sheet": true,
                 "override_explicit": true
             },
-            "output": "XYZ_egy_cv_v1.0.db",
+            "db": "XYZ_egy_cv_v1.0.db",
             "repr_lemmas": "repr_lemmas_cv_egy.pkl",
             "debugging": {
                 "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
@@ -734,7 +748,6 @@
             },
             "lexprob": "data/egy_verbs_lexprob.tsv",
             "pos_type": "verbal",
-            "bank": "EGY-CV-Bank.tsv",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
@@ -761,7 +774,7 @@
                 "get_patterns_from_sheet": true,
                 "override_explicit": true
             },
-            "output": "XYZ_egy_cv_v1.0_red.db",
+            "db": "XYZ_egy_cv_v1.0_red.db",
             "repr_lemmas": "repr_lemmas_cv_egy.pkl",
             "conj_tables": "conj_cv_egy_v1.0.tsv",
             "lexprob": "data/egy_verbs_lexprob.tsv",
@@ -774,22 +787,130 @@
         },
         "nom_msa_red": {
             "dialect": "msa",
-            "pruning": false,
+            "pruning": true,
             "specs": {
                 "order": "ORDER-MSA-Nom",
-                "morph": "MSA-MORPH-Nom-Red"
+                "morph": "MSA-MORPH-Nom",
+                "exclude": [
+                    "RED"
+                ]
             },
             "lexicon": {
-                "spreadsheet": "msa-nom-lex",
+                "spreadsheet": "msa-nom-other-lex",
                 "sheets": [
                     "MSA-LEX-Nom"
                 ]
             },
-            "output": "XYZ_msa_nom_v1.0_red.db",
+            "db": "XYZ_msa_nom_v1.0_red.db",
             "repr_lemmas": "repr_lemmas_nom_msa.pkl",
-            "bank": "MSA-Nom-Bank.tsv",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Nominals",
+                "feats": {
+                    "": {
+                        "debugging_sheet": "MSA-Nom",
+                        "conj_tables": "conj_nom_msa_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_nom_msa_v1.0.tsv",
+                        "bank": "MSA-Nom-Bank.tsv"
+                    }
+                }
+            },
             "pos_type": "nominal",
-            "debugging_spreadsheet": "Paradigm-Debugging-Nominals",
+            "class_keys": [
+                "cond_t",
+                "cond_s",
+                "gen",
+                "num",
+                "cas"
+            ],
+            "extended_lemma_keys": [
+                "lemma",
+                "form",
+                "pos",
+                "rat",
+                "cond_t",
+                "index"
+            ]
+        },
+        "noun_msa_split_red": {
+            "split_or": true,
+            "pruning": true,
+            "specs": {
+                "order": "ORDER-MSA-Nom",
+                "morph": "MSA-MORPH-Nom",
+                "exclude": [
+                    "RED"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "msa-nom-other-lex",
+                "sheets": [
+                    "MSA-LEX-Nom"
+                ]
+            },
+            "dialect": "msa",
+            "db": "XYZ_msa_nom_v1.0_red.db",
+            "repr_lemmas": "repr_lemmas_noun_msa.pkl",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Nominals",
+                "feats": {
+                    "": {
+                        "debugging_sheet": "MSA-Noun",
+                        "conj_tables": "conj_noun_msa_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_noun_msa_v1.0.tsv",
+                        "bank": "MSA-Noun-Bank.tsv"
+                    }
+                }
+            },
+            "pos_type": "nominal",
+            "pos": "noun",
+            "class_keys": [
+                "cond_t",
+                "cond_s",
+                "gen",
+                "num",
+                "cas"
+            ],
+            "extended_lemma_keys": [
+                "lemma",
+                "form",
+                "pos",
+                "rat",
+                "cond_t",
+                "index"
+            ]
+        },
+        "adj_msa_split_red": {
+            "split_or": true,
+            "pruning": true,
+            "specs": {
+                "order": "ORDER-MSA-Nom",
+                "morph": "MSA-MORPH-Nom",
+                "exclude": [
+                    "RED"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "msa-nom-other-lex",
+                "sheets": [
+                    "MSA-LEX-Nom"
+                ]
+            },
+            "dialect": "msa",
+            "db": "XYZ_msa_nom_v1.0_red.db",
+            "repr_lemmas": "repr_lemmas_adj_msa.pkl",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Nominals",
+                "feats": {
+                    "": {
+                        "debugging_sheet": "MSA-Adj",
+                        "conj_tables": "conj_adj_msa_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_adj_msa_v1.0.tsv",
+                        "bank": "MSA-Adj-Bank.tsv"
+                    }
+                }
+            },
+            "pos_type": "nominal",
+            "pos": "adj",
             "class_keys": [
                 "cond_t",
                 "cond_s",
@@ -808,21 +929,20 @@
         },
         "nom_msa_split": {
             "dialect": "msa",
-            "pruning": false,
+            "pruning": true,
             "split_or": true,
             "specs": {
                 "order": "ORDER-MSA-Nom",
-                "morph": "MSA-MORPH-Nom-Red"
+                "morph": "MSA-MORPH-Nom"
             },
             "lexicon": {
-                "spreadsheet": "msa-nom-lex",
+                "spreadsheet": "msa-nom-other-lex",
                 "sheets": [
                     "MSA-LEX-Nom"
                 ]
             },
-            "output": "XYZ_msa_nom_v1.0_red.db",
+            "db": "XYZ_msa_nom_v1.0_red.db",
             "repr_lemmas": "repr_lemmas_nom_msa.pkl",
-            "bank": "MSA-Nom-Bank.tsv",
             "pos_type": "nominal",
             "debugging_spreadsheet": "Paradigm-Debugging-Nominals",
             "class_keys": [
@@ -839,6 +959,49 @@
                 "rat",
                 "cond_t",
                 "index"
+            ]
+        },
+        "adj_repr_lemmas_test": {
+            "split_or": false,
+            "pruning": true,
+            "specs": {
+                "order": "ORDER-MSA-Nom",
+                "morph": "MSA-MORPH-Nom",
+                "exclude": [
+                    "RED"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "msa-nom-other-lex",
+                "sheets": [
+                    "MSA-LEX-Nom"
+                ]
+            },
+            "dialect": "msa",
+            "db": "XYZ_msa_nom_v1.0_red.db",
+            "repr_lemmas": "repr_lemmas_adj_msa_test.pkl",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Nominals",
+                "feats": {
+                    "": {
+                        "debugging_sheet": "MSA-Adj",
+                        "conj_tables": "conj_adj_msa_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_adj_msa_v1.0.tsv",
+                        "bank": "MSA-Adj-Bank.tsv"
+                    }
+                }
+            },
+            "pos_type": "nominal",
+            "pos": "adj",
+            "class_keys": [
+                "cond_t",
+                "cond_s",
+                "gen",
+                "num",
+                "cas"
+            ],
+            "extended_lemma_keys": [
+                "lemma"
             ]
         }
     }

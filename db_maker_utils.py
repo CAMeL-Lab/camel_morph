@@ -66,7 +66,7 @@ def read_morph_specs(config, config_name):
     postregex_path = local_specs['specs'].get('postregex')
     if postregex_path:
         POSTREGEX = pd.read_csv(os.path.join(data_dir, 'PostRegex.csv'))
-        POSTREGEX = POSTREGEX[POSTREGEX.DEFINE == 'POSTREGEX']
+        POSTREGEX = POSTREGEX[(POSTREGEX.DEFINE == 'POSTREGEX') & (POSTREGEX.VARIANT == local_specs['dialect'].upper())]
         POSTREGEX = POSTREGEX.replace(nan, '', regex=True)
         for i, row in POSTREGEX.iterrows():
             POSTREGEX.at[i, 'MATCH'] = _bw2ar_regex(row['MATCH'], safebw2ar)
@@ -164,7 +164,7 @@ def read_morph_specs(config, config_name):
                                 (MORPH.CLASS == CLASS)]['COND-T'].str.split(pat=' ', expand=True)
             if cond_t.empty:
                 continue
-            cond_t = cond_t.replace(['_'], '')
+            cond_t = cond_t.replace(r'\b_\b', '', regex=True)
 
             if len(cond_t.iloc[:][:]) == 1 and cond_t.iloc[0][0] == '':
                 continue
@@ -253,7 +253,7 @@ def get_morph_cond_f(morph_cond_t, cond_t_current, MORPH):
             # Finally, populate the 'COND-F' cell with the false conditions
         MORPH.loc[idx, 'COND-F'] = MORPH.loc[idx, 'COND-F'] + \
             ' ' + ' '.join(cond_f_almrph)
-        MORPH.loc[idx, 'COND-F'] = MORPH.loc[idx, 'COND-F'].replace('_', '')
+        MORPH.loc[idx, 'COND-F'] = re.sub(r'\b_\b', '', MORPH.loc[idx, 'COND-F'])
     
     return MORPH
 

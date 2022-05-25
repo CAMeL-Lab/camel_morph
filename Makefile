@@ -32,25 +32,29 @@ make_db_nom_msa:
 	python db_maker.py -config_name nom_msa_red 
 
 repr_lemmas_pv_msa:
-	python create_repr_lemmas_list.py -config_name pv_msa_order-v4 -display_format expanded
+	python create_repr_lemmas_list.py -config_name pv_msa_order-v4 -display_format expanded -feats "asp:p mod:i" -db eval/calima-msa-s31_0.4.2.utf8.db
 repr_lemmas_iv_msa:	
-	python create_repr_lemmas_list.py -config_name iv_msa_order-v3 -display_format expanded
+	python create_repr_lemmas_list.py -config_name iv_msa_order-v3 -display_format expanded -feats "asp:i mod:i" -db eval/calima-msa-s31_0.4.2.utf8.db
 repr_lemmas_cv_msa:	
-	python create_repr_lemmas_list.py -config_name cv_msa_order-v4 -display_format expanded
+	python create_repr_lemmas_list.py -config_name cv_msa_order-v4 -display_format expanded -feats "asp:c mod:i" -db eval/calima-msa-s31_0.4.2.utf8.db
 repr_lemmas_pv_glf:	
-	python create_repr_lemmas_list.py -config_name pv_glf_order-v4 -display_format expanded 
+	python create_repr_lemmas_list.py -config_name pv_glf_order-v4_red -display_format expanded -feats "asp:p mod:i"
 repr_lemmas_iv_glf:	
-	python create_repr_lemmas_list.py -config_name iv_glf_order-v4 -display_format expanded 
+	python create_repr_lemmas_list.py -config_name iv_glf_order-v4_red -display_format expanded -feats "asp:i mod:i"
 repr_lemmas_cv_glf:	
-	python create_repr_lemmas_list.py -config_name cv_glf_order-v4 -display_format expanded 
+	python create_repr_lemmas_list.py -config_name cv_glf_order-v4_red -display_format expanded -feats "asp:c mod:i"
 repr_lemmas_pv_egy:	
-	python create_repr_lemmas_list.py -config_name pv_egy_order-v4 -display_format expanded 
+	python create_repr_lemmas_list.py -config_name pv_egy_order-v4 -display_format expanded -feats "asp:p mod:i"
 repr_lemmas_iv_egy:	
-	python create_repr_lemmas_list.py -config_name iv_egy_order-v4 -display_format expanded 
+	python create_repr_lemmas_list.py -config_name iv_egy_order-v4 -display_format expanded -feats "asp:i mod:i"
 repr_lemmas_cv_egy:	
-	python create_repr_lemmas_list.py -config_name cv_egy_order-v4 -display_format expanded 
+	python create_repr_lemmas_list.py -config_name cv_egy_order-v4 -display_format expanded -feats "asp:c mod:i"
 repr_lemmas_nom_msa:	
-	python create_repr_lemmas_list.py -config_name nom_msa_split -display_format expanded
+	python create_repr_lemmas_list.py -config_name nom_msa_split -display_format expanded -db eval/calima-msa-s31_0.4.2.utf8.db
+repr_lemmas_adj_msa:
+	python create_repr_lemmas_list.py -config_name adj_msa_split_red -display_format expanded -db eval/calima-msa-s31_0.4.2.utf8.db
+repr_lemmas_noun_msa:
+	python create_repr_lemmas_list.py -config_name noun_msa_split_red adj_msa_split_red -display_format expanded -db eval/calima-msa-s31_0.4.2.utf8.db
 
 conj_pv_msa:
 	python generate_conj_table.py -feats "asp:p mod:i" -config_name pv_msa_order-v4
@@ -94,15 +98,17 @@ conj_cv_e_msa_db_full:
 conj_cv_x_msa_db_full:	
 	python generate_conj_table.py -feats "asp:c mod:x" -config_name cv_msa_order-v4 -db XYZ_msa_all_v1.0.db
 
-conj_nom_msa:	
-	python generate_conj_table.py 
+conj_adj_msa:	
+	python generate_conj_table.py -config_name adj_msa_split_red
+conj_noun_msa:	
+	python generate_conj_table.py -config_name noun_msa_split_red
 
 conj_pv_glf:
-	python generate_conj_table.py -feats "asp:p mod:i" -config_name pv_glf_order-v4
+	python generate_conj_table.py -feats "asp:p mod:i" -config_name pv_glf_order-v4_red
 conj_iv_glf:	
-	python generate_conj_table.py -feats "asp:i mod:i" -config_name iv_glf_order-v4
+	python generate_conj_table.py -feats "asp:i mod:i" -config_name iv_glf_order-v4_red
 conj_cv_glf:	
-	python generate_conj_table.py -feats "asp:c mod:i" -config_name cv_glf_order-v4
+	python generate_conj_table.py -feats "asp:c mod:i" -config_name cv_glf_order-v4_red
 
 conj_pv_egy:
 	python generate_conj_table.py -feats "asp:p mod:i" -config_name pv_egy_order-v4
@@ -134,11 +140,11 @@ download_msa_all:
 	python download_sheets.py -config_name all_msa_order-v4
 
 download_glf_pv:	
-	python download_sheets.py -config_name pv_glf_order-v4
+	python download_sheets.py -config_name pv_glf_order-v4_red
 download_glf_iv:	
-	python download_sheets.py -config_name iv_glf_order-v4
+	python download_sheets.py -config_name iv_glf_order-v4_red
 download_glf_cv:	
-	python download_sheets.py -config_name cv_glf_order-v4
+	python download_sheets.py -config_name cv_glf_order-v4_red
 
 download_egy_pv:	
 	python download_sheets.py -config_name pv_egy_order-v4
@@ -173,12 +179,17 @@ upload_cv_e_msa:
 upload_cv_x_msa:
 	python format_conj_gsheets.py -formatting conj_tables -config_name cv_msa_order-v4 -feats "asp:c mod:x"
 
+upload_adj_msa:
+	python format_conj_gsheets.py -formatting conj_tables -config_name adj_msa_split_red -mode backup
+upload_noun_msa:
+	python format_conj_gsheets.py -formatting conj_tables -config_name noun_msa_split_red -mode backup
+
 upload_pv_glf:
-	python format_conj_gsheets.py -formatting conj_tables -config_name pv_glf_order-v4 -feats "asp:p mod:i"
+	python format_conj_gsheets.py -formatting conj_tables -config_name pv_glf_order-v4_red -feats "asp:p mod:i" -mode backup
 upload_iv_glf:
-	python format_conj_gsheets.py -formatting conj_tables -config_name iv_glf_order-v4 -feats "asp:i mod:i"
+	python format_conj_gsheets.py -formatting conj_tables -config_name iv_glf_order-v4_red -feats "asp:i mod:i" -mode backup
 upload_cv_glf:
-	python format_conj_gsheets.py -formatting conj_tables -config_name cv_glf_order-v4 -feats "asp:c mod:i"
+	python format_conj_gsheets.py -formatting conj_tables -config_name cv_glf_order-v4_red -feats "asp:c mod:i" -mode backup
 upload_pv_egy:
 	python format_conj_gsheets.py -formatting conj_tables -config_name pv_egy_order-v4 -feats "asp:p mod:i"
 upload_iv_egy:
@@ -195,6 +206,9 @@ msa_iv_x_process: download_msa_iv repr_lemmas_iv_msa make_db_iv_msa conj_iv_x_ms
 msa_cv_i_process: download_msa_cv repr_lemmas_cv_msa make_db_cv_msa conj_cv_i_msa upload_cv_i_msa
 msa_cv_e_process: download_msa_cv repr_lemmas_cv_msa make_db_cv_msa conj_cv_e_msa upload_cv_e_msa
 msa_cv_x_process: download_msa_cv repr_lemmas_cv_msa make_db_cv_msa conj_cv_x_msa upload_cv_x_msa
+
+msa_adj_process: download_msa_nom repr_lemmas_adj_msa make_db_nom_msa conj_adj_msa upload_adj_msa
+msa_noun_process: download_msa_nom repr_lemmas_noun_msa make_db_nom_msa conj_noun_msa upload_noun_msa
 
 glf_pv_process: download_glf_pv repr_lemmas_pv_glf make_db_pv_glf conj_pv_glf upload_pv_glf
 glf_iv_process: download_glf_iv repr_lemmas_iv_glf make_db_iv_glf conj_iv_glf upload_iv_glf
@@ -293,6 +307,16 @@ msa_cv_x_auto_qc_upload:
 msa_cv_x_debug: download_msa_cv repr_lemmas_cv_msa make_db_cv_msa conj_cv_x_msa msa_cv_x_bank_annotation msa_cv_x_bank_upload msa_cv_x_auto_qc_upload
 msa_cv_x_debug_db_full: download_msa_all repr_lemmas_cv_msa make_db_all_msa conj_cv_x_msa_db_full msa_cv_x_bank_annotation msa_cv_x_bank_upload msa_cv_x_auto_qc_upload
 msa_cv_x_debug_db_full_no_build: conj_cv_x_msa_db_full msa_cv_x_bank_annotation msa_cv_x_bank_upload msa_cv_x_auto_qc_upload
+
+msa_adj_bank_annotation:
+	python paradigm_debugging.py -config_name adj_msa_split_red
+msa_adj_bank_upload:
+	python format_conj_gsheets.py -dir conjugation_local/banks -file_name MSA-Adj-Bank.tsv -spreadsheet_name Paradigm-Banks -gsheet_name MSA-Adj-Bank -formatting bank -mode backup
+msa_adj_auto_qc_upload:
+	python format_conj_gsheets.py -dir conjugation_local/paradigm_debugging -file_name paradigm_debug_adj_msa_v1.0.tsv -spreadsheet_name Paradigm-Debugging-Nominals -gsheet_name MSA-Adj -formatting conj_tables -mode backup
+msa_adj_debug: download_msa_nom repr_lemmas_adj_msa make_db_nom_msa conj_adj_msa msa_adj_bank_annotation msa_adj_bank_upload msa_adj_auto_qc_upload
+msa_adj_debug_db_full: download_msa_nom repr_lemmas_adj_msa make_db_nom_msa conj_adj_msa_db_full msa_adj_bank_annotation msa_adj_bank_upload msa_adj_auto_qc_upload
+msa_adj_debug_db_full_no_build: conj_adj_msa_db_full msa_adj_bank_annotation msa_adj_bank_upload msa_adj_auto_qc_upload
 
 egy_pv_bank_annotation:
 	python paradigm_debugging.py -config_name pv_egy_order-v4 -feats "asp:p mod:i"

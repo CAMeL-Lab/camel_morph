@@ -1,4 +1,5 @@
 import re
+import gspread
 
 consonants_bw = "['|>&<}bptvjHxd*rzs$SDTZEgfqklmnhwy]"
 double_cons = re.compile('{}{}'.format(consonants_bw, consonants_bw))
@@ -339,29 +340,66 @@ def analyze_pattern_egy(root, stem):
     return tmp_stem
 
 
-def add_check_mark_online(verbs,
+def add_check_mark_online(rows,
                           spreadsheet,
                           sheet,
                           error_cases=None,
                           indexes=None,
+                          messages=None,
                           mode=None,
-                          status_col_name='STATUS'):
-    assert bool(error_cases) ^ bool(indexes)
+                          write='append',
+                          status_col_name='STATUS',
+                          service_account='/Users/chriscay/.config/gspread/service_account.json'):
+    assert bool(error_cases) ^ bool(indexes) ^ bool(messages)
     if error_cases is not None:
-        filtered = verbs[verbs['LEMMA'].isin(error_cases)]
-        indexes = filtered.index
+        filtered = rows[rows['LEMMA'].isin(error_cases)]
+        indexes = list(filtered.index)
+
+    if type(spreadsheet) is str:
+        sa = gspread.service_account(service_account)
+        spreadsheet = sa.open(spreadsheet)
 
     worksheet = spreadsheet.worksheet(title=sheet)
     header = worksheet.row_values(1)
-    assert header.count(status_col_name) == 1
+    header_count = header.count(status_col_name)
+    if header_count == 0:
+        worksheet.insert_cols([[status_col_name]])
+        header = worksheet.row_values(1)
+    elif header_count > 1:
+        raise NotImplementedError
+
     status_column_index = header.index(status_col_name)
-    column_letter = chr(ord('A') + status_column_index)
-    status = worksheet.col_values(status_column_index + 1)[1:]
-    if mode:
-        check, ok = f'{mode}:CHECK', f'{mode}:OK'
+    column_letter = (chr(ord('A') + status_column_index // 27) if status_column_index >= 26 else '') + \
+        chr(ord('A') + status_column_index % 26)
+
+    status_old = worksheet.col_values(status_column_index + 1)[1:]
+    lemmas = worksheet.col_values(header.index('LEMMA') + 1)[1:]
+    status_old += [''] * (len(lemmas) - len(status_old))
+    assert len(lemmas) == len(status_old) == len(rows['LEMMA'])
+    col_range = f'{column_letter}2:{len(rows.index) + 1}'
+    
+    if indexes:
+        if mode:
+            check, ok = f'{mode}:CHECK', f'{mode}:OK'
+        else:
+            check, ok = 'CHECK', 'OK'
+        assert set(status_old) <= {check, ok, ''}
+        status_new = [[check] if i in indexes else ([ok] if status_old[i] != check else [check])
+                            for i in range(len(rows['LEMMA']))]
+    elif messages:
+        assert len(status_old) == len(lemmas) == len(messages) 
+        if write == 'overwrite':
+            status_new = [[f'{mode}:{message}'] if message else ['']
+                            for message in messages]
+        elif write == 'append':
+            status_new = [[f"{s}{' ' if s else ''}" + f'{mode}:{message}'] if message else [s + '']
+                            for s, message in zip(status_old, messages)]
     else:
-        check, ok = 'CHECK', 'OK'
-    assert len(status) == len(verbs['LEMMA']) and set(status) <= {check, ok, ''}
-    worksheet.update(f'{column_letter}2:{len(verbs.index) + 1}',
-                     [[check] if i in indexes else ([ok] if status[i] != check else [check])
-                        for i in range(len(verbs['LEMMA']))])
+        raise NotImplementedError
+        
+    worksheet.update(col_range, status_new)
+
+def _strip_brackets(info):
+    if info[0] == '[' and info[-1] == ']':
+        info = info[1:-1]
+    return info

@@ -11,8 +11,16 @@ import gspread
 from utils import assign_pattern, add_check_mark_online
 from download_sheets import download_sheets
 
+two_stem_well_formedness_options_dialect = {
+    'msa': [('c-suff', 'v-suff')],
+    'egy': [('c-suff', 'n-suff||v-suff')],
+    'glf': [('c-suff', 'n-suff||v-suff'), ('c-suff||n-suff', 'v-suff'), ('n-suff', 'v-suff')]
+}
+two_stem_well_formedness_options = None
+
 
 def two_stem_lemma_well_formedness(lemma, rows, iv=None):
+    global two_stem_well_formedness_options
     stems_cond_t_sorted = tuple(sorted([row['cond-t'] for row in rows]))
     lemma_uniq_glosses = set([row['gloss'] for row in rows])
     lemma_uniq_conditions = set([tuple([row[k] for k in ['cond-t', 'cond-s']]) for row in rows])
@@ -21,10 +29,10 @@ def two_stem_lemma_well_formedness(lemma, rows, iv=None):
     lemma_uniq_forms = set([row['form'] for row in rows])
     lemma_trans = tuple(sorted([re.search(r'trans|intrans', row['cond-s']).group() for row in rows]))
     stems_cond_s_no_trans = set([re.sub(r' ?(trans|intrans) ?', '', row['cond-s']) for row in rows])
-    if (len(lemma_uniq_glosses) == 1 and stems_cond_t_sorted in [('c-suff', 'v-suff'), ('c-suff', 'n-suff||v-suff')] and
+    if (len(lemma_uniq_glosses) == 1 and stems_cond_t_sorted in two_stem_well_formedness_options and
         len(lemma_uniq_forms) == len(rows) and len(lemma_uniq_cond_s) == 1):
         return True, 'legit'
-    elif (len(lemma_uniq_glosses) == 1 and stems_cond_t_sorted in [('c-suff', 'v-suff'), ('c-suff', 'n-suff||v-suff')] and
+    elif (len(lemma_uniq_glosses) == 1 and stems_cond_t_sorted in two_stem_well_formedness_options and
             len(lemma_uniq_forms) == len(rows) and len(lemma_uniq_cond_s) == 2):
         if len(set(lemma_trans)) == 1:
             return True, 'legit'
@@ -58,7 +66,7 @@ def two_stem_lemma_well_formedness(lemma, rows, iv=None):
     return False, 'error'
 
 def well_formedness_check(verbs, lemma2info, spreadsheet=None, sheet=None):
-    elementary_feats = ['lemma', 'form', 'gloss', 'feats', 'cond-s', 'cond-t']
+    elementary_feats = ['lemma', 'form', 'root', 'gloss', 'feats', 'cond-s', 'cond-t']
     # Duplicate entries are not allowed
     error_cases = {}
     for lemma, info in lemma2info.items():
@@ -154,13 +162,14 @@ def get_lemma2info(verbs):
         count_suff[1].append(True if row['COND-T'] else False)
         count_suff[2].append(
             {'index': i, 'lemma': row['LEMMA'], 'form': row['FORM'], 'gloss': row['GLOSS'],
-            'cond-s': row['COND-S'], 'cond-t': row['COND-T'], 'feats': row['FEAT']})
+            'cond-s': row['COND-S'], 'cond-t': row['COND-T'], 'feats': row['FEAT'],
+            'root': row['ROOT']})
     return lemma2info
 
 
 def form_pattern_well_formedness(verbs):
     verbs['COND-S'] = verbs.apply(
-        lambda row: re.sub(r'(hamzated|hollow|defective|trans|intrans)', '', row['COND-S']), axis=1)
+        lambda row: re.sub(r'(hamzated|hollow|defective|ditrans|trans|intrans)', '', row['COND-S']), axis=1)
     verbs['COND-S'] = verbs.apply(
         lambda row: re.sub(r' +', ' ', row['COND-S']), axis=1)
     verbs['COND-S'] = verbs.apply(
@@ -201,7 +210,7 @@ def well_formedness_all_aspects(verbs, strictness, spreadsheet=None, sheets=None
         extlemma2infos_asp = extlemma2infos.setdefault(asp, {})
         for lemma, info in lemma2info.items():
             for row in info[2]:
-                transitivity = re.search(r'trans|intrans', row['cond-s']).group()
+                transitivity = re.search(r'ditrans|trans|intrans', row['cond-s']).group()
                 if 'Frozen' in row['cond-s']:
                     continue
                 if strictness == 'high':
@@ -261,11 +270,11 @@ def merge_same_feats_diff_gloss_lemmas(lemma2info, iv=None):
                                 for k, v in merged.items()}
                     rows_ .append(merged)
                 if two_stem_lemma_well_formedness(lemma, rows_, iv)[1] == 'merge_case':
-                    assert all([row['cond-t'] in ['c-suff', 'v-suff'] for rows in gloss2rows.values() for row in rows])
-                    rows_to_merge = {'c-suff': [], 'v-suff': []}
+                    # assert all([row['cond-t'] in ['c-suff', 'v-suff'] for rows in gloss2rows.values() for row in rows])
+                    rows_to_merge = {}
                     for rows in gloss2rows.values():
                         for row in rows:
-                            rows_to_merge[row['cond-t']].append(row)
+                            rows_to_merge.setdefault(row['cond-t'], []).append(row)
 
                     for rows in rows_to_merge.values():
                         row_indexes_to_merge.append(tuple(
@@ -307,7 +316,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-lex", action='append', default=[],
                         type=str, help="Paths of the verb lexicon(s) that need(s) to be checked (against each other) for well-formedness.")
-    parser.add_argument("-config_file", default='',
+    parser.add_argument("-config_file", default='config.json',
                         type=str, help="Config file specifying which sheets to use.")
     parser.add_argument("-config_name", default='',
                         type=str, help="Name of the configuration to load from the config file.")
@@ -335,15 +344,19 @@ if __name__ == "__main__":
     
     if args.config_file and args.config_name:
         with open(args.config_file) as f:
-            config = json.load(f)['local'][args.config_name]
-        lexicon_sheets = config['lexicon']['sheets']
+            config = json.load(f)
+            config_local = config['local'][args.config_name]
+        lexicon_sheets = config_local['lexicon']['sheets']
     else:
         lexicon_sheets = args.lex
+    
+    two_stem_well_formedness_options = two_stem_well_formedness_options_dialect[config_local['dialect']]
 
     sa = gspread.service_account(args.service_account)
-    sh = sa.open(config['lexicon']['spreadsheet'])
-    download_sheets(lex=None, specs=None, save_dir=args.data_dir,
-                    config_file=args.config_file, config_name=args.config_name,
+    sh = sa.open(config_local['lexicon']['spreadsheet'])
+    download_sheets(save_dir=args.data_dir,
+                    config=config,
+                    config_name=args.config_name,
                     service_account=sa)
 
     verbs, sheets = {}, {}
@@ -354,7 +367,7 @@ if __name__ == "__main__":
         verbs[asp] = verbs[asp][verbs[asp].DEFINE == 'LEXICON']
         sheets[asp] = sheet
 
-    morph = pd.read_csv(os.path.join(args.data_dir, f"{config['specs']['morph']}.csv"))
+    morph = pd.read_csv(os.path.join(args.data_dir, f"{config_local['specs']['morph']}.csv"))
     class2cond = morph[morph.DEFINE == 'CONDITIONS']
     class2cond = {cond_class["CLASS"]:
                             [cond for cond in cond_class["FUNC"].split() if cond]

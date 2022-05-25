@@ -563,9 +563,9 @@ if __name__ == "__main__":
 
     print('Eval mode:', args.eval_mode)
     if 'msa' in args.eval_mode and 'egy' not in args.eval_mode:
-        camel_db_path = os.path.join(args.db_dir, config_msa['output'])
+        camel_db_path = os.path.join(args.db_dir, config_msa['db'])
     elif 'egy' in args.eval_mode:
-        camel_db_path = os.path.join(args.db_dir, config_egy['output'])
+        camel_db_path = os.path.join(args.db_dir, config_egy['db'])
     else:
         raise NotImplementedError
 
@@ -618,7 +618,7 @@ if __name__ == "__main__":
         if 'egy_union_msa' in args.eval_mode and args.msa_config_name:
             print('Using union of EGY and MSA analyses.')
             msa_camel_db = MorphologyDB(os.path.join(
-                args.db_dir, config_msa['output']))
+                args.db_dir, config_msa['db']))
             msa_camel_analyzer = Analyzer(msa_camel_db)
 
         evaluate_verbs_recall(data, args.eval_mode)

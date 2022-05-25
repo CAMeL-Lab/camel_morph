@@ -40,14 +40,14 @@ if __name__ == "__main__":
     config_global = config['global']
 
     input_dir = args.dir if args.dir else config_global['tables_dir']
-    file_name = args.file_name if args.file_name else config_local['debugging'][args.feats]['conj_tables']
-    gsheet_name = args.gsheet_name if args.gsheet_name else config_local['debugging'][args.feats]['debugging_sheet']
+    file_name = args.file_name if args.file_name else config_local['debugging']['feats'][args.feats]['conj_tables']
+    gsheet_name = args.gsheet_name if args.gsheet_name else config_local['debugging']['feats'][args.feats]['debugging_sheet']
     sheet_csv = pd.read_csv(os.path.join(input_dir, file_name), sep='\t')
     sheet_csv = sheet_csv.replace(nan, '', regex=True)
     service_account = args.service_account if args.service_account else config_global['service_account']
     sa = gspread.service_account(service_account)
     spreadsheet_name = args.spreadsheet_name if args.spreadsheet_name else config_local['debugging']['debugging_spreadsheet']
-    sh = sa.open(args.spreadsheet_name)
+    sh = sa.open(spreadsheet_name)
     try:
         worksheet = sh.add_worksheet(title=gsheet_name, rows="100", cols="20")
     except gspread.exceptions.APIError as e:

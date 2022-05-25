@@ -7,7 +7,7 @@ import time
 import gspread
 import pandas as pd
 
-def download_sheets(lex, specs, save_dir, config, config_name, service_account):
+def download_sheets(lex=None, specs=None, save_dir=None, config=None, config_name=None, service_account=None):
     if type(service_account) is str:
         sa = gspread.service_account(service_account)
     else:
@@ -77,13 +77,18 @@ if __name__ == "__main__":
                         type=str, help="Path of the JSON file containing the information about the service account used for the Google API.")
     args = parser.parse_args()
 
-    with open(args.config_file) as f:
-        config = json.load(f)
-    config_local = config['local'][args.config_name]
-    config_global = config['global']
+    service_account = args.service_account
+    save_dir = args.save_dir
+    config = None
 
-    save_dir = args.save_dir if args.save_dir else config_global['data-dir']
-    service_account = args.service_account if args.service_account else config_global['service_account']
+    if args.config_name:
+        with open(args.config_file) as f:
+            config = json.load(f)
+        config_local = config['local'][args.config_name]
+        config_global = config['global']
+
+        service_account = config_global['service_account']
+        save_dir = config_global['data-dir']
 
     download_sheets(args.lex, args.specs, save_dir,
                     config, args.config_name, service_account)

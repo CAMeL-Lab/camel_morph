@@ -48,7 +48,7 @@ def make_db(config, config_name, output_dir):
     
     print("\nGenerating DB file... [3/3]")
     print_almor_db(
-        os.path.join(output_dir, config['local'][config_name]['output']), db)
+        os.path.join(output_dir, config['local'][config_name]['db']), db)
     
     c1 = process_time()
     print(f"\nTotal time required: {strftime('%M:%S', gmtime(c1 - c0))}")
@@ -334,7 +334,7 @@ def _read_affix(affix):
     affix_feat = {feat.split(':')[0]: feat.split(':')[1]
              for m in affix for feat in m['FEAT'].split()}
     affix_match = normalize_alef_bw(normalize_alef_maksura_bw(
-        normalize_teh_marbuta_bw(dediac_bw(affix_diac.replace('#', '')))))
+        normalize_teh_marbuta_bw(dediac_bw(re.sub(r'[#@]', '', affix_diac)))))
     return affix_match, affix_diac, affix_gloss, affix_feat, affix_bw
 
 def _read_stem(stem):
@@ -353,15 +353,15 @@ def _read_stem(stem):
     if not any([s['DEFINE'] == 'BACKOFF' for s in stem]):
         stem_diac = ''.join([s['FORM']for s in stem if s['FORM'] != '_'])
         stem_match = normalize_alef_bw(normalize_alef_maksura_bw(
-            normalize_teh_marbuta_bw(dediac_bw(stem_diac.replace('#', '')))))
+            normalize_teh_marbuta_bw(dediac_bw(re.sub(r'[#@]', '', stem_diac)))))
     else:
         backoff = True
         stem_diac = ''.join([s['FORM_SUB'] if s['DEFINE'] == 'BACKOFF' else s['FORM']
                              for s in stem if s['FORM'] != '_'])
-        stem_match = ''.join([re.sub(r'^\^|\$$', '', s['MATCH']).replace('#', '')
+        stem_match = ''.join([re.sub(r'^\^|\$$|[#@]', '', s['MATCH'])
                               if s['DEFINE'] == 'BACKOFF' else \
                                 normalize_alef_bw(normalize_alef_maksura_bw(
-                                normalize_teh_marbuta_bw(dediac_bw(s['FORM'].replace('#', '')))))
+                                normalize_teh_marbuta_bw(dediac_bw(re.sub(r'[#@]', '', s['FORM'])))))
                               for s in stem if s['FORM'] != '_'])
         stem_match = f'^{stem_match}$'
 
@@ -487,7 +487,7 @@ def gen_cmplx_morph_combs(cmplx_morph_seq,
             # of the combination sequence, then the sequence should be pruned out since it
             # is incoherent.
             if pruning_same_class_incompat:
-                # If or-ed (||) COND-T cond_s did not exist, this would be as simple as checking
+                # If or-ed (||) COND-T did not exist, this would be as simple as checking
                 # whether two conditions of the same class are present in COND-T of the combination
                 # sequence, and disqualifying the latter based on that since two morphemes cannot
                 # coherently require some condition to be true if they are of the same class 

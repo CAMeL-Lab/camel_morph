@@ -22,7 +22,7 @@
                     "MSA-LEX-PV-Capstones"
                 ]
             },
-            "output": "XYZ_msa_pv_v1.0_red.db"
+            "db": "XYZ_msa_pv_v1.0_red.db"
         }
     }
 }

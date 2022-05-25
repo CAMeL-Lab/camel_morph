@@ -241,7 +241,7 @@ if __name__ == "__main__":
                         type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
     parser.add_argument("-config_name", required=True,
                         type=str, help="Name of the configuration to load from the config file.")
-    parser.add_argument("-feats", required=True,
+    parser.add_argument("-feats", default='',
                         type=str, help="Features to generate the conjugation tables for.")
     parser.add_argument("-gsheet", default='',
                         type=str, help="Name of the manually annotated paradigms gsheet, the annotations of which will go in the bank.")
@@ -259,7 +259,7 @@ if __name__ == "__main__":
                         type=str, help="Name of the spreadsheet in which that sheet is.")
     parser.add_argument("-output_name",
                         type=str, help="Name of the file to output the automatically bank-annotated paradigm tables to.")
-    parser.add_argument("-output_dir", default='conjugation/paradigm_debugging',
+    parser.add_argument("-output_dir", default='',
                         type=str, help="Path of the directory to output the paradigm tables to.")
     parser.add_argument("-mode", default='debugging', choices=['debugging', 'bank_cleanup'],
                         type=str, help="Path of the directory to output the paradigm tables to.")
