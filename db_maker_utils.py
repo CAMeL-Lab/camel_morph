@@ -38,7 +38,7 @@ def read_morph_specs(config, config_name):
             if passive_patterns:
                 LEXICON_PASS = generate_passive(
                     LEXICON_, os.path.join(data_dir, f"{passive_patterns}.csv"))
-                LEXICON_ = pd.concat([LEXICON_, LEXICON_PASS])
+                LEXICON_ = pd.concat([LEXICON_, LEXICON_PASS], ignore_index=True)
 
         if backoff_sheets:
             if backoff_sheets == 'auto':
