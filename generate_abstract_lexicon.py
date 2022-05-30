@@ -8,12 +8,9 @@ import sys
 
 import gspread
 import pandas as pd
-from numpy import nan
 
 from utils import add_check_mark_online, consonants_bw
 from download_sheets import download_sheets
-
-root_class_list = []
 
 header = ['PATTERN_ABSTRACT', 'PATTERN_DEF', 'ROOT', 'ROOT_SUB', 'DEFINE', 'CLASS', 'PATTERN',
           'LEMMA', 'LEMMA_SUB', 'FORM', 'FORM_SUB', 'BW', 'BW_SUB', 'GLOSS', 'FEAT', 'COND-T', 'COND-F', 'COND-S',
@@ -70,12 +67,12 @@ def generate_match_field(pattern, root_class, global_exclusions, local_exclusion
     match_regex = ''.join(match_regex)
     return match_regex, pos2match
 
-def test_regex(match, sub, text, gold, normalize_map):
+def test_regex(match, sub, text, gold):
     try:
         generated, n = re.subn(match, sub, text)
     except:
         return 'Regex Error'
-    if n != 1 or normalize_map(generated) != normalize_map(gold):
+    if n != 1 or generated != gold:
         return 'Regex Error'
     else:
         return ''
@@ -102,10 +99,31 @@ def check_correct_patterns(patterns_to_test, root, root_class):
 
 
 def generate_abstract_stem(row,
-                           global_exclusions='', local_exclusions='', local_additions='',
-                           form_preprocessed=None, form_pattern_preprocessed=None,
-                           cond_s=None, cond_t=None,
-                           normalize_map=None):
+                           global_exclusions, local_exclusions, local_additions,
+                           form_preprocessed='', form_pattern_preprocessed='',
+                           root_class_preprocessed='',
+                           cond_s='', cond_t=''):
+    """Root class has four types of phenomena (which can occur simultaneously):
+        (1) Letter made explicit, e.g., c.y.c
+        (2) Digit letter for certain types of gem, e.g., c.c.2
+        (3) Local exclusion: c.c.c-n
+        (4) Local addition: c.c+w.c
+    Global exclusion occurs automatically and relies on the letters made explicit in (1)
+
+    Args:
+        row (pd.Series): pandas row
+        global_exclusions (dict): computed automatically from explicit radicals in root class. Defaults to ''.
+        local_exclusions (dict): computed from explicit radicals following `-` in root class. Defaults to ''.
+        local_additions (dict): computed from explicit radicals following `+` in root class.
+        form_preprocessed (str, optional): form used to provide as input for testing correctness of match/sub regexes. For Arabic will usually be the normalized, dediacritized pattern. Defaults to ''.
+        form_pattern_preprocessed (str, optional): form pattern used to generate the match_regex. For Arabic, will usually be the normalized, dediacritized pattern. Defaults to ''.
+        root_class_preprocessed (list, optional): preprocessed root class used to generate the match_regex. For Arabic, will usually be the normalized, dediacritized version. Defaults to ''.
+        cond_s (str, optional): preprocessed COND-S to use for abstract stem. Defaults to ''.
+        cond_t (str, optional): preprocessed COND-T to use for abstract stem.. Defaults to ''.
+
+    Returns:
+        dict: dictionary containaining the new columns of the abstract entry
+    """
     messages = []
     columns = {}
     columns['DEFINE'] = 'BACKOFF'
@@ -123,15 +141,7 @@ def generate_abstract_stem(row,
     form_ = form_preprocessed if form_preprocessed else row['FORM']
     
     root = row['ROOT'].split('.')
-    # root_class = re.sub(r'2\.2', 'c.2', row['ROOT_CLASS'])
-    # root_class = re.sub(r'(?<!c\.)\d', 'c', root_class).split('.')
     root_class = row['ROOT_CLASS'].split('.')
-    # Root class has four types of phenomena (cna occur simultaneously):
-    # (1) Letter made explicit, e.g., c.y.c
-    # (2) Digit letter for when there is a gem, e.g., c.1.1
-    # (3) Local exclusion: c.c.c-n
-    # (4) Local addition: c.c+w.c
-    # Global exclusion occurs automatically and relies on the letters made explicit in (1)
     
     assert len(root_class) == len(root)
 
@@ -143,14 +153,13 @@ def generate_abstract_stem(row,
     
     # MATCH #########################################################
     form_pattern_ = form_pattern_preprocessed if form_pattern_preprocessed else row['PATTERN']
-    root_class_ = list(map(normalize_map, root_class))
     match_form, pos2match = generate_match_field(
-        form_pattern_, root_class_, global_exclusions, local_exclusions, local_additions)
+        form_pattern_, root_class_preprocessed, global_exclusions, local_exclusions, local_additions)
     columns['MATCH'] = f"^{match_form}$"
 
     # FORM #########################################################
     form_sub = generate_sub_regex(row['PATTERN'], root_class, pos2match)
-    messages.append(test_regex(match_form, form_sub, form_, row['FORM'], normalize_map))
+    messages.append(test_regex(match_form, form_sub, form_, row['FORM']))
 
     columns['FORM'] = form_sub
     columns['FORM_EX'] = row['FORM']
@@ -162,7 +171,7 @@ def generate_abstract_stem(row,
     columns['PATTERN_ABSTRACT'] = abstract_pattern
 
     lemma_sub = generate_sub_regex(pattern_lemma_stripped, root_class, pos2match)
-    messages.append(test_regex(match_form, lemma_sub, form_, lemma_stripped, normalize_map))
+    messages.append(test_regex(match_form, lemma_sub, form_, lemma_stripped))
     
     extra_info = re.search(r'-.', row['LEMMA'])
     columns['LEMMA'] = f"lex:{lemma_sub}{extra_info.group() if extra_info else ''}"
@@ -172,7 +181,7 @@ def generate_abstract_stem(row,
     root_concrete = row['ROOT'].split('.')
     pattern_root = ''.join(map(str, range(1, len(root_concrete) + 1)))
     root_sub = generate_sub_regex(pattern_root, root_class, pos2match, join_symbol='.', root=root)
-    messages.append(test_regex(match_form, root_sub, form_, row['ROOT'], normalize_map))
+    messages.append(test_regex(match_form, root_sub, form_, row['ROOT']))
 
     columns['ROOT'] = root_sub
     columns['ROOT_EX'] = row['ROOT']
@@ -194,6 +203,38 @@ def process_cond_s(row):
                               for cond in cond_s.split()]))
     return cond_s
 
+def get_exclusions(unique_abstract_types, preprocess_func):
+    global_exclusions = set()
+    for rows in unique_abstract_types.values():
+        row_index, row = rows[0]
+        root_class = row['ROOT_CLASS'].split('.')
+        local_exclusions = {
+            '-': {i: set() for i in range(len(root_class))},
+            '+': {i: set() for i in range(len(root_class))}
+        }
+        for i, r in enumerate(root_class):
+            if r != 'c' and not r.isdigit():
+                match = re.match(r'c([-\+][^\.\+]+)([-\+][^\.]+)?', r)
+                if match:
+                    match = match.groups()
+                    if match[0][0] == '-':
+                        exclusions_, additions_ = match[0][1:], match[1][1:] if match[1] else ''
+                    elif match[0][0] == '+':
+                        additions_, exclusions_ = match[0][1:], match[1][1:] if match[1] else ''
+                    local_exclusions['-'][i].update(exclusions_)
+                    local_exclusions['+'][i].update(additions_)
+                else:
+                    global_exclusions.add(r)
+        row['LOCAL_EXCLUSIONS'] = local_exclusions
+        rows[0] = (row_index, row)
+    
+    all_radicals = set(consonants_bw + 'A')
+    global_exclusions = set([preprocess_func(c) for c in global_exclusions])
+    for c in global_exclusions:
+        assert len(c) == 1 and c in all_radicals
+    
+    return global_exclusions, unique_abstract_types
+
 
 def generate_abstract_lexicon(lexicon, spreadsheet=None, sheet=None):
     from camel_tools.utils.charmap import CharMapper
@@ -211,55 +252,32 @@ def generate_abstract_lexicon(lexicon, spreadsheet=None, sheet=None):
     
     abstract_entries = []
     errors_indexes, messages = [], []
-    t_explicit = bool(lexicon['COND-S-BACKOFF'].str.contains('#t').any())
-    n_explicit = bool(lexicon['COND-S-BACKOFF'].str.contains('#n').any())
     unique_abstract_types = {}
     for row_index, row in tqdm(lexicon.iterrows(), total=len(lexicon.index)):
-        # root_class = re.sub(r'2\.2', 'c.2', row['ROOT_CLASS'])
-        # root_class = re.sub(r'(?<!c\.)\d', 'c', root_class).split('.')
-        # root_class_list.append(root_class)
         key = (row['PATTERN_ABSTRACT'], row['PATTERN_LEMMA'], row['PATTERN'],
                row['ROOT_CLASS'], row['FEAT'], row['COND-T-BACKOFF'], row['COND-S-BACKOFF'])
         unique_abstract_types.setdefault(key, []).append((row_index, row))
 
-    global_exclusions = set()
-    for rows in unique_abstract_types.values():
-        row_index, row = rows[0]
-        root_class = row['ROOT_CLASS'].split('.')
-        local_exclusions = {
-            '-': {i: set() for i in range(len(root_class))},
-            '+': {i: set() for i in range(len(root_class))}
-        }
-        for i, r in enumerate(root_class):
-            if r != 'c' and not r.isdigit():
-                if re.match(r'c([-\+].)+', r):
-                    for exclusion in [r[x : x + 2] for x in range(1, len(r), 2)]:
-                        local_exclusions[exclusion[0]][i].add(exclusion[1])
-                else:
-                    global_exclusions.add(r)
-        row['LOCAL_EXCLUSIONS'] = local_exclusions
-        rows[0] = (row_index, row)
-    
-    all_radicals = set(consonants_bw + 'A')
-    global_exclusions = set([normalize_map(c) for c in global_exclusions])
-    for c in global_exclusions:
-        assert len(c) == 1 and c in all_radicals
+    def preprocess_func(form):
+        form = normalize_map(form)
+        form = re.sub(r"[uioa~]", '', form)
+        return form
+
+    global_exclusions, unique_abstract_types = get_exclusions(unique_abstract_types, preprocess_func)
     
     messages = [''] * len(lexicon.index)
     for rows in unique_abstract_types.values():
         row_index, row = rows[0]
-        form_norm_dediac = normalize_map(row['FORM'])
-        form_norm_dediac = re.sub(r"[uioa~]", '', form_norm_dediac)
-        form_pattern_norm_dediac = normalize_map(row['PATTERN'])
-        form_pattern_norm_dediac = re.sub(r"[uioa~]", '', form_pattern_norm_dediac)
-        
+        form_norm_dediac = preprocess_func(row['FORM'])
+        form_pattern_norm_dediac = preprocess_func(row['PATTERN'])
+        root_class_preprocessed = preprocess_func(row['ROOT_CLASS']).split('.')
         columns = generate_abstract_stem(row=row,
                                          global_exclusions=global_exclusions,
                                          local_exclusions=row['LOCAL_EXCLUSIONS']['-'],
                                          local_additions=row['LOCAL_EXCLUSIONS']['+'],
                                          form_preprocessed=form_norm_dediac,
                                          form_pattern_preprocessed=form_pattern_norm_dediac,
-                                         normalize_map=normalize_map)
+                                         root_class_preprocessed=root_class_preprocessed)
         
         if type(columns) is dict:
             abstract_entries.append(columns)
@@ -267,10 +285,6 @@ def generate_abstract_lexicon(lexicon, spreadsheet=None, sheet=None):
             for row_index, _ in rows:
                 errors_indexes.append(row_index)
                 messages[row_index] = columns
-    
-    with open('sandbox/root_classes.tsv', 'w') as f:
-        for root_class in root_class_list:
-            print('.'.join(root_class), file=f)
 
     if sheet and spreadsheet and errors_indexes:
         add_check_mark_online(lexicon, spreadsheet, sheet,
