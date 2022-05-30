@@ -10,84 +10,65 @@ import gspread
 import pandas as pd
 from numpy import nan
 
-from utils import add_check_mark_online
+from utils import add_check_mark_online, consonants_bw
 from download_sheets import download_sheets
 
-root_class_list, patterns_list = [], []
+root_class_list = []
 
 header = ['PATTERN_ABSTRACT', 'PATTERN_DEF', 'ROOT', 'ROOT_SUB', 'DEFINE', 'CLASS', 'PATTERN',
           'LEMMA', 'LEMMA_SUB', 'FORM', 'FORM_SUB', 'BW', 'BW_SUB', 'GLOSS', 'FEAT', 'COND-T', 'COND-F', 'COND-S',
           'MATCH', 'COMMENTS', 'STATUS']
 
-def generate_sub_regex(pattern, root, root_class, join_symbol='', sub_type=''):
-    sub = []
-    counter, stop_counting = 0, False
-    for c in pattern:
-        if c.isdigit():
-            if int(c) - 2 and root_class[int(c) - 1] == root_class[int(c) - 2]:
-                if not root_class[int(c) - 1].isdigit():
-                    sub.append(concrete_root_radical(c, root, root_class)
-                                if sub_type != 'root' else root[int(c) - 1])
-                    continue
-            elif re.match(r'^\d$', root_class[int(c) - 1]):
-                counter += 1
-            elif not stop_counting and re.match(r'\d\d', root_class[int(c) - 1]):
-                counter += 1
-                stop_counting = True
-            elif not stop_counting and re.match(r'\d\w\d', root_class[int(c) - 1]):
-                counter += 1
-                stop_counting = True
-            else:
-                sub.append(concrete_root_radical(c, root, root_class)
-                            if sub_type != 'root' else root[int(c) - 1])
-                continue
-            sub.append(f'\\{counter}')
-        else:
-            sub.append(c)
-    sub = join_symbol.join(sub)
-    return sub
-
-def concrete_root_radical(index, root, root_class):
-    interdigitation = root_class[int(index) - 1][0]
-    interdigitation = interdigitation if not interdigitation.isdigit() else root[int(index) - 1]
-    return interdigitation
-
-
-def generate_match_field(pattern, root_class, regex_replace, final_radical_regex_replace):
-    match_form_ = pattern
+def generate_sub_regex(pattern, root_class, pos2match, join_symbol='', root=None):
+    pos2sub = []
+    match_groups = 1
     for i, r in enumerate(root_class):
-        generic_pos = i + 1
-        regex_match_ = str(generic_pos)
-        r_ = int(r) if r.isdigit() else r
-
-        if len(r) > 1:
-            if re.match(r'\d\d', r):
-                regex_match_ = r
-                regex_replace_ = regex_replace if generic_pos != len(root_class) else final_radical_regex_replace
-                parenth_grps = re.findall(r'\([^\(\)]+\)', match_form_)
-                regex_replace_ += f"\\\{len(parenth_grps) + 1}"
-            elif re.match(r'\d\w\d', r):
-                regex_match_ = r
-                regex_replace_ = regex_replace if generic_pos != len(root_class) else final_radical_regex_replace
-                regex_replace_ += r[1]
-                parenth_grps = re.findall(r'\([^\(\)]+\)', match_form_)
-                regex_replace_ += f"\\\{len(parenth_grps) + 1}"
-            else:
-                regex_match_ = str(generic_pos) * 2
-                regex_replace_ = r
-        elif i + 1 < len(root_class) and r == root_class[i + 1]:
-            regex_replace_ = (regex_replace if generic_pos != len(root_class) - 1 else final_radical_regex_replace) \
-                if type(r_) is int else r_
-        elif i >= 1 and r == root_class[i - 1]:
-            parenth_grps = re.findall(r'\([^\(\)]+\)', match_form_)
-            regex_replace_ = f"\\\{len(parenth_grps)}" if type(r_) is int else r_
+        if r[0] == 'c':
+            regex_replace_ = f"\\{match_groups}"
+            match_groups += 1
+        elif r.isdigit():
+            regex_replace_ = pos2match[i]
         else:
-            regex_replace_ = (regex_replace if generic_pos != len(root_class) else final_radical_regex_replace) \
-                if type(r_) is int else r_
+            regex_replace_ = r if not root else root[i]
         
-        match_form_ = re.sub(regex_match_, regex_replace_, match_form_, count=1)
+        pos2sub.append(regex_replace_)
+
+    sub_regex = join_symbol.join(pos2sub[int(p) - 1] if p.isdigit() else p for p in pattern)
+    return sub_regex
+
+
+def generate_match_field(pattern, root_class, global_exclusions, local_exclusions, local_additions):
+    pos2match = []
+    match_groups = 0
+    for i, r in enumerate(root_class):
+        regex_match = (global_exclusions | local_exclusions[i]) - local_additions[i]
+        regex_match = f"([^{''.join(regex_match)}])"
+        
+        if r[0] == 'c':
+            regex_match_ = regex_match
+            match_groups += 1
+        elif r.isdigit():
+            regex_match_ = f"\\{match_groups}"
+        else:
+            regex_match_ = r
+
+        pos2match.append(regex_match_)
     
-    return match_form_
+    match_regex = []
+    digits_used = set()
+    for p in pattern:
+        p_is_digit = p.isdigit()
+        if p_is_digit:
+            r = root_class[int(p) - 1]
+            if p not in digits_used or not r.isdigit() and r[0] != 'c':
+                match_regex.append(pos2match[int(p) - 1])
+                digits_used.add(p)
+            elif p in digits_used and r[0] == 'c':
+                match_regex.append(f"\\{[x[0] for x in root_class[:int(p)]].count('c')}")
+        else:
+            match_regex.append(p)
+    match_regex = ''.join(match_regex)
+    return match_regex, pos2match
 
 def test_regex(match, sub, text, gold, normalize_map):
     try:
@@ -99,12 +80,19 @@ def test_regex(match, sub, text, gold, normalize_map):
     else:
         return ''
 
-def check_correct_patterns(patterns_to_test, root):
-    for x_name, (x, x_pattern, root_class) in patterns_to_test.items():
+def check_correct_patterns(patterns_to_test, root, root_class):
+    for x_name, (x, x_pattern) in patterns_to_test.items():
         reconstructed = []
         for c in x_pattern:
             if c.isdigit():
-                reconstructed.append(concrete_root_radical(c, root, root_class))
+                r = root_class[int(c) - 1]
+                if r != 'c' and not r.isdigit():
+                    if len(r) > 1:
+                        reconstructed.append(root[int(c) - 1])
+                    else:
+                        reconstructed.append(r)
+                else:
+                    reconstructed.append(root[int(c) - 1])
             else:
                 reconstructed.append(c)
         reconstructed = ''.join(reconstructed)
@@ -113,7 +101,8 @@ def check_correct_patterns(patterns_to_test, root):
     return ''
 
 
-def generate_abstract_stem(row, regex_replace='(.)', final_radical_regex_replace='(.)',
+def generate_abstract_stem(row,
+                           global_exclusions='', local_exclusions='', local_additions='',
                            form_preprocessed=None, form_pattern_preprocessed=None,
                            cond_s=None, cond_t=None,
                            normalize_map=None):
@@ -134,32 +123,33 @@ def generate_abstract_stem(row, regex_replace='(.)', final_radical_regex_replace
     form_ = form_preprocessed if form_preprocessed else row['FORM']
     
     root = row['ROOT'].split('.')
+    # root_class = re.sub(r'2\.2', 'c.2', row['ROOT_CLASS'])
+    # root_class = re.sub(r'(?<!c\.)\d', 'c', root_class).split('.')
     root_class = row['ROOT_CLASS'].split('.')
+    # Root class has four types of phenomena (cna occur simultaneously):
+    # (1) Letter made explicit, e.g., c.y.c
+    # (2) Digit letter for when there is a gem, e.g., c.1.1
+    # (3) Local exclusion: c.c.c-n
+    # (4) Local addition: c.c+w.c
+    # Global exclusion occurs automatically and relies on the letters made explicit in (1)
+    
     assert len(root_class) == len(root)
-    root_class_lemma, root_class_form = [], []
-    for r in root_class:
-        if '@' in r:
-            r_lemma, r_form = r.split('@')
-            root_class_lemma.append(r_lemma)
-            root_class_form.append(r_form)
-        else:
-            root_class_lemma.append(r)
-            root_class_form.append(r)
 
     patterns_to_test = {
-        'lemma': (lemma_stripped, pattern_lemma_stripped, root_class_lemma),
-        'form': (row['FORM'], row['PATTERN'], root_class_form)
+        'lemma': (lemma_stripped, pattern_lemma_stripped),
+        'form': (row['FORM'], row['PATTERN'])
     }
-    messages.append(check_correct_patterns(patterns_to_test, root))
+    messages.append(check_correct_patterns(patterns_to_test, root, root_class))
     
     # MATCH #########################################################
     form_pattern_ = form_pattern_preprocessed if form_pattern_preprocessed else row['PATTERN']
-    root_class_ = list(map(normalize_map, root_class_form))
-    match_form = generate_match_field(form_pattern_, root_class_, regex_replace, final_radical_regex_replace)
+    root_class_ = list(map(normalize_map, root_class))
+    match_form, pos2match = generate_match_field(
+        form_pattern_, root_class_, global_exclusions, local_exclusions, local_additions)
     columns['MATCH'] = f"^{match_form}$"
 
     # FORM #########################################################
-    form_sub = generate_sub_regex(row['PATTERN'], root, root_class_form, sub_type='form')
+    form_sub = generate_sub_regex(row['PATTERN'], root_class, pos2match)
     messages.append(test_regex(match_form, form_sub, form_, row['FORM'], normalize_map))
 
     columns['FORM'] = form_sub
@@ -171,7 +161,7 @@ def generate_abstract_stem(row, regex_replace='(.)', final_radical_regex_replace
     columns['PATTERN_LEMMA'] = row['PATTERN_LEMMA']
     columns['PATTERN_ABSTRACT'] = abstract_pattern
 
-    lemma_sub = generate_sub_regex(pattern_lemma_stripped, root, root_class_lemma, sub_type='lemma')
+    lemma_sub = generate_sub_regex(pattern_lemma_stripped, root_class, pos2match)
     messages.append(test_regex(match_form, lemma_sub, form_, lemma_stripped, normalize_map))
     
     extra_info = re.search(r'-.', row['LEMMA'])
@@ -181,7 +171,7 @@ def generate_abstract_stem(row, regex_replace='(.)', final_radical_regex_replace
     # ROOT ##########################################################
     root_concrete = row['ROOT'].split('.')
     pattern_root = ''.join(map(str, range(1, len(root_concrete) + 1)))
-    root_sub = generate_sub_regex(pattern_root, root_concrete, root_class_lemma, join_symbol='.', sub_type='root')
+    root_sub = generate_sub_regex(pattern_root, root_class, pos2match, join_symbol='.', root=root)
     messages.append(test_regex(match_form, root_sub, form_, row['ROOT'], normalize_map))
 
     columns['ROOT'] = root_sub
@@ -205,7 +195,7 @@ def process_cond_s(row):
     return cond_s
 
 
-def generate_abstract_lexicon(lexicon, override_explicit=False, spreadsheet=None, sheet=None):
+def generate_abstract_lexicon(lexicon, spreadsheet=None, sheet=None):
     from camel_tools.utils.charmap import CharMapper
 
     normalize_map = CharMapper({
@@ -225,30 +215,48 @@ def generate_abstract_lexicon(lexicon, override_explicit=False, spreadsheet=None
     n_explicit = bool(lexicon['COND-S-BACKOFF'].str.contains('#n').any())
     unique_abstract_types = {}
     for row_index, row in tqdm(lexicon.iterrows(), total=len(lexicon.index)):
+        # root_class = re.sub(r'2\.2', 'c.2', row['ROOT_CLASS'])
+        # root_class = re.sub(r'(?<!c\.)\d', 'c', root_class).split('.')
+        # root_class_list.append(root_class)
         key = (row['PATTERN_ABSTRACT'], row['PATTERN_LEMMA'], row['PATTERN'],
                row['ROOT_CLASS'], row['FEAT'], row['COND-T-BACKOFF'], row['COND-S-BACKOFF'])
         unique_abstract_types.setdefault(key, []).append((row_index, row))
+
+    global_exclusions = set()
+    for rows in unique_abstract_types.values():
+        row_index, row = rows[0]
+        root_class = row['ROOT_CLASS'].split('.')
+        local_exclusions = {
+            '-': {i: set() for i in range(len(root_class))},
+            '+': {i: set() for i in range(len(root_class))}
+        }
+        for i, r in enumerate(root_class):
+            if r != 'c' and not r.isdigit():
+                if re.match(r'c([-\+].)+', r):
+                    for exclusion in [r[x : x + 2] for x in range(1, len(r), 2)]:
+                        local_exclusions[exclusion[0]][i].add(exclusion[1])
+                else:
+                    global_exclusions.add(r)
+        row['LOCAL_EXCLUSIONS'] = local_exclusions
+        rows[0] = (row_index, row)
+    
+    all_radicals = set(consonants_bw + 'A')
+    global_exclusions = set([normalize_map(c) for c in global_exclusions])
+    for c in global_exclusions:
+        assert len(c) == 1 and c in all_radicals
     
     messages = [''] * len(lexicon.index)
-    for k, rows in unique_abstract_types.items():
+    for rows in unique_abstract_types.values():
         row_index, row = rows[0]
-        override_n_t = override_explicit and 'gem' in row['COND-S-BACKOFF'] and bool(re.search(r'[nt]~?$', re.sub(r'(-.)?(_\d)?$', '', row['LEMMA'])))
-        if not t_explicit and not n_explicit or override_n_t:
-            final_radical_regex_replace = '([^wyA}&])'
-        elif not t_explicit and n_explicit:
-            final_radical_regex_replace = '([^nwyA}&])'
-        elif t_explicit and not n_explicit:
-            final_radical_regex_replace = '([^twyA}&])'
-        else:
-            final_radical_regex_replace = '([^ntwyA}&])'
         form_norm_dediac = normalize_map(row['FORM'])
         form_norm_dediac = re.sub(r"[uioa~]", '', form_norm_dediac)
         form_pattern_norm_dediac = normalize_map(row['PATTERN'])
         form_pattern_norm_dediac = re.sub(r"[uioa~]", '', form_pattern_norm_dediac)
         
         columns = generate_abstract_stem(row=row,
-                                         regex_replace='([^wyA}&])',
-                                         final_radical_regex_replace=final_radical_regex_replace,
+                                         global_exclusions=global_exclusions,
+                                         local_exclusions=row['LOCAL_EXCLUSIONS']['-'],
+                                         local_additions=row['LOCAL_EXCLUSIONS']['+'],
                                          form_preprocessed=form_norm_dediac,
                                          form_pattern_preprocessed=form_pattern_norm_dediac,
                                          normalize_map=normalize_map)
@@ -260,6 +268,10 @@ def generate_abstract_lexicon(lexicon, override_explicit=False, spreadsheet=None
                 errors_indexes.append(row_index)
                 messages[row_index] = columns
     
+    with open('sandbox/root_classes.tsv', 'w') as f:
+        for root_class in root_class_list:
+            print('.'.join(root_class), file=f)
+
     if sheet and spreadsheet and errors_indexes:
         add_check_mark_online(lexicon, spreadsheet, sheet,
                               messages=messages, mode='backoff',
@@ -320,10 +332,8 @@ if __name__ == "__main__":
 
     SHEETS, _ = db_maker_utils.read_morph_specs(config, args.config_name)
     lexicon = SHEETS['lexicon']
-    override_explicit = config_local['lexicon'].get('override_explicit')
 
     abstract_lexicon = generate_abstract_lexicon(lexicon,
-                                                 override_explicit,
                                                  sh, config_local['lexicon']['sheets'][0])
 
     abstract_lexicon.to_csv(os.path.join(data_dir, output_name))
