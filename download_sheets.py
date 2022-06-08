@@ -23,15 +23,21 @@ def download_sheets(lex=None, specs=None, save_dir=None, config=None, config_nam
                  'sheets': [ss[1:] for ss in specs]}
     else:
         specs_local = []
-        for sheets in config['local'][config_name]['specs'].values():
+        sheets_groups = config['local'][config_name]['specs']['sheets'].values() \
+                            if config['local'][config_name]['specs'].get('sheets') \
+                            else config['local'][config_name]['specs'].values()
+        for sheets in sheets_groups:
             if type(sheets) is str:
                 specs_local.append(sheets)
             elif type(sheets) is dict:
                 for sheet in sheets.values():
                     specs_local.append(sheet)
-                    
+        
+        spreadsheet_specs = config['local'][config_name]['specs']['spreadsheet'] \
+                                if config['local'][config_name]['specs'].get('spreadsheet') \
+                                else config['global']['specs']['spreadsheet']
         specs = {
-            'spreadsheets': [config['global']['specs']['spreadsheet']],
+            'spreadsheets': [spreadsheet_specs],
             'sheets': [
                 config['global']['specs']['sheets'] + specs_local]
         }

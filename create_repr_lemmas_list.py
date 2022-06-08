@@ -223,7 +223,7 @@ if __name__ == "__main__":
     SHEETS, _ = db_maker_utils.read_morph_specs(config, config_name)
     lexicon = SHEETS['lexicon']
     lexicon['COND-S'] = lexicon.apply(
-        lambda row: re.sub(r'hamzated|hollow|defective', '', row['COND-S']), axis=1)
+        lambda row: re.sub(r'hamzated|hollow|defective|ditrans', '', row['COND-S']), axis=1)
     lexicon['COND-S'] = lexicon.apply(
         lambda row: re.sub(r' +', ' ', row['COND-S']), axis=1)
     

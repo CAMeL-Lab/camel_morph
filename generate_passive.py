@@ -77,7 +77,8 @@ def generate_passive(LEXICON, patterns_path):
         lambda row: re.sub(row['PATTERN-MAP']['regex_match'],
                            row['PATTERN-MAP']['regex_sub'],
                            row['FORM']), axis=1)
-    LEXICON_PASS['PATTERN'] = LEXICON_PASS.apply(get_pattern, axis=1)
+    if 'PATTERN' in LEXICON_PASS.columns:
+        LEXICON_PASS['PATTERN'] = LEXICON_PASS.apply(get_pattern, axis=1)
     LEXICON_PASS['SOUND'] = LEXICON_PASS.apply(get_soundness, axis=1)
     # All passive forms should be intransitive
     LEXICON_PASS['COND-T'] = LEXICON_PASS.apply(

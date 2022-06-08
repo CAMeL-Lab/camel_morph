@@ -11,6 +11,8 @@ make_db_all_msa_red:
 	python db_maker.py -config_name all_msa_order-v4_red 
 make_db_all_msa:
 	python db_maker.py -config_name all_msa_order-v4 
+make_db_cr_msa:
+	python db_maker.py -config_name msa_cr
 
 make_db_pv_glf:	
 	python db_maker.py -config_name pv_glf_order-v4_red 
@@ -27,6 +29,8 @@ make_db_cv_egy:
 	python db_maker.py -config_name cv_egy_order-v4_red 
 make_db_all_egy:	
 	python db_maker.py -config_name all_egy_order-v4 
+make_db_cr_egy:	
+	python db_maker.py -config_name egy_cr
 
 make_db_nom_msa:	
 	python db_maker.py -config_name nom_msa_red 
@@ -78,25 +82,25 @@ conj_cv_x_msa:
 	python generate_conj_table.py -feats "asp:c mod:x" -config_name cv_msa_order-v4
 
 conj_pv_msa_db_full:
-	python generate_conj_table.py -feats "asp:p mod:i" -config_name pv_msa_order-v4 -db XYZ_msa_all_v1.0.db
+	python generate_conj_table.py -feats "asp:p mod:i" -config_name pv_msa_order-v4 -db XYZ_msa_cr_v1.0.db
 
 conj_iv_i_msa_db_full:	
-	python generate_conj_table.py -feats "asp:i mod:i" -config_name iv_msa_order-v4 -db XYZ_msa_all_v1.0.db
+	python generate_conj_table.py -feats "asp:i mod:i" -config_name iv_msa_order-v4 -db XYZ_msa_cr_v1.0.db
 conj_iv_s_msa_db_full:	
-	python generate_conj_table.py -feats "asp:i mod:s" -config_name iv_msa_order-v4 -db XYZ_msa_all_v1.0.db
+	python generate_conj_table.py -feats "asp:i mod:s" -config_name iv_msa_order-v4 -db XYZ_msa_cr_v1.0.db
 conj_iv_j_msa_db_full:	
-	python generate_conj_table.py -feats "asp:i mod:j" -config_name iv_msa_order-v4 -db XYZ_msa_all_v1.0.db
+	python generate_conj_table.py -feats "asp:i mod:j" -config_name iv_msa_order-v4 -db XYZ_msa_cr_v1.0.db
 conj_iv_e_msa_db_full:	
-	python generate_conj_table.py -feats "asp:i mod:e" -config_name iv_msa_order-v4 -db XYZ_msa_all_v1.0.db
+	python generate_conj_table.py -feats "asp:i mod:e" -config_name iv_msa_order-v4 -db XYZ_msa_cr_v1.0.db
 conj_iv_x_msa_db_full:	
-	python generate_conj_table.py -feats "asp:i mod:x" -config_name iv_msa_order-v4 -db XYZ_msa_all_v1.0.db
+	python generate_conj_table.py -feats "asp:i mod:x" -config_name iv_msa_order-v4 -db XYZ_msa_cr_v1.0.db
 
 conj_cv_i_msa_db_full:	
-	python generate_conj_table.py -feats "asp:c mod:i" -config_name cv_msa_order-v4 -db XYZ_msa_all_v1.0.db
+	python generate_conj_table.py -feats "asp:c mod:i" -config_name cv_msa_order-v4 -db XYZ_msa_cr_v1.0.db
 conj_cv_e_msa_db_full:	
-	python generate_conj_table.py -feats "asp:c mod:e" -config_name cv_msa_order-v4 -db XYZ_msa_all_v1.0.db
+	python generate_conj_table.py -feats "asp:c mod:e" -config_name cv_msa_order-v4 -db XYZ_msa_cr_v1.0.db
 conj_cv_x_msa_db_full:	
-	python generate_conj_table.py -feats "asp:c mod:x" -config_name cv_msa_order-v4 -db XYZ_msa_all_v1.0.db
+	python generate_conj_table.py -feats "asp:c mod:x" -config_name cv_msa_order-v4 -db XYZ_msa_cr_v1.0.db
 
 conj_adj_msa:	
 	python generate_conj_table.py -config_name adj_msa_split_red
@@ -118,11 +122,11 @@ conj_cv_egy:
 	python generate_conj_table.py -feats "asp:c mod:i" -config_name iv_egy_order-v4
 
 conj_pv_egy_db_full:
-	python generate_conj_table.py -feats "asp:p mod:i" -config_name pv_egy_order-v4 -db XYZ_egy_all_v1.0.db
+	python generate_conj_table.py -feats "asp:p mod:i" -config_name pv_egy_order-v4 -db XYZ_egy_cr_v1.0.db
 conj_iv_egy_db_full:	
-	python generate_conj_table.py -feats "asp:i mod:i" -config_name iv_egy_order-v4 -db XYZ_egy_all_v1.0.db
+	python generate_conj_table.py -feats "asp:i mod:i" -config_name iv_egy_order-v4 -db XYZ_egy_cr_v1.0.db
 conj_cv_egy_db_full:	
-	python generate_conj_table.py -feats "asp:c mod:i" -config_name cv_egy_order-v4 -db XYZ_egy_all_v1.0.db
+	python generate_conj_table.py -feats "asp:c mod:i" -config_name cv_egy_order-v4 -db XYZ_egy_cr_v1.0.db
 
 download_specs:
 	python download_sheets.py -specs header-morph-order-sheets MSA-MORPH-Verbs-v4-Red
@@ -138,6 +142,8 @@ download_msa_all_red:
 	python download_sheets.py -config_name all_msa_order-v4
 download_msa_all:	
 	python download_sheets.py -config_name all_msa_order-v4
+download_msa_cr:
+	python download_sheets.py -config_name msa_cr
 
 download_glf_pv:	
 	python download_sheets.py -config_name pv_glf_order-v4_red
@@ -154,6 +160,8 @@ download_egy_cv:
 	python download_sheets.py -config_name cv_egy_order-v4
 download_egy_all:	
 	python download_sheets.py -config_name all_egy_order-v4
+download_cr_egy:	
+	python download_sheets.py -config_name egy_cr
 
 download_msa_nom:	
 	python download_sheets.py -config_name nom_msa_red

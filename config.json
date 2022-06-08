@@ -103,9 +103,7 @@
                 "sheets": [
                     "MSA-LEX-PV"
                 ],
-                "backoff": {
-                    "MSA-LEX-PV": "MSA-LEX-PV-ABSTRACT"
-                }
+                "backoff": "auto"
             },
             "db": "XYZ_msa_pv_v1.0.db",
             "repr_lemmas": "repr_lemmas_pv_msa.pkl",
@@ -668,7 +666,7 @@
             "debugging": {
                 "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
                 "feats": {
-                    "asp:p mod:i": {
+                    "asp:i mod:i": {
                         "conj_tables": "conj_iv_egy_v1.0.tsv",
                         "paradigm_debugging": "paradigm_debug_iv_egy_v1.0.tsv",
                         "bank": "EGY-IV-Bank.tsv",
@@ -738,7 +736,7 @@
             "debugging": {
                 "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
                 "feats": {
-                    "asp:p mod:i": {
+                    "asp:c mod:i": {
                         "conj_tables": "conj_cv_egy_v1.0.tsv",
                         "paradigm_debugging": "paradigm_debug_cv_egy_v1.0.tsv",
                         "bank": "EGY-CV-Bank.tsv",
@@ -1002,6 +1000,56 @@
             ],
             "extended_lemma_keys": [
                 "lemma"
+            ]
+        },
+        "msa_cr": {
+            "dialect": "msa",
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "CamelMorph-MSA-Specs-v1.0",
+                "sheets": {
+                    "order": "MSA-ORDER-Verbs",
+                    "morph": "MSA-MORPH-Verbs"
+                }
+            },
+            "lexicon": {
+                "spreadsheet": "CamelMorph-MSA-Specs-v1.0",
+                "sheets": [
+                    "MSA-LEX-PV",
+                    "MSA-LEX-IV",
+                    "MSA-LEX-CV"
+                ]
+            },
+            "db": "XYZ_msa_cr_v1.0.db",
+            "pos_type": "verbal",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        },
+        "egy_cr": {
+            "dialect": "egy",
+            "pruning": true,
+            "specs": {
+                "postregex": "PostRegex",
+                "spreadsheet": "CamelMorph-EGY-Specs-v1.0",
+                "sheets": {
+                    "order": "EGY-ORDER-Verbs",
+                    "morph": "EGY-MORPH-Verbs"
+                }
+            },
+            "lexicon": {
+                "spreadsheet": "CamelMorph-EGY-Specs-v1.0",
+                "sheets": [
+                    "EGY-LEX-PV",
+                    "EGY-LEX-IV",
+                    "EGY-LEX-CV"
+                ]
+            },
+            "db": "XYZ_egy_cr_v1.0.db",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
             ]
         }
     }

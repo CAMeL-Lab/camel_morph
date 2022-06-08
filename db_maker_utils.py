@@ -18,13 +18,19 @@ def read_morph_specs(config, config_name):
 
     ABOUT = pd.read_csv(os.path.join(data_dir, 'About.csv'))
     HEADER = pd.read_csv(os.path.join(data_dir, 'Header.csv'))
-    order_filename = f"{local_specs['specs']['order']}.csv"
+
+    order_filename = f"{local_specs['specs']['sheets']['order']}.csv" if local_specs['specs'].get('sheets') \
+        else f"{local_specs['specs']['order']}.csv"
     ORDER = pd.read_csv(os.path.join(data_dir, order_filename))
-    morph_filename = f"{local_specs['specs']['morph']}.csv"
+    morph_filename = f"{local_specs['specs']['sheets']['morph']}.csv" if local_specs['specs'].get('sheets') \
+        else f"{local_specs['specs']['morph']}.csv"
     MORPH = pd.read_csv(os.path.join(data_dir, morph_filename))
     
     lexicon_sheets = local_specs['lexicon']['sheets']
-    patterns_sheets = local_specs['specs'].get('passive')
+    if local_specs['specs'].get('spreadsheet'):
+        patterns_sheets = local_specs['specs']['sheets'].get('passive')
+    else:
+        patterns_sheets = local_specs['specs'].get('passive')
     backoff_sheets = local_specs['lexicon'].get('backoff')
     LEXICON, BACKOFF = None, None
     for lexicon_sheet_name in lexicon_sheets:
@@ -32,6 +38,8 @@ def read_morph_specs(config, config_name):
         # Replace spaces in BW and GLOSS with '#'; skip commented rows and empty lines
         LEXICON_ = LEXICON_[LEXICON_.DEFINE == 'LEXICON']
         LEXICON_ = LEXICON_.replace(nan, '', regex=True)
+        if 'COND-F' not in LEXICON_.columns:
+            LEXICON_['COND-F'] = ''
 
         if patterns_sheets:
             passive_patterns = patterns_sheets.get(lexicon_sheet_name)
@@ -114,19 +122,6 @@ def read_morph_specs(config, config_name):
         )
         for cond_class, cond_s in class2cond.items()
             for i, cond in enumerate(cond_s)}
-
-    if not os.path.exists('morph_cache'):
-        os.mkdir('morph_cache')
-    if os.path.exists('morph_cache/morph_sheet_prev.pkl'):
-        MORPH_prev = pd.read_pickle('morph_cache/morph_sheet_prev.pkl')
-        if MORPH.equals(MORPH_prev):
-            MORPH = pd.read_pickle('morph_cache/morph_sheet_processed.pkl')
-            for exclusion in exclusions:
-                MORPH = MORPH[~MORPH.EXCLUDE.str.contains(exclusion)]
-            SHEETS = dict(about=ABOUT, header=HEADER, order=ORDER, morph=MORPH,
-                          lexicon=LEXICON, backoff=BACKOFF, postregex=POSTREGEX)
-            return SHEETS, cond2class
-    MORPH.to_pickle('morph_cache/morph_sheet_prev.pkl')
     
     # Skip commented rows and empty lines
     MORPH = MORPH[MORPH.DEFINE == 'MORPH']
@@ -143,6 +138,8 @@ def read_morph_specs(config, config_name):
     MORPH.loc[MORPH['BW'] == '', 'BW'] = '_'
     MORPH.loc[MORPH['FORM'] == '', 'FORM'] = '_'
     MORPH['GLOSS'] = MORPH['GLOSS'].replace('\s+', '#', regex=True)
+    if 'COND-F' not in MORPH.columns:
+        MORPH['COND-F'] = ''
     # Retroactively generate the condFalse by creating the complementry distribution
     # of all the conditions within a single morpheme (all the allomorphs)
     # This is perfomed here once instead of on the fly.
@@ -220,7 +217,7 @@ def read_morph_specs(config, config_name):
                 cond_f_almrph = [y for y in cond_f_almrph if y not in ['', '_', 'else', None]]
                 MORPH.loc[idx, 'COND-T'] = ' '.join(cond_t_almrph)
                 MORPH.loc[idx, 'COND-F'] = ' '.join(cond_f_almrph)
-    MORPH.to_pickle('morph_cache/morph_sheet_processed.pkl')
+
     for exclusion in exclusions:
         MORPH = MORPH[~MORPH.EXCLUDE.str.contains(exclusion)]
     SHEETS = dict(about=ABOUT, header=HEADER, order=ORDER, morph=MORPH,
