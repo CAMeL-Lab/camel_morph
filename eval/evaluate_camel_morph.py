@@ -69,7 +69,7 @@ def _preprocess_camel_tb_data(data):
 
 
 def _preprocess_ldc_dediac(ldc_diac):
-    analyzer_input = re.sub(r'\(null\)', '', ldc_diac)
+    analyzer_input = re.sub(r'\(null\)', '', re.sub(r'_\d$', '', ldc_diac))
     analyzer_input = re.sub(r'uwA\+', 'uw', analyzer_input)
     analyzer_input = re.sub(r'[aiuo~FKN`\+_]', '', analyzer_input)
     return analyzer_input
@@ -170,6 +170,8 @@ def evaluate_verbs_recall(data, eval_mode):
         print('Analyzer input: LDC DEDIAC')
     elif 'raw' in eval_mode:
         print('Analyzer input: RAW')
+    elif 'calima_dediac' in eval_mode:
+        print('Analyzer input: CALIMA DEDIAC')
 
     data_, counts = {}, {}
     for word_info in data['verbal']:
@@ -185,10 +187,14 @@ def evaluate_verbs_recall(data, eval_mode):
     pbar = tqdm(total=len(data_))
     for (word, ldc_bw), word_info in data_:
         total += 1
+        analysis_gold = _preprocess_analysis(word_info['analysis'])
+
         if 'raw' in eval_mode:
             analyzer_input = word
         elif 'ldc_dediac' in eval_mode:
             analyzer_input = _preprocess_ldc_dediac(ldc_bw[0])
+        elif 'calima_dediac' in eval_mode:
+            analyzer_input = _preprocess_ldc_dediac(analysis_gold[diac_index])
 
         analyzer_input = bw2ar(analyzer_input)
 
@@ -197,7 +203,6 @@ def evaluate_verbs_recall(data, eval_mode):
             analysis['source'] = 'main'
         analyses_pred = set([_preprocess_analysis(analysis)
                              for analysis in analyses_pred])
-        analysis_gold = _preprocess_analysis(word_info['analysis'])
 
         match = re.search(r'ADAM|CALIMA|SAMA', word_info['analysis']['gloss'])
         if match:
@@ -530,7 +535,8 @@ if __name__ == "__main__":
                         type=str, help="Path of the EGY baseline DB file we will be comparing against.")
     parser.add_argument("-eval_mode", required=True,
                         choices=['recall_msa_magold_raw', 'recall_msa_magold_ldc_dediac',
-                                 'recall_egy_magold_raw', 'recall_egy_magold_ldc_dediac', 'recall_egy_union_msa_magold_raw', 'recall_egy_union_msa_magold_ldc_dediac',
+                                 'recall_egy_magold_raw', 'recall_egy_magold_ldc_dediac',
+                                 'recall_egy_union_msa_magold_raw', 'recall_egy_union_msa_magold_ldc_dediac', 'recall_egy_union_msa_magold_calima_dediac',
                                  'recall_egy_magold_raw_no_lex', 'recall_egy_magold_ldc_dediac_no_lex',
                                  'recall_msa_magold_ldc_dediac_backoff', 'recall_egy_magold_ldc_dediac_backoff',
                                  'compare_camel_tb_msa_raw', 'compare_camel_tb_egy_raw'],

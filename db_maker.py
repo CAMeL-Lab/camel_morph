@@ -9,9 +9,6 @@
 ###########################################
 
 import db_maker_utils
-from camel_tools.utils.normalize import normalize_alef_bw, normalize_alef_maksura_bw, normalize_teh_marbuta_bw
-from camel_tools.utils.charmap import CharMapper
-from camel_tools.utils.dediac import dediac_bw
 import re
 import os
 from tqdm import tqdm
@@ -62,8 +59,8 @@ def construct_almor_db(SHEETS, pruning, cond2class):
     short_cat_maps = _get_short_cat_name_maps(ORDER)
 
     db = {}
-    db['OUT:###ABOUT###'] = list(ABOUT['Content'])
-    db['OUT:###HEADER###'] = list(HEADER['Content'])
+    db['OUT:###ABOUT###'] = list(ABOUT['CONTENT'])
+    db['OUT:###HEADER###'] = list(HEADER['CONTENT'])
     if POSTREGEX is not None:
         db['OUT:###POSTREGEX###'] = [
             'MATCH\t' + '\t'.join([match for match in POSTREGEX['MATCH'].values.tolist()]),
@@ -72,59 +69,56 @@ def construct_almor_db(SHEETS, pruning, cond2class):
     
     defaults = _process_defaults(db['OUT:###HEADER###'])
     
-    def construct_process(lexicon, stems_section_title):
-        compatibility_memoize = {}
-        cmplx_morph_memoize = {'stem': {}, 'suffix': {}, 'prefix': {}}
-        stem_pattern = re.compile(r'\[(STEM(?:-[PIC]V)?)\]')
-        # Currently not used
-        # TODO: see how different order lines can benefit from each other's information
-        # when it comes to affixes
-        prefix_pattern = re.compile(r'(\[(IVPref)\.\d\w{1,2}\])')
-        suffix_pattern = re.compile(r'(\[(IVSuff)\.\w\.\d\w{1,2}\])')
+    def construct_process(lexicon, order, cmplx_stem_memoize, stems_section_title):
+        cmplx_prefix_classes = gen_cmplx_morph_combs(
+            order['PREFIX'], MORPH, lexicon, cond2class,
+            pruning_cond_s_f=pruning, pruning_same_class_incompat=pruning)
+        cmplx_suffix_classes = gen_cmplx_morph_combs(
+            order['SUFFIX'], MORPH, lexicon, cond2class,
+            pruning_cond_s_f=pruning, pruning_same_class_incompat=pruning)
+        cmplx_stem_classes = gen_cmplx_morph_combs(
+            order['STEM'], MORPH, lexicon, cond2class,
+            cmplx_morph_memoize=cmplx_stem_memoize,
+            pruning_cond_s_f=pruning, pruning_same_class_incompat=pruning)
         
+        cmplx_morph_classes = dict(
+            cmplx_prefix_classes=(cmplx_prefix_classes, order['PREFIX']),
+            cmplx_suffix_classes=(cmplx_suffix_classes, order['SUFFIX']),
+            cmplx_stem_classes=(cmplx_stem_classes, order['STEM']))
+        
+        db_ = populate_db(
+            cmplx_morph_classes, order['CLASS'].lower(), short_cat_maps, defaults, stems_section_title)
+        for section, contents in db_.items():
+            # if 'BACKOFF' in stems_section_title and section != stems_section_title:
+            #     assert set(contents) <= set(db[section])
+            db.setdefault(section, {}).update(contents)
+    
+    print('Concrete lexicon')
+    pbar = tqdm(total=len(list(ORDER.iterrows())))
+    cmplx_stem_memoize = {}
+    order_stem_prev = ''
+    for _, order in ORDER.iterrows():
+        pbar.set_description(order['SUFFIX-SHORT'])
+        if order['STEM'] != order_stem_prev:
+            cmplx_stem_memoize = {}
+            order_stem_prev = order['STEM']
+        construct_process(LEXICON, order, cmplx_stem_memoize, stems_section_title='OUT:###STEMS###')
+        pbar.update(1)
+    pbar.close()
+    
+    if BACKOFF is not None:
+        print('Backoff lexicon')
         pbar = tqdm(total=len(list(ORDER.iterrows())))
         for _, order in ORDER.iterrows():
             pbar.set_description(order['SUFFIX-SHORT'])
-            cmplx_prefix_classes = gen_cmplx_morph_combs(
-                order['PREFIX'], MORPH, lexicon, cond2class, prefix_pattern,
-                cmplx_morph_memoize=cmplx_morph_memoize['prefix'],
-                pruning_cond_s_f=pruning, pruning_same_class_incompat=pruning)
-            cmplx_suffix_classes = gen_cmplx_morph_combs(
-                order['SUFFIX'], MORPH, lexicon, cond2class, suffix_pattern,
-                cmplx_morph_memoize=cmplx_morph_memoize['suffix'],
-                pruning_cond_s_f=pruning, pruning_same_class_incompat=pruning)
-            cmplx_stem_classes = gen_cmplx_morph_combs(
-                order['STEM'], MORPH, lexicon, cond2class, stem_pattern,
-                cmplx_morph_memoize=cmplx_morph_memoize['stem'],
-                pruning_cond_s_f=pruning, pruning_same_class_incompat=pruning)
-            
-            cmplx_morph_classes = dict(
-                cmplx_prefix_classes=(cmplx_prefix_classes, order['PREFIX']),
-                cmplx_suffix_classes=(cmplx_suffix_classes, order['SUFFIX']),
-                cmplx_stem_classes=(cmplx_stem_classes, order['STEM']))
-            
-            db_ = populate_db(
-                cmplx_morph_classes, order['CLASS'].lower(), compatibility_memoize,
-                short_cat_maps, defaults, stems_section_title)
-            for section, contents in db_.items():
-                # if 'BACKOFF' in stems_section_title and section != stems_section_title:
-                #     assert set(contents) <= set(db[section])
-                db.setdefault(section, {}).update(contents)
-            
+            construct_process(BACKOFF, order, stems_section_title='OUT:###SMARTBACKOFF###')
             pbar.update(1)
         pbar.close()
-    
-    print('Concrete lexicon')
-    construct_process(LEXICON, stems_section_title='OUT:###STEMS###')
-    if BACKOFF is not None:
-        print('Backoff lexicon')
-        construct_process(BACKOFF, stems_section_title='OUT:###SMARTBACKOFF###')
 
     return db
 
 def populate_db(cmplx_morph_classes,
                 pos_type,
-                compatibility_memoize,
                 short_cat_maps=None,
                 defaults=None,
                 stems_section_title='OUT:###STEMS###'):
@@ -139,8 +133,8 @@ def populate_db(cmplx_morph_classes,
     cmplx_prefix_classes, cmplx_prefix_seq = cmplx_morph_classes['cmplx_prefix_classes']
     cmplx_suffix_classes, cmplx_suffix_seq = cmplx_morph_classes['cmplx_suffix_classes']
     cmplx_stem_classes, cmplx_stem_seq = cmplx_morph_classes['cmplx_stem_classes']
-
     cat_memoize = {'stem': {}, 'suffix': {}, 'prefix': {}}
+    compatibility_memoize = {}
     for cmplx_stem_cls, cmplx_stems in cmplx_stem_classes.items():
         # `cmplx_stem_cls` = (cmplx_stem['COND-S'], cmplx_stem['COND-T'], cmplx_stem['COND-F'])
         # All entries in `cmplx_stems` have the same cat
@@ -338,16 +332,13 @@ def _read_affix(affix):
     return affix_match, affix_diac, affix_gloss, affix_feat, affix_bw
 
 def _read_stem(stem):
-    stem_bw = '+'.join([s['BW_SUB'] if s['DEFINE'] == 'BACKOFF' else s['BW']
-                        for s in stem if s['BW'] != '_'])
+    stem_bw = '+'.join([s['BW'] for s in stem if s['BW'] != '_'])
     stem_gloss = '+'.join([s['GLOSS'] for s in stem if 'LEMMA' in s])
     stem_gloss = stem_gloss if stem_gloss else '_'
-    stem_lex = '+'.join([s['LEMMA_SUB'].split(':')[1] if s['DEFINE'] == 'BACKOFF' else s['LEMMA'].split(':')[1]
-                            for s in stem if 'LEMMA' in s])
+    stem_lex = '+'.join([s['LEMMA'].split(':')[1] for s in stem if 'LEMMA' in s])
     stem_feat = {feat.split(':')[0]: feat.split(':')[1]
                 for s in stem for feat in s['FEAT'].split()}
-    root = [s['ROOT_SUB'] if s['DEFINE'] == 'BACKOFF' else s['ROOT']
-            for s in stem if s.get('ROOT')][0]
+    root = [s['ROOT'] for s in stem if s.get('ROOT')][0]
     
     backoff = False
     if not any([s['DEFINE'] == 'BACKOFF' for s in stem]):
@@ -356,14 +347,16 @@ def _read_stem(stem):
             normalize_teh_marbuta_bw(dediac_bw(re.sub(r'[#@]', '', stem_diac)))))
     else:
         backoff = True
-        stem_diac = ''.join([s['FORM_SUB'] if s['DEFINE'] == 'BACKOFF' else s['FORM']
-                             for s in stem if s['FORM'] != '_'])
-        stem_match = ''.join([re.sub(r'^\^|\$$|[#@]', '', s['MATCH'])
-                              if s['DEFINE'] == 'BACKOFF' else \
-                                normalize_alef_bw(normalize_alef_maksura_bw(
-                                normalize_teh_marbuta_bw(dediac_bw(re.sub(r'[#@]', '', s['FORM'])))))
-                              for s in stem if s['FORM'] != '_'])
-        stem_match = f'^{stem_match}$'
+        stem_diac = ''.join([s['FORM'] for s in stem if s['FORM'] != '_'])
+        stem_match = []
+        for s in stem:
+            if s['FORM'] != '_':
+                if s['DEFINE'] == 'BACKOFF':
+                    stem_match.append(re.sub(r'^\^|\$$|[#@]', '', s['MATCH']))
+                else:
+                    stem_match.append(normalize_alef_bw(normalize_alef_maksura_bw(
+                                      normalize_teh_marbuta_bw(dediac_bw(re.sub(r'[#@]', '', s['FORM']))))))
+        stem_match = f"^{''.join(stem_match)}$"
 
     return stem_match, stem_diac, stem_lex, stem_gloss, stem_feat, stem_bw, root, backoff
 
@@ -430,7 +423,6 @@ def _get_short_cat_name_maps(ORDER):
 def gen_cmplx_morph_combs(cmplx_morph_seq,
                           MORPH, LEXICON,
                           cond2class=None,
-                          morph_pattern=None,
                           cmplx_morph_memoize=None,
                           pruning_cond_s_f=True,
                           pruning_same_class_incompat=True):
@@ -442,15 +434,8 @@ def gen_cmplx_morph_combs(cmplx_morph_seq,
     order of morphemes.
     In other words, it generates a Cartesian product of their combinations
     as specified by the allowed morph classes"""
-    if cmplx_morph_memoize != None:
-        pattern_match = morph_pattern.search(cmplx_morph_seq)
-        if pattern_match:
-            seq_key = pattern_match.group(1)
-        else:
-            seq_key = cmplx_morph_seq
-        
-        if 'STEM' in cmplx_morph_seq and cmplx_morph_memoize.get(seq_key) != None:
-            return cmplx_morph_memoize[seq_key]
+    if cmplx_morph_memoize:
+        return cmplx_morph_memoize
 
     cmplx_morph_classes = []
     for cmplx_morph_cls in cmplx_morph_seq.split():
@@ -523,8 +508,7 @@ def gen_cmplx_morph_combs(cmplx_morph_seq,
         
         cmplx_morph_categorized = complex_morph_categorized_
     
-    if 'STEM' in cmplx_morph_seq and cmplx_morph_memoize != None:
-        cmplx_morph_memoize[seq_key] = cmplx_morph_categorized
+    cmplx_morph_memoize = cmplx_morph_categorized
     
     return cmplx_morph_categorized
 
@@ -607,6 +591,18 @@ if __name__ == "__main__":
     if args.camel_tools == 'local':
         camel_tools_dir = config_global['camel_tools']
         sys.path.insert(0, camel_tools_dir)
+
+    from camel_tools.utils.normalize import normalize_alef_bw, normalize_alef_maksura_bw, normalize_teh_marbuta_bw
+    from camel_tools.utils.charmap import CharMapper
+    from camel_tools.utils.dediac import dediac_bw
+
+    normalize_map = CharMapper({
+        '<': 'A',
+        '>': 'A',
+        '|': 'A',
+        '{': 'A',
+        'Y': 'y'
+    })
 
     bw2ar = CharMapper.builtin_mapper('bw2ar')
     ar2bw = CharMapper.builtin_mapper('ar2bw')
