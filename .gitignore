@@ -354,3 +354,4 @@ MigrationBackup/
 *.db
 *.pkl
 *.tsv
+sigmorphon2022_release/*
