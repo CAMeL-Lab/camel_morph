@@ -1,0 +1,4687 @@
+SIGNATURE	LEMMA	DIAC	QC	COMMENTS	STATUS
+VERB.P1S.AI	>ak~ad	>ak~adtu	OK		
+VERB.P1P.AI	>ak~ad	>ak~adnA	OK		
+VERB.P2MS.AI	>ak~ad	>ak~adta	OK		
+VERB.P2FS.AI	>ak~ad	>ak~adti	OK		
+VERB.P2D.AI	>ak~ad	>ak~adtumA	OK		
+VERB.P2MP.AI	>ak~ad	>ak~adtum	OK		
+VERB.P2FP.AI	>ak~ad	>ak~adtun~a	OK		
+VERB.P3MS.AI	>ak~ad	>ak~ada	OK		
+VERB.P3FS.AI	>ak~ad	>ak~adat	OK		
+VERB.P3MD.AI	>ak~ad	>ak~adA	OK		
+VERB.P3FD.AI	>ak~ad	>ak~adatA	OK		
+VERB.P3MP.AI	>ak~ad	>ak~aduwA	OK		
+VERB.P3FP.AI	>ak~ad	>ak~adna	OK		
+VERB.P1S.PI	>ak~ad	>uk~idtu	OK		
+VERB.P1P.PI	>ak~ad	>uk~idnA	OK		
+VERB.P2MS.PI	>ak~ad	>uk~idta	OK		
+VERB.P2FS.PI	>ak~ad	>uk~idti	OK		
+VERB.P2D.PI	>ak~ad	>uk~idtumA	OK		
+VERB.P2MP.PI	>ak~ad	>uk~idtum	OK		
+VERB.P2FP.PI	>ak~ad	>uk~idtun~a	OK		
+VERB.P3MS.PI	>ak~ad	>uk~ida	OK		
+VERB.P3FS.PI	>ak~ad	>uk~idat	OK		
+VERB.P3MD.PI	>ak~ad	>uk~idA	OK		
+VERB.P3FD.PI	>ak~ad	>uk~idatA	OK		
+VERB.P3MP.PI	>ak~ad	>uk~iduwA	OK		
+VERB.P3FP.PI	>ak~ad	>uk~idna	OK		
+VERB.P1S.AI.E0	>ak~ad	>ak~adtuhu	OK		
+VERB.P1P.AI.E0	>ak~ad	>ak~adnAhu	OK		
+VERB.P2MS.AI.E0	>ak~ad	>ak~adtahu	OK		
+VERB.P2FS.AI.E0	>ak~ad	>ak~adtihi	OK		
+VERB.P2D.AI.E0	>ak~ad	>ak~adtumAhu	OK		
+VERB.P2MP.AI.E0	>ak~ad	>ak~adtumuwhu	OK		
+VERB.P2FP.AI.E0	>ak~ad	>ak~adtun~ahu	OK		
+VERB.P3MS.AI.E0	>ak~ad	>ak~adahu	OK		
+VERB.P3FS.AI.E0	>ak~ad	>ak~adathu	OK		
+VERB.P3MD.AI.E0	>ak~ad	>ak~adAhu	OK		
+VERB.P3FD.AI.E0	>ak~ad	>ak~adatAhu	OK		
+VERB.P3MP.AI.E0	>ak~ad	>ak~aduwhu	OK		
+VERB.P3FP.AI.E0	>ak~ad	>ak~adnahu	OK		
+VERB.P1S.PI.E0	>ak~ad		OK		
+VERB.P1P.PI.E0	>ak~ad		OK		
+VERB.P2MS.PI.E0	>ak~ad		OK		
+VERB.P2FS.PI.E0	>ak~ad		OK		
+VERB.P2D.PI.E0	>ak~ad		OK		
+VERB.P2MP.PI.E0	>ak~ad		OK		
+VERB.P2FP.PI.E0	>ak~ad		OK		
+VERB.P3MS.PI.E0	>ak~ad		OK		
+VERB.P3FS.PI.E0	>ak~ad		OK		
+VERB.P3MD.PI.E0	>ak~ad		OK		
+VERB.P3FD.PI.E0	>ak~ad		OK		
+VERB.P3MP.PI.E0	>ak~ad		OK		
+VERB.P3FP.PI.E0	>ak~ad		OK		
+VERB.P1S.AI	{isotamar~	Aisotamorartu	OK		
+VERB.P1P.AI	{isotamar~	AisotamorarnA	OK		
+VERB.P2MS.AI	{isotamar~	Aisotamorarta	OK		
+VERB.P2FS.AI	{isotamar~	Aisotamorarti	OK		
+VERB.P2D.AI	{isotamar~	AisotamorartumA	OK		
+VERB.P2MP.AI	{isotamar~	Aisotamorartum	OK		
+VERB.P2FP.AI	{isotamar~	Aisotamorartun~a	OK		
+VERB.P3MS.AI	{isotamar~	Aisotamar~a	OK		
+VERB.P3FS.AI	{isotamar~	Aisotamar~at	OK		
+VERB.P3MD.AI	{isotamar~	Aisotamar~A	OK		
+VERB.P3FD.AI	{isotamar~	Aisotamar~atA	OK		
+VERB.P3MP.AI	{isotamar~	Aisotamar~uwA	OK		
+VERB.P3FP.AI	{isotamar~	Aisotamorarna	OK		
+VERB.P1S.PI	{isotamar~	Ausotumorirtu	OK		
+VERB.P1P.PI	{isotamar~	AusotumorirnA	OK		
+VERB.P2MS.PI	{isotamar~	Ausotumorirta	OK		
+VERB.P2FS.PI	{isotamar~	Ausotumorirti	OK		
+VERB.P2D.PI	{isotamar~	AusotumorirtumA	OK		
+VERB.P2MP.PI	{isotamar~	Ausotumorirtum	OK		
+VERB.P2FP.PI	{isotamar~	Ausotumorirtun~a	OK		
+VERB.P3MS.PI	{isotamar~	Ausotumorira	PROB		
+VERB.P3FS.PI	{isotamar~	Ausotumorirat	PROB		
+VERB.P3MD.PI	{isotamar~	AusotumorirA	PROB		
+VERB.P3FD.PI	{isotamar~	AusotumoriratA	PROB		
+VERB.P3MP.PI	{isotamar~	AusotumoriruwA	PROB		
+VERB.P3FP.PI	{isotamar~	Ausotumorirna	OK		
+VERB.P1S.AI.E0	{isotamar~	Aisotamorartuhu	OK		
+VERB.P1P.AI.E0	{isotamar~	AisotamorarnAhu	OK		
+VERB.P2MS.AI.E0	{isotamar~	Aisotamorartahu	OK		
+VERB.P2FS.AI.E0	{isotamar~	Aisotamorartihi	OK		
+VERB.P2D.AI.E0	{isotamar~	AisotamorartumAhu	OK		
+VERB.P2MP.AI.E0	{isotamar~	Aisotamorartumuwhu	OK		
+VERB.P2FP.AI.E0	{isotamar~	Aisotamorartun~ahu	OK		
+VERB.P3MS.AI.E0	{isotamar~	Aisotamar~ahu	OK		
+VERB.P3FS.AI.E0	{isotamar~	Aisotamar~athu	OK		
+VERB.P3MD.AI.E0	{isotamar~	Aisotamar~Ahu	OK		
+VERB.P3FD.AI.E0	{isotamar~	Aisotamar~atAhu	OK		
+VERB.P3MP.AI.E0	{isotamar~	Aisotamar~uwhu	OK		
+VERB.P3FP.AI.E0	{isotamar~	Aisotamorarnahu	OK		
+VERB.P1S.PI.E0	{isotamar~		OK		
+VERB.P1P.PI.E0	{isotamar~		OK		
+VERB.P2MS.PI.E0	{isotamar~		OK		
+VERB.P2FS.PI.E0	{isotamar~		OK		
+VERB.P2D.PI.E0	{isotamar~		OK		
+VERB.P2MP.PI.E0	{isotamar~		OK		
+VERB.P2FP.PI.E0	{isotamar~		OK		
+VERB.P3MS.PI.E0	{isotamar~		OK		
+VERB.P3FS.PI.E0	{isotamar~		OK		
+VERB.P3MD.PI.E0	{isotamar~		OK		
+VERB.P3FD.PI.E0	{isotamar~		OK		
+VERB.P3MP.PI.E0	{isotamar~		OK		
+VERB.P3FP.PI.E0	{isotamar~		OK		
+VERB.P1S.AI	>aEolan	>aEolantu	OK		
+VERB.P1P.AI	>aEolan	>aEolan~A	OK		
+VERB.P2MS.AI	>aEolan	>aEolanta	OK		
+VERB.P2FS.AI	>aEolan	>aEolanti	OK		
+VERB.P2D.AI	>aEolan	>aEolantumA	OK		
+VERB.P2MP.AI	>aEolan	>aEolantum	OK		
+VERB.P2FP.AI	>aEolan	>aEolantun~a	OK		
+VERB.P3MS.AI	>aEolan	>aEolana	OK		
+VERB.P3FS.AI	>aEolan	>aEolanat	OK		
+VERB.P3MD.AI	>aEolan	>aEolanA	OK		
+VERB.P3FD.AI	>aEolan	>aEolanatA	OK		
+VERB.P3MP.AI	>aEolan	>aEolanuwA	OK		
+VERB.P3FP.AI	>aEolan	>aEolan~a	OK		
+VERB.P1S.PI	>aEolan	>uEolintu	OK		
+VERB.P1P.PI	>aEolan	>uEolin~A	OK		
+VERB.P2MS.PI	>aEolan	>uEolinta	OK		
+VERB.P2FS.PI	>aEolan	>uEolinti	OK		
+VERB.P2D.PI	>aEolan	>uEolintumA	OK		
+VERB.P2MP.PI	>aEolan	>uEolintum	OK		
+VERB.P2FP.PI	>aEolan	>uEolintun~a	OK		
+VERB.P3MS.PI	>aEolan	>uEolina	OK		
+VERB.P3FS.PI	>aEolan	>uEolinat	OK		
+VERB.P3MD.PI	>aEolan	>uEolinA	OK		
+VERB.P3FD.PI	>aEolan	>uEolinatA	OK		
+VERB.P3MP.PI	>aEolan	>uEolinuwA	OK		
+VERB.P3FP.PI	>aEolan	>uEolin~a	OK		
+VERB.P1S.AI.E0	>aEolan	>aEolantuhu	OK		
+VERB.P1P.AI.E0	>aEolan	>aEolan~Ahu	OK		
+VERB.P2MS.AI.E0	>aEolan	>aEolantahu	OK		
+VERB.P2FS.AI.E0	>aEolan	>aEolantihi	OK		
+VERB.P2D.AI.E0	>aEolan	>aEolantumAhu	OK		
+VERB.P2MP.AI.E0	>aEolan	>aEolantumuwhu	OK		
+VERB.P2FP.AI.E0	>aEolan	>aEolantun~ahu	OK		
+VERB.P3MS.AI.E0	>aEolan	>aEolanahu	OK		
+VERB.P3FS.AI.E0	>aEolan	>aEolanathu	OK		
+VERB.P3MD.AI.E0	>aEolan	>aEolanAhu	OK		
+VERB.P3FD.AI.E0	>aEolan	>aEolanatAhu	OK		
+VERB.P3MP.AI.E0	>aEolan	>aEolanuwhu	OK		
+VERB.P3FP.AI.E0	>aEolan	>aEolan~ahu	OK		
+VERB.P1S.PI.E0	>aEolan		OK		
+VERB.P1P.PI.E0	>aEolan		OK		
+VERB.P2MS.PI.E0	>aEolan		OK		
+VERB.P2FS.PI.E0	>aEolan		OK		
+VERB.P2D.PI.E0	>aEolan		OK		
+VERB.P2MP.PI.E0	>aEolan		OK		
+VERB.P2FP.PI.E0	>aEolan		OK		
+VERB.P3MS.PI.E0	>aEolan		OK		
+VERB.P3FS.PI.E0	>aEolan		OK		
+VERB.P3MD.PI.E0	>aEolan		OK		
+VERB.P3FD.PI.E0	>aEolan		OK		
+VERB.P3MP.PI.E0	>aEolan		OK		
+VERB.P3FP.PI.E0	>aEolan		OK		
+VERB.P1S.AI	{isotaTAE	AisotaTaEtu	OK		
+VERB.P1P.AI	{isotaTAE	AisotaTaEnA	OK		
+VERB.P2MS.AI	{isotaTAE	AisotaTaEta	OK		
+VERB.P2FS.AI	{isotaTAE	AisotaTaEti	OK		
+VERB.P2D.AI	{isotaTAE	AisotaTaEtumA	OK		
+VERB.P2MP.AI	{isotaTAE	AisotaTaEtum	OK		
+VERB.P2FP.AI	{isotaTAE	AisotaTaEtun~a	OK		
+VERB.P3MS.AI	{isotaTAE	AisotaTAEa	OK		
+VERB.P3FS.AI	{isotaTAE	AisotaTAEat	OK		
+VERB.P3MD.AI	{isotaTAE	AisotaTAEA	OK		
+VERB.P3FD.AI	{isotaTAE	AisotaTAEatA	OK		
+VERB.P3MP.AI	{isotaTAE	AisotaTAEuwA	OK		
+VERB.P3FP.AI	{isotaTAE	AisotaTaEna	OK		
+VERB.P1S.PI	{isotaTAE	AusotuTiyEtu	PROB		
+VERB.P1P.PI	{isotaTAE	AusotuTiyEnA	PROB		
+VERB.P2MS.PI	{isotaTAE	AusotuTiyEta	PROB		
+VERB.P2FS.PI	{isotaTAE	AusotuTiyEti	PROB		
+VERB.P2D.PI	{isotaTAE	AusotuTiyEtumA	PROB		
+VERB.P2MP.PI	{isotaTAE	AusotuTiyEtum	PROB		
+VERB.P2FP.PI	{isotaTAE	AusotuTiyEtun~a	PROB		
+VERB.P3MS.PI	{isotaTAE	AusotuTiyEa	OK		
+VERB.P3FS.PI	{isotaTAE	AusotuTiyEat	OK		
+VERB.P3MD.PI	{isotaTAE	AusotuTiyEA	OK		
+VERB.P3FD.PI	{isotaTAE	AusotuTiyEatA	OK		
+VERB.P3MP.PI	{isotaTAE	AusotuTiyEuwA	OK		
+VERB.P3FP.PI	{isotaTAE	AusotuTiyEna	PROB		
+VERB.P1S.AI.E0	{isotaTAE		OK		
+VERB.P1P.AI.E0	{isotaTAE		OK		
+VERB.P2MS.AI.E0	{isotaTAE		OK		
+VERB.P2FS.AI.E0	{isotaTAE		OK		
+VERB.P2D.AI.E0	{isotaTAE		OK		
+VERB.P2MP.AI.E0	{isotaTAE		OK		
+VERB.P2FP.AI.E0	{isotaTAE		OK		
+VERB.P3MS.AI.E0	{isotaTAE		OK		
+VERB.P3FS.AI.E0	{isotaTAE		OK		
+VERB.P3MD.AI.E0	{isotaTAE		OK		
+VERB.P3FD.AI.E0	{isotaTAE		OK		
+VERB.P3MP.AI.E0	{isotaTAE		OK		
+VERB.P3FP.AI.E0	{isotaTAE		OK		
+VERB.P1S.PI.E0	{isotaTAE		OK		
+VERB.P1P.PI.E0	{isotaTAE		OK		
+VERB.P2MS.PI.E0	{isotaTAE		OK		
+VERB.P2FS.PI.E0	{isotaTAE		OK		
+VERB.P2D.PI.E0	{isotaTAE		OK		
+VERB.P2MP.PI.E0	{isotaTAE		OK		
+VERB.P2FP.PI.E0	{isotaTAE		OK		
+VERB.P3MS.PI.E0	{isotaTAE		OK		
+VERB.P3FS.PI.E0	{isotaTAE		OK		
+VERB.P3MD.PI.E0	{isotaTAE		OK		
+VERB.P3FD.PI.E0	{isotaTAE		OK		
+VERB.P3MP.PI.E0	{isotaTAE		OK		
+VERB.P3FP.PI.E0	{isotaTAE		OK		
+VERB.P1S.AI	{inotahaY	Ainotahaytu	OK		
+VERB.P1P.AI	{inotahaY	AinotahaynA	OK		
+VERB.P2MS.AI	{inotahaY	Ainotahayta	OK		
+VERB.P2FS.AI	{inotahaY	Ainotahayti	OK		
+VERB.P2D.AI	{inotahaY	AinotahaytumA	OK		
+VERB.P2MP.AI	{inotahaY	Ainotahaytum	OK		
+VERB.P2FP.AI	{inotahaY	Ainotahaytun~a	OK		
+VERB.P3MS.AI	{inotahaY	AinotahaY	OK		
+VERB.P3FS.AI	{inotahaY	Ainotahat	OK		
+VERB.P3MD.AI	{inotahaY	AinotahayA	OK		
+VERB.P3FD.AI	{inotahaY	AinotahatA	OK		
+VERB.P3MP.AI	{inotahaY	AinotahawoA	OK		
+VERB.P3FP.AI	{inotahaY	Ainotahayna	OK		
+VERB.P1S.PI	{inotahaY	Aunotuhiytu	OK		
+VERB.P1P.PI	{inotahaY	AunotuhiynA	OK		
+VERB.P2MS.PI	{inotahaY	Aunotuhiyta	OK		
+VERB.P2FS.PI	{inotahaY	Aunotuhiyti	OK		
+VERB.P2D.PI	{inotahaY	AunotuhiytumA	OK		
+VERB.P2MP.PI	{inotahaY	Aunotuhiytum	OK		
+VERB.P2FP.PI	{inotahaY	Aunotuhiytun~a	OK		
+VERB.P3MS.PI	{inotahaY	Aunotuhiya	OK		
+VERB.P3FS.PI	{inotahaY	Aunotuhiyat	OK		
+VERB.P3MD.PI	{inotahaY	AunotuhiyA	OK		
+VERB.P3FD.PI	{inotahaY	AunotuhiyatA	OK		
+VERB.P3MP.PI	{inotahaY	AunotuhuwA	OK		
+VERB.P3FP.PI	{inotahaY	Aunotuhiyna	OK		
+VERB.P1S.AI.E0	{inotahaY		OK		
+VERB.P1P.AI.E0	{inotahaY		OK		
+VERB.P2MS.AI.E0	{inotahaY		OK		
+VERB.P2FS.AI.E0	{inotahaY		OK		
+VERB.P2D.AI.E0	{inotahaY		OK		
+VERB.P2MP.AI.E0	{inotahaY		OK		
+VERB.P2FP.AI.E0	{inotahaY		OK		
+VERB.P3MS.AI.E0	{inotahaY		OK		
+VERB.P3FS.AI.E0	{inotahaY		OK		
+VERB.P3MD.AI.E0	{inotahaY		OK		
+VERB.P3FD.AI.E0	{inotahaY		OK		
+VERB.P3MP.AI.E0	{inotahaY		OK		
+VERB.P3FP.AI.E0	{inotahaY		OK		
+VERB.P1S.PI.E0	{inotahaY		OK		
+VERB.P1P.PI.E0	{inotahaY		OK		
+VERB.P2MS.PI.E0	{inotahaY		OK		
+VERB.P2FS.PI.E0	{inotahaY		OK		
+VERB.P2D.PI.E0	{inotahaY		OK		
+VERB.P2MP.PI.E0	{inotahaY		OK		
+VERB.P2FP.PI.E0	{inotahaY		OK		
+VERB.P3MS.PI.E0	{inotahaY		OK		
+VERB.P3FS.PI.E0	{inotahaY		OK		
+VERB.P3MD.PI.E0	{inotahaY		OK		
+VERB.P3FD.PI.E0	{inotahaY		OK		
+VERB.P3MP.PI.E0	{inotahaY		OK		
+VERB.P3FP.PI.E0	{inotahaY		OK		
+VERB.P1S.AI	>ajoraY	>ajoraytu	OK		
+VERB.P1P.AI	>ajoraY	>ajoraynA	OK		
+VERB.P2MS.AI	>ajoraY	>ajorayta	OK		
+VERB.P2FS.AI	>ajoraY	>ajorayti	OK		
+VERB.P2D.AI	>ajoraY	>ajoraytumA	OK		
+VERB.P2MP.AI	>ajoraY	>ajoraytum	OK		
+VERB.P2FP.AI	>ajoraY	>ajoraytun~a	OK		
+VERB.P3MS.AI	>ajoraY	>ajoraY	OK		
+VERB.P3FS.AI	>ajoraY	>ajorat	OK		
+VERB.P3MD.AI	>ajoraY	>ajorayA	OK		
+VERB.P3FD.AI	>ajoraY	>ajoratA	OK		
+VERB.P3MP.AI	>ajoraY	>ajorawoA	OK		
+VERB.P3FP.AI	>ajoraY	>ajorayna	OK		
+VERB.P1S.PI	>ajoraY	>ujoriytu	OK		
+VERB.P1P.PI	>ajoraY	>ujoriynA	OK		
+VERB.P2MS.PI	>ajoraY	>ujoriyta	OK		
+VERB.P2FS.PI	>ajoraY	>ujoriyti	OK		
+VERB.P2D.PI	>ajoraY	>ujoriytumA	OK		
+VERB.P2MP.PI	>ajoraY	>ujoriytum	OK		
+VERB.P2FP.PI	>ajoraY	>ujoriytun~a	OK		
+VERB.P3MS.PI	>ajoraY	>ujoriya	OK		
+VERB.P3FS.PI	>ajoraY	>ujoriyat	OK		
+VERB.P3MD.PI	>ajoraY	>ujoriyA	OK		
+VERB.P3FD.PI	>ajoraY	>ujoriyatA	OK		
+VERB.P3MP.PI	>ajoraY	>ujoruwA	OK		
+VERB.P3FP.PI	>ajoraY	>ujoriyna	OK		
+VERB.P1S.AI.E0	>ajoraY	>ajoraytuhu	OK		
+VERB.P1P.AI.E0	>ajoraY	>ajoraynAhu	OK		
+VERB.P2MS.AI.E0	>ajoraY	>ajoraytahu	OK		
+VERB.P2FS.AI.E0	>ajoraY	>ajoraytihi	OK		
+VERB.P2D.AI.E0	>ajoraY	>ajoraytumAhu	OK		
+VERB.P2MP.AI.E0	>ajoraY	>ajoraytumuwhu	OK		
+VERB.P2FP.AI.E0	>ajoraY	>ajoraytun~ahu	OK		
+VERB.P3MS.AI.E0	>ajoraY	>ajoraAhu	OK		
+VERB.P3FS.AI.E0	>ajoraY	>ajorathu	OK		
+VERB.P3MD.AI.E0	>ajoraY	>ajorayAhu	OK		
+VERB.P3FD.AI.E0	>ajoraY	>ajoratAhu	OK		
+VERB.P3MP.AI.E0	>ajoraY	>ajorawohu	OK		
+VERB.P3FP.AI.E0	>ajoraY	>ajoraynahu	OK		
+VERB.P1S.PI.E0	>ajoraY		OK		
+VERB.P1P.PI.E0	>ajoraY		OK		
+VERB.P2MS.PI.E0	>ajoraY		OK		
+VERB.P2FS.PI.E0	>ajoraY		OK		
+VERB.P2D.PI.E0	>ajoraY		OK		
+VERB.P2MP.PI.E0	>ajoraY		OK		
+VERB.P2FP.PI.E0	>ajoraY		OK		
+VERB.P3MS.PI.E0	>ajoraY		OK		
+VERB.P3FS.PI.E0	>ajoraY		OK		
+VERB.P3MD.PI.E0	>ajoraY		OK		
+VERB.P3FD.PI.E0	>ajoraY		OK		
+VERB.P3MP.PI.E0	>ajoraY		OK		
+VERB.P3FP.PI.E0	>ajoraY		OK		
+VERB.P1S.AI	tamak~an	tamak~antu	OK		
+VERB.P1P.AI	tamak~an	tamak~an~A	OK		
+VERB.P2MS.AI	tamak~an	tamak~anta	OK		
+VERB.P2FS.AI	tamak~an	tamak~anti	OK		
+VERB.P2D.AI	tamak~an	tamak~antumA	OK		
+VERB.P2MP.AI	tamak~an	tamak~antum	OK		
+VERB.P2FP.AI	tamak~an	tamak~antun~a	OK		
+VERB.P3MS.AI	tamak~an	tamak~ana	OK		
+VERB.P3FS.AI	tamak~an	tamak~anat	OK		
+VERB.P3MD.AI	tamak~an	tamak~anA	OK		
+VERB.P3FD.AI	tamak~an	tamak~anatA	OK		
+VERB.P3MP.AI	tamak~an	tamak~anuwA	OK		
+VERB.P3FP.AI	tamak~an	tamak~an~a	OK		
+VERB.P1S.PI	tamak~an	tumuk~intu	OK		
+VERB.P1P.PI	tamak~an	tumuk~in~A	OK		
+VERB.P2MS.PI	tamak~an	tumuk~inta	OK		
+VERB.P2FS.PI	tamak~an	tumuk~inti	OK		
+VERB.P2D.PI	tamak~an	tumuk~intumA	OK		
+VERB.P2MP.PI	tamak~an	tumuk~intum	OK		
+VERB.P2FP.PI	tamak~an	tumuk~intun~a	OK		
+VERB.P3MS.PI	tamak~an	tumuk~ina	OK		
+VERB.P3FS.PI	tamak~an	tumuk~inat	OK		
+VERB.P3MD.PI	tamak~an	tumuk~inA	OK		
+VERB.P3FD.PI	tamak~an	tumuk~inatA	OK		
+VERB.P3MP.PI	tamak~an	tumuk~inuwA	OK		
+VERB.P3FP.PI	tamak~an	tumuk~in~a	OK		
+VERB.P1S.AI.E0	tamak~an		OK		
+VERB.P1P.AI.E0	tamak~an		OK		
+VERB.P2MS.AI.E0	tamak~an		OK		
+VERB.P2FS.AI.E0	tamak~an		OK		
+VERB.P2D.AI.E0	tamak~an		OK		
+VERB.P2MP.AI.E0	tamak~an		OK		
+VERB.P2FP.AI.E0	tamak~an		OK		
+VERB.P3MS.AI.E0	tamak~an		OK		
+VERB.P3FS.AI.E0	tamak~an		OK		
+VERB.P3MD.AI.E0	tamak~an		OK		
+VERB.P3FD.AI.E0	tamak~an		OK		
+VERB.P3MP.AI.E0	tamak~an		OK		
+VERB.P3FP.AI.E0	tamak~an		OK		
+VERB.P1S.PI.E0	tamak~an		OK		
+VERB.P1P.PI.E0	tamak~an		OK		
+VERB.P2MS.PI.E0	tamak~an		OK		
+VERB.P2FS.PI.E0	tamak~an		OK		
+VERB.P2D.PI.E0	tamak~an		OK		
+VERB.P2MP.PI.E0	tamak~an		OK		
+VERB.P2FP.PI.E0	tamak~an		OK		
+VERB.P3MS.PI.E0	tamak~an		OK		
+VERB.P3FS.PI.E0	tamak~an		OK		
+VERB.P3MD.PI.E0	tamak~an		OK		
+VERB.P3FD.PI.E0	tamak~an		OK		
+VERB.P3MP.PI.E0	tamak~an		OK		
+VERB.P3FP.PI.E0	tamak~an		OK		
+VERB.P1S.AI	{ifotan~	Aifotanantu	OK		
+VERB.P1P.AI	{ifotan~	Aifotanan~A	OK		
+VERB.P2MS.AI	{ifotan~	Aifotananta	OK		
+VERB.P2FS.AI	{ifotan~	Aifotananti	OK		
+VERB.P2D.AI	{ifotan~	AifotanantumA	OK		
+VERB.P2MP.AI	{ifotan~	Aifotanantum	OK		
+VERB.P2FP.AI	{ifotan~	Aifotanantun~a	OK		
+VERB.P3MS.AI	{ifotan~	Aifotan~a	OK		
+VERB.P3FS.AI	{ifotan~	Aifotan~at	OK		
+VERB.P3MD.AI	{ifotan~	Aifotan~A	OK		
+VERB.P3FD.AI	{ifotan~	Aifotan~atA	OK		
+VERB.P3MP.AI	{ifotan~	Aifotan~uwA	OK		
+VERB.P3FP.AI	{ifotan~	Aifotanan~a	OK		
+VERB.P1S.PI	{ifotan~	Aufotunintu	OK		
+VERB.P1P.PI	{ifotan~	Aufotunin~A	OK		
+VERB.P2MS.PI	{ifotan~	Aufotuninta	OK		
+VERB.P2FS.PI	{ifotan~	Aufotuninti	OK		
+VERB.P2D.PI	{ifotan~	AufotunintumA	OK		
+VERB.P2MP.PI	{ifotan~	Aufotunintum	OK		
+VERB.P2FP.PI	{ifotan~	Aufotunintun~a	OK		
+VERB.P3MS.PI	{ifotan~	Aufotun~a	OK		
+VERB.P3FS.PI	{ifotan~	Aufotun~at	OK		
+VERB.P3MD.PI	{ifotan~	Aufotun~A	OK		
+VERB.P3FD.PI	{ifotan~	Aufotun~atA	OK		
+VERB.P3MP.PI	{ifotan~	Aufotun~uwA	OK		
+VERB.P3FP.PI	{ifotan~	Aufotunin~a	OK		
+VERB.P1S.AI.E0	{ifotan~		OK		
+VERB.P1P.AI.E0	{ifotan~		OK		
+VERB.P2MS.AI.E0	{ifotan~		OK		
+VERB.P2FS.AI.E0	{ifotan~		OK		
+VERB.P2D.AI.E0	{ifotan~		OK		
+VERB.P2MP.AI.E0	{ifotan~		OK		
+VERB.P2FP.AI.E0	{ifotan~		OK		
+VERB.P3MS.AI.E0	{ifotan~		OK		
+VERB.P3FS.AI.E0	{ifotan~		OK		
+VERB.P3MD.AI.E0	{ifotan~		OK		
+VERB.P3FD.AI.E0	{ifotan~		OK		
+VERB.P3MP.AI.E0	{ifotan~		OK		
+VERB.P3FP.AI.E0	{ifotan~		OK		
+VERB.P1S.PI.E0	{ifotan~		OK		
+VERB.P1P.PI.E0	{ifotan~		OK		
+VERB.P2MS.PI.E0	{ifotan~		OK		
+VERB.P2FS.PI.E0	{ifotan~		OK		
+VERB.P2D.PI.E0	{ifotan~		OK		
+VERB.P2MP.PI.E0	{ifotan~		OK		
+VERB.P2FP.PI.E0	{ifotan~		OK		
+VERB.P3MS.PI.E0	{ifotan~		OK		
+VERB.P3FS.PI.E0	{ifotan~		OK		
+VERB.P3MD.PI.E0	{ifotan~		OK		
+VERB.P3FD.PI.E0	{ifotan~		OK		
+VERB.P3MP.PI.E0	{ifotan~		OK		
+VERB.P3FP.PI.E0	{ifotan~		OK		
+VERB.P1S.AI	{irota>aY	Airota>aytu	OK		
+VERB.P1P.AI	{irota>aY	Airota>aynA	OK		
+VERB.P2MS.AI	{irota>aY	Airota>ayta	OK		
+VERB.P2FS.AI	{irota>aY	Airota>ayti	OK		
+VERB.P2D.AI	{irota>aY	Airota>aytumA	OK		
+VERB.P2MP.AI	{irota>aY	Airota>aytum	OK		
+VERB.P2FP.AI	{irota>aY	Airota>aytun~a	OK		
+VERB.P3MS.AI	{irota>aY	Airota>aY	OK		
+VERB.P3FS.AI	{irota>aY	Airota>at	OK		
+VERB.P3MD.AI	{irota>aY	Airota>ayA	OK		
+VERB.P3FD.AI	{irota>aY	Airota>atA	OK		
+VERB.P3MP.AI	{irota>aY	Airota>awoA	OK		
+VERB.P3FP.AI	{irota>aY	Airota>ayna	OK		
+VERB.P1S.PI	{irota>aY	Aurotutu	PROB		
+VERB.P1P.PI	{irota>aY	AurotunA	PROB		
+VERB.P2MS.PI	{irota>aY	Aurotuta	PROB		
+VERB.P2FS.PI	{irota>aY	Aurotuti	PROB		
+VERB.P2D.PI	{irota>aY	AurotutumA	PROB		
+VERB.P2MP.PI	{irota>aY	Aurotutum	PROB		
+VERB.P2FP.PI	{irota>aY	Aurotutun~a	PROB		
+VERB.P3MS.PI	{irota>aY	Aurotua	PROB		
+VERB.P3FS.PI	{irota>aY	Aurotuat	PROB		
+VERB.P3MD.PI	{irota>aY	AurotuA	PROB		
+VERB.P3FD.PI	{irota>aY	AurotuatA	PROB		
+VERB.P3MP.PI	{irota>aY	AurotuuwA	PROB		
+VERB.P3FP.PI	{irota>aY	Aurotuna	PROB		
+VERB.P1S.AI.E0	{irota>aY	Airota>aytuhu	OK		
+VERB.P1P.AI.E0	{irota>aY	Airota>aynAhu	OK		
+VERB.P2MS.AI.E0	{irota>aY	Airota>aytahu	OK		
+VERB.P2FS.AI.E0	{irota>aY	Airota>aytihi	OK		
+VERB.P2D.AI.E0	{irota>aY	Airota>aytumAhu	OK		
+VERB.P2MP.AI.E0	{irota>aY	Airota>aytumuwhu	OK		
+VERB.P2FP.AI.E0	{irota>aY	Airota>aytun~ahu	OK		
+VERB.P3MS.AI.E0	{irota>aY	Airota>aAhu	OK		
+VERB.P3FS.AI.E0	{irota>aY	Airota>athu	OK		
+VERB.P3MD.AI.E0	{irota>aY	Airota>ayAhu	OK		
+VERB.P3FD.AI.E0	{irota>aY	Airota>atAhu	OK		
+VERB.P3MP.AI.E0	{irota>aY	Airota>awohu	OK		
+VERB.P3FP.AI.E0	{irota>aY	Airota>aynahu	OK		
+VERB.P1S.PI.E0	{irota>aY		OK		
+VERB.P1P.PI.E0	{irota>aY		OK		
+VERB.P2MS.PI.E0	{irota>aY		OK		
+VERB.P2FS.PI.E0	{irota>aY		OK		
+VERB.P2D.PI.E0	{irota>aY		OK		
+VERB.P2MP.PI.E0	{irota>aY		OK		
+VERB.P2FP.PI.E0	{irota>aY		OK		
+VERB.P3MS.PI.E0	{irota>aY		OK		
+VERB.P3FS.PI.E0	{irota>aY		OK		
+VERB.P3MD.PI.E0	{irota>aY		OK		
+VERB.P3FD.PI.E0	{irota>aY		OK		
+VERB.P3MP.PI.E0	{irota>aY		OK		
+VERB.P3FP.PI.E0	{irota>aY		OK		
+VERB.P1S.AI	>amAt	>amat~u	OK		
+VERB.P1P.AI	>amAt	>amatnA	OK		
+VERB.P2MS.AI	>amAt	>amat~a	OK		
+VERB.P2FS.AI	>amAt	>amat~i	OK		
+VERB.P2D.AI	>amAt	>amat~umA	OK		
+VERB.P2MP.AI	>amAt	>amat~um	OK		
+VERB.P2FP.AI	>amAt	>amat~un~a	OK		
+VERB.P3MS.AI	>amAt	>amAta	OK		
+VERB.P3FS.AI	>amAt	>amAtat	OK		
+VERB.P3MD.AI	>amAt	>amAtA	OK		
+VERB.P3FD.AI	>amAt	>amAtatA	OK		
+VERB.P3MP.AI	>amAt	>amAtuwA	OK		
+VERB.P3FP.AI	>amAt	>amatna	OK		
+VERB.P1S.PI	>amAt	>umit~u	OK		
+VERB.P1P.PI	>amAt	>umitnA	OK		
+VERB.P2MS.PI	>amAt	>umit~a	OK		
+VERB.P2FS.PI	>amAt	>umit~i	OK		
+VERB.P2D.PI	>amAt	>umit~umA	OK		
+VERB.P2MP.PI	>amAt	>umit~um	OK		
+VERB.P2FP.PI	>amAt	>umit~un~a	OK		
+VERB.P3MS.PI	>amAt	>umiyta	OK		
+VERB.P3FS.PI	>amAt	>umiytat	OK		
+VERB.P3MD.PI	>amAt	>umiytA	OK		
+VERB.P3FD.PI	>amAt	>umiytatA	OK		
+VERB.P3MP.PI	>amAt	>umiytuwA	OK		
+VERB.P3FP.PI	>amAt	>umitna	OK		
+VERB.P1S.AI.E0	>amAt		OK		
+VERB.P1P.AI.E0	>amAt		OK		
+VERB.P2MS.AI.E0	>amAt		OK		
+VERB.P2FS.AI.E0	>amAt		OK		
+VERB.P2D.AI.E0	>amAt		OK		
+VERB.P2MP.AI.E0	>amAt		OK		
+VERB.P2FP.AI.E0	>amAt		OK		
+VERB.P3MS.AI.E0	>amAt		OK		
+VERB.P3FS.AI.E0	>amAt		OK		
+VERB.P3MD.AI.E0	>amAt		OK		
+VERB.P3FD.AI.E0	>amAt		OK		
+VERB.P3MP.AI.E0	>amAt		OK		
+VERB.P3FP.AI.E0	>amAt		OK		
+VERB.P1S.PI.E0	>amAt		OK		
+VERB.P1P.PI.E0	>amAt		OK		
+VERB.P2MS.PI.E0	>amAt		OK		
+VERB.P2FS.PI.E0	>amAt		OK		
+VERB.P2D.PI.E0	>amAt		OK		
+VERB.P2MP.PI.E0	>amAt		OK		
+VERB.P2FP.PI.E0	>amAt		OK		
+VERB.P3MS.PI.E0	>amAt		OK		
+VERB.P3FS.PI.E0	>amAt		OK		
+VERB.P3MD.PI.E0	>amAt		OK		
+VERB.P3FD.PI.E0	>amAt		OK		
+VERB.P3MP.PI.E0	>amAt		OK		
+VERB.P3FP.PI.E0	>amAt		OK		
+VERB.P1S.AI	{isotA'	Aisota>tu	OK		
+VERB.P1P.AI	{isotA'	Aisota>nA	OK		
+VERB.P2MS.AI	{isotA'	Aisota>ta	OK		
+VERB.P2FS.AI	{isotA'	Aisota>ti	OK		
+VERB.P2D.AI	{isotA'	Aisota>tumA	OK		
+VERB.P2MP.AI	{isotA'	Aisota>tum	OK		
+VERB.P2FP.AI	{isotA'	Aisota>tun~a	OK		
+VERB.P3MS.AI	{isotA'	AisotA'a	OK		
+VERB.P3FS.AI	{isotA'	AisotA'at	OK		
+VERB.P3MD.AI	{isotA'	AisotA'A	OK		
+VERB.P3FD.AI	{isotA'	AisotA'atA	OK		
+VERB.P3MP.AI	{isotA'	AisotA&uwA	OK		
+VERB.P3FP.AI	{isotA'	Aisota>na	OK		
+VERB.P1S.PI	{isotA'	Ausoti}tu	OK		
+VERB.P1P.PI	{isotA'	Ausoti}nA	OK		
+VERB.P2MS.PI	{isotA'	Ausoti}ta	OK		
+VERB.P2FS.PI	{isotA'	Ausoti}ti	OK		
+VERB.P2D.PI	{isotA'	Ausoti}tumA	OK		
+VERB.P2MP.PI	{isotA'	Ausoti}tum	OK		
+VERB.P2FP.PI	{isotA'	Ausoti}tun~a	OK		
+VERB.P3MS.PI	{isotA'	Ausotiy'a	OK		
+VERB.P3FS.PI	{isotA'	Ausotiy}at	OK		
+VERB.P3MD.PI	{isotA'	Ausotiy}A	OK		
+VERB.P3FD.PI	{isotA'	Ausotiy}atA	OK		
+VERB.P3MP.PI	{isotA'	Ausotiy}uwA	OK		
+VERB.P3FP.PI	{isotA'	Ausoti}na	OK		
+VERB.P1S.AI.E0	{isotA'		OK		
+VERB.P1P.AI.E0	{isotA'		OK		
+VERB.P2MS.AI.E0	{isotA'		OK		
+VERB.P2FS.AI.E0	{isotA'		OK		
+VERB.P2D.AI.E0	{isotA'		OK		
+VERB.P2MP.AI.E0	{isotA'		OK		
+VERB.P2FP.AI.E0	{isotA'		OK		
+VERB.P3MS.AI.E0	{isotA'		OK		
+VERB.P3FS.AI.E0	{isotA'		OK		
+VERB.P3MD.AI.E0	{isotA'		OK		
+VERB.P3FD.AI.E0	{isotA'		OK		
+VERB.P3MP.AI.E0	{isotA'		OK		
+VERB.P3FP.AI.E0	{isotA'		OK		
+VERB.P1S.PI.E0	{isotA'		OK		
+VERB.P1P.PI.E0	{isotA'		OK		
+VERB.P2MS.PI.E0	{isotA'		OK		
+VERB.P2FS.PI.E0	{isotA'		OK		
+VERB.P2D.PI.E0	{isotA'		OK		
+VERB.P2MP.PI.E0	{isotA'		OK		
+VERB.P2FP.PI.E0	{isotA'		OK		
+VERB.P3MS.PI.E0	{isotA'		OK		
+VERB.P3FS.PI.E0	{isotA'		OK		
+VERB.P3MD.PI.E0	{isotA'		OK		
+VERB.P3FD.PI.E0	{isotA'		OK		
+VERB.P3MP.PI.E0	{isotA'		OK		
+VERB.P3FP.PI.E0	{isotA'		OK		
+VERB.P1S.AI	{isotaDA'	AisotaDa>tu	OK		
+VERB.P1P.AI	{isotaDA'	AisotaDa>nA	OK		
+VERB.P2MS.AI	{isotaDA'	AisotaDa>ta	OK		
+VERB.P2FS.AI	{isotaDA'	AisotaDa>ti	OK		
+VERB.P2D.AI	{isotaDA'	AisotaDa>tumA	OK		
+VERB.P2MP.AI	{isotaDA'	AisotaDa>tum	OK		
+VERB.P2FP.AI	{isotaDA'	AisotaDa>tun~a	OK		
+VERB.P3MS.AI	{isotaDA'	AisotaDA'a	OK		
+VERB.P3FS.AI	{isotaDA'	AisotaDA'at	OK		
+VERB.P3MD.AI	{isotaDA'	AisotaDA'A	OK		
+VERB.P3FD.AI	{isotaDA'	AisotaDA'atA	OK		
+VERB.P3MP.AI	{isotaDA'	AisotaDA&uwA	OK		
+VERB.P3FP.AI	{isotaDA'	AisotaDa>na	OK		
+VERB.P1S.PI	{isotaDA'	AusotuDtu	PROB		
+VERB.P1P.PI	{isotaDA'	AusotuDnA	PROB		
+VERB.P2MS.PI	{isotaDA'	AusotuDta	PROB		
+VERB.P2FS.PI	{isotaDA'	AusotuDti	PROB		
+VERB.P2D.PI	{isotaDA'	AusotuDtumA	PROB		
+VERB.P2MP.PI	{isotaDA'	AusotuDtum	PROB		
+VERB.P2FP.PI	{isotaDA'	AusotuDtun~a	PROB		
+VERB.P3MS.PI	{isotaDA'	AusotuDa	PROB		
+VERB.P3FS.PI	{isotaDA'	AusotuDat	PROB		
+VERB.P3MD.PI	{isotaDA'	AusotuDA	PROB		
+VERB.P3FD.PI	{isotaDA'	AusotuDatA	PROB		
+VERB.P3MP.PI	{isotaDA'	AusotuDuwA	PROB		
+VERB.P3FP.PI	{isotaDA'	AusotuDna	PROB		
+VERB.P1S.AI.E0	{isotaDA'		OK		
+VERB.P1P.AI.E0	{isotaDA'		OK		
+VERB.P2MS.AI.E0	{isotaDA'		OK		
+VERB.P2FS.AI.E0	{isotaDA'		OK		
+VERB.P2D.AI.E0	{isotaDA'		OK		
+VERB.P2MP.AI.E0	{isotaDA'		OK		
+VERB.P2FP.AI.E0	{isotaDA'		OK		
+VERB.P3MS.AI.E0	{isotaDA'		OK		
+VERB.P3FS.AI.E0	{isotaDA'		OK		
+VERB.P3MD.AI.E0	{isotaDA'		OK		
+VERB.P3FD.AI.E0	{isotaDA'		OK		
+VERB.P3MP.AI.E0	{isotaDA'		OK		
+VERB.P3FP.AI.E0	{isotaDA'		OK		
+VERB.P1S.PI.E0	{isotaDA'		OK		
+VERB.P1P.PI.E0	{isotaDA'		OK		
+VERB.P2MS.PI.E0	{isotaDA'		OK		
+VERB.P2FS.PI.E0	{isotaDA'		OK		
+VERB.P2D.PI.E0	{isotaDA'		OK		
+VERB.P2MP.PI.E0	{isotaDA'		OK		
+VERB.P2FP.PI.E0	{isotaDA'		OK		
+VERB.P3MS.PI.E0	{isotaDA'		OK		
+VERB.P3FS.PI.E0	{isotaDA'		OK		
+VERB.P3MD.PI.E0	{isotaDA'		OK		
+VERB.P3FD.PI.E0	{isotaDA'		OK		
+VERB.P3MP.PI.E0	{isotaDA'		OK		
+VERB.P3FP.PI.E0	{isotaDA'		OK		
+VERB.P1S.AI	{iToma>an~	AiToma>onantu	OK		
+VERB.P1P.AI	{iToma>an~	AiToma>onan~A	OK		
+VERB.P2MS.AI	{iToma>an~	AiToma>onanta	OK		
+VERB.P2FS.AI	{iToma>an~	AiToma>onanti	OK		
+VERB.P2D.AI	{iToma>an~	AiToma>onantumA	OK		
+VERB.P2MP.AI	{iToma>an~	AiToma>onantum	OK		
+VERB.P2FP.AI	{iToma>an~	AiToma>onantun~a	OK		
+VERB.P3MS.AI	{iToma>an~	AiToma>an~a	OK		
+VERB.P3FS.AI	{iToma>an~	AiToma>an~at	OK		
+VERB.P3MD.AI	{iToma>an~	AiToma>an~A	OK		
+VERB.P3FD.AI	{iToma>an~	AiToma>an~atA	OK		
+VERB.P3MP.AI	{iToma>an~	AiToma>an~uwA	OK		
+VERB.P3FP.AI	{iToma>an~	AiToma>onan~a	OK		
+VERB.P1S.PI	{iToma>an~	AuTomu&onintu	OK		
+VERB.P1P.PI	{iToma>an~	AuTomu&onin~A	OK		
+VERB.P2MS.PI	{iToma>an~	AuTomu&oninta	OK		
+VERB.P2FS.PI	{iToma>an~	AuTomu&oninti	OK		
+VERB.P2D.PI	{iToma>an~	AuTomu&onintumA	OK		
+VERB.P2MP.PI	{iToma>an~	AuTomu&onintum	OK		
+VERB.P2FP.PI	{iToma>an~	AuTomu&onintun~a	OK		
+VERB.P3MS.PI	{iToma>an~	AuTomu&in~a	OK		
+VERB.P3FS.PI	{iToma>an~	AuTomu&in~at	OK		
+VERB.P3MD.PI	{iToma>an~	AuTomu&in~A	OK		
+VERB.P3FD.PI	{iToma>an~	AuTomu&in~atA	OK		
+VERB.P3MP.PI	{iToma>an~	AuTomu&in~uwA	OK		
+VERB.P3FP.PI	{iToma>an~	AuTomu&onin~a	OK		
+VERB.P1S.AI.E0	{iToma>an~		OK		
+VERB.P1P.AI.E0	{iToma>an~		OK		
+VERB.P2MS.AI.E0	{iToma>an~		OK		
+VERB.P2FS.AI.E0	{iToma>an~		OK		
+VERB.P2D.AI.E0	{iToma>an~		OK		
+VERB.P2MP.AI.E0	{iToma>an~		OK		
+VERB.P2FP.AI.E0	{iToma>an~		OK		
+VERB.P3MS.AI.E0	{iToma>an~		OK		
+VERB.P3FS.AI.E0	{iToma>an~		OK		
+VERB.P3MD.AI.E0	{iToma>an~		OK		
+VERB.P3FD.AI.E0	{iToma>an~		OK		
+VERB.P3MP.AI.E0	{iToma>an~		OK		
+VERB.P3FP.AI.E0	{iToma>an~		OK		
+VERB.P1S.PI.E0	{iToma>an~		OK		
+VERB.P1P.PI.E0	{iToma>an~		OK		
+VERB.P2MS.PI.E0	{iToma>an~		OK		
+VERB.P2FS.PI.E0	{iToma>an~		OK		
+VERB.P2D.PI.E0	{iToma>an~		OK		
+VERB.P2MP.PI.E0	{iToma>an~		OK		
+VERB.P2FP.PI.E0	{iToma>an~		OK		
+VERB.P3MS.PI.E0	{iToma>an~		OK		
+VERB.P3FS.PI.E0	{iToma>an~		OK		
+VERB.P3MD.PI.E0	{iToma>an~		OK		
+VERB.P3FD.PI.E0	{iToma>an~		OK		
+VERB.P3MP.PI.E0	{iToma>an~		OK		
+VERB.P3FP.PI.E0	{iToma>an~		OK		
+VERB.P1S.AI	>asA'	>asa>tu	OK		
+VERB.P1P.AI	>asA'	>asa>nA	OK		
+VERB.P2MS.AI	>asA'	>asa>ta	OK		
+VERB.P2FS.AI	>asA'	>asa>ti	OK		
+VERB.P2D.AI	>asA'	>asa>tumA	OK		
+VERB.P2MP.AI	>asA'	>asa>tum	OK		
+VERB.P2FP.AI	>asA'	>asa>tun~a	OK		
+VERB.P3MS.AI	>asA'	>asA'a	OK		
+VERB.P3FS.AI	>asA'	>asA'at	OK		
+VERB.P3MD.AI	>asA'	>asA'A	OK		
+VERB.P3FD.AI	>asA'	>asA'atA	OK		
+VERB.P3MP.AI	>asA'	>asA&uwA	OK		
+VERB.P3FP.AI	>asA'	>asa>na	OK		
+VERB.P1S.PI	>asA'	>usiytu	PROB		
+VERB.P1P.PI	>asA'	>usiynA	PROB		
+VERB.P2MS.PI	>asA'	>usiyta	PROB		
+VERB.P2FS.PI	>asA'	>usiyti	PROB		
+VERB.P2D.PI	>asA'	>usiytumA	PROB		
+VERB.P2MP.PI	>asA'	>usiytum	PROB		
+VERB.P2FP.PI	>asA'	>usiytun~a	PROB		
+VERB.P3MS.PI	>asA'	>usiya	PROB		
+VERB.P3FS.PI	>asA'	>usiyat	PROB		
+VERB.P3MD.PI	>asA'	>usiyA	PROB		
+VERB.P3FD.PI	>asA'	>usiyatA	PROB		
+VERB.P3MP.PI	>asA'	>usiyuwA	PROB		
+VERB.P3FP.PI	>asA'	>usiyna	PROB		
+VERB.P1S.AI.E0	>asA'	>asa>tuhu	OK		
+VERB.P1P.AI.E0	>asA'	>asa>nAhu	OK		
+VERB.P2MS.AI.E0	>asA'	>asa>tahu	OK		
+VERB.P2FS.AI.E0	>asA'	>asa>tihi	OK		
+VERB.P2D.AI.E0	>asA'	>asa>tumAhu	OK		
+VERB.P2MP.AI.E0	>asA'	>asa>tumuwhu	OK		
+VERB.P2FP.AI.E0	>asA'	>asa>tun~ahu	OK		
+VERB.P3MS.AI.E0	>asA'	>asA'ahu	OK		
+VERB.P3FS.AI.E0	>asA'	>asA'athu	OK		
+VERB.P3MD.AI.E0	>asA'	>asA'Ahu	OK		
+VERB.P3FD.AI.E0	>asA'	>asA'atAhu	OK		
+VERB.P3MP.AI.E0	>asA'	>asA&uwhu	OK		
+VERB.P3FP.AI.E0	>asA'	>asa>nahu	OK		
+VERB.P1S.PI.E0	>asA'		OK		
+VERB.P1P.PI.E0	>asA'		OK		
+VERB.P2MS.PI.E0	>asA'		OK		
+VERB.P2FS.PI.E0	>asA'		OK		
+VERB.P2D.PI.E0	>asA'		OK		
+VERB.P2MP.PI.E0	>asA'		OK		
+VERB.P2FP.PI.E0	>asA'		OK		
+VERB.P3MS.PI.E0	>asA'		OK		
+VERB.P3FS.PI.E0	>asA'		OK		
+VERB.P3MD.PI.E0	>asA'		OK		
+VERB.P3FD.PI.E0	>asA'		OK		
+VERB.P3MP.PI.E0	>asA'		OK		
+VERB.P3FP.PI.E0	>asA'		OK		
+VERB.P1S.AI	>aEAn	>aEan~u	PROB		
+VERB.P1P.AI	>aEAn	>aEannA	PROB		
+VERB.P2MS.AI	>aEAn	>aEan~a	PROB		
+VERB.P2FS.AI	>aEAn	>aEan~i	PROB		
+VERB.P2D.AI	>aEAn	>aEan~umA	PROB		
+VERB.P2MP.AI	>aEAn	>aEan~um	PROB		
+VERB.P2FP.AI	>aEAn	>aEan~un~a	PROB		
+VERB.P3MS.AI	>aEAn	>aEAna	OK		
+VERB.P3FS.AI	>aEAn	>aEAnat	OK		
+VERB.P3MD.AI	>aEAn	>aEAnA	OK		
+VERB.P3FD.AI	>aEAn	>aEAnatA	OK		
+VERB.P3MP.AI	>aEAn	>aEAnuwA	OK		
+VERB.P3FP.AI	>aEAn	>aEanna	PROB		
+VERB.P1S.PI	>aEAn	>uEin~u	PROB		
+VERB.P1P.PI	>aEAn	>uEinnA	PROB		
+VERB.P2MS.PI	>aEAn	>uEin~a	PROB		
+VERB.P2FS.PI	>aEAn	>uEin~i	PROB		
+VERB.P2D.PI	>aEAn	>uEin~umA	PROB		
+VERB.P2MP.PI	>aEAn	>uEin~um	PROB		
+VERB.P2FP.PI	>aEAn	>uEin~un~a	PROB		
+VERB.P3MS.PI	>aEAn	>uEiyna	OK		
+VERB.P3FS.PI	>aEAn	>uEiynat	OK		
+VERB.P3MD.PI	>aEAn	>uEiynA	OK		
+VERB.P3FD.PI	>aEAn	>uEiynatA	OK		
+VERB.P3MP.PI	>aEAn	>uEiynuwA	OK		
+VERB.P3FP.PI	>aEAn	>uEinna	PROB		
+VERB.P1S.AI.E0	>aEAn		OK		
+VERB.P1P.AI.E0	>aEAn		OK		
+VERB.P2MS.AI.E0	>aEAn		OK		
+VERB.P2FS.AI.E0	>aEAn		OK		
+VERB.P2D.AI.E0	>aEAn		OK		
+VERB.P2MP.AI.E0	>aEAn		OK		
+VERB.P2FP.AI.E0	>aEAn		OK		
+VERB.P3MS.AI.E0	>aEAn		OK		
+VERB.P3FS.AI.E0	>aEAn		OK		
+VERB.P3MD.AI.E0	>aEAn		OK		
+VERB.P3FD.AI.E0	>aEAn		OK		
+VERB.P3MP.AI.E0	>aEAn		OK		
+VERB.P3FP.AI.E0	>aEAn		OK		
+VERB.P1S.PI.E0	>aEAn		OK		
+VERB.P1P.PI.E0	>aEAn		OK		
+VERB.P2MS.PI.E0	>aEAn		OK		
+VERB.P2FS.PI.E0	>aEAn		OK		
+VERB.P2D.PI.E0	>aEAn		OK		
+VERB.P2MP.PI.E0	>aEAn		OK		
+VERB.P2FP.PI.E0	>aEAn		OK		
+VERB.P3MS.PI.E0	>aEAn		OK		
+VERB.P3FS.PI.E0	>aEAn		OK		
+VERB.P3MD.PI.E0	>aEAn		OK		
+VERB.P3FD.PI.E0	>aEAn		OK		
+VERB.P3MP.PI.E0	>aEAn		OK		
+VERB.P3FP.PI.E0	>aEAn		OK		
+VERB.P1S.AI	jA'	ji}tu	OK		
+VERB.P1P.AI	jA'	ji}nA	OK		
+VERB.P2MS.AI	jA'	ji}ta	OK		
+VERB.P2FS.AI	jA'	ji}ti	OK		
+VERB.P2D.AI	jA'	ji}tumA	OK		
+VERB.P2MP.AI	jA'	ji}tum	OK		
+VERB.P2FP.AI	jA'	ji}tun~a	OK		
+VERB.P3MS.AI	jA'	jA'a	OK		
+VERB.P3FS.AI	jA'	jA'at	OK		
+VERB.P3MD.AI	jA'	jA'A	OK		
+VERB.P3FD.AI	jA'	jA'atA	OK		
+VERB.P3MP.AI	jA'	jA&uwA	OK		
+VERB.P3FP.AI	jA'	ji}na	OK		
+VERB.P1S.PI	jA'	ji}tu	OK		
+VERB.P1P.PI	jA'	ji}nA	OK		
+VERB.P2MS.PI	jA'	ji}ta	OK		
+VERB.P2FS.PI	jA'	ji}ti	OK		
+VERB.P2D.PI	jA'	ji}tumA	OK		
+VERB.P2MP.PI	jA'	ji}tum	OK		
+VERB.P2FP.PI	jA'	ji}tun~a	OK		
+VERB.P3MS.PI	jA'	jiy'a	OK		
+VERB.P3FS.PI	jA'	jiy}at	OK		
+VERB.P3MD.PI	jA'	jiy}A	OK		
+VERB.P3FD.PI	jA'	jiy}atA	OK		
+VERB.P3MP.PI	jA'	jiy}uwA	OK		
+VERB.P3FP.PI	jA'	ji}na	OK		
+VERB.P1S.AI.E0	jA'	ji}tuhu	OK		
+VERB.P1P.AI.E0	jA'	ji}nAhu	OK		
+VERB.P2MS.AI.E0	jA'	ji}tahu	OK		
+VERB.P2FS.AI.E0	jA'	ji}tihi	OK		
+VERB.P2D.AI.E0	jA'	ji}tumAhu	OK		
+VERB.P2MP.AI.E0	jA'	ji}tumuwhu	OK		
+VERB.P2FP.AI.E0	jA'	ji}tun~ahu	OK		
+VERB.P3MS.AI.E0	jA'	jA'ahu	OK		
+VERB.P3FS.AI.E0	jA'	jA'athu	OK		
+VERB.P3MD.AI.E0	jA'	jA'Ahu	OK		
+VERB.P3FD.AI.E0	jA'	jA'atAhu	OK		
+VERB.P3MP.AI.E0	jA'	jA&uwhu	OK		
+VERB.P3FP.AI.E0	jA'	ji}nahu	OK		
+VERB.P1S.PI.E0	jA'		OK		
+VERB.P1P.PI.E0	jA'		OK		
+VERB.P2MS.PI.E0	jA'		OK		
+VERB.P2FS.PI.E0	jA'		OK		
+VERB.P2D.PI.E0	jA'		OK		
+VERB.P2MP.PI.E0	jA'		OK		
+VERB.P2FP.PI.E0	jA'		OK		
+VERB.P3MS.PI.E0	jA'		OK		
+VERB.P3FS.PI.E0	jA'		OK		
+VERB.P3MD.PI.E0	jA'		OK		
+VERB.P3FD.PI.E0	jA'		OK		
+VERB.P3MP.PI.E0	jA'		OK		
+VERB.P3FP.PI.E0	jA'		OK		
+VERB.P1S.AI	$a>aw	$a>awtu	OK		
+VERB.P1P.AI	$a>aw	$a>awnA	OK		
+VERB.P2MS.AI	$a>aw	$a>awta	OK		
+VERB.P2FS.AI	$a>aw	$a>awti	OK		
+VERB.P2D.AI	$a>aw	$a>awtumA	OK		
+VERB.P2MP.AI	$a>aw	$a>awtum	OK		
+VERB.P2FP.AI	$a>aw	$a>awtun~a	OK		
+VERB.P3MS.AI	$a>aw	$a>awa	OK		
+VERB.P3FS.AI	$a>aw	$a>awat	OK		
+VERB.P3MD.AI	$a>aw	$a>awA	OK		
+VERB.P3FD.AI	$a>aw	$a>awatA	OK		
+VERB.P3MP.AI	$a>aw	$a>awuwA	OK		
+VERB.P3FP.AI	$a>aw	$a>awna	OK		
+VERB.P1S.PI	$a>aw	$u}iwtu	OK		
+VERB.P1P.PI	$a>aw	$u}iwnA	OK		
+VERB.P2MS.PI	$a>aw	$u}iwta	OK		
+VERB.P2FS.PI	$a>aw	$u}iwti	OK		
+VERB.P2D.PI	$a>aw	$u}iwtumA	OK		
+VERB.P2MP.PI	$a>aw	$u}iwtum	OK		
+VERB.P2FP.PI	$a>aw	$u}iwtun~a	OK		
+VERB.P3MS.PI	$a>aw	$u}iwa	OK		
+VERB.P3FS.PI	$a>aw	$u}iwat	OK		
+VERB.P3MD.PI	$a>aw	$u}iwA	OK		
+VERB.P3FD.PI	$a>aw	$u}iwatA	OK		
+VERB.P3MP.PI	$a>aw	$u}iwuwA	OK		
+VERB.P3FP.PI	$a>aw	$u}iwna	OK		
+VERB.P1S.AI.E0	$a>aw	$a>awtuhu	OK		
+VERB.P1P.AI.E0	$a>aw	$a>awnAhu	OK		
+VERB.P2MS.AI.E0	$a>aw	$a>awtahu	OK		
+VERB.P2FS.AI.E0	$a>aw	$a>awtihi	OK		
+VERB.P2D.AI.E0	$a>aw	$a>awtumAhu	OK		
+VERB.P2MP.AI.E0	$a>aw	$a>awtumuwhu	OK		
+VERB.P2FP.AI.E0	$a>aw	$a>awtun~ahu	OK		
+VERB.P3MS.AI.E0	$a>aw	$a>awahu	OK		
+VERB.P3FS.AI.E0	$a>aw	$a>awathu	OK		
+VERB.P3MD.AI.E0	$a>aw	$a>awAhu	OK		
+VERB.P3FD.AI.E0	$a>aw	$a>awatAhu	OK		
+VERB.P3MP.AI.E0	$a>aw	$a>awuwhu	OK		
+VERB.P3FP.AI.E0	$a>aw	$a>awnahu	OK		
+VERB.P1S.PI.E0	$a>aw		OK		
+VERB.P1P.PI.E0	$a>aw		OK		
+VERB.P2MS.PI.E0	$a>aw		OK		
+VERB.P2FS.PI.E0	$a>aw		OK		
+VERB.P2D.PI.E0	$a>aw		OK		
+VERB.P2MP.PI.E0	$a>aw		OK		
+VERB.P2FP.PI.E0	$a>aw		OK		
+VERB.P3MS.PI.E0	$a>aw		OK		
+VERB.P3FS.PI.E0	$a>aw		OK		
+VERB.P3MD.PI.E0	$a>aw		OK		
+VERB.P3FD.PI.E0	$a>aw		OK		
+VERB.P3MP.PI.E0	$a>aw		OK		
+VERB.P3FP.PI.E0	$a>aw		OK		
+VERB.P1S.AI	$Ad~	$Adadtu	OK		
+VERB.P1P.AI	$Ad~	$AdadnA	OK		
+VERB.P2MS.AI	$Ad~	$Adadta	OK		
+VERB.P2FS.AI	$Ad~	$Adadti	OK		
+VERB.P2D.AI	$Ad~	$AdadtumA	OK		
+VERB.P2MP.AI	$Ad~	$Adadtum	OK		
+VERB.P2FP.AI	$Ad~	$Adadtun~a	OK		
+VERB.P3MS.AI	$Ad~	$Ad~a	OK		
+VERB.P3FS.AI	$Ad~	$Ad~at	OK		
+VERB.P3MD.AI	$Ad~	$Ad~A	OK		
+VERB.P3FD.AI	$Ad~	$Ad~atA	OK		
+VERB.P3MP.AI	$Ad~	$Ad~uwA	OK		
+VERB.P3FP.AI	$Ad~	$Adadna	OK		
+VERB.P1S.PI	$Ad~	$uwdidtu	OK		
+VERB.P1P.PI	$Ad~	$uwdidnA	OK		
+VERB.P2MS.PI	$Ad~	$uwdidta	OK		
+VERB.P2FS.PI	$Ad~	$uwdidti	OK		
+VERB.P2D.PI	$Ad~	$uwdidtumA	OK		
+VERB.P2MP.PI	$Ad~	$uwdidtum	OK		
+VERB.P2FP.PI	$Ad~	$uwdidtun~a	OK		
+VERB.P3MS.PI	$Ad~	$uwdida	OK		
+VERB.P3FS.PI	$Ad~	$uwdidat	OK		
+VERB.P3MD.PI	$Ad~	$uwdidA	OK		
+VERB.P3FD.PI	$Ad~	$uwdidatA	OK		
+VERB.P3MP.PI	$Ad~	$uwdiduwA	OK		
+VERB.P3FP.PI	$Ad~	$uwdidna	OK		
+VERB.P1S.AI.E0	$Ad~	$Adadtuhu	OK		
+VERB.P1P.AI.E0	$Ad~	$AdadnAhu	OK		
+VERB.P2MS.AI.E0	$Ad~	$Adadtahu	OK		
+VERB.P2FS.AI.E0	$Ad~	$Adadtihi	OK		
+VERB.P2D.AI.E0	$Ad~	$AdadtumAhu	OK		
+VERB.P2MP.AI.E0	$Ad~	$Adadtumuwhu	OK		
+VERB.P2FP.AI.E0	$Ad~	$Adadtun~ahu	OK		
+VERB.P3MS.AI.E0	$Ad~	$Ad~ahu	OK		
+VERB.P3FS.AI.E0	$Ad~	$Ad~athu	OK		
+VERB.P3MD.AI.E0	$Ad~	$Ad~Ahu	OK		
+VERB.P3FD.AI.E0	$Ad~	$Ad~atAhu	OK		
+VERB.P3MP.AI.E0	$Ad~	$Ad~uwhu	OK		
+VERB.P3FP.AI.E0	$Ad~	$Adadnahu	OK		
+VERB.P1S.PI.E0	$Ad~		OK		
+VERB.P1P.PI.E0	$Ad~		OK		
+VERB.P2MS.PI.E0	$Ad~		OK		
+VERB.P2FS.PI.E0	$Ad~		OK		
+VERB.P2D.PI.E0	$Ad~		OK		
+VERB.P2MP.PI.E0	$Ad~		OK		
+VERB.P2FP.PI.E0	$Ad~		OK		
+VERB.P3MS.PI.E0	$Ad~		OK		
+VERB.P3FS.PI.E0	$Ad~		OK		
+VERB.P3MD.PI.E0	$Ad~		OK		
+VERB.P3FD.PI.E0	$Ad~		OK		
+VERB.P3MP.PI.E0	$Ad~		OK		
+VERB.P3FP.PI.E0	$Ad~		OK		
+VERB.P1S.AI	fA'	fi}tu	OK		
+VERB.P1P.AI	fA'	fi}nA	OK		
+VERB.P2MS.AI	fA'	fi}ta	OK		
+VERB.P2FS.AI	fA'	fi}ti	OK		
+VERB.P2D.AI	fA'	fi}tumA	OK		
+VERB.P2MP.AI	fA'	fi}tum	OK		
+VERB.P2FP.AI	fA'	fi}tun~a	OK		
+VERB.P3MS.AI	fA'	fA'a	OK		
+VERB.P3FS.AI	fA'	fA'at	OK		
+VERB.P3MD.AI	fA'	fA'A	OK		
+VERB.P3FD.AI	fA'	fA'atA	OK		
+VERB.P3MP.AI	fA'	fA&uwA	OK		
+VERB.P3FP.AI	fA'	fi}na	OK		
+VERB.P1S.PI	fA'	fi}tu	OK		
+VERB.P1P.PI	fA'	fi}nA	OK		
+VERB.P2MS.PI	fA'	fi}ta	OK		
+VERB.P2FS.PI	fA'	fi}ti	OK		
+VERB.P2D.PI	fA'	fi}tumA	OK		
+VERB.P2MP.PI	fA'	fi}tum	OK		
+VERB.P2FP.PI	fA'	fi}tun~a	OK		
+VERB.P3MS.PI	fA'	fiy'a	OK		
+VERB.P3FS.PI	fA'	fiy}at	OK		
+VERB.P3MD.PI	fA'	fiy}A	OK		
+VERB.P3FD.PI	fA'	fiy}atA	OK		
+VERB.P3MP.PI	fA'	fiy}uwA	OK		
+VERB.P3FP.PI	fA'	fi}na	OK		
+VERB.P1S.AI.E0	fA'		OK		
+VERB.P1P.AI.E0	fA'		OK		
+VERB.P2MS.AI.E0	fA'		OK		
+VERB.P2FS.AI.E0	fA'		OK		
+VERB.P2D.AI.E0	fA'		OK		
+VERB.P2MP.AI.E0	fA'		OK		
+VERB.P2FP.AI.E0	fA'		OK		
+VERB.P3MS.AI.E0	fA'		OK		
+VERB.P3FS.AI.E0	fA'		OK		
+VERB.P3MD.AI.E0	fA'		OK		
+VERB.P3FD.AI.E0	fA'		OK		
+VERB.P3MP.AI.E0	fA'		OK		
+VERB.P3FP.AI.E0	fA'		OK		
+VERB.P1S.PI.E0	fA'		OK		
+VERB.P1P.PI.E0	fA'		OK		
+VERB.P2MS.PI.E0	fA'		OK		
+VERB.P2FS.PI.E0	fA'		OK		
+VERB.P2D.PI.E0	fA'		OK		
+VERB.P2MP.PI.E0	fA'		OK		
+VERB.P2FP.PI.E0	fA'		OK		
+VERB.P3MS.PI.E0	fA'		OK		
+VERB.P3FS.PI.E0	fA'		OK		
+VERB.P3MD.PI.E0	fA'		OK		
+VERB.P3FD.PI.E0	fA'		OK		
+VERB.P3MP.PI.E0	fA'		OK		
+VERB.P3FP.PI.E0	fA'		OK		
+VERB.P1S.AI	HA$A	HA$tu	PROB		
+VERB.P1P.AI	HA$A	HA$nA	PROB		
+VERB.P2MS.AI	HA$A	HA$ta	PROB		
+VERB.P2FS.AI	HA$A	HA$ti	PROB		
+VERB.P2D.AI	HA$A	HA$tumA	PROB		
+VERB.P2MP.AI	HA$A	HA$tum	PROB		
+VERB.P2FP.AI	HA$A	HA$tun~a	PROB		
+VERB.P3MS.AI	HA$A	HA$a	PROB		
+VERB.P3FS.AI	HA$A	HA$at	OK		
+VERB.P3FD.AI	HA$A	HA$atA	OK		
+VERB.P3FP.AI	HA$A	HA$na	PROB		
+VERB.P3FS.AI.E0	HA$A	HA$athu	OK		
+VERB.P3FD.AI.E0	HA$A	HA$atAhu	OK		
+VERB.P1S.PI.E0	HA$A		OK		
+VERB.P1P.PI.E0	HA$A		OK		
+VERB.P2MS.PI.E0	HA$A		OK		
+VERB.P2FS.PI.E0	HA$A		OK		
+VERB.P2D.PI.E0	HA$A		OK		
+VERB.P2MP.PI.E0	HA$A		OK		
+VERB.P2FP.PI.E0	HA$A		OK		
+VERB.P3MS.PI.E0	HA$A		OK		
+VERB.P3FS.PI.E0	HA$A		OK		
+VERB.P3MD.PI.E0	HA$A		OK		
+VERB.P3FD.PI.E0	HA$A		OK		
+VERB.P3MP.PI.E0	HA$A		OK		
+VERB.P3FP.PI.E0	HA$A		OK		
+VERB.P1S.AI	Hay~A	Hay~aytu	OK		
+VERB.P1P.AI	Hay~A	Hay~aynA	OK		
+VERB.P2MS.AI	Hay~A	Hay~ayta	OK		
+VERB.P2FS.AI	Hay~A	Hay~ayti	OK		
+VERB.P2D.AI	Hay~A	Hay~aytumA	OK		
+VERB.P2MP.AI	Hay~A	Hay~aytum	OK		
+VERB.P2FP.AI	Hay~A	Hay~aytun~a	OK		
+VERB.P3MS.AI	Hay~A	Hay~aA	OK		
+VERB.P3FS.AI	Hay~A	Hay~at	OK		
+VERB.P3MD.AI	Hay~A	Hay~ayA	OK		
+VERB.P3FD.AI	Hay~A	Hay~atA	OK		
+VERB.P3MP.AI	Hay~A	Hay~awoA	OK		
+VERB.P3FP.AI	Hay~A	Hay~ayna	OK		
+VERB.P1S.PI	Hay~A	Huy~iytu	OK		
+VERB.P1P.PI	Hay~A	Huy~iynA	OK		
+VERB.P2MS.PI	Hay~A	Huy~iyta	OK		
+VERB.P2FS.PI	Hay~A	Huy~iyti	OK		
+VERB.P2D.PI	Hay~A	Huy~iytumA	OK		
+VERB.P2MP.PI	Hay~A	Huy~iytum	OK		
+VERB.P2FP.PI	Hay~A	Huy~iytun~a	OK		
+VERB.P3MS.PI	Hay~A	Huy~iya	OK		
+VERB.P3FS.PI	Hay~A	Huy~iyat	OK		
+VERB.P3MD.PI	Hay~A	Huy~iyA	OK		
+VERB.P3FD.PI	Hay~A	Huy~iyatA	OK		
+VERB.P3MP.PI	Hay~A	Huy~uwA	OK		
+VERB.P3FP.PI	Hay~A	Huy~iyna	OK		
+VERB.P1S.AI.E0	Hay~A	Hay~aytuhu	OK		
+VERB.P1P.AI.E0	Hay~A	Hay~aynAhu	OK		
+VERB.P2MS.AI.E0	Hay~A	Hay~aytahu	OK		
+VERB.P2FS.AI.E0	Hay~A	Hay~aytihi	OK		
+VERB.P2D.AI.E0	Hay~A	Hay~aytumAhu	OK		
+VERB.P2MP.AI.E0	Hay~A	Hay~aytumuwhu	OK		
+VERB.P2FP.AI.E0	Hay~A	Hay~aytun~ahu	OK		
+VERB.P3MS.AI.E0	Hay~A	Hay~aAhu	OK		
+VERB.P3FS.AI.E0	Hay~A	Hay~athu	OK		
+VERB.P3MD.AI.E0	Hay~A	Hay~ayAhu	OK		
+VERB.P3FD.AI.E0	Hay~A	Hay~atAhu	OK		
+VERB.P3MP.AI.E0	Hay~A	Hay~awohu	OK		
+VERB.P3FP.AI.E0	Hay~A	Hay~aynahu	OK		
+VERB.P1S.PI.E0	Hay~A		OK		
+VERB.P1P.PI.E0	Hay~A		OK		
+VERB.P2MS.PI.E0	Hay~A		OK		
+VERB.P2FS.PI.E0	Hay~A		OK		
+VERB.P2D.PI.E0	Hay~A		OK		
+VERB.P2MP.PI.E0	Hay~A		OK		
+VERB.P2FP.PI.E0	Hay~A		OK		
+VERB.P3MS.PI.E0	Hay~A		OK		
+VERB.P3FS.PI.E0	Hay~A		OK		
+VERB.P3MD.PI.E0	Hay~A		OK		
+VERB.P3FD.PI.E0	Hay~A		OK		
+VERB.P3MP.PI.E0	Hay~A		OK		
+VERB.P3FP.PI.E0	Hay~A		OK		
+VERB.P1S.AI	layosa	lastu	OK		
+VERB.P1P.AI	layosa	lasnA	OK		
+VERB.P2MS.AI	layosa	lasta	OK		
+VERB.P2FS.AI	layosa	lasti	OK		
+VERB.P2D.AI	layosa	lastumA	OK		
+VERB.P2MP.AI	layosa	lastum	OK		
+VERB.P2FP.AI	layosa	lastun~a	OK		
+VERB.P3MS.AI	layosa	layosa	OK		
+VERB.P3FS.AI	layosa	layosat	OK		
+VERB.P3MD.AI	layosa	layosA	OK		
+VERB.P3FD.AI	layosa	layosatA	OK		
+VERB.P3MP.AI	layosa	layosuwA	OK		
+VERB.P3FP.AI	layosa	lasna	OK		
+VERB.P3MS.PI	layosa	lasa	PROB		
+VERB.P3FS.PI	layosa	lasat	PROB		
+VERB.P3MD.PI	layosa	lasA	PROB		
+VERB.P1S.AI.E0	layosa		OK		
+VERB.P1P.AI.E0	layosa		OK		
+VERB.P2MS.AI.E0	layosa		OK		
+VERB.P2FS.AI.E0	layosa		OK		
+VERB.P2D.AI.E0	layosa		OK		
+VERB.P2MP.AI.E0	layosa		OK		
+VERB.P2FP.AI.E0	layosa		OK		
+VERB.P3MS.AI.E0	layosa		OK		
+VERB.P3FS.AI.E0	layosa		OK		
+VERB.P3MD.AI.E0	layosa		OK		
+VERB.P3FD.AI.E0	layosa		OK		
+VERB.P3MP.AI.E0	layosa		OK		
+VERB.P3FP.AI.E0	layosa		OK		
+VERB.P1S.PI.E0	layosa		OK		
+VERB.P1P.PI.E0	layosa		OK		
+VERB.P2MS.PI.E0	layosa		OK		
+VERB.P2FS.PI.E0	layosa		OK		
+VERB.P2D.PI.E0	layosa		OK		
+VERB.P2MP.PI.E0	layosa		OK		
+VERB.P2FP.PI.E0	layosa		OK		
+VERB.P3MS.PI.E0	layosa		OK		
+VERB.P3FS.PI.E0	layosa		OK		
+VERB.P3MD.PI.E0	layosa		OK		
+VERB.P3FD.PI.E0	layosa		OK		
+VERB.P3MP.PI.E0	layosa		OK		
+VERB.P3FP.PI.E0	layosa		OK		
+VERB.P1S.AI	mAs~	mAsastu	OK		
+VERB.P1P.AI	mAs~	mAsasnA	OK		
+VERB.P2MS.AI	mAs~	mAsasta	OK		
+VERB.P2FS.AI	mAs~	mAsasti	OK		
+VERB.P2D.AI	mAs~	mAsastumA	OK		
+VERB.P2MP.AI	mAs~	mAsastum	OK		
+VERB.P2FP.AI	mAs~	mAsastun~a	OK		
+VERB.P3MS.AI	mAs~	mAs~a	OK		
+VERB.P3FS.AI	mAs~	mAs~at	OK		
+VERB.P3MD.AI	mAs~	mAs~A	OK		
+VERB.P3FD.AI	mAs~	mAs~atA	OK		
+VERB.P3MP.AI	mAs~	mAs~uwA	OK		
+VERB.P3FP.AI	mAs~	mAsasna	OK		
+VERB.P1S.PI	mAs~	muwsistu	OK		
+VERB.P1P.PI	mAs~	muwsisnA	OK		
+VERB.P2MS.PI	mAs~	muwsista	OK		
+VERB.P2FS.PI	mAs~	muwsisti	OK		
+VERB.P2D.PI	mAs~	muwsistumA	OK		
+VERB.P2MP.PI	mAs~	muwsistum	OK		
+VERB.P2FP.PI	mAs~	muwsistun~a	OK		
+VERB.P3MS.PI	mAs~	muwsisa	OK		
+VERB.P3FS.PI	mAs~	muwsisat	OK		
+VERB.P3MD.PI	mAs~	muwsisA	OK		
+VERB.P3FD.PI	mAs~	muwsisatA	OK		
+VERB.P3MP.PI	mAs~	muwsisuwA	OK		
+VERB.P3FP.PI	mAs~	muwsisna	OK		
+VERB.P1S.AI.E0	mAs~		OK		
+VERB.P1P.AI.E0	mAs~		OK		
+VERB.P2MS.AI.E0	mAs~		OK		
+VERB.P2FS.AI.E0	mAs~		OK		
+VERB.P2D.AI.E0	mAs~		OK		
+VERB.P2MP.AI.E0	mAs~		OK		
+VERB.P2FP.AI.E0	mAs~		OK		
+VERB.P3MS.AI.E0	mAs~		OK		
+VERB.P3FS.AI.E0	mAs~		OK		
+VERB.P3MD.AI.E0	mAs~		OK		
+VERB.P3FD.AI.E0	mAs~		OK		
+VERB.P3MP.AI.E0	mAs~		OK		
+VERB.P3FP.AI.E0	mAs~		OK		
+VERB.P1S.PI.E0	mAs~		OK		
+VERB.P1P.PI.E0	mAs~		OK		
+VERB.P2MS.PI.E0	mAs~		OK		
+VERB.P2FS.PI.E0	mAs~		OK		
+VERB.P2D.PI.E0	mAs~		OK		
+VERB.P2MP.PI.E0	mAs~		OK		
+VERB.P2FP.PI.E0	mAs~		OK		
+VERB.P3MS.PI.E0	mAs~		OK		
+VERB.P3FS.PI.E0	mAs~		OK		
+VERB.P3MD.PI.E0	mAs~		OK		
+VERB.P3FD.PI.E0	mAs~		OK		
+VERB.P3MP.PI.E0	mAs~		OK		
+VERB.P3FP.PI.E0	mAs~		OK		
+VERB.P1S.AI	na>aY	na>aytu	OK		
+VERB.P1P.AI	na>aY	na>aynA	OK		
+VERB.P2MS.AI	na>aY	na>ayta	OK		
+VERB.P2FS.AI	na>aY	na>ayti	OK		
+VERB.P2D.AI	na>aY	na>aytumA	OK		
+VERB.P2MP.AI	na>aY	na>aytum	OK		
+VERB.P2FP.AI	na>aY	na>aytun~a	OK		
+VERB.P3MS.AI	na>aY	na>aY	OK		
+VERB.P3FS.AI	na>aY	na>at	OK		
+VERB.P3MD.AI	na>aY	na>ayA	OK		
+VERB.P3FD.AI	na>aY	na>atA	OK		
+VERB.P3MP.AI	na>aY	na>awoA	OK		
+VERB.P3FP.AI	na>aY	na>ayna	OK		
+VERB.P1S.PI	na>aY	nutu	PROB		
+VERB.P1P.PI	na>aY	nunA	PROB		
+VERB.P2MS.PI	na>aY	nuta	PROB		
+VERB.P2FS.PI	na>aY	nuti	PROB		
+VERB.P2D.PI	na>aY	nutumA	PROB		
+VERB.P2MP.PI	na>aY	nutum	PROB		
+VERB.P2FP.PI	na>aY	nutun~a	PROB		
+VERB.P3MS.PI	na>aY	nua	PROB		
+VERB.P3FS.PI	na>aY	nuat	PROB		
+VERB.P3MD.PI	na>aY	nuA	PROB		
+VERB.P3FD.PI	na>aY	nuatA	PROB		
+VERB.P3MP.PI	na>aY	nuuwA	PROB		
+VERB.P3FP.PI	na>aY	nuna	PROB		
+VERB.P1S.AI.E0	na>aY		OK		
+VERB.P1P.AI.E0	na>aY		OK		
+VERB.P2MS.AI.E0	na>aY		OK		
+VERB.P2FS.AI.E0	na>aY		OK		
+VERB.P2D.AI.E0	na>aY		OK		
+VERB.P2MP.AI.E0	na>aY		OK		
+VERB.P2FP.AI.E0	na>aY		OK		
+VERB.P3MS.AI.E0	na>aY		OK		
+VERB.P3FS.AI.E0	na>aY		OK		
+VERB.P3MD.AI.E0	na>aY		OK		
+VERB.P3FD.AI.E0	na>aY		OK		
+VERB.P3MP.AI.E0	na>aY		OK		
+VERB.P3FP.AI.E0	na>aY		OK		
+VERB.P1S.PI.E0	na>aY		OK		
+VERB.P1P.PI.E0	na>aY		OK		
+VERB.P2MS.PI.E0	na>aY		OK		
+VERB.P2FS.PI.E0	na>aY		OK		
+VERB.P2D.PI.E0	na>aY		OK		
+VERB.P2MP.PI.E0	na>aY		OK		
+VERB.P2FP.PI.E0	na>aY		OK		
+VERB.P3MS.PI.E0	na>aY		OK		
+VERB.P3FS.PI.E0	na>aY		OK		
+VERB.P3MD.PI.E0	na>aY		OK		
+VERB.P3FD.PI.E0	na>aY		OK		
+VERB.P3MP.PI.E0	na>aY		OK		
+VERB.P3FP.PI.E0	na>aY		OK		
+VERB.P1S.AI	taHAt~	taHAtat~u	OK		
+VERB.P1P.AI	taHAt~	taHAtatnA	OK		
+VERB.P2MS.AI	taHAt~	taHAtat~a	OK		
+VERB.P2FS.AI	taHAt~	taHAtat~i	OK		
+VERB.P2D.AI	taHAt~	taHAtat~umA	OK		
+VERB.P2MP.AI	taHAt~	taHAtat~um	OK		
+VERB.P2FP.AI	taHAt~	taHAtat~un~a	OK		
+VERB.P3MS.AI	taHAt~	taHAt~a	OK		
+VERB.P3FS.AI	taHAt~	taHAt~at	OK		
+VERB.P3MD.AI	taHAt~	taHAt~A	OK		
+VERB.P3FD.AI	taHAt~	taHAt~atA	OK		
+VERB.P3MP.AI	taHAt~	taHAt~uwA	OK		
+VERB.P3FP.AI	taHAt~	taHAtatna	OK		
+VERB.P1S.PI	taHAt~	tuHuwtit~u	OK		
+VERB.P1P.PI	taHAt~	tuHuwtitnA	OK		
+VERB.P2MS.PI	taHAt~	tuHuwtit~a	OK		
+VERB.P2FS.PI	taHAt~	tuHuwtit~i	OK		
+VERB.P2D.PI	taHAt~	tuHuwtit~umA	OK		
+VERB.P2MP.PI	taHAt~	tuHuwtit~um	OK		
+VERB.P2FP.PI	taHAt~	tuHuwtit~un~a	OK		
+VERB.P3MS.PI	taHAt~	tuHuwtita	OK		
+VERB.P3FS.PI	taHAt~	tuHuwtitat	OK		
+VERB.P3MD.PI	taHAt~	tuHuwtitA	OK		
+VERB.P3FD.PI	taHAt~	tuHuwtitatA	OK		
+VERB.P3MP.PI	taHAt~	tuHuwtituwA	OK		
+VERB.P3FP.PI	taHAt~	tuHuwtitna	OK		
+VERB.P1S.AI.E0	taHAt~	taHAtat~uhu	OK		
+VERB.P1P.AI.E0	taHAt~	taHAtatnAhu	OK		
+VERB.P2MS.AI.E0	taHAt~	taHAtat~ahu	OK		
+VERB.P2FS.AI.E0	taHAt~	taHAtat~ihi	OK		
+VERB.P2D.AI.E0	taHAt~	taHAtat~umAhu	OK		
+VERB.P2MP.AI.E0	taHAt~	taHAtat~umuwhu	OK		
+VERB.P2FP.AI.E0	taHAt~	taHAtat~un~ahu	OK		
+VERB.P3MS.AI.E0	taHAt~	taHAt~ahu	OK		
+VERB.P3FS.AI.E0	taHAt~	taHAt~athu	OK		
+VERB.P3MD.AI.E0	taHAt~	taHAt~Ahu	OK		
+VERB.P3FD.AI.E0	taHAt~	taHAt~atAhu	OK		
+VERB.P3MP.AI.E0	taHAt~	taHAt~uwhu	OK		
+VERB.P3FP.AI.E0	taHAt~	taHAtatnahu	OK		
+VERB.P1S.PI.E0	taHAt~		OK		
+VERB.P1P.PI.E0	taHAt~		OK		
+VERB.P2MS.PI.E0	taHAt~		OK		
+VERB.P2FS.PI.E0	taHAt~		OK		
+VERB.P2D.PI.E0	taHAt~		OK		
+VERB.P2MP.PI.E0	taHAt~		OK		
+VERB.P2FP.PI.E0	taHAt~		OK		
+VERB.P3MS.PI.E0	taHAt~		OK		
+VERB.P3FS.PI.E0	taHAt~		OK		
+VERB.P3MD.PI.E0	taHAt~		OK		
+VERB.P3FD.PI.E0	taHAt~		OK		
+VERB.P3MP.PI.E0	taHAt~		OK		
+VERB.P3FP.PI.E0	taHAt~		OK		
+VERB.P1S.AI	tara>~aY	tara>~aytu	OK		
+VERB.P1P.AI	tara>~aY	tara>~aynA	OK		
+VERB.P2MS.AI	tara>~aY	tara>~ayta	OK		
+VERB.P2FS.AI	tara>~aY	tara>~ayti	OK		
+VERB.P2D.AI	tara>~aY	tara>~aytumA	OK		
+VERB.P2MP.AI	tara>~aY	tara>~aytum	OK		
+VERB.P2FP.AI	tara>~aY	tara>~aytun~a	OK		
+VERB.P3MS.AI	tara>~aY	tara>~aY	OK		
+VERB.P3FS.AI	tara>~aY	tara>~at	OK		
+VERB.P3MD.AI	tara>~aY	tara>~ayA	OK		
+VERB.P3FD.AI	tara>~aY	tara>~atA	OK		
+VERB.P3MP.AI	tara>~aY	tara>~awoA	OK		
+VERB.P3FP.AI	tara>~aY	tara>~ayna	OK		
+VERB.P1S.PI	tara>~aY	turu>~tu	PROB		
+VERB.P1P.PI	tara>~aY	turu>~nA	PROB		
+VERB.P2MS.PI	tara>~aY	turu>~ta	PROB		
+VERB.P2FS.PI	tara>~aY	turu>~ti	PROB		
+VERB.P2D.PI	tara>~aY	turu>~tumA	PROB		
+VERB.P2MP.PI	tara>~aY	turu>~tum	PROB		
+VERB.P2FP.PI	tara>~aY	turu>~tun~a	PROB		
+VERB.P3MS.PI	tara>~aY	turu>~a	PROB		
+VERB.P3FS.PI	tara>~aY	turu>~at	PROB		
+VERB.P3MD.PI	tara>~aY	turu>~A	PROB		
+VERB.P3FD.PI	tara>~aY	turu>~atA	PROB		
+VERB.P3MP.PI	tara>~aY	turu>~uwA	PROB		
+VERB.P3FP.PI	tara>~aY	turu>~na	PROB		
+VERB.P1S.AI.E0	tara>~aY	tara>~aytuhu	OK		
+VERB.P1P.AI.E0	tara>~aY	tara>~aynAhu	OK		
+VERB.P2MS.AI.E0	tara>~aY	tara>~aytahu	OK		
+VERB.P2FS.AI.E0	tara>~aY	tara>~aytihi	OK		
+VERB.P2D.AI.E0	tara>~aY	tara>~aytumAhu	OK		
+VERB.P2MP.AI.E0	tara>~aY	tara>~aytumuwhu	OK		
+VERB.P2FP.AI.E0	tara>~aY	tara>~aytun~ahu	OK		
+VERB.P3MS.AI.E0	tara>~aY	tara>~aAhu	OK		
+VERB.P3FS.AI.E0	tara>~aY	tara>~athu	OK		
+VERB.P3MD.AI.E0	tara>~aY	tara>~ayAhu	OK		
+VERB.P3FD.AI.E0	tara>~aY	tara>~atAhu	OK		
+VERB.P3MP.AI.E0	tara>~aY	tara>~awohu	OK		
+VERB.P3FP.AI.E0	tara>~aY	tara>~aynahu	OK		
+VERB.P1S.PI.E0	tara>~aY		OK		
+VERB.P1P.PI.E0	tara>~aY		OK		
+VERB.P2MS.PI.E0	tara>~aY		OK		
+VERB.P2FS.PI.E0	tara>~aY		OK		
+VERB.P2D.PI.E0	tara>~aY		OK		
+VERB.P2MP.PI.E0	tara>~aY		OK		
+VERB.P2FP.PI.E0	tara>~aY		OK		
+VERB.P3MS.PI.E0	tara>~aY		OK		
+VERB.P3FS.PI.E0	tara>~aY		OK		
+VERB.P3MD.PI.E0	tara>~aY		OK		
+VERB.P3FD.PI.E0	tara>~aY		OK		
+VERB.P3MP.PI.E0	tara>~aY		OK		
+VERB.P3FP.PI.E0	tara>~aY		OK		
+VERB.P1S.AI	wAd~	wAdadtu	OK		
+VERB.P1P.AI	wAd~	wAdadnA	OK		
+VERB.P2MS.AI	wAd~	wAdadta	OK		
+VERB.P2FS.AI	wAd~	wAdadti	OK		
+VERB.P2D.AI	wAd~	wAdadtumA	OK		
+VERB.P2MP.AI	wAd~	wAdadtum	OK		
+VERB.P2FP.AI	wAd~	wAdadtun~a	OK		
+VERB.P3MS.AI	wAd~	wAd~a	OK		
+VERB.P3FS.AI	wAd~	wAd~at	OK		
+VERB.P3MD.AI	wAd~	wAd~A	OK		
+VERB.P3FD.AI	wAd~	wAd~atA	OK		
+VERB.P3MP.AI	wAd~	wAd~uwA	OK		
+VERB.P3FP.AI	wAd~	wAdadna	OK		
+VERB.P1S.PI	wAd~	wuwdidtu	OK		
+VERB.P1P.PI	wAd~	wuwdidnA	OK		
+VERB.P2MS.PI	wAd~	wuwdidta	OK		
+VERB.P2FS.PI	wAd~	wuwdidti	OK		
+VERB.P2D.PI	wAd~	wuwdidtumA	OK		
+VERB.P2MP.PI	wAd~	wuwdidtum	OK		
+VERB.P2FP.PI	wAd~	wuwdidtun~a	OK		
+VERB.P3MS.PI	wAd~	wuwdida	OK		
+VERB.P3FS.PI	wAd~	wuwdidat	OK		
+VERB.P3MD.PI	wAd~	wuwdidA	OK		
+VERB.P3FD.PI	wAd~	wuwdidatA	OK		
+VERB.P3MP.PI	wAd~	wuwdiduwA	OK		
+VERB.P3FP.PI	wAd~	wuwdidna	OK		
+VERB.P1S.AI.E0	wAd~	wAdadtuhu	OK		
+VERB.P1P.AI.E0	wAd~	wAdadnAhu	OK		
+VERB.P2MS.AI.E0	wAd~	wAdadtahu	OK		
+VERB.P2FS.AI.E0	wAd~	wAdadtihi	OK		
+VERB.P2D.AI.E0	wAd~	wAdadtumAhu	OK		
+VERB.P2MP.AI.E0	wAd~	wAdadtumuwhu	OK		
+VERB.P2FP.AI.E0	wAd~	wAdadtun~ahu	OK		
+VERB.P3MS.AI.E0	wAd~	wAd~ahu	OK		
+VERB.P3FS.AI.E0	wAd~	wAd~athu	OK		
+VERB.P3MD.AI.E0	wAd~	wAd~Ahu	OK		
+VERB.P3FD.AI.E0	wAd~	wAd~atAhu	OK		
+VERB.P3MP.AI.E0	wAd~	wAd~uwhu	OK		
+VERB.P3FP.AI.E0	wAd~	wAdadnahu	OK		
+VERB.P1S.PI.E0	wAd~		OK		
+VERB.P1P.PI.E0	wAd~		OK		
+VERB.P2MS.PI.E0	wAd~		OK		
+VERB.P2FS.PI.E0	wAd~		OK		
+VERB.P2D.PI.E0	wAd~		OK		
+VERB.P2MP.PI.E0	wAd~		OK		
+VERB.P2FP.PI.E0	wAd~		OK		
+VERB.P3MS.PI.E0	wAd~		OK		
+VERB.P3FS.PI.E0	wAd~		OK		
+VERB.P3MD.PI.E0	wAd~		OK		
+VERB.P3FD.PI.E0	wAd~		OK		
+VERB.P3MP.PI.E0	wAd~		OK		
+VERB.P3FP.PI.E0	wAd~		OK		
+VERB.P1S.AI	qAl-u	qultu	OK		
+VERB.P1P.AI	qAl-u	qulnA	OK		
+VERB.P2MS.AI	qAl-u	qulta	OK		
+VERB.P2FS.AI	qAl-u	qulti	OK		
+VERB.P2D.AI	qAl-u	qultumA	OK		
+VERB.P2MP.AI	qAl-u	qultum	OK		
+VERB.P2FP.AI	qAl-u	qultun~a	OK		
+VERB.P3MS.AI	qAl-u	qAla	OK		
+VERB.P3FS.AI	qAl-u	qAlat	OK		
+VERB.P3MD.AI	qAl-u	qAlA	OK		
+VERB.P3FD.AI	qAl-u	qAlatA	OK		
+VERB.P3MP.AI	qAl-u	qAluwA	OK		
+VERB.P3FP.AI	qAl-u	qulna	OK		
+VERB.P3MS.PI	qAl-u	qiyla	OK		
+VERB.P3FS.PI	qAl-u	qiylat	OK		
+VERB.P3MD.PI	qAl-u	qiylA	OK		
+VERB.P3FD.PI	qAl-u	qiylatA	OK		
+VERB.P3MP.PI	qAl-u	qiyluwA	OK		
+VERB.P1S.AI.E0	qAl-u	qultuhu	OK		
+VERB.P1P.AI.E0	qAl-u	qulnAhu	OK		
+VERB.P2MS.AI.E0	qAl-u	qultahu	OK		
+VERB.P2FS.AI.E0	qAl-u	qultihi	OK		
+VERB.P2D.AI.E0	qAl-u	qultumAhu	OK		
+VERB.P2MP.AI.E0	qAl-u	qultumuwhu	OK		
+VERB.P2FP.AI.E0	qAl-u	qultun~ahu	OK		
+VERB.P3MS.AI.E0	qAl-u	qAlahu	OK		
+VERB.P3FS.AI.E0	qAl-u	qAlathu	OK		
+VERB.P3MD.AI.E0	qAl-u	qAlAhu	OK		
+VERB.P3FD.AI.E0	qAl-u	qAlatAhu	OK		
+VERB.P3MP.AI.E0	qAl-u	qAluwhu	OK		
+VERB.P3FP.AI.E0	qAl-u	qulnahu	OK		
+VERB.P1S.PI.E0	qAl-u		OK		
+VERB.P1P.PI.E0	qAl-u		OK		
+VERB.P2MS.PI.E0	qAl-u		OK		
+VERB.P2FS.PI.E0	qAl-u		OK		
+VERB.P2D.PI.E0	qAl-u		OK		
+VERB.P2MP.PI.E0	qAl-u		OK		
+VERB.P2FP.PI.E0	qAl-u		OK		
+VERB.P3MS.PI.E0	qAl-u		OK		
+VERB.P3FS.PI.E0	qAl-u		OK		
+VERB.P3MD.PI.E0	qAl-u		OK		
+VERB.P3FD.PI.E0	qAl-u		OK		
+VERB.P3MP.PI.E0	qAl-u		OK		
+VERB.P3FP.PI.E0	qAl-u		OK		
+VERB.P1S.PI	{isotaTAE	AusotuTiEtu	OK		
+VERB.P1P.PI	{isotaTAE	AusotuTiEnA	OK		
+VERB.P2MS.PI	{isotaTAE	AusotuTiEta	OK		
+VERB.P2FS.PI	{isotaTAE	AusotuTiEti	OK		
+VERB.P2D.PI	{isotaTAE	AusotuTiEtumA	OK		
+VERB.P2MP.PI	{isotaTAE	AusotuTiEtum	OK		
+VERB.P2FP.PI	{isotaTAE	AusotuTiEtun~a	OK		
+VERB.P3FP.PI	{isotaTAE	AusotuTiEna	OK		
+VERB.P1S.AI	kAn-u	kuntu	OK		
+VERB.P1P.AI	kAn-u	kun~A	OK		
+VERB.P2MS.AI	kAn-u	kunta	OK		
+VERB.P2FS.AI	kAn-u	kunti	OK		
+VERB.P2D.AI	kAn-u	kuntumA	OK		
+VERB.P2MP.AI	kAn-u	kuntum	OK		
+VERB.P2FP.AI	kAn-u	kuntun~a	OK		
+VERB.P3MS.AI	kAn-u	kAna	OK		
+VERB.P3FS.AI	kAn-u	kAnat	OK		
+VERB.P3MD.AI	kAn-u	kAnA	OK		
+VERB.P3FD.AI	kAn-u	kAnatA	OK		
+VERB.P3MP.AI	kAn-u	kAnuwA	OK		
+VERB.P3FP.AI	kAn-u	kun~a	OK		
+VERB.P3MS.PI	kAn-u	kiyna	OK		
+VERB.P3FS.PI	kAn-u	kiynat	OK		
+VERB.P3MD.PI	kAn-u	kiynA	OK		
+VERB.P3FD.PI	kAn-u	kiynatA	OK		
+VERB.P3MP.PI	kAn-u	kiynuwA	OK		
+VERB.P1S.AI.E0	kAn-u	kuntuhu	OK		
+VERB.P1P.AI.E0	kAn-u	kun~Ahu	OK		
+VERB.P2MS.AI.E0	kAn-u	kuntahu	OK		
+VERB.P2FS.AI.E0	kAn-u	kuntihi	OK		
+VERB.P2D.AI.E0	kAn-u	kuntumAhu	OK		
+VERB.P2MP.AI.E0	kAn-u	kuntumuwhu	OK		
+VERB.P2FP.AI.E0	kAn-u	kuntun~ahu	OK		
+VERB.P3MS.AI.E0	kAn-u	kAnahu	OK		
+VERB.P3FS.AI.E0	kAn-u	kAnathu	OK		
+VERB.P3MD.AI.E0	kAn-u	kAnAhu	OK		
+VERB.P3FD.AI.E0	kAn-u	kAnatAhu	OK		
+VERB.P3MP.AI.E0	kAn-u	kAnuwhu	OK		
+VERB.P3FP.AI.E0	kAn-u	kun~ahu	OK		
+VERB.P1S.PI.E0	kAn-u		OK		
+VERB.P1P.PI.E0	kAn-u		OK		
+VERB.P2MS.PI.E0	kAn-u		OK		
+VERB.P2FS.PI.E0	kAn-u		OK		
+VERB.P2D.PI.E0	kAn-u		OK		
+VERB.P2MP.PI.E0	kAn-u		OK		
+VERB.P2FP.PI.E0	kAn-u		OK		
+VERB.P3MS.PI.E0	kAn-u		OK		
+VERB.P3FS.PI.E0	kAn-u		OK		
+VERB.P3MD.PI.E0	kAn-u		OK		
+VERB.P3FD.PI.E0	kAn-u		OK		
+VERB.P3MP.PI.E0	kAn-u		OK		
+VERB.P3FP.PI.E0	kAn-u		OK		
+VERB.P1S.AI	wajab-i	wajabtu	OK		
+VERB.P1P.AI	wajab-i	wajabnA	OK		
+VERB.P2MS.AI	wajab-i	wajabta	OK		
+VERB.P2FS.AI	wajab-i	wajabti	OK		
+VERB.P2D.AI	wajab-i	wajabtumA	OK		
+VERB.P2MP.AI	wajab-i	wajabtum	OK		
+VERB.P2FP.AI	wajab-i	wajabtun~a	OK		
+VERB.P3MS.AI	wajab-i	wajaba	OK		
+VERB.P3FS.AI	wajab-i	wajabat	OK		
+VERB.P3MD.AI	wajab-i	wajabA	OK		
+VERB.P3FD.AI	wajab-i	wajabatA	OK		
+VERB.P3MP.AI	wajab-i	wajabuwA	OK		
+VERB.P3FP.AI	wajab-i	wajabna	OK		
+VERB.P1S.PI	wajab-i	wujibtu	OK		
+VERB.P1P.PI	wajab-i	wujibnA	OK		
+VERB.P2MS.PI	wajab-i	wujibta	OK		
+VERB.P2FS.PI	wajab-i	wujibti	OK		
+VERB.P2D.PI	wajab-i	wujibtumA	OK		
+VERB.P2MP.PI	wajab-i	wujibtum	OK		
+VERB.P2FP.PI	wajab-i	wujibtun~a	OK		
+VERB.P3MS.PI	wajab-i	wujiba	OK		
+VERB.P3FS.PI	wajab-i	wujibat	OK		
+VERB.P3MD.PI	wajab-i	wujibA	OK		
+VERB.P3FD.PI	wajab-i	wujibatA	OK		
+VERB.P3MP.PI	wajab-i	wujibuwA	OK		
+VERB.P3FP.PI	wajab-i	wujibna	OK		
+VERB.P1S.AI.E0	wajab-i		OK		
+VERB.P1P.AI.E0	wajab-i		OK		
+VERB.P2MS.AI.E0	wajab-i		OK		
+VERB.P2FS.AI.E0	wajab-i		OK		
+VERB.P2D.AI.E0	wajab-i		OK		
+VERB.P2MP.AI.E0	wajab-i		OK		
+VERB.P2FP.AI.E0	wajab-i		OK		
+VERB.P3MS.AI.E0	wajab-i		OK		
+VERB.P3FS.AI.E0	wajab-i		OK		
+VERB.P3MD.AI.E0	wajab-i		OK		
+VERB.P3FD.AI.E0	wajab-i		OK		
+VERB.P3MP.AI.E0	wajab-i		OK		
+VERB.P3FP.AI.E0	wajab-i		OK		
+VERB.P1S.PI.E0	wajab-i		OK		
+VERB.P1P.PI.E0	wajab-i		OK		
+VERB.P2MS.PI.E0	wajab-i		OK		
+VERB.P2FS.PI.E0	wajab-i		OK		
+VERB.P2D.PI.E0	wajab-i		OK		
+VERB.P2MP.PI.E0	wajab-i		OK		
+VERB.P2FP.PI.E0	wajab-i		OK		
+VERB.P3MS.PI.E0	wajab-i		OK		
+VERB.P3FS.PI.E0	wajab-i		OK		
+VERB.P3MD.PI.E0	wajab-i		OK		
+VERB.P3FD.PI.E0	wajab-i		OK		
+VERB.P3MP.PI.E0	wajab-i		OK		
+VERB.P3FP.PI.E0	wajab-i		OK		
+VERB.P3MS.PI	{isotamar~	Ausotumir~a	OK		
+VERB.P3FS.PI	{isotamar~	Ausotumir~at	OK		
+VERB.P3MD.PI	{isotamar~	Ausotumir~A	OK		
+VERB.P3FD.PI	{isotamar~	Ausotumir~atA	OK		
+VERB.P3MP.PI	{isotamar~	Ausotumir~uwA	OK		
+VERB.P1S.AI	bAt-i	bit~u	OK		
+VERB.P1P.AI	bAt-i	bitnA	OK		
+VERB.P2MS.AI	bAt-i	bit~a	OK		
+VERB.P2FS.AI	bAt-i	bit~i	OK		
+VERB.P2D.AI	bAt-i	bit~umA	OK		
+VERB.P2MP.AI	bAt-i	bit~um	OK		
+VERB.P2FP.AI	bAt-i	bit~un~a	OK		
+VERB.P3MS.AI	bAt-i	bAta	OK		
+VERB.P3FS.AI	bAt-i	bAtat	OK		
+VERB.P3MD.AI	bAt-i	bAtA	OK		
+VERB.P3FD.AI	bAt-i	bAtatA	OK		
+VERB.P3MP.AI	bAt-i	bAtuwA	OK		
+VERB.P3FP.AI	bAt-i	bitna	OK		
+VERB.P3MS.PI	bAt-i	biyta	OK		
+VERB.P3FS.PI	bAt-i	biytat	OK		
+VERB.P3MD.PI	bAt-i	biytA	OK		
+VERB.P3FD.PI	bAt-i	biytatA	OK		
+VERB.P3MP.PI	bAt-i	biytuwA	OK		
+VERB.P1S.AI.E0	bAt-i	bit~uhu	OK		
+VERB.P1P.AI.E0	bAt-i	bitnAhu	OK		
+VERB.P2MS.AI.E0	bAt-i	bit~ahu	OK		
+VERB.P2FS.AI.E0	bAt-i	bit~ihi	OK		
+VERB.P2D.AI.E0	bAt-i	bit~umAhu	OK		
+VERB.P2MP.AI.E0	bAt-i	bit~umuwhu	OK		
+VERB.P2FP.AI.E0	bAt-i	bit~un~ahu	OK		
+VERB.P3MS.AI.E0	bAt-i	bAtahu	OK		
+VERB.P3FS.AI.E0	bAt-i	bAtathu	OK		
+VERB.P3MD.AI.E0	bAt-i	bAtAhu	OK		
+VERB.P3FD.AI.E0	bAt-i	bAtatAhu	OK		
+VERB.P3MP.AI.E0	bAt-i	bAtuwhu	OK		
+VERB.P3FP.AI.E0	bAt-i	bitnahu	OK		
+VERB.P1S.PI.E0	bAt-i		OK		
+VERB.P1P.PI.E0	bAt-i		OK		
+VERB.P2MS.PI.E0	bAt-i		OK		
+VERB.P2FS.PI.E0	bAt-i		OK		
+VERB.P2D.PI.E0	bAt-i		OK		
+VERB.P2MP.PI.E0	bAt-i		OK		
+VERB.P2FP.PI.E0	bAt-i		OK		
+VERB.P3MS.PI.E0	bAt-i		OK		
+VERB.P3FS.PI.E0	bAt-i		OK		
+VERB.P3MD.PI.E0	bAt-i		OK		
+VERB.P3FD.PI.E0	bAt-i		OK		
+VERB.P3MP.PI.E0	bAt-i		OK		
+VERB.P3FP.PI.E0	bAt-i		OK		
+VERB.P1S.AI	bada>-a	bada>tu	OK		
+VERB.P1P.AI	bada>-a	bada>nA	OK		
+VERB.P2MS.AI	bada>-a	bada>ta	OK		
+VERB.P2FS.AI	bada>-a	bada>ti	OK		
+VERB.P2D.AI	bada>-a	bada>tumA	OK		
+VERB.P2MP.AI	bada>-a	bada>tum	OK		
+VERB.P2FP.AI	bada>-a	bada>tun~a	OK		
+VERB.P3MS.AI	bada>-a	bada>a	OK		
+VERB.P3FS.AI	bada>-a	bada>at	OK		
+VERB.P3MD.AI	bada>-a	bada|	OK		
+VERB.P3FD.AI	bada>-a	bada>atA	OK		
+VERB.P3MP.AI	bada>-a	bada&uwA	OK		
+VERB.P3FP.AI	bada>-a	bada>na	OK		
+VERB.P1S.PI	bada>-a	budi}tu	OK		
+VERB.P1P.PI	bada>-a	budi}nA	OK		
+VERB.P2MS.PI	bada>-a	budi}ta	OK		
+VERB.P2FS.PI	bada>-a	budi}ti	OK		
+VERB.P2D.PI	bada>-a	budi}tumA	OK		
+VERB.P2MP.PI	bada>-a	budi}tum	OK		
+VERB.P2FP.PI	bada>-a	budi}tun~a	OK		
+VERB.P3MS.PI	bada>-a	budi}a	OK		
+VERB.P3FS.PI	bada>-a	budi}at	OK		
+VERB.P3MD.PI	bada>-a	budi}A	OK		
+VERB.P3FD.PI	bada>-a	budi}atA	OK		
+VERB.P3MP.PI	bada>-a	budi}uwA	OK		
+VERB.P3FP.PI	bada>-a	budi}na	OK		
+VERB.P1S.AI.E0	bada>-a	bada>tuhu	OK		
+VERB.P1P.AI.E0	bada>-a	bada>nAhu	OK		
+VERB.P2MS.AI.E0	bada>-a	bada>tahu	OK		
+VERB.P2FS.AI.E0	bada>-a	bada>tihi	OK		
+VERB.P2D.AI.E0	bada>-a	bada>tumAhu	OK		
+VERB.P2MP.AI.E0	bada>-a	bada>tumuwhu	OK		
+VERB.P2FP.AI.E0	bada>-a	bada>tun~ahu	OK		
+VERB.P3MS.AI.E0	bada>-a	bada>ahu	OK		
+VERB.P3FS.AI.E0	bada>-a	bada>athu	OK		
+VERB.P3MD.AI.E0	bada>-a	bada|hu	OK		
+VERB.P3FD.AI.E0	bada>-a	bada>atAhu	OK		
+VERB.P3MP.AI.E0	bada>-a	bada&uwhu	OK		
+VERB.P3FP.AI.E0	bada>-a	bada>nahu	OK		
+VERB.P1S.PI.E0	bada>-a		OK		
+VERB.P1P.PI.E0	bada>-a		OK		
+VERB.P2MS.PI.E0	bada>-a		OK		
+VERB.P2FS.PI.E0	bada>-a		OK		
+VERB.P2D.PI.E0	bada>-a		OK		
+VERB.P2MP.PI.E0	bada>-a		OK		
+VERB.P2FP.PI.E0	bada>-a		OK		
+VERB.P3MS.PI.E0	bada>-a		OK		
+VERB.P3FS.PI.E0	bada>-a		OK		
+VERB.P3MD.PI.E0	bada>-a		OK		
+VERB.P3FD.PI.E0	bada>-a		OK		
+VERB.P3MP.PI.E0	bada>-a		OK		
+VERB.P3FP.PI.E0	bada>-a		OK		
+VERB.P1S.AI	lafat-i	lafat~u	OK		
+VERB.P1P.AI	lafat-i	lafatnA	OK		
+VERB.P2MS.AI	lafat-i	lafat~a	OK		
+VERB.P2FS.AI	lafat-i	lafat~i	OK		
+VERB.P2D.AI	lafat-i	lafat~umA	OK		
+VERB.P2MP.AI	lafat-i	lafat~um	OK		
+VERB.P2FP.AI	lafat-i	lafat~un~a	OK		
+VERB.P3MS.AI	lafat-i	lafata	OK		
+VERB.P3FS.AI	lafat-i	lafatat	OK		
+VERB.P3MD.AI	lafat-i	lafatA	OK		
+VERB.P3FD.AI	lafat-i	lafatatA	OK		
+VERB.P3MP.AI	lafat-i	lafatuwA	OK		
+VERB.P3FP.AI	lafat-i	lafatna	OK		
+VERB.P1S.PI	lafat-i	lufit~u	OK		
+VERB.P1P.PI	lafat-i	lufitnA	OK		
+VERB.P2MS.PI	lafat-i	lufit~a	OK		
+VERB.P2FS.PI	lafat-i	lufit~i	OK		
+VERB.P2D.PI	lafat-i	lufit~umA	OK		
+VERB.P2MP.PI	lafat-i	lufit~um	OK		
+VERB.P2FP.PI	lafat-i	lufit~un~a	OK		
+VERB.P3MS.PI	lafat-i	lufita	OK		
+VERB.P3FS.PI	lafat-i	lufitat	OK		
+VERB.P3MD.PI	lafat-i	lufitA	OK		
+VERB.P3FD.PI	lafat-i	lufitatA	OK		
+VERB.P3MP.PI	lafat-i	lufituwA	OK		
+VERB.P3FP.PI	lafat-i	lufitna	OK		
+VERB.P1S.AI.E0	lafat-i	lafat~uhu	OK		
+VERB.P1P.AI.E0	lafat-i	lafatnAhu	OK		
+VERB.P2MS.AI.E0	lafat-i	lafat~ahu	OK		
+VERB.P2FS.AI.E0	lafat-i	lafat~ihi	OK		
+VERB.P2D.AI.E0	lafat-i	lafat~umAhu	OK		
+VERB.P2MP.AI.E0	lafat-i	lafat~umuwhu	OK		
+VERB.P2FP.AI.E0	lafat-i	lafat~un~ahu	OK		
+VERB.P3MS.AI.E0	lafat-i	lafatahu	OK		
+VERB.P3FS.AI.E0	lafat-i	lafatathu	OK		
+VERB.P3MD.AI.E0	lafat-i	lafatAhu	OK		
+VERB.P3FD.AI.E0	lafat-i	lafatatAhu	OK		
+VERB.P3MP.AI.E0	lafat-i	lafatuwhu	OK		
+VERB.P3FP.AI.E0	lafat-i	lafatnahu	OK		
+VERB.P1S.PI.E0	lafat-i		OK		
+VERB.P1P.PI.E0	lafat-i		OK		
+VERB.P2MS.PI.E0	lafat-i		OK		
+VERB.P2FS.PI.E0	lafat-i		OK		
+VERB.P2D.PI.E0	lafat-i		OK		
+VERB.P2MP.PI.E0	lafat-i		OK		
+VERB.P2FP.PI.E0	lafat-i		OK		
+VERB.P3MS.PI.E0	lafat-i		OK		
+VERB.P3FS.PI.E0	lafat-i		OK		
+VERB.P3MD.PI.E0	lafat-i		OK		
+VERB.P3FD.PI.E0	lafat-i		OK		
+VERB.P3MP.PI.E0	lafat-i		OK		
+VERB.P3FP.PI.E0	lafat-i		OK		
+VERB.P1S.AI	tam~-i	tamamtu	OK		
+VERB.P1P.AI	tam~-i	tamamnA	OK		
+VERB.P2MS.AI	tam~-i	tamamta	OK		
+VERB.P2FS.AI	tam~-i	tamamti	OK		
+VERB.P2D.AI	tam~-i	tamamtumA	OK		
+VERB.P2MP.AI	tam~-i	tamamtum	OK		
+VERB.P2FP.AI	tam~-i	tamamtun~a	OK		
+VERB.P3MS.AI	tam~-i	tam~a	OK		
+VERB.P3FS.AI	tam~-i	tam~at	OK		
+VERB.P3MD.AI	tam~-i	tam~A	OK		
+VERB.P3FD.AI	tam~-i	tam~atA	OK		
+VERB.P3MP.AI	tam~-i	tam~uwA	OK		
+VERB.P3FP.AI	tam~-i	tamamna	OK		
+VERB.P1S.PI	tam~-i	tumimtu	OK		
+VERB.P1P.PI	tam~-i	tumimnA	OK		
+VERB.P2MS.PI	tam~-i	tumimta	OK		
+VERB.P2FS.PI	tam~-i	tumimti	OK		
+VERB.P2D.PI	tam~-i	tumimtumA	OK		
+VERB.P2MP.PI	tam~-i	tumimtum	OK		
+VERB.P2FP.PI	tam~-i	tumimtun~a	OK		
+VERB.P3MS.PI	tam~-i	tum~a	OK		
+VERB.P3FS.PI	tam~-i	tum~at	OK		
+VERB.P3MD.PI	tam~-i	tum~A	OK		
+VERB.P3FD.PI	tam~-i	tum~atA	OK		
+VERB.P3MP.PI	tam~-i	tum~uwA	OK		
+VERB.P3FP.PI	tam~-i	tumimna	OK		
+VERB.P1S.AI.E0	tam~-i		OK		
+VERB.P1P.AI.E0	tam~-i		OK		
+VERB.P2MS.AI.E0	tam~-i		OK		
+VERB.P2FS.AI.E0	tam~-i		OK		
+VERB.P2D.AI.E0	tam~-i		OK		
+VERB.P2MP.AI.E0	tam~-i		OK		
+VERB.P2FP.AI.E0	tam~-i		OK		
+VERB.P3MS.AI.E0	tam~-i		OK		
+VERB.P3FS.AI.E0	tam~-i		OK		
+VERB.P3MD.AI.E0	tam~-i		OK		
+VERB.P3FD.AI.E0	tam~-i		OK		
+VERB.P3MP.AI.E0	tam~-i		OK		
+VERB.P3FP.AI.E0	tam~-i		OK		
+VERB.P1S.PI.E0	tam~-i		OK		
+VERB.P1P.PI.E0	tam~-i		OK		
+VERB.P2MS.PI.E0	tam~-i		OK		
+VERB.P2FS.PI.E0	tam~-i		OK		
+VERB.P2D.PI.E0	tam~-i		OK		
+VERB.P2MP.PI.E0	tam~-i		OK		
+VERB.P2FP.PI.E0	tam~-i		OK		
+VERB.P3MS.PI.E0	tam~-i		OK		
+VERB.P3FS.PI.E0	tam~-i		OK		
+VERB.P3MD.PI.E0	tam~-i		OK		
+VERB.P3FD.PI.E0	tam~-i		OK		
+VERB.P3MP.PI.E0	tam~-i		OK		
+VERB.P3FP.PI.E0	tam~-i		OK		
+VERB.P1S.AI	$an~-u	$anantu	OK		
+VERB.P1P.AI	$an~-u	$anan~A	OK		
+VERB.P2MS.AI	$an~-u	$ananta	OK		
+VERB.P2FS.AI	$an~-u	$ananti	OK		
+VERB.P2D.AI	$an~-u	$anantumA	OK		
+VERB.P2MP.AI	$an~-u	$anantum	OK		
+VERB.P2FP.AI	$an~-u	$anantun~a	OK		
+VERB.P3MS.AI	$an~-u	$an~a	OK		
+VERB.P3FS.AI	$an~-u	$an~at	OK		
+VERB.P3MD.AI	$an~-u	$an~A	OK		
+VERB.P3FD.AI	$an~-u	$an~atA	OK		
+VERB.P3MP.AI	$an~-u	$an~uwA	OK		
+VERB.P3FP.AI	$an~-u	$anan~a	OK		
+VERB.P1S.PI	$an~-u	$unintu	OK		
+VERB.P1P.PI	$an~-u	$unin~A	OK		
+VERB.P2MS.PI	$an~-u	$uninta	OK		
+VERB.P2FS.PI	$an~-u	$uninti	OK		
+VERB.P2D.PI	$an~-u	$unintumA	OK		
+VERB.P2MP.PI	$an~-u	$unintum	OK		
+VERB.P2FP.PI	$an~-u	$unintun~a	OK		
+VERB.P3MS.PI	$an~-u	$un~a	OK		
+VERB.P3FS.PI	$an~-u	$un~at	OK		
+VERB.P3MD.PI	$an~-u	$un~A	OK		
+VERB.P3FD.PI	$an~-u	$un~atA	OK		
+VERB.P3MP.PI	$an~-u	$un~uwA	OK		
+VERB.P3FP.PI	$an~-u	$unin~a	OK		
+VERB.P1S.AI.E0	$an~-u	$anantuhu	OK		
+VERB.P1P.AI.E0	$an~-u	$anan~Ahu	OK		
+VERB.P2MS.AI.E0	$an~-u	$anantahu	OK		
+VERB.P2FS.AI.E0	$an~-u	$anantihi	OK		
+VERB.P2D.AI.E0	$an~-u	$anantumAhu	OK		
+VERB.P2MP.AI.E0	$an~-u	$anantumuwhu	OK		
+VERB.P2FP.AI.E0	$an~-u	$anantun~ahu	OK		
+VERB.P3MS.AI.E0	$an~-u	$an~ahu	OK		
+VERB.P3FS.AI.E0	$an~-u	$an~athu	OK		
+VERB.P3MD.AI.E0	$an~-u	$an~Ahu	OK		
+VERB.P3FD.AI.E0	$an~-u	$an~atAhu	OK		
+VERB.P3MP.AI.E0	$an~-u	$an~uwhu	OK		
+VERB.P3FP.AI.E0	$an~-u	$anan~ahu	OK		
+VERB.P1S.PI.E0	$an~-u		OK		
+VERB.P1P.PI.E0	$an~-u		OK		
+VERB.P2MS.PI.E0	$an~-u		OK		
+VERB.P2FS.PI.E0	$an~-u		OK		
+VERB.P2D.PI.E0	$an~-u		OK		
+VERB.P2MP.PI.E0	$an~-u		OK		
+VERB.P2FP.PI.E0	$an~-u		OK		
+VERB.P3MS.PI.E0	$an~-u		OK		
+VERB.P3FS.PI.E0	$an~-u		OK		
+VERB.P3MD.PI.E0	$an~-u		OK		
+VERB.P3FD.PI.E0	$an~-u		OK		
+VERB.P3MP.PI.E0	$an~-u		OK		
+VERB.P3FP.PI.E0	$an~-u		OK		
+VERB.P1S.AI	vabat-u	vabat~u	OK		
+VERB.P1P.AI	vabat-u	vabatnA	OK		
+VERB.P2MS.AI	vabat-u	vabat~a	OK		
+VERB.P2FS.AI	vabat-u	vabat~i	OK		
+VERB.P2D.AI	vabat-u	vabat~umA	OK		
+VERB.P2MP.AI	vabat-u	vabat~um	OK		
+VERB.P2FP.AI	vabat-u	vabat~un~a	OK		
+VERB.P3MS.AI	vabat-u	vabata	OK		
+VERB.P3FS.AI	vabat-u	vabatat	OK		
+VERB.P3MD.AI	vabat-u	vabatA	OK		
+VERB.P3FD.AI	vabat-u	vabatatA	OK		
+VERB.P3MP.AI	vabat-u	vabatuwA	OK		
+VERB.P3FP.AI	vabat-u	vabatna	OK		
+VERB.P1S.PI	vabat-u	vubit~u	OK		
+VERB.P1P.PI	vabat-u	vubitnA	OK		
+VERB.P2MS.PI	vabat-u	vubit~a	OK		
+VERB.P2FS.PI	vabat-u	vubit~i	OK		
+VERB.P2D.PI	vabat-u	vubit~umA	OK		
+VERB.P2MP.PI	vabat-u	vubit~um	OK		
+VERB.P2FP.PI	vabat-u	vubit~un~a	OK		
+VERB.P3MS.PI	vabat-u	vubita	OK		
+VERB.P3FS.PI	vabat-u	vubitat	OK		
+VERB.P3MD.PI	vabat-u	vubitA	OK		
+VERB.P3FD.PI	vabat-u	vubitatA	OK		
+VERB.P3MP.PI	vabat-u	vubituwA	OK		
+VERB.P3FP.PI	vabat-u	vubitna	OK		
+VERB.P1S.AI.E0	vabat-u		OK		
+VERB.P1P.AI.E0	vabat-u		OK		
+VERB.P2MS.AI.E0	vabat-u		OK		
+VERB.P2FS.AI.E0	vabat-u		OK		
+VERB.P2D.AI.E0	vabat-u		OK		
+VERB.P2MP.AI.E0	vabat-u		OK		
+VERB.P2FP.AI.E0	vabat-u		OK		
+VERB.P3MS.AI.E0	vabat-u		OK		
+VERB.P3FS.AI.E0	vabat-u		OK		
+VERB.P3MD.AI.E0	vabat-u		OK		
+VERB.P3FD.AI.E0	vabat-u		OK		
+VERB.P3MP.AI.E0	vabat-u		OK		
+VERB.P3FP.AI.E0	vabat-u		OK		
+VERB.P1S.PI.E0	vabat-u		OK		
+VERB.P1P.PI.E0	vabat-u		OK		
+VERB.P2MS.PI.E0	vabat-u		OK		
+VERB.P2FS.PI.E0	vabat-u		OK		
+VERB.P2D.PI.E0	vabat-u		OK		
+VERB.P2MP.PI.E0	vabat-u		OK		
+VERB.P2FP.PI.E0	vabat-u		OK		
+VERB.P3MS.PI.E0	vabat-u		OK		
+VERB.P3FS.PI.E0	vabat-u		OK		
+VERB.P3MD.PI.E0	vabat-u		OK		
+VERB.P3FD.PI.E0	vabat-u		OK		
+VERB.P3MP.PI.E0	vabat-u		OK		
+VERB.P3FP.PI.E0	vabat-u		OK		
+VERB.P1S.AI	baqiy-a	baqiytu	OK		
+VERB.P1P.AI	baqiy-a	baqiynA	OK		
+VERB.P2MS.AI	baqiy-a	baqiyta	OK		
+VERB.P2FS.AI	baqiy-a	baqiyti	OK		
+VERB.P2D.AI	baqiy-a	baqiytumA	OK		
+VERB.P2MP.AI	baqiy-a	baqiytum	OK		
+VERB.P2FP.AI	baqiy-a	baqiytun~a	OK		
+VERB.P3MS.AI	baqiy-a	baqiya	OK		
+VERB.P3FS.AI	baqiy-a	baqiyat	OK		
+VERB.P3MD.AI	baqiy-a	baqiyA	OK		
+VERB.P3FD.AI	baqiy-a	baqiyatA	OK		
+VERB.P3MP.AI	baqiy-a	baquwA	OK		
+VERB.P3FP.AI	baqiy-a	baqiyna	OK		
+VERB.P1S.PI	baqiy-a	buqiytu	OK		
+VERB.P1P.PI	baqiy-a	buqiynA	OK		
+VERB.P2MS.PI	baqiy-a	buqiyta	OK		
+VERB.P2FS.PI	baqiy-a	buqiyti	OK		
+VERB.P2D.PI	baqiy-a	buqiytumA	OK		
+VERB.P2MP.PI	baqiy-a	buqiytum	OK		
+VERB.P2FP.PI	baqiy-a	buqiytun~a	OK		
+VERB.P3MS.PI	baqiy-a	buqiya	OK		
+VERB.P3FS.PI	baqiy-a	buqiyat	OK		
+VERB.P3MD.PI	baqiy-a	buqiyA	OK		
+VERB.P3FD.PI	baqiy-a	buqiyatA	OK		
+VERB.P3MP.PI	baqiy-a	buquwA	OK		
+VERB.P3FP.PI	baqiy-a	buqiyna	OK		
+VERB.P1S.AI.E0	baqiy-a	baqiytuhu	OK		
+VERB.P1P.AI.E0	baqiy-a	baqiynAhu	OK		
+VERB.P2MS.AI.E0	baqiy-a	baqiytahu	OK		
+VERB.P2FS.AI.E0	baqiy-a	baqiytihi	OK		
+VERB.P2D.AI.E0	baqiy-a	baqiytumAhu	OK		
+VERB.P2MP.AI.E0	baqiy-a	baqiytumuwhu	OK		
+VERB.P2FP.AI.E0	baqiy-a	baqiytun~ahu	OK		
+VERB.P3MS.AI.E0	baqiy-a	baqiyahu	OK		
+VERB.P3FS.AI.E0	baqiy-a	baqiyathu	OK		
+VERB.P3MD.AI.E0	baqiy-a	baqiyAhu	OK		
+VERB.P3FD.AI.E0	baqiy-a	baqiyatAhu	OK		
+VERB.P3MP.AI.E0	baqiy-a	baquwhu	OK		
+VERB.P3FP.AI.E0	baqiy-a	baqiynahu	OK		
+VERB.P1S.PI.E0	baqiy-a		OK		
+VERB.P1P.PI.E0	baqiy-a		OK		
+VERB.P2MS.PI.E0	baqiy-a		OK		
+VERB.P2FS.PI.E0	baqiy-a		OK		
+VERB.P2D.PI.E0	baqiy-a		OK		
+VERB.P2MP.PI.E0	baqiy-a		OK		
+VERB.P2FP.PI.E0	baqiy-a		OK		
+VERB.P3MS.PI.E0	baqiy-a		OK		
+VERB.P3FS.PI.E0	baqiy-a		OK		
+VERB.P3MD.PI.E0	baqiy-a		OK		
+VERB.P3FD.PI.E0	baqiy-a		OK		
+VERB.P3MP.PI.E0	baqiy-a		OK		
+VERB.P3FP.PI.E0	baqiy-a		OK		
+VERB.P1S.AI	daEA-u	daEawtu	OK		
+VERB.P1P.AI	daEA-u	daEawnA	OK		
+VERB.P2MS.AI	daEA-u	daEawta	OK		
+VERB.P2FS.AI	daEA-u	daEawti	OK		
+VERB.P2D.AI	daEA-u	daEawtumA	OK		
+VERB.P2MP.AI	daEA-u	daEawtum	OK		
+VERB.P2FP.AI	daEA-u	daEawtun~a	OK		
+VERB.P3MS.AI	daEA-u	daEaA	OK		
+VERB.P3FS.AI	daEA-u	daEat	OK		
+VERB.P3MD.AI	daEA-u	daEawA	OK		
+VERB.P3FD.AI	daEA-u	daEatA	OK		
+VERB.P3MP.AI	daEA-u	daEawoA	OK		
+VERB.P3FP.AI	daEA-u	daEawna	OK		
+VERB.P1S.PI	daEA-u	duEiytu	OK		
+VERB.P1P.PI	daEA-u	duEiynA	OK		
+VERB.P2MS.PI	daEA-u	duEiyta	OK		
+VERB.P2FS.PI	daEA-u	duEiyti	OK		
+VERB.P2D.PI	daEA-u	duEiytumA	OK		
+VERB.P2MP.PI	daEA-u	duEiytum	OK		
+VERB.P2FP.PI	daEA-u	duEiytun~a	OK		
+VERB.P3MS.PI	daEA-u	duEiya	OK		
+VERB.P3FS.PI	daEA-u	duEiyat	OK		
+VERB.P3MD.PI	daEA-u	duEiyA	OK		
+VERB.P3FD.PI	daEA-u	duEiyatA	OK		
+VERB.P3MP.PI	daEA-u	duEuwA	OK		
+VERB.P3FP.PI	daEA-u	duEiyna	OK		
+VERB.P1S.AI.E0	daEA-u	daEawtuhu	OK		
+VERB.P1P.AI.E0	daEA-u	daEawnAhu	OK		
+VERB.P2MS.AI.E0	daEA-u	daEawtahu	OK		
+VERB.P2FS.AI.E0	daEA-u	daEawtihi	OK		
+VERB.P2D.AI.E0	daEA-u	daEawtumAhu	OK		
+VERB.P2MP.AI.E0	daEA-u	daEawtumuwhu	OK		
+VERB.P2FP.AI.E0	daEA-u	daEawtun~ahu	OK		
+VERB.P3MS.AI.E0	daEA-u	daEaAhu	OK		
+VERB.P3FS.AI.E0	daEA-u	daEathu	OK		
+VERB.P3MD.AI.E0	daEA-u	daEawAhu	OK		
+VERB.P3FD.AI.E0	daEA-u	daEatAhu	OK		
+VERB.P3MP.AI.E0	daEA-u	daEawohu	OK		
+VERB.P3FP.AI.E0	daEA-u	daEawnahu	OK		
+VERB.P1S.PI.E0	daEA-u		OK		
+VERB.P1P.PI.E0	daEA-u		OK		
+VERB.P2MS.PI.E0	daEA-u		OK		
+VERB.P2FS.PI.E0	daEA-u		OK		
+VERB.P2D.PI.E0	daEA-u		OK		
+VERB.P2MP.PI.E0	daEA-u		OK		
+VERB.P2FP.PI.E0	daEA-u		OK		
+VERB.P3MS.PI.E0	daEA-u		OK		
+VERB.P3FS.PI.E0	daEA-u		OK		
+VERB.P3MD.PI.E0	daEA-u		OK		
+VERB.P3FD.PI.E0	daEA-u		OK		
+VERB.P3MP.PI.E0	daEA-u		OK		
+VERB.P3FP.PI.E0	daEA-u		OK		
+VERB.P1S.AI	raDiy-a	raDiytu	OK		
+VERB.P1P.AI	raDiy-a	raDiynA	OK		
+VERB.P2MS.AI	raDiy-a	raDiyta	OK		
+VERB.P2FS.AI	raDiy-a	raDiyti	OK		
+VERB.P2D.AI	raDiy-a	raDiytumA	OK		
+VERB.P2MP.AI	raDiy-a	raDiytum	OK		
+VERB.P2FP.AI	raDiy-a	raDiytun~a	OK		
+VERB.P3MS.AI	raDiy-a	raDiya	OK		
+VERB.P3FS.AI	raDiy-a	raDiyat	OK		
+VERB.P3MD.AI	raDiy-a	raDiyA	OK		
+VERB.P3FD.AI	raDiy-a	raDiyatA	OK		
+VERB.P3MP.AI	raDiy-a	raDuwA	OK		
+VERB.P3FP.AI	raDiy-a	raDiyna	OK		
+VERB.P1S.PI	raDiy-a	ruDiytu	OK		
+VERB.P1P.PI	raDiy-a	ruDiynA	OK		
+VERB.P2MS.PI	raDiy-a	ruDiyta	OK		
+VERB.P2FS.PI	raDiy-a	ruDiyti	OK		
+VERB.P2D.PI	raDiy-a	ruDiytumA	OK		
+VERB.P2MP.PI	raDiy-a	ruDiytum	OK		
+VERB.P2FP.PI	raDiy-a	ruDiytun~a	OK		
+VERB.P3MS.PI	raDiy-a	ruDiya	OK		
+VERB.P3FS.PI	raDiy-a	ruDiyat	OK		
+VERB.P3MD.PI	raDiy-a	ruDiyA	OK		
+VERB.P3FD.PI	raDiy-a	ruDiyatA	OK		
+VERB.P3MP.PI	raDiy-a	ruDuwA	OK		
+VERB.P3FP.PI	raDiy-a	ruDiyna	OK		
+VERB.P1S.AI.E0	raDiy-a		OK		
+VERB.P1P.AI.E0	raDiy-a		OK		
+VERB.P2MS.AI.E0	raDiy-a		OK		
+VERB.P2FS.AI.E0	raDiy-a		OK		
+VERB.P2D.AI.E0	raDiy-a		OK		
+VERB.P2MP.AI.E0	raDiy-a		OK		
+VERB.P2FP.AI.E0	raDiy-a		OK		
+VERB.P3MS.AI.E0	raDiy-a		OK		
+VERB.P3FS.AI.E0	raDiy-a		OK		
+VERB.P3MD.AI.E0	raDiy-a		OK		
+VERB.P3FD.AI.E0	raDiy-a		OK		
+VERB.P3MP.AI.E0	raDiy-a		OK		
+VERB.P3FP.AI.E0	raDiy-a		OK		
+VERB.P1S.PI.E0	raDiy-a		OK		
+VERB.P1P.PI.E0	raDiy-a		OK		
+VERB.P2MS.PI.E0	raDiy-a		OK		
+VERB.P2FS.PI.E0	raDiy-a		OK		
+VERB.P2D.PI.E0	raDiy-a		OK		
+VERB.P2MP.PI.E0	raDiy-a		OK		
+VERB.P2FP.PI.E0	raDiy-a		OK		
+VERB.P3MS.PI.E0	raDiy-a		OK		
+VERB.P3FS.PI.E0	raDiy-a		OK		
+VERB.P3MD.PI.E0	raDiy-a		OK		
+VERB.P3FD.PI.E0	raDiy-a		OK		
+VERB.P3MP.PI.E0	raDiy-a		OK		
+VERB.P3FP.PI.E0	raDiy-a		OK		
+VERB.P1S.AI	bat~-u	batat~u	OK		
+VERB.P1P.AI	bat~-u	batatnA	OK		
+VERB.P2MS.AI	bat~-u	batat~a	OK		
+VERB.P2FS.AI	bat~-u	batat~i	OK		
+VERB.P2D.AI	bat~-u	batat~umA	OK		
+VERB.P2MP.AI	bat~-u	batat~um	OK		
+VERB.P2FP.AI	bat~-u	batat~un~a	OK		
+VERB.P3MS.AI	bat~-u	bat~a	OK		
+VERB.P3FS.AI	bat~-u	bat~at	OK		
+VERB.P3MD.AI	bat~-u	bat~A	OK		
+VERB.P3FD.AI	bat~-u	bat~atA	OK		
+VERB.P3MP.AI	bat~-u	bat~uwA	OK		
+VERB.P3FP.AI	bat~-u	batatna	OK		
+VERB.P1S.PI	bat~-u	butit~u	OK		
+VERB.P1P.PI	bat~-u	butitnA	OK		
+VERB.P2MS.PI	bat~-u	butit~a	OK		
+VERB.P2FS.PI	bat~-u	butit~i	OK		
+VERB.P2D.PI	bat~-u	butit~umA	OK		
+VERB.P2MP.PI	bat~-u	butit~um	OK		
+VERB.P2FP.PI	bat~-u	butit~un~a	OK		
+VERB.P3MS.PI	bat~-u	but~a	OK		
+VERB.P3FS.PI	bat~-u	but~at	OK		
+VERB.P3MD.PI	bat~-u	but~A	OK		
+VERB.P3FD.PI	bat~-u	but~atA	OK		
+VERB.P3MP.PI	bat~-u	but~uwA	OK		
+VERB.P3FP.PI	bat~-u	butitna	OK		
+VERB.P1S.AI.E0	bat~-u	batat~uhu	OK		
+VERB.P1P.AI.E0	bat~-u	batatnAhu	OK		
+VERB.P2MS.AI.E0	bat~-u	batat~ahu	OK		
+VERB.P2FS.AI.E0	bat~-u	batat~ihi	OK		
+VERB.P2D.AI.E0	bat~-u	batat~umAhu	OK		
+VERB.P2MP.AI.E0	bat~-u	batat~umuwhu	OK		
+VERB.P2FP.AI.E0	bat~-u	batat~un~ahu	OK		
+VERB.P3MS.AI.E0	bat~-u	bat~ahu	OK		
+VERB.P3FS.AI.E0	bat~-u	bat~athu	OK		
+VERB.P3MD.AI.E0	bat~-u	bat~Ahu	OK		
+VERB.P3FD.AI.E0	bat~-u	bat~atAhu	OK		
+VERB.P3MP.AI.E0	bat~-u	bat~uwhu	OK		
+VERB.P3FP.AI.E0	bat~-u	batatnahu	OK		
+VERB.P1S.PI.E0	bat~-u		OK		
+VERB.P1P.PI.E0	bat~-u		OK		
+VERB.P2MS.PI.E0	bat~-u		OK		
+VERB.P2FS.PI.E0	bat~-u		OK		
+VERB.P2D.PI.E0	bat~-u		OK		
+VERB.P2MP.PI.E0	bat~-u		OK		
+VERB.P2FP.PI.E0	bat~-u		OK		
+VERB.P3MS.PI.E0	bat~-u		OK		
+VERB.P3FS.PI.E0	bat~-u		OK		
+VERB.P3MD.PI.E0	bat~-u		OK		
+VERB.P3FD.PI.E0	bat~-u		OK		
+VERB.P3MP.PI.E0	bat~-u		OK		
+VERB.P3FP.PI.E0	bat~-u		OK		
+VERB.P1S.AI	>aEAn	>aEantu	OK		
+VERB.P1P.AI	>aEAn	>aEan~A	OK		
+VERB.P2MS.AI	>aEAn	>aEanta	OK		
+VERB.P2FS.AI	>aEAn	>aEanti	OK		
+VERB.P2D.AI	>aEAn	>aEantumA	OK		
+VERB.P2MP.AI	>aEAn	>aEantum	OK		
+VERB.P2FP.AI	>aEAn	>aEantun~a	OK		
+VERB.P3FP.AI	>aEAn	>aEan~a	OK		
+VERB.P1S.PI	>aEAn	>uEintu	OK		
+VERB.P1P.PI	>aEAn	>uEin~A	OK		
+VERB.P2MS.PI	>aEAn	>uEinta	OK		
+VERB.P2FS.PI	>aEAn	>uEinti	OK		
+VERB.P2D.PI	>aEAn	>uEintumA	OK		
+VERB.P2MP.PI	>aEAn	>uEintum	OK		
+VERB.P2FP.PI	>aEAn	>uEintun~a	OK		
+VERB.P3FP.PI	>aEAn	>uEin~a	OK		
+VERB.P1S.AI	Tara>-a	Tara>tu	OK		
+VERB.P1P.AI	Tara>-a	Tara>nA	OK		
+VERB.P2MS.AI	Tara>-a	Tara>ta	OK		
+VERB.P2FS.AI	Tara>-a	Tara>ti	OK		
+VERB.P2D.AI	Tara>-a	Tara>tumA	OK		
+VERB.P2MP.AI	Tara>-a	Tara>tum	OK		
+VERB.P2FP.AI	Tara>-a	Tara>tun~a	OK		
+VERB.P3MS.AI	Tara>-a	Tara>a	OK		
+VERB.P3FS.AI	Tara>-a	Tara>at	OK		
+VERB.P3MD.AI	Tara>-a	Tara|	OK		
+VERB.P3FD.AI	Tara>-a	Tara>atA	OK		
+VERB.P3MP.AI	Tara>-a	Tara&uwA	OK		
+VERB.P3FP.AI	Tara>-a	Tara>na	OK		
+VERB.P1S.PI	Tara>-a	Turi}tu	OK		
+VERB.P1P.PI	Tara>-a	Turi}nA	OK		
+VERB.P2MS.PI	Tara>-a	Turi}ta	OK		
+VERB.P2FS.PI	Tara>-a	Turi}ti	OK		
+VERB.P2D.PI	Tara>-a	Turi}tumA	OK		
+VERB.P2MP.PI	Tara>-a	Turi}tum	OK		
+VERB.P2FP.PI	Tara>-a	Turi}tun~a	OK		
+VERB.P3MS.PI	Tara>-a	Turi}a	OK		
+VERB.P3FS.PI	Tara>-a	Turi}at	OK		
+VERB.P3MD.PI	Tara>-a	Turi}A	OK		
+VERB.P3FD.PI	Tara>-a	Turi}atA	OK		
+VERB.P3MP.PI	Tara>-a	Turi}uwA	OK		
+VERB.P3FP.PI	Tara>-a	Turi}na	OK		
+VERB.P1S.AI.E0	Tara>-a		OK		
+VERB.P1P.AI.E0	Tara>-a		OK		
+VERB.P2MS.AI.E0	Tara>-a		OK		
+VERB.P2FS.AI.E0	Tara>-a		OK		
+VERB.P2D.AI.E0	Tara>-a		OK		
+VERB.P2MP.AI.E0	Tara>-a		OK		
+VERB.P2FP.AI.E0	Tara>-a		OK		
+VERB.P3MS.AI.E0	Tara>-a		OK		
+VERB.P3FS.AI.E0	Tara>-a		OK		
+VERB.P3MD.AI.E0	Tara>-a		OK		
+VERB.P3FD.AI.E0	Tara>-a		OK		
+VERB.P3MP.AI.E0	Tara>-a		OK		
+VERB.P3FP.AI.E0	Tara>-a		OK		
+VERB.P1S.PI.E0	Tara>-a		OK		
+VERB.P1P.PI.E0	Tara>-a		OK		
+VERB.P2MS.PI.E0	Tara>-a		OK		
+VERB.P2FS.PI.E0	Tara>-a		OK		
+VERB.P2D.PI.E0	Tara>-a		OK		
+VERB.P2MP.PI.E0	Tara>-a		OK		
+VERB.P2FP.PI.E0	Tara>-a		OK		
+VERB.P3MS.PI.E0	Tara>-a		OK		
+VERB.P3FS.PI.E0	Tara>-a		OK		
+VERB.P3MD.PI.E0	Tara>-a		OK		
+VERB.P3FD.PI.E0	Tara>-a		OK		
+VERB.P3MP.PI.E0	Tara>-a		OK		
+VERB.P3FP.PI.E0	Tara>-a		OK		
+VERB.P1S.AI	mat~-u	matat~u	OK		
+VERB.P1P.AI	mat~-u	matatnA	OK		
+VERB.P2MS.AI	mat~-u	matat~a	OK		
+VERB.P2FS.AI	mat~-u	matat~i	OK		
+VERB.P2D.AI	mat~-u	matat~umA	OK		
+VERB.P2MP.AI	mat~-u	matat~um	OK		
+VERB.P2FP.AI	mat~-u	matat~un~a	OK		
+VERB.P3MS.AI	mat~-u	mat~a	OK		
+VERB.P3FS.AI	mat~-u	mat~at	OK		
+VERB.P3MD.AI	mat~-u	mat~A	OK		
+VERB.P3FD.AI	mat~-u	mat~atA	OK		
+VERB.P3MP.AI	mat~-u	mat~uwA	OK		
+VERB.P3FP.AI	mat~-u	matatna	OK		
+VERB.P1S.PI	mat~-u	mutit~u	OK		
+VERB.P1P.PI	mat~-u	mutitnA	OK		
+VERB.P2MS.PI	mat~-u	mutit~a	OK		
+VERB.P2FS.PI	mat~-u	mutit~i	OK		
+VERB.P2D.PI	mat~-u	mutit~umA	OK		
+VERB.P2MP.PI	mat~-u	mutit~um	OK		
+VERB.P2FP.PI	mat~-u	mutit~un~a	OK		
+VERB.P3MS.PI	mat~-u	mut~a	OK		
+VERB.P3FS.PI	mat~-u	mut~at	OK		
+VERB.P3MD.PI	mat~-u	mut~A	OK		
+VERB.P3FD.PI	mat~-u	mut~atA	OK		
+VERB.P3MP.PI	mat~-u	mut~uwA	OK		
+VERB.P3FP.PI	mat~-u	mutitna	OK		
+VERB.P1S.AI.E0	mat~-u		OK		
+VERB.P1P.AI.E0	mat~-u		OK		
+VERB.P2MS.AI.E0	mat~-u		OK		
+VERB.P2FS.AI.E0	mat~-u		OK		
+VERB.P2D.AI.E0	mat~-u		OK		
+VERB.P2MP.AI.E0	mat~-u		OK		
+VERB.P2FP.AI.E0	mat~-u		OK		
+VERB.P3MS.AI.E0	mat~-u		OK		
+VERB.P3FS.AI.E0	mat~-u		OK		
+VERB.P3MD.AI.E0	mat~-u		OK		
+VERB.P3FD.AI.E0	mat~-u		OK		
+VERB.P3MP.AI.E0	mat~-u		OK		
+VERB.P3FP.AI.E0	mat~-u		OK		
+VERB.P1S.PI.E0	mat~-u		OK		
+VERB.P1P.PI.E0	mat~-u		OK		
+VERB.P2MS.PI.E0	mat~-u		OK		
+VERB.P2FS.PI.E0	mat~-u		OK		
+VERB.P2D.PI.E0	mat~-u		OK		
+VERB.P2MP.PI.E0	mat~-u		OK		
+VERB.P2FP.PI.E0	mat~-u		OK		
+VERB.P3MS.PI.E0	mat~-u		OK		
+VERB.P3FS.PI.E0	mat~-u		OK		
+VERB.P3MD.PI.E0	mat~-u		OK		
+VERB.P3FD.PI.E0	mat~-u		OK		
+VERB.P3MP.PI.E0	mat~-u		OK		
+VERB.P3FP.PI.E0	mat~-u		OK		
+VERB.P1S.AI	xalA-u	xalawtu	OK		
+VERB.P1P.AI	xalA-u	xalawnA	OK		
+VERB.P2MS.AI	xalA-u	xalawta	OK		
+VERB.P2FS.AI	xalA-u	xalawti	OK		
+VERB.P2D.AI	xalA-u	xalawtumA	OK		
+VERB.P2MP.AI	xalA-u	xalawtum	OK		
+VERB.P2FP.AI	xalA-u	xalawtun~a	OK		
+VERB.P3MS.AI	xalA-u	xalaA	OK		
+VERB.P3FS.AI	xalA-u	xalat	OK		
+VERB.P3MD.AI	xalA-u	xalawA	OK		
+VERB.P3FD.AI	xalA-u	xalatA	OK		
+VERB.P3MP.AI	xalA-u	xalawoA	OK		
+VERB.P3FP.AI	xalA-u	xalawna	OK		
+VERB.P1S.PI	xalA-u	xuliytu	OK		
+VERB.P1P.PI	xalA-u	xuliynA	OK		
+VERB.P2MS.PI	xalA-u	xuliyta	OK		
+VERB.P2FS.PI	xalA-u	xuliyti	OK		
+VERB.P2D.PI	xalA-u	xuliytumA	OK		
+VERB.P2MP.PI	xalA-u	xuliytum	OK		
+VERB.P2FP.PI	xalA-u	xuliytun~a	OK		
+VERB.P3MS.PI	xalA-u	xuliya	OK		
+VERB.P3FS.PI	xalA-u	xuliyat	OK		
+VERB.P3MD.PI	xalA-u	xuliyA	OK		
+VERB.P3FD.PI	xalA-u	xuliyatA	OK		
+VERB.P3MP.PI	xalA-u	xuluwA	OK		
+VERB.P3FP.PI	xalA-u	xuliyna	OK		
+VERB.P1S.AI.E0	xalA-u		OK		
+VERB.P1P.AI.E0	xalA-u		OK		
+VERB.P2MS.AI.E0	xalA-u		OK		
+VERB.P2FS.AI.E0	xalA-u		OK		
+VERB.P2D.AI.E0	xalA-u		OK		
+VERB.P2MP.AI.E0	xalA-u		OK		
+VERB.P2FP.AI.E0	xalA-u		OK		
+VERB.P3MS.AI.E0	xalA-u		OK		
+VERB.P3FS.AI.E0	xalA-u		OK		
+VERB.P3MD.AI.E0	xalA-u		OK		
+VERB.P3FD.AI.E0	xalA-u		OK		
+VERB.P3MP.AI.E0	xalA-u		OK		
+VERB.P3FP.AI.E0	xalA-u		OK		
+VERB.P1S.PI.E0	xalA-u		OK		
+VERB.P1P.PI.E0	xalA-u		OK		
+VERB.P2MS.PI.E0	xalA-u		OK		
+VERB.P2FS.PI.E0	xalA-u		OK		
+VERB.P2D.PI.E0	xalA-u		OK		
+VERB.P2MP.PI.E0	xalA-u		OK		
+VERB.P2FP.PI.E0	xalA-u		OK		
+VERB.P3MS.PI.E0	xalA-u		OK		
+VERB.P3FS.PI.E0	xalA-u		OK		
+VERB.P3MD.PI.E0	xalA-u		OK		
+VERB.P3FD.PI.E0	xalA-u		OK		
+VERB.P3MP.PI.E0	xalA-u		OK		
+VERB.P3FP.PI.E0	xalA-u		OK		
+VERB.P3MS.AI	qar~-a	qar~a	OK		
+VERB.P3FS.AI	qar~-a	qar~at	OK		
+VERB.P3MD.AI	qar~-a	qar~A	OK		
+VERB.P3FD.AI	qar~-a	qar~atA	OK		
+VERB.P3MP.AI	qar~-a	qar~uwA	OK		
+VERB.P1S.PI	qar~-a	qurirtu	OK		
+VERB.P1P.PI	qar~-a	qurirnA	OK		
+VERB.P2MS.PI	qar~-a	qurirta	OK		
+VERB.P2FS.PI	qar~-a	qurirti	OK		
+VERB.P2D.PI	qar~-a	qurirtumA	OK		
+VERB.P2MP.PI	qar~-a	qurirtum	OK		
+VERB.P2FP.PI	qar~-a	qurirtun~a	OK		
+VERB.P3MS.PI	qar~-a	qur~a	OK		
+VERB.P3FS.PI	qar~-a	qur~at	OK		
+VERB.P3MD.PI	qar~-a	qur~A	OK		
+VERB.P3FD.PI	qar~-a	qur~atA	OK		
+VERB.P3MP.PI	qar~-a	qur~uwA	OK		
+VERB.P3FP.PI	qar~-a	qurirna	OK		
+VERB.P3MS.AI.E0	qar~-a	qar~ahu	OK		
+VERB.P3FS.AI.E0	qar~-a	qar~athu	OK		
+VERB.P3MD.AI.E0	qar~-a	qar~Ahu	OK		
+VERB.P3FD.AI.E0	qar~-a	qar~atAhu	OK		
+VERB.P3MP.AI.E0	qar~-a	qar~uwhu	OK		
+VERB.P1S.PI.E0	qar~-a		OK		
+VERB.P1P.PI.E0	qar~-a		OK		
+VERB.P2MS.PI.E0	qar~-a		OK		
+VERB.P2FS.PI.E0	qar~-a		OK		
+VERB.P2D.PI.E0	qar~-a		OK		
+VERB.P2MP.PI.E0	qar~-a		OK		
+VERB.P2FP.PI.E0	qar~-a		OK		
+VERB.P3MS.PI.E0	qar~-a		OK		
+VERB.P3FS.PI.E0	qar~-a		OK		
+VERB.P3MD.PI.E0	qar~-a		OK		
+VERB.P3FD.PI.E0	qar~-a		OK		
+VERB.P3MP.PI.E0	qar~-a		OK		
+VERB.P3FP.PI.E0	qar~-a		OK		
+VERB.P1S.AI	EA$	Ei$tu	OK		
+VERB.P1P.AI	EA$	Ei$nA	OK		
+VERB.P2MS.AI	EA$	Ei$ta	OK		
+VERB.P2FS.AI	EA$	Ei$ti	OK		
+VERB.P2D.AI	EA$	Ei$tumA	OK		
+VERB.P2MP.AI	EA$	Ei$tum	OK		
+VERB.P2FP.AI	EA$	Ei$tun~a	OK		
+VERB.P3MS.AI	EA$	EA$a	OK		
+VERB.P3FS.AI	EA$	EA$at	OK		
+VERB.P3MD.AI	EA$	EA$A	OK		
+VERB.P3FD.AI	EA$	EA$atA	OK		
+VERB.P3MP.AI	EA$	EA$uwA	OK		
+VERB.P3FP.AI	EA$	Ei$na	OK		
+VERB.P1S.AI.E0	EA$	Ei$tuhu	OK		
+VERB.P1P.AI.E0	EA$	Ei$nAhu	OK		
+VERB.P2MS.AI.E0	EA$	Ei$tahu	OK		
+VERB.P2FS.AI.E0	EA$	Ei$tihi	OK		
+VERB.P2D.AI.E0	EA$	Ei$tumAhu	OK		
+VERB.P2MP.AI.E0	EA$	Ei$tumuwhu	OK		
+VERB.P2FP.AI.E0	EA$	Ei$tun~ahu	OK		
+VERB.P3MS.AI.E0	EA$	EA$ahu	OK		
+VERB.P3FS.AI.E0	EA$	EA$athu	OK		
+VERB.P3MD.AI.E0	EA$	EA$Ahu	OK		
+VERB.P3FD.AI.E0	EA$	EA$atAhu	OK		
+VERB.P3MP.AI.E0	EA$	EA$uwhu	OK		
+VERB.P3FP.AI.E0	EA$	Ei$nahu	OK		
+VERB.P1S.PI.E0	EA$		OK		
+VERB.P1P.PI.E0	EA$		OK		
+VERB.P2MS.PI.E0	EA$		OK		
+VERB.P2FS.PI.E0	EA$		OK		
+VERB.P2D.PI.E0	EA$		OK		
+VERB.P2MP.PI.E0	EA$		OK		
+VERB.P2FP.PI.E0	EA$		OK		
+VERB.P3MS.PI.E0	EA$		OK		
+VERB.P3FS.PI.E0	EA$		OK		
+VERB.P3MD.PI.E0	EA$		OK		
+VERB.P3FD.PI.E0	EA$		OK		
+VERB.P3MP.PI.E0	EA$		OK		
+VERB.P3FP.PI.E0	EA$		OK		
+VERB.P3MS.AI	laj~-a	laj~a	OK		
+VERB.P3FS.AI	laj~-a	laj~at	OK		
+VERB.P3MD.AI	laj~-a	laj~A	OK		
+VERB.P3FD.AI	laj~-a	laj~atA	OK		
+VERB.P3MP.AI	laj~-a	laj~uwA	OK		
+VERB.P1S.PI	laj~-a	lujijtu	OK		
+VERB.P1P.PI	laj~-a	lujijnA	OK		
+VERB.P2MS.PI	laj~-a	lujijta	OK		
+VERB.P2FS.PI	laj~-a	lujijti	OK		
+VERB.P2D.PI	laj~-a	lujijtumA	OK		
+VERB.P2MP.PI	laj~-a	lujijtum	OK		
+VERB.P2FP.PI	laj~-a	lujijtun~a	OK		
+VERB.P3MS.PI	laj~-a	luj~a	OK		
+VERB.P3FS.PI	laj~-a	luj~at	OK		
+VERB.P3MD.PI	laj~-a	luj~A	OK		
+VERB.P3FD.PI	laj~-a	luj~atA	OK		
+VERB.P3MP.PI	laj~-a	luj~uwA	OK		
+VERB.P3FP.PI	laj~-a	lujijna	OK		
+VERB.P1S.AI.E0	laj~-a		OK		
+VERB.P1P.AI.E0	laj~-a		OK		
+VERB.P2MS.AI.E0	laj~-a		OK		
+VERB.P2FS.AI.E0	laj~-a		OK		
+VERB.P2D.AI.E0	laj~-a		OK		
+VERB.P2MP.AI.E0	laj~-a		OK		
+VERB.P2FP.AI.E0	laj~-a		OK		
+VERB.P3MS.AI.E0	laj~-a		OK		
+VERB.P3FS.AI.E0	laj~-a		OK		
+VERB.P3MD.AI.E0	laj~-a		OK		
+VERB.P3FD.AI.E0	laj~-a		OK		
+VERB.P3MP.AI.E0	laj~-a		OK		
+VERB.P3FP.AI.E0	laj~-a		OK		
+VERB.P1S.PI.E0	laj~-a		OK		
+VERB.P1P.PI.E0	laj~-a		OK		
+VERB.P2MS.PI.E0	laj~-a		OK		
+VERB.P2FS.PI.E0	laj~-a		OK		
+VERB.P2D.PI.E0	laj~-a		OK		
+VERB.P2MP.PI.E0	laj~-a		OK		
+VERB.P2FP.PI.E0	laj~-a		OK		
+VERB.P3MS.PI.E0	laj~-a		OK		
+VERB.P3FS.PI.E0	laj~-a		OK		
+VERB.P3MD.PI.E0	laj~-a		OK		
+VERB.P3FD.PI.E0	laj~-a		OK		
+VERB.P3MP.PI.E0	laj~-a		OK		
+VERB.P3FP.PI.E0	laj~-a		OK		
+VERB.P1S.AI	na>aY-a	na>aytu	OK		
+VERB.P1P.AI	na>aY-a	na>aynA	OK		
+VERB.P2MS.AI	na>aY-a	na>ayta	OK		
+VERB.P2FS.AI	na>aY-a	na>ayti	OK		
+VERB.P2D.AI	na>aY-a	na>aytumA	OK		
+VERB.P2MP.AI	na>aY-a	na>aytum	OK		
+VERB.P2FP.AI	na>aY-a	na>aytun~a	OK		
+VERB.P3MS.AI	na>aY-a	na>aY	OK		
+VERB.P3FS.AI	na>aY-a	na>at	OK		
+VERB.P3MD.AI	na>aY-a	na>ayA	OK		
+VERB.P3FD.AI	na>aY-a	na>atA	OK		
+VERB.P3MP.AI	na>aY-a	na>awoA	OK		
+VERB.P3FP.AI	na>aY-a	na>ayna	OK		
+VERB.P1S.PI	na>aY-a	nutu	PROB		
+VERB.P1P.PI	na>aY-a	nunA	PROB		
+VERB.P2MS.PI	na>aY-a	nuta	PROB		
+VERB.P2FS.PI	na>aY-a	nuti	PROB		
+VERB.P2D.PI	na>aY-a	nutumA	PROB		
+VERB.P2MP.PI	na>aY-a	nutum	PROB		
+VERB.P2FP.PI	na>aY-a	nutun~a	PROB		
+VERB.P3MS.PI	na>aY-a	nua	PROB		
+VERB.P3FS.PI	na>aY-a	nuat	PROB		
+VERB.P3MD.PI	na>aY-a	nuA	PROB		
+VERB.P3FD.PI	na>aY-a	nuatA	PROB		
+VERB.P3MP.PI	na>aY-a	nuuwA	PROB		
+VERB.P3FP.PI	na>aY-a	nuna	PROB		
+VERB.P1S.AI.E0	na>aY-a		OK		
+VERB.P1P.AI.E0	na>aY-a		OK		
+VERB.P2MS.AI.E0	na>aY-a		OK		
+VERB.P2FS.AI.E0	na>aY-a		OK		
+VERB.P2D.AI.E0	na>aY-a		OK		
+VERB.P2MP.AI.E0	na>aY-a		OK		
+VERB.P2FP.AI.E0	na>aY-a		OK		
+VERB.P3MS.AI.E0	na>aY-a		OK		
+VERB.P3FS.AI.E0	na>aY-a		OK		
+VERB.P3MD.AI.E0	na>aY-a		OK		
+VERB.P3FD.AI.E0	na>aY-a		OK		
+VERB.P3MP.AI.E0	na>aY-a		OK		
+VERB.P3FP.AI.E0	na>aY-a		OK		
+VERB.P1S.PI.E0	na>aY-a		OK		
+VERB.P1P.PI.E0	na>aY-a		OK		
+VERB.P2MS.PI.E0	na>aY-a		OK		
+VERB.P2FS.PI.E0	na>aY-a		OK		
+VERB.P2D.PI.E0	na>aY-a		OK		
+VERB.P2MP.PI.E0	na>aY-a		OK		
+VERB.P2FP.PI.E0	na>aY-a		OK		
+VERB.P3MS.PI.E0	na>aY-a		OK		
+VERB.P3FS.PI.E0	na>aY-a		OK		
+VERB.P3MD.PI.E0	na>aY-a		OK		
+VERB.P3FD.PI.E0	na>aY-a		OK		
+VERB.P3MP.PI.E0	na>aY-a		OK		
+VERB.P3FP.PI.E0	na>aY-a		OK		
+VERB.P1S.AI	nA'-i	ni}tu	OK		
+VERB.P1P.AI	nA'-i	ni}nA	OK		
+VERB.P2MS.AI	nA'-i	ni}ta	OK		
+VERB.P2FS.AI	nA'-i	ni}ti	OK		
+VERB.P2D.AI	nA'-i	ni}tumA	OK		
+VERB.P2MP.AI	nA'-i	ni}tum	OK		
+VERB.P2FP.AI	nA'-i	ni}tun~a	OK		
+VERB.P3MS.AI	nA'-i	nA'a	OK		
+VERB.P3FS.AI	nA'-i	nA'at	OK		
+VERB.P3MD.AI	nA'-i	nA'A	OK		
+VERB.P3FD.AI	nA'-i	nA'atA	OK		
+VERB.P3FP.AI	nA'-i	ni}na	OK		
+VERB.P1S.PI	nA'-i	ni}tu	OK		
+VERB.P1P.PI	nA'-i	ni}nA	OK		
+VERB.P2MS.PI	nA'-i	ni}ta	OK		
+VERB.P2FS.PI	nA'-i	ni}ti	OK		
+VERB.P2D.PI	nA'-i	ni}tumA	OK		
+VERB.P2MP.PI	nA'-i	ni}tum	OK		
+VERB.P2FP.PI	nA'-i	ni}tun~a	OK		
+VERB.P1S.AI.E0	nA'-i	ni}tuhu	OK		
+VERB.P1P.AI.E0	nA'-i	ni}nAhu	OK		
+VERB.P2MS.AI.E0	nA'-i	ni}tahu	OK		
+VERB.P2FS.AI.E0	nA'-i	ni}tihi	OK		
+VERB.P2D.AI.E0	nA'-i	ni}tumAhu	OK		
+VERB.P2MP.AI.E0	nA'-i	ni}tumuwhu	OK		
+VERB.P2FP.AI.E0	nA'-i	ni}tun~ahu	OK		
+VERB.P3MS.AI.E0	nA'-i	nA'ahu	OK		
+VERB.P3FS.AI.E0	nA'-i	nA'athu	OK		
+VERB.P3MD.AI.E0	nA'-i	nA'Ahu	OK		
+VERB.P3FD.AI.E0	nA'-i	nA'atAhu	OK		
+VERB.P3FP.AI.E0	nA'-i	ni}nahu	OK		
+VERB.P1S.PI.E0	nA'-i		OK		
+VERB.P1P.PI.E0	nA'-i		OK		
+VERB.P2MS.PI.E0	nA'-i		OK		
+VERB.P2FS.PI.E0	nA'-i		OK		
+VERB.P2D.PI.E0	nA'-i		OK		
+VERB.P2MP.PI.E0	nA'-i		OK		
+VERB.P2FP.PI.E0	nA'-i		OK		
+VERB.P3MS.PI.E0	nA'-i		OK		
+VERB.P3FS.PI.E0	nA'-i		OK		
+VERB.P3MD.PI.E0	nA'-i		OK		
+VERB.P3FD.PI.E0	nA'-i		OK		
+VERB.P3MP.PI.E0	nA'-i		OK		
+VERB.P3FP.PI.E0	nA'-i		OK		
+VERB.P3MS.AI	hAE-a	hAEa	OK		
+VERB.P3FS.AI	hAE-a	hAEat	OK		
+VERB.P3MD.AI	hAE-a	hAEA	OK		
+VERB.P3FD.AI	hAE-a	hAEatA	OK		
+VERB.P3MP.AI	hAE-a	hAEuwA	OK		
+VERB.P3MS.PI	hAE-a	hiyEa	OK		
+VERB.P3FS.PI	hAE-a	hiyEat	OK		
+VERB.P3MD.PI	hAE-a	hiyEA	OK		
+VERB.P3FD.PI	hAE-a	hiyEatA	OK		
+VERB.P3MP.PI	hAE-a	hiyEuwA	OK		
+VERB.P3MS.AI.E0	hAE-a	hAEahu	OK		
+VERB.P3FS.AI.E0	hAE-a	hAEathu	OK		
+VERB.P3MD.AI.E0	hAE-a	hAEAhu	OK		
+VERB.P3FD.AI.E0	hAE-a	hAEatAhu	OK		
+VERB.P3MP.AI.E0	hAE-a	hAEuwhu	OK		
+VERB.P1S.PI.E0	hAE-a		OK		
+VERB.P1P.PI.E0	hAE-a		OK		
+VERB.P2MS.PI.E0	hAE-a		OK		
+VERB.P2FS.PI.E0	hAE-a		OK		
+VERB.P2D.PI.E0	hAE-a		OK		
+VERB.P2MP.PI.E0	hAE-a		OK		
+VERB.P2FP.PI.E0	hAE-a		OK		
+VERB.P3MS.PI.E0	hAE-a		OK		
+VERB.P3FS.PI.E0	hAE-a		OK		
+VERB.P3MD.PI.E0	hAE-a		OK		
+VERB.P3FD.PI.E0	hAE-a		OK		
+VERB.P3MP.PI.E0	hAE-a		OK		
+VERB.P3FP.PI.E0	hAE-a		OK		
+VERB.P1S.PI	qAl-u	qultu	OK		
+VERB.P1P.PI	qAl-u	qulnA	OK		
+VERB.P2MS.PI	qAl-u	qulta	OK		
+VERB.P2FS.PI	qAl-u	qulti	OK		
+VERB.P2D.PI	qAl-u	qultumA	OK		
+VERB.P2MP.PI	qAl-u	qultum	OK		
+VERB.P2FP.PI	qAl-u	qultun~a	OK		
+VERB.P3FP.PI	qAl-u	qulna	OK		
+VERB.P3MS.AI	>ajoraY	>ajoraA	PROB		
+VERB.P1S.PI	kAn-u	kuntu	OK		
+VERB.P1P.PI	kAn-u	kun~A	OK		
+VERB.P2MS.PI	kAn-u	kunta	OK		
+VERB.P2FS.PI	kAn-u	kunti	OK		
+VERB.P2D.PI	kAn-u	kuntumA	OK		
+VERB.P2MP.PI	kAn-u	kuntum	OK		
+VERB.P2FP.PI	kAn-u	kuntun~a	OK		
+VERB.P3FP.PI	kAn-u	kun~a	OK		
+VERB.P1S.PI	>asA'	>usiy}tu	PROB		
+VERB.P1P.PI	>asA'	>usiy}nA	PROB		
+VERB.P2MS.PI	>asA'	>usiy}ta	PROB		
+VERB.P2FS.PI	>asA'	>usiy}ti	PROB		
+VERB.P2D.PI	>asA'	>usiy}tumA	PROB		
+VERB.P2MP.PI	>asA'	>usiy}tum	PROB		
+VERB.P2FP.PI	>asA'	>usiy}tun~a	PROB		
+VERB.P3MS.PI	>asA'	>usiy'a	OK		
+VERB.P3FS.PI	>asA'	>usiy}at	OK		
+VERB.P3MD.PI	>asA'	>usiy}A	OK		
+VERB.P3FD.PI	>asA'	>usiy}atA	OK		
+VERB.P3MP.PI	>asA'	>usiy}uwA	OK		
+VERB.P3FP.PI	>asA'	>usiy}na	PROB		
+VERB.P3MS.AI	{irota>aY	Airota>aA	PROB		
+VERB.P1S.PI	{irota>aY	Aurotu}iytu	OK		
+VERB.P1P.PI	{irota>aY	Aurotu}iynA	OK		
+VERB.P2MS.PI	{irota>aY	Aurotu}iyta	OK		
+VERB.P2FS.PI	{irota>aY	Aurotu}iyti	OK		
+VERB.P2D.PI	{irota>aY	Aurotu}iytumA	OK		
+VERB.P2MP.PI	{irota>aY	Aurotu}iytum	OK		
+VERB.P2FP.PI	{irota>aY	Aurotu}iytun~a	OK		
+VERB.P3MS.PI	{irota>aY	Aurotu}iya	OK		
+VERB.P3FS.PI	{irota>aY	Aurotu}iyat	OK		
+VERB.P3MD.PI	{irota>aY	Aurotu}iyA	OK		
+VERB.P3FD.PI	{irota>aY	Aurotu}iyatA	OK		
+VERB.P3MP.PI	{irota>aY	Aurotu&uwA	OK		
+VERB.P3FP.PI	{irota>aY	Aurotu}iyna	OK		
+VERB.P1S.PI	{isotA'	Ausotiy}tu	PROB		
+VERB.P1P.PI	{isotA'	Ausotiy}nA	PROB		
+VERB.P2MS.PI	{isotA'	Ausotiy}ta	PROB		
+VERB.P2FS.PI	{isotA'	Ausotiy}ti	PROB		
+VERB.P2D.PI	{isotA'	Ausotiy}tumA	PROB		
+VERB.P2MP.PI	{isotA'	Ausotiy}tum	PROB		
+VERB.P2FP.PI	{isotA'	Ausotiy}tun~a	PROB		
+VERB.P3FP.PI	{isotA'	Ausotiy}na	PROB		
+VERB.P1S.PI	EA$	Eu$tu	OK		
+VERB.P1P.PI	EA$	Eu$nA	OK		
+VERB.P2MS.PI	EA$	Eu$ta	OK		
+VERB.P2FS.PI	EA$	Eu$ti	OK		
+VERB.P2D.PI	EA$	Eu$tumA	OK		
+VERB.P2MP.PI	EA$	Eu$tum	OK		
+VERB.P2FP.PI	EA$	Eu$tun~a	OK		
+VERB.P3MS.PI	EA$	Eiy$a	OK		
+VERB.P3FS.PI	EA$	Eiy$at	OK		
+VERB.P3MD.PI	EA$	Eiy$A	OK		
+VERB.P3FD.PI	EA$	Eiy$atA	OK		
+VERB.P3MP.PI	EA$	Eiy$uwA	OK		
+VERB.P3FP.PI	EA$	Eu$na	OK		
+VERB.P3MS.AI	na>aY-a	na>aA	PROB		
+VERB.P1S.PI	na>aY-a	nu}iytu	OK		
+VERB.P1P.PI	na>aY-a	nu}iynA	OK		
+VERB.P2MS.PI	na>aY-a	nu}iyta	OK		
+VERB.P2FS.PI	na>aY-a	nu}iyti	OK		
+VERB.P2D.PI	na>aY-a	nu}iytumA	OK		
+VERB.P2MP.PI	na>aY-a	nu}iytum	OK		
+VERB.P2FP.PI	na>aY-a	nu}iytun~a	OK		
+VERB.P3MS.PI	na>aY-a	nu}iya	OK		
+VERB.P3FS.PI	na>aY-a	nu}iyat	OK		
+VERB.P3MD.PI	na>aY-a	nu}iyA	OK		
+VERB.P3FD.PI	na>aY-a	nu}iyatA	OK		
+VERB.P3MP.PI	na>aY-a	nu&uwA	OK		
+VERB.P3FP.PI	na>aY-a	nu}iyna	OK		
+VERB.P3MP.AI	nA'-i	nA&uwA	OK		
+VERB.P3MS.PI	nA'-i	niy'a	OK		
+VERB.P3FS.PI	nA'-i	niy}at	OK		
+VERB.P3MD.PI	nA'-i	niy}A	OK		
+VERB.P3FD.PI	nA'-i	niy}atA	OK		
+VERB.P3MP.PI	nA'-i	niy}uwA	OK		
+VERB.P3FP.PI	nA'-i	ni}na	OK		
+VERB.P3MP.AI.E0	nA'-i	nA&uwhu	OK		
+VERB.P1S.PI	hAE-a	huEtu	OK		
+VERB.P1P.PI	hAE-a	huEnA	OK		
+VERB.P2MS.PI	hAE-a	huEta	OK		
+VERB.P2FS.PI	hAE-a	huEti	OK		
+VERB.P2D.PI	hAE-a	huEtumA	OK		
+VERB.P2MP.PI	hAE-a	huEtum	OK		
+VERB.P2FP.PI	hAE-a	huEtun~a	OK		
+VERB.P3FP.PI	hAE-a	huEna	OK		
+VERB.P1S.AI	HA$A	HA$aytu	OK		
+VERB.P1P.AI	HA$A	HA$aynA	OK		
+VERB.P2MS.AI	HA$A	HA$ayta	OK		
+VERB.P2FS.AI	HA$A	HA$ayti	OK		
+VERB.P2D.AI	HA$A	HA$aytumA	OK		
+VERB.P2MP.AI	HA$A	HA$aytum	OK		
+VERB.P2FP.AI	HA$A	HA$aytun~a	OK		
+VERB.P3MS.AI	HA$A	HA$aAa	PROB		
+VERB.P3FP.AI	HA$A	HA$ayna	OK		
+VERB.P1S.AI.E0	HA$A	HA$aytuhu	OK		
+VERB.P1P.AI.E0	HA$A	HA$aynAhu	OK		
+VERB.P2MS.AI.E0	HA$A	HA$aytahu	OK		
+VERB.P2FS.AI.E0	HA$A	HA$aytihi	OK		
+VERB.P2D.AI.E0	HA$A	HA$aytumAhu	OK		
+VERB.P2MP.AI.E0	HA$A	HA$aytumuwhu	OK		
+VERB.P2FP.AI.E0	HA$A	HA$aytun~ahu	OK		
+VERB.P3MS.AI.E0	HA$A	HA$aAahu	PROB		
+VERB.P3MD.AI.E0	HA$A	HA$ayAhu	OK		
+VERB.P3FP.AI.E0	HA$A	HA$aynahu	OK		
+VERB.P1S.PI	>asA'	>usi}tu	OK		
+VERB.P1P.PI	>asA'	>usi}nA	OK		
+VERB.P2MS.PI	>asA'	>usi}ta	OK		
+VERB.P2FS.PI	>asA'	>usi}ti	OK		
+VERB.P2D.PI	>asA'	>usi}tumA	OK		
+VERB.P2MP.PI	>asA'	>usi}tum	OK		
+VERB.P2FP.PI	>asA'	>usi}tun~a	OK		
+VERB.P3MD.PI	>asA'	>usi}A	PROB		
+VERB.P3FD.PI	>asA'	>usi}atA	PROB		
+VERB.P3MP.PI	>asA'	>usi}uwA	PROB		
+VERB.P3FP.PI	>asA'	>usi}na	OK		
+VERB.P3FS.PI	{isotA'	Ausoti}at	PROB		
+VERB.P3MD.PI	{isotA'	Ausoti}A	PROB		
+VERB.P3FD.PI	{isotA'	Ausoti}atA	PROB		
+VERB.P3MP.PI	{isotA'	Ausoti}uwA	PROB		
+VERB.P3FS.PI	jA'	ji}at	PROB		
+VERB.P3MD.PI	jA'	ji}A	PROB		
+VERB.P3FD.PI	jA'	ji}atA	PROB		
+VERB.P3MP.PI	jA'	ji}uwA	PROB		
+VERB.P3MS.AI	HA$A	HA$aA	OK		
+VERB.P3MS.AI.E0	HA$A	HA$aAhu	OK		
+VERB.P3MS.PI	layosa		OK		
+VERB.P3FS.PI	layosa		OK		
+VERB.P3MD.PI	layosa		OK		
+VERB.P3FS.PI	nA'-i	ni}at	PROB		
+VERB.P3MD.PI	nA'-i	ni}A	PROB		
+VERB.P3FD.PI	nA'-i	ni}atA	PROB		
+VERB.P3MP.PI	nA'-i	ni}uwA	PROB		
+VERB.P3MP.AI	HA$A	HA$awoA	OK		
+VERB.P3MP.AI.E0	HA$A	HA$awohu	OK		
+VERB.P3MD.AI	HA$A	HA$ayA	OK		
+VERB.P1S.PI	HA$A		OK		
+VERB.P1P.PI	HA$A		OK		
+VERB.P2MS.PI	HA$A		OK		
+VERB.P2FS.PI	HA$A		OK		
+VERB.P2D.PI	HA$A		OK		
+VERB.P2MP.PI	HA$A		OK		
+VERB.P2FP.PI	HA$A		OK		
+VERB.P3MS.PI	HA$A		OK		
+VERB.P3FS.PI	HA$A		OK		
+VERB.P3MD.PI	HA$A		OK		
+VERB.P3FD.PI	HA$A		OK		
+VERB.P3MP.PI	HA$A		OK		
+VERB.P3FP.PI	HA$A		OK		
+VERB.P1S.PI	layosa		OK		
+VERB.P1P.PI	layosa		OK		
+VERB.P2MS.PI	layosa		OK		
+VERB.P2FS.PI	layosa		OK		
+VERB.P2D.PI	layosa		OK		
+VERB.P2MP.PI	layosa		OK		
+VERB.P2FP.PI	layosa		OK		
+VERB.P3FD.PI	layosa		OK		
+VERB.P3MP.PI	layosa		OK		
+VERB.P3FP.PI	layosa		OK		
+VERB.P1S.PI	na>aY	nu}iytu	OK		
+VERB.P1P.PI	na>aY	nu}iynA	OK		
+VERB.P2MS.PI	na>aY	nu}iyta	OK		
+VERB.P2FS.PI	na>aY	nu}iyti	OK		
+VERB.P2D.PI	na>aY	nu}iytumA	OK		
+VERB.P2MP.PI	na>aY	nu}iytum	OK		
+VERB.P2FP.PI	na>aY	nu}iytun~a	OK		
+VERB.P3MS.PI	na>aY	nu}iya	OK		
+VERB.P3FS.PI	na>aY	nu}iyat	OK		
+VERB.P3MD.PI	na>aY	nu}iyA	OK		
+VERB.P3FD.PI	na>aY	nu}iyatA	OK		
+VERB.P3MP.PI	na>aY	nu&uwA	OK		
+VERB.P3FP.PI	na>aY	nu}iyna	OK		
+VERB.P1S.PI	bAt-i	but~u	OK		
+VERB.P1P.PI	bAt-i	butnA	OK		
+VERB.P2MS.PI	bAt-i	but~a	OK		
+VERB.P2FS.PI	bAt-i	but~i	OK		
+VERB.P2D.PI	bAt-i	but~umA	OK		
+VERB.P2MP.PI	bAt-i	but~um	OK		
+VERB.P2FP.PI	bAt-i	but~un~a	OK		
+VERB.P3FP.PI	bAt-i	butna	OK		
+VERB.P1S.AI	qar~-a	qarartu	OK		
+VERB.P1P.AI	qar~-a	qararnA	OK		
+VERB.P2MS.AI	qar~-a	qararta	OK		
+VERB.P2FS.AI	qar~-a	qararti	OK		
+VERB.P2D.AI	qar~-a	qarartumA	OK		
+VERB.P2MP.AI	qar~-a	qarartum	OK		
+VERB.P2FP.AI	qar~-a	qarartun~a	OK		
+VERB.P3FP.AI	qar~-a	qararna	OK		
+VERB.P1S.AI.E0	qar~-a	qarartuhu	OK		
+VERB.P1P.AI.E0	qar~-a	qararnAhu	OK		
+VERB.P2MS.AI.E0	qar~-a	qarartahu	OK		
+VERB.P2FS.AI.E0	qar~-a	qarartihi	OK		
+VERB.P2D.AI.E0	qar~-a	qarartumAhu	OK		
+VERB.P2MP.AI.E0	qar~-a	qarartumuwhu	OK		
+VERB.P2FP.AI.E0	qar~-a	qarartun~ahu	OK		
+VERB.P3FP.AI.E0	qar~-a	qararnahu	OK		
+VERB.P1S.AI	laj~-a	lajijtu	OK		
+VERB.P1P.AI	laj~-a	lajijnA	OK		
+VERB.P2MS.AI	laj~-a	lajijta	OK		
+VERB.P2FS.AI	laj~-a	lajijti	OK		
+VERB.P2D.AI	laj~-a	lajijtumA	OK		
+VERB.P2MP.AI	laj~-a	lajijtum	OK		
+VERB.P2FP.AI	laj~-a	lajijtun~a	OK		
+VERB.P3FP.AI	laj~-a	lajijna	OK		
+VERB.P1S.AI	hAE-a	huEtu	OK		
+VERB.P1P.AI	hAE-a	huEnA	OK		
+VERB.P2MS.AI	hAE-a	huEta	OK		
+VERB.P2FS.AI	hAE-a	huEti	OK		
+VERB.P2D.AI	hAE-a	huEtumA	OK		
+VERB.P2MP.AI	hAE-a	huEtum	OK		
+VERB.P2FP.AI	hAE-a	huEtun~a	OK		
+VERB.P3FP.AI	hAE-a	huEna	OK		
+VERB.P1S.AI.E0	hAE-a	huEtuhu	OK		
+VERB.P1P.AI.E0	hAE-a	huEnAhu	OK		
+VERB.P2MS.AI.E0	hAE-a	huEtahu	OK		
+VERB.P2FS.AI.E0	hAE-a	huEtihi	OK		
+VERB.P2D.AI.E0	hAE-a	huEtumAhu	OK		
+VERB.P2MP.AI.E0	hAE-a	huEtumuwhu	OK		
+VERB.P2FP.AI.E0	hAE-a	huEtun~ahu	OK		
+VERB.P3FP.AI.E0	hAE-a	huEnahu	OK		
+VERB.P1S.AI	kuz~	kuziztu	OK		
+VERB.P1P.AI	kuz~	kuziznA	OK		
+VERB.P2MS.AI	kuz~	kuzizta	OK		
+VERB.P2FS.AI	kuz~	kuzizti	OK		
+VERB.P2D.AI	kuz~	kuziztumA	OK		
+VERB.P2MP.AI	kuz~	kuziztum	OK		
+VERB.P2FP.AI	kuz~	kuziztun~a	OK		
+VERB.P3MS.AI	kuz~	kuz~a	OK		
+VERB.P3FS.AI	kuz~	kuz~at	OK		
+VERB.P3MD.AI	kuz~	kuz~A	OK		
+VERB.P3FD.AI	kuz~	kuz~atA	OK		
+VERB.P3MP.AI	kuz~	kuz~uwA	OK		
+VERB.P3FP.AI	kuz~	kuzizna	OK		
+VERB.P3MS.PI	kuz~	kuz~a	OK		
+VERB.P3MD.PI	kuz~	kuz~A	OK		
+VERB.P3MP.PI	kuz~	kuz~uwA	OK		
+VERB.P1S.AI.E0	kuz~	kuziztuhu	OK		
+VERB.P1P.AI.E0	kuz~	kuziznAhu	OK		
+VERB.P2MS.AI.E0	kuz~	kuziztahu	OK		
+VERB.P2FS.AI.E0	kuz~	kuziztihi	OK		
+VERB.P2D.AI.E0	kuz~	kuziztumAhu	OK		
+VERB.P2MP.AI.E0	kuz~	kuziztumuwhu	OK		
+VERB.P2FP.AI.E0	kuz~	kuziztun~ahu	OK		
+VERB.P3MS.AI.E0	kuz~	kuz~ahu	OK		
+VERB.P3FS.AI.E0	kuz~	kuz~athu	OK		
+VERB.P3MD.AI.E0	kuz~	kuz~Ahu	OK		
+VERB.P3FD.AI.E0	kuz~	kuz~atAhu	OK		
+VERB.P3MP.AI.E0	kuz~	kuz~uwhu	OK		
+VERB.P3FP.AI.E0	kuz~	kuziznahu	OK		
+VERB.P1S.PI.E0	kuz~		OK		
+VERB.P1P.PI.E0	kuz~		OK		
+VERB.P2MS.PI.E0	kuz~		OK		
+VERB.P2FS.PI.E0	kuz~		OK		
+VERB.P2D.PI.E0	kuz~		OK		
+VERB.P2MP.PI.E0	kuz~		OK		
+VERB.P2FP.PI.E0	kuz~		OK		
+VERB.P3MS.PI.E0	kuz~		OK		
+VERB.P3FS.PI.E0	kuz~		OK		
+VERB.P3MD.PI.E0	kuz~		OK		
+VERB.P3FD.PI.E0	kuz~		OK		
+VERB.P3MP.PI.E0	kuz~		OK		
+VERB.P3FP.PI.E0	kuz~		OK		
+VERB.P3MS.PI	kuz~	kuziza	PROB		
+VERB.P3MD.PI	kuz~	kuzizA	PROB		
+VERB.P3MP.PI	kuz~	kuzizuwA	PROB		
+VERB.P3FP.PI	kuz~	kuz~na	OK		
+VERB.P1S.A	EA$	Ei$tu	OK		
+VERB.P1P.A	EA$	Ei$nA	OK		
+VERB.P2MS.A	EA$	Ei$ta	OK		
+VERB.P2FS.A	EA$	Ei$ti	OK		
+VERB.P2D.A	EA$	Ei$tumA	OK		
+VERB.P2MP.A	EA$	Ei$tum	OK		
+VERB.P2FP.A	EA$	Ei$tun~a	OK		
+VERB.P3MS.A	EA$	EA$a	OK		
+VERB.P3FS.A	EA$	EA$at	OK		
+VERB.P3MD.A	EA$	EA$A	OK		
+VERB.P3FD.A	EA$	EA$atA	OK		
+VERB.P3MP.A	EA$	EA$uwA	OK		
+VERB.P3FP.A	EA$	Ei$na	OK		
+VERB.P1S.P	EA$	Eu$tu	OK		
+VERB.P1P.P	EA$	Eu$nA	OK		
+VERB.P2MS.P	EA$	Eu$ta	OK		
+VERB.P2FS.P	EA$	Eu$ti	OK		
+VERB.P2D.P	EA$	Eu$tumA	OK		
+VERB.P2MP.P	EA$	Eu$tum	OK		
+VERB.P2FP.P	EA$	Eu$tun~a	OK		
+VERB.P3MS.P	EA$	Eiy$a	OK		
+VERB.P3FS.P	EA$	Eiy$at	OK		
+VERB.P3MD.P	EA$	Eiy$A	OK		
+VERB.P3FD.P	EA$	Eiy$atA	OK		
+VERB.P3MP.P	EA$	Eiy$uwA	OK		
+VERB.P3FP.P	EA$	Eu$na	OK		
+VERB.P1S.A.E0	EA$	Ei$tuhu	OK		
+VERB.P1P.A.E0	EA$	Ei$nAhu	OK		
+VERB.P2MS.A.E0	EA$	Ei$tahu	OK		
+VERB.P2FS.A.E0	EA$	Ei$tihi	OK		
+VERB.P2D.A.E0	EA$	Ei$tumAhu	OK		
+VERB.P2MP.A.E0	EA$	Ei$tumuwhu	OK		
+VERB.P2FP.A.E0	EA$	Ei$tun~ahu	OK		
+VERB.P3MS.A.E0	EA$	EA$ahu	OK		
+VERB.P3FS.A.E0	EA$	EA$athu	OK		
+VERB.P3MD.A.E0	EA$	EA$Ahu	OK		
+VERB.P3FD.A.E0	EA$	EA$atAhu	OK		
+VERB.P3MP.A.E0	EA$	EA$uwhu	OK		
+VERB.P3FP.A.E0	EA$	Ei$nahu	OK		
+VERB.P1S.P.E0	EA$		OK		
+VERB.P1P.P.E0	EA$		OK		
+VERB.P2MS.P.E0	EA$		OK		
+VERB.P2FS.P.E0	EA$		OK		
+VERB.P2D.P.E0	EA$		OK		
+VERB.P2MP.P.E0	EA$		OK		
+VERB.P2FP.P.E0	EA$		OK		
+VERB.P3MS.P.E0	EA$		OK		
+VERB.P3FS.P.E0	EA$		OK		
+VERB.P3MD.P.E0	EA$		OK		
+VERB.P3FD.P.E0	EA$		OK		
+VERB.P3MP.P.E0	EA$		OK		
+VERB.P3FP.P.E0	EA$		OK		
+VERB.P1S.A	>ajoraY	>ajoraytu	OK		
+VERB.P1P.A	>ajoraY	>ajoraynA	OK		
+VERB.P2MS.A	>ajoraY	>ajorayta	OK		
+VERB.P2FS.A	>ajoraY	>ajorayti	OK		
+VERB.P2D.A	>ajoraY	>ajoraytumA	OK		
+VERB.P2MP.A	>ajoraY	>ajoraytum	OK		
+VERB.P2FP.A	>ajoraY	>ajoraytun~a	OK		
+VERB.P3MS.A	>ajoraY	>ajoraY	OK		
+VERB.P3FS.A	>ajoraY	>ajorat	OK		
+VERB.P3MD.A	>ajoraY	>ajorayA	OK		
+VERB.P3FD.A	>ajoraY	>ajoratA	OK		
+VERB.P3MP.A	>ajoraY	>ajorawoA	OK		
+VERB.P3FP.A	>ajoraY	>ajorayna	OK		
+VERB.P1S.P	>ajoraY	>ujoriytu	OK		
+VERB.P1P.P	>ajoraY	>ujoriynA	OK		
+VERB.P2MS.P	>ajoraY	>ujoriyta	OK		
+VERB.P2FS.P	>ajoraY	>ujoriyti	OK		
+VERB.P2D.P	>ajoraY	>ujoriytumA	OK		
+VERB.P2MP.P	>ajoraY	>ujoriytum	OK		
+VERB.P2FP.P	>ajoraY	>ujoriytun~a	OK		
+VERB.P3MS.P	>ajoraY	>ujoriya	OK		
+VERB.P3FS.P	>ajoraY	>ujoriyat	OK		
+VERB.P3MD.P	>ajoraY	>ujoriyA	OK		
+VERB.P3FD.P	>ajoraY	>ujoriyatA	OK		
+VERB.P3MP.P	>ajoraY	>ujoruwA	OK		
+VERB.P3FP.P	>ajoraY	>ujoriyna	OK		
+VERB.P1S.A.E0	>ajoraY	>ajoraytuhu	OK		
+VERB.P1P.A.E0	>ajoraY	>ajoraynAhu	OK		
+VERB.P2MS.A.E0	>ajoraY	>ajoraytahu	OK		
+VERB.P2FS.A.E0	>ajoraY	>ajoraytihi	OK		
+VERB.P2D.A.E0	>ajoraY	>ajoraytumAhu	OK		
+VERB.P2MP.A.E0	>ajoraY	>ajoraytumuwhu	OK		
+VERB.P2FP.A.E0	>ajoraY	>ajoraytun~ahu	OK		
+VERB.P3MS.A.E0	>ajoraY	>ajoraAhu	OK		
+VERB.P3FS.A.E0	>ajoraY	>ajorathu	OK		
+VERB.P3MD.A.E0	>ajoraY	>ajorayAhu	OK		
+VERB.P3FD.A.E0	>ajoraY	>ajoratAhu	OK		
+VERB.P3MP.A.E0	>ajoraY	>ajorawohu	OK		
+VERB.P3FP.A.E0	>ajoraY	>ajoraynahu	OK		
+VERB.P1S.P.E0	>ajoraY		OK		
+VERB.P1P.P.E0	>ajoraY		OK		
+VERB.P2MS.P.E0	>ajoraY		OK		
+VERB.P2FS.P.E0	>ajoraY		OK		
+VERB.P2D.P.E0	>ajoraY		OK		
+VERB.P2MP.P.E0	>ajoraY		OK		
+VERB.P2FP.P.E0	>ajoraY		OK		
+VERB.P3MS.P.E0	>ajoraY		OK		
+VERB.P3FS.P.E0	>ajoraY		OK		
+VERB.P3MD.P.E0	>ajoraY		OK		
+VERB.P3FD.P.E0	>ajoraY		OK		
+VERB.P3MP.P.E0	>ajoraY		OK		
+VERB.P3FP.P.E0	>ajoraY		OK		
+VERB.P1S.A	>ak~ad	>ak~adtu	OK		
+VERB.P1P.A	>ak~ad	>ak~adnA	OK		
+VERB.P2MS.A	>ak~ad	>ak~adta	OK		
+VERB.P2FS.A	>ak~ad	>ak~adti	OK		
+VERB.P2D.A	>ak~ad	>ak~adtumA	OK		
+VERB.P2MP.A	>ak~ad	>ak~adtum	OK		
+VERB.P2FP.A	>ak~ad	>ak~adtun~a	OK		
+VERB.P3MS.A	>ak~ad	>ak~ada	OK		
+VERB.P3FS.A	>ak~ad	>ak~adat	OK		
+VERB.P3MD.A	>ak~ad	>ak~adA	OK		
+VERB.P3FD.A	>ak~ad	>ak~adatA	OK		
+VERB.P3MP.A	>ak~ad	>ak~aduwA	OK		
+VERB.P3FP.A	>ak~ad	>ak~adna	OK		
+VERB.P1S.P	>ak~ad	>uk~idtu	OK		
+VERB.P1P.P	>ak~ad	>uk~idnA	OK		
+VERB.P2MS.P	>ak~ad	>uk~idta	OK		
+VERB.P2FS.P	>ak~ad	>uk~idti	OK		
+VERB.P2D.P	>ak~ad	>uk~idtumA	OK		
+VERB.P2MP.P	>ak~ad	>uk~idtum	OK		
+VERB.P2FP.P	>ak~ad	>uk~idtun~a	OK		
+VERB.P3MS.P	>ak~ad	>uk~ida	OK		
+VERB.P3FS.P	>ak~ad	>uk~idat	OK		
+VERB.P3MD.P	>ak~ad	>uk~idA	OK		
+VERB.P3FD.P	>ak~ad	>uk~idatA	OK		
+VERB.P3MP.P	>ak~ad	>uk~iduwA	OK		
+VERB.P3FP.P	>ak~ad	>uk~idna	OK		
+VERB.P1S.A.E0	>ak~ad	>ak~adtuhu	OK		
+VERB.P1P.A.E0	>ak~ad	>ak~adnAhu	OK		
+VERB.P2MS.A.E0	>ak~ad	>ak~adtahu	OK		
+VERB.P2FS.A.E0	>ak~ad	>ak~adtihi	OK		
+VERB.P2D.A.E0	>ak~ad	>ak~adtumAhu	OK		
+VERB.P2MP.A.E0	>ak~ad	>ak~adtumuwhu	OK		
+VERB.P2FP.A.E0	>ak~ad	>ak~adtun~ahu	OK		
+VERB.P3MS.A.E0	>ak~ad	>ak~adahu	OK		
+VERB.P3FS.A.E0	>ak~ad	>ak~adathu	OK		
+VERB.P3MD.A.E0	>ak~ad	>ak~adAhu	OK		
+VERB.P3FD.A.E0	>ak~ad	>ak~adatAhu	OK		
+VERB.P3MP.A.E0	>ak~ad	>ak~aduwhu	OK		
+VERB.P3FP.A.E0	>ak~ad	>ak~adnahu	OK		
+VERB.P1S.P.E0	>ak~ad		OK		
+VERB.P1P.P.E0	>ak~ad		OK		
+VERB.P2MS.P.E0	>ak~ad		OK		
+VERB.P2FS.P.E0	>ak~ad		OK		
+VERB.P2D.P.E0	>ak~ad		OK		
+VERB.P2MP.P.E0	>ak~ad		OK		
+VERB.P2FP.P.E0	>ak~ad		OK		
+VERB.P3MS.P.E0	>ak~ad		OK		
+VERB.P3FS.P.E0	>ak~ad		OK		
+VERB.P3MD.P.E0	>ak~ad		OK		
+VERB.P3FD.P.E0	>ak~ad		OK		
+VERB.P3MP.P.E0	>ak~ad		OK		
+VERB.P3FP.P.E0	>ak~ad		OK		
+VERB.P1S.A	>aEolan	>aEolantu	OK		
+VERB.P1P.A	>aEolan	>aEolan~A	OK		
+VERB.P2MS.A	>aEolan	>aEolanta	OK		
+VERB.P2FS.A	>aEolan	>aEolanti	OK		
+VERB.P2D.A	>aEolan	>aEolantumA	OK		
+VERB.P2MP.A	>aEolan	>aEolantum	OK		
+VERB.P2FP.A	>aEolan	>aEolantun~a	OK		
+VERB.P3MS.A	>aEolan	>aEolana	OK		
+VERB.P3FS.A	>aEolan	>aEolanat	OK		
+VERB.P3MD.A	>aEolan	>aEolanA	OK		
+VERB.P3FD.A	>aEolan	>aEolanatA	OK		
+VERB.P3MP.A	>aEolan	>aEolanuwA	OK		
+VERB.P3FP.A	>aEolan	>aEolan~a	OK		
+VERB.P1S.P	>aEolan	>uEolintu	OK		
+VERB.P1P.P	>aEolan	>uEolin~A	OK		
+VERB.P2MS.P	>aEolan	>uEolinta	OK		
+VERB.P2FS.P	>aEolan	>uEolinti	OK		
+VERB.P2D.P	>aEolan	>uEolintumA	OK		
+VERB.P2MP.P	>aEolan	>uEolintum	OK		
+VERB.P2FP.P	>aEolan	>uEolintun~a	OK		
+VERB.P3MS.P	>aEolan	>uEolina	OK		
+VERB.P3FS.P	>aEolan	>uEolinat	OK		
+VERB.P3MD.P	>aEolan	>uEolinA	OK		
+VERB.P3FD.P	>aEolan	>uEolinatA	OK		
+VERB.P3MP.P	>aEolan	>uEolinuwA	OK		
+VERB.P3FP.P	>aEolan	>uEolin~a	OK		
+VERB.P1S.A.E0	>aEolan	>aEolantuhu	OK		
+VERB.P1P.A.E0	>aEolan	>aEolan~Ahu	OK		
+VERB.P2MS.A.E0	>aEolan	>aEolantahu	OK		
+VERB.P2FS.A.E0	>aEolan	>aEolantihi	OK		
+VERB.P2D.A.E0	>aEolan	>aEolantumAhu	OK		
+VERB.P2MP.A.E0	>aEolan	>aEolantumuwhu	OK		
+VERB.P2FP.A.E0	>aEolan	>aEolantun~ahu	OK		
+VERB.P3MS.A.E0	>aEolan	>aEolanahu	OK		
+VERB.P3FS.A.E0	>aEolan	>aEolanathu	OK		
+VERB.P3MD.A.E0	>aEolan	>aEolanAhu	OK		
+VERB.P3FD.A.E0	>aEolan	>aEolanatAhu	OK		
+VERB.P3MP.A.E0	>aEolan	>aEolanuwhu	OK		
+VERB.P3FP.A.E0	>aEolan	>aEolan~ahu	OK		
+VERB.P1S.P.E0	>aEolan		OK		
+VERB.P1P.P.E0	>aEolan		OK		
+VERB.P2MS.P.E0	>aEolan		OK		
+VERB.P2FS.P.E0	>aEolan		OK		
+VERB.P2D.P.E0	>aEolan		OK		
+VERB.P2MP.P.E0	>aEolan		OK		
+VERB.P2FP.P.E0	>aEolan		OK		
+VERB.P3MS.P.E0	>aEolan		OK		
+VERB.P3FS.P.E0	>aEolan		OK		
+VERB.P3MD.P.E0	>aEolan		OK		
+VERB.P3FD.P.E0	>aEolan		OK		
+VERB.P3MP.P.E0	>aEolan		OK		
+VERB.P3FP.P.E0	>aEolan		OK		
+VERB.P1S.A	{inotahaY	Ainotahaytu	OK		
+VERB.P1P.A	{inotahaY	AinotahaynA	OK		
+VERB.P2MS.A	{inotahaY	Ainotahayta	OK		
+VERB.P2FS.A	{inotahaY	Ainotahayti	OK		
+VERB.P2D.A	{inotahaY	AinotahaytumA	OK		
+VERB.P2MP.A	{inotahaY	Ainotahaytum	OK		
+VERB.P2FP.A	{inotahaY	Ainotahaytun~a	OK		
+VERB.P3MS.A	{inotahaY	AinotahaY	OK		
+VERB.P3FS.A	{inotahaY	Ainotahat	OK		
+VERB.P3MD.A	{inotahaY	AinotahayA	OK		
+VERB.P3FD.A	{inotahaY	AinotahatA	OK		
+VERB.P3MP.A	{inotahaY	AinotahawoA	OK		
+VERB.P3FP.A	{inotahaY	Ainotahayna	OK		
+VERB.P1S.P	{inotahaY	Aunotuhiytu	OK		
+VERB.P1P.P	{inotahaY	AunotuhiynA	OK		
+VERB.P2MS.P	{inotahaY	Aunotuhiyta	OK		
+VERB.P2FS.P	{inotahaY	Aunotuhiyti	OK		
+VERB.P2D.P	{inotahaY	AunotuhiytumA	OK		
+VERB.P2MP.P	{inotahaY	Aunotuhiytum	OK		
+VERB.P2FP.P	{inotahaY	Aunotuhiytun~a	OK		
+VERB.P3MS.P	{inotahaY	Aunotuhiya	OK		
+VERB.P3FS.P	{inotahaY	Aunotuhiyat	OK		
+VERB.P3MD.P	{inotahaY	AunotuhiyA	OK		
+VERB.P3FD.P	{inotahaY	AunotuhiyatA	OK		
+VERB.P3MP.P	{inotahaY	AunotuhuwA	OK		
+VERB.P3FP.P	{inotahaY	Aunotuhiyna	OK		
+VERB.P1S.A.E0	{inotahaY		OK		
+VERB.P1P.A.E0	{inotahaY		OK		
+VERB.P2MS.A.E0	{inotahaY		OK		
+VERB.P2FS.A.E0	{inotahaY		OK		
+VERB.P2D.A.E0	{inotahaY		OK		
+VERB.P2MP.A.E0	{inotahaY		OK		
+VERB.P2FP.A.E0	{inotahaY		OK		
+VERB.P3MS.A.E0	{inotahaY		OK		
+VERB.P3FS.A.E0	{inotahaY		OK		
+VERB.P3MD.A.E0	{inotahaY		OK		
+VERB.P3FD.A.E0	{inotahaY		OK		
+VERB.P3MP.A.E0	{inotahaY		OK		
+VERB.P3FP.A.E0	{inotahaY		OK		
+VERB.P1S.P.E0	{inotahaY		OK		
+VERB.P1P.P.E0	{inotahaY		OK		
+VERB.P2MS.P.E0	{inotahaY		OK		
+VERB.P2FS.P.E0	{inotahaY		OK		
+VERB.P2D.P.E0	{inotahaY		OK		
+VERB.P2MP.P.E0	{inotahaY		OK		
+VERB.P2FP.P.E0	{inotahaY		OK		
+VERB.P3MS.P.E0	{inotahaY		OK		
+VERB.P3FS.P.E0	{inotahaY		OK		
+VERB.P3MD.P.E0	{inotahaY		OK		
+VERB.P3FD.P.E0	{inotahaY		OK		
+VERB.P3MP.P.E0	{inotahaY		OK		
+VERB.P3FP.P.E0	{inotahaY		OK		
+VERB.P1S.A	{isotaTAE	AisotaTaEtu	OK		
+VERB.P1P.A	{isotaTAE	AisotaTaEnA	OK		
+VERB.P2MS.A	{isotaTAE	AisotaTaEta	OK		
+VERB.P2FS.A	{isotaTAE	AisotaTaEti	OK		
+VERB.P2D.A	{isotaTAE	AisotaTaEtumA	OK		
+VERB.P2MP.A	{isotaTAE	AisotaTaEtum	OK		
+VERB.P2FP.A	{isotaTAE	AisotaTaEtun~a	OK		
+VERB.P3MS.A	{isotaTAE	AisotaTAEa	OK		
+VERB.P3FS.A	{isotaTAE	AisotaTAEat	OK		
+VERB.P3MD.A	{isotaTAE	AisotaTAEA	OK		
+VERB.P3FD.A	{isotaTAE	AisotaTAEatA	OK		
+VERB.P3MP.A	{isotaTAE	AisotaTAEuwA	OK		
+VERB.P3FP.A	{isotaTAE	AisotaTaEna	OK		
+VERB.P1S.P	{isotaTAE	AusotuTiEtu	OK		
+VERB.P1P.P	{isotaTAE	AusotuTiEnA	OK		
+VERB.P2MS.P	{isotaTAE	AusotuTiEta	OK		
+VERB.P2FS.P	{isotaTAE	AusotuTiEti	OK		
+VERB.P2D.P	{isotaTAE	AusotuTiEtumA	OK		
+VERB.P2MP.P	{isotaTAE	AusotuTiEtum	OK		
+VERB.P2FP.P	{isotaTAE	AusotuTiEtun~a	OK		
+VERB.P3MS.P	{isotaTAE	AusotuTiyEa	OK		
+VERB.P3FS.P	{isotaTAE	AusotuTiyEat	OK		
+VERB.P3MD.P	{isotaTAE	AusotuTiyEA	OK		
+VERB.P3FD.P	{isotaTAE	AusotuTiyEatA	OK		
+VERB.P3MP.P	{isotaTAE	AusotuTiyEuwA	OK		
+VERB.P3FP.P	{isotaTAE	AusotuTiEna	OK		
+VERB.P1S.A.E0	{isotaTAE		OK		
+VERB.P1P.A.E0	{isotaTAE		OK		
+VERB.P2MS.A.E0	{isotaTAE		OK		
+VERB.P2FS.A.E0	{isotaTAE		OK		
+VERB.P2D.A.E0	{isotaTAE		OK		
+VERB.P2MP.A.E0	{isotaTAE		OK		
+VERB.P2FP.A.E0	{isotaTAE		OK		
+VERB.P3MS.A.E0	{isotaTAE		OK		
+VERB.P3FS.A.E0	{isotaTAE		OK		
+VERB.P3MD.A.E0	{isotaTAE		OK		
+VERB.P3FD.A.E0	{isotaTAE		OK		
+VERB.P3MP.A.E0	{isotaTAE		OK		
+VERB.P3FP.A.E0	{isotaTAE		OK		
+VERB.P1S.P.E0	{isotaTAE		OK		
+VERB.P1P.P.E0	{isotaTAE		OK		
+VERB.P2MS.P.E0	{isotaTAE		OK		
+VERB.P2FS.P.E0	{isotaTAE		OK		
+VERB.P2D.P.E0	{isotaTAE		OK		
+VERB.P2MP.P.E0	{isotaTAE		OK		
+VERB.P2FP.P.E0	{isotaTAE		OK		
+VERB.P3MS.P.E0	{isotaTAE		OK		
+VERB.P3FS.P.E0	{isotaTAE		OK		
+VERB.P3MD.P.E0	{isotaTAE		OK		
+VERB.P3FD.P.E0	{isotaTAE		OK		
+VERB.P3MP.P.E0	{isotaTAE		OK		
+VERB.P3FP.P.E0	{isotaTAE		OK		
+VERB.P1S.A	kAn-u	kuntu	OK		
+VERB.P1P.A	kAn-u	kun~A	OK		
+VERB.P2MS.A	kAn-u	kunta	OK		
+VERB.P2FS.A	kAn-u	kunti	OK		
+VERB.P2D.A	kAn-u	kuntumA	OK		
+VERB.P2MP.A	kAn-u	kuntum	OK		
+VERB.P2FP.A	kAn-u	kuntun~a	OK		
+VERB.P3MS.A	kAn-u	kAna	OK		
+VERB.P3FS.A	kAn-u	kAnat	OK		
+VERB.P3MD.A	kAn-u	kAnA	OK		
+VERB.P3FD.A	kAn-u	kAnatA	OK		
+VERB.P3MP.A	kAn-u	kAnuwA	OK		
+VERB.P3FP.A	kAn-u	kun~a	OK		
+VERB.P1S.P	kAn-u	kuntu	OK		
+VERB.P1P.P	kAn-u	kun~A	OK		
+VERB.P2MS.P	kAn-u	kunta	OK		
+VERB.P2FS.P	kAn-u	kunti	OK		
+VERB.P2D.P	kAn-u	kuntumA	OK		
+VERB.P2MP.P	kAn-u	kuntum	OK		
+VERB.P2FP.P	kAn-u	kuntun~a	OK		
+VERB.P3MS.P	kAn-u	kiyna	OK		
+VERB.P3FS.P	kAn-u	kiynat	OK		
+VERB.P3MD.P	kAn-u	kiynA	OK		
+VERB.P3FD.P	kAn-u	kiynatA	OK		
+VERB.P3MP.P	kAn-u	kiynuwA	OK		
+VERB.P3FP.P	kAn-u	kun~a	OK		
+VERB.P1S.A.E0	kAn-u	kuntuhu	OK		
+VERB.P1P.A.E0	kAn-u	kun~Ahu	OK		
+VERB.P2MS.A.E0	kAn-u	kuntahu	OK		
+VERB.P2FS.A.E0	kAn-u	kuntihi	OK		
+VERB.P2D.A.E0	kAn-u	kuntumAhu	OK		
+VERB.P2MP.A.E0	kAn-u	kuntumuwhu	OK		
+VERB.P2FP.A.E0	kAn-u	kuntun~ahu	OK		
+VERB.P3MS.A.E0	kAn-u	kAnahu	OK		
+VERB.P3FS.A.E0	kAn-u	kAnathu	OK		
+VERB.P3MD.A.E0	kAn-u	kAnAhu	OK		
+VERB.P3FD.A.E0	kAn-u	kAnatAhu	OK		
+VERB.P3MP.A.E0	kAn-u	kAnuwhu	OK		
+VERB.P3FP.A.E0	kAn-u	kun~ahu	OK		
+VERB.P1S.P.E0	kAn-u		OK		
+VERB.P1P.P.E0	kAn-u		OK		
+VERB.P2MS.P.E0	kAn-u		OK		
+VERB.P2FS.P.E0	kAn-u		OK		
+VERB.P2D.P.E0	kAn-u		OK		
+VERB.P2MP.P.E0	kAn-u		OK		
+VERB.P2FP.P.E0	kAn-u		OK		
+VERB.P3MS.P.E0	kAn-u		OK		
+VERB.P3FS.P.E0	kAn-u		OK		
+VERB.P3MD.P.E0	kAn-u		OK		
+VERB.P3FD.P.E0	kAn-u		OK		
+VERB.P3MP.P.E0	kAn-u		OK		
+VERB.P3FP.P.E0	kAn-u		OK		
+VERB.P1S.A	wajab-i	wajabtu	OK		
+VERB.P1P.A	wajab-i	wajabnA	OK		
+VERB.P2MS.A	wajab-i	wajabta	OK		
+VERB.P2FS.A	wajab-i	wajabti	OK		
+VERB.P2D.A	wajab-i	wajabtumA	OK		
+VERB.P2MP.A	wajab-i	wajabtum	OK		
+VERB.P2FP.A	wajab-i	wajabtun~a	OK		
+VERB.P3MS.A	wajab-i	wajaba	OK		
+VERB.P3FS.A	wajab-i	wajabat	OK		
+VERB.P3MD.A	wajab-i	wajabA	OK		
+VERB.P3FD.A	wajab-i	wajabatA	OK		
+VERB.P3MP.A	wajab-i	wajabuwA	OK		
+VERB.P3FP.A	wajab-i	wajabna	OK		
+VERB.P1S.P	wajab-i	wujibtu	OK		
+VERB.P1P.P	wajab-i	wujibnA	OK		
+VERB.P2MS.P	wajab-i	wujibta	OK		
+VERB.P2FS.P	wajab-i	wujibti	OK		
+VERB.P2D.P	wajab-i	wujibtumA	OK		
+VERB.P2MP.P	wajab-i	wujibtum	OK		
+VERB.P2FP.P	wajab-i	wujibtun~a	OK		
+VERB.P3MS.P	wajab-i	wujiba	OK		
+VERB.P3FS.P	wajab-i	wujibat	OK		
+VERB.P3MD.P	wajab-i	wujibA	OK		
+VERB.P3FD.P	wajab-i	wujibatA	OK		
+VERB.P3MP.P	wajab-i	wujibuwA	OK		
+VERB.P3FP.P	wajab-i	wujibna	OK		
+VERB.P1S.A.E0	wajab-i		OK		
+VERB.P1P.A.E0	wajab-i		OK		
+VERB.P2MS.A.E0	wajab-i		OK		
+VERB.P2FS.A.E0	wajab-i		OK		
+VERB.P2D.A.E0	wajab-i		OK		
+VERB.P2MP.A.E0	wajab-i		OK		
+VERB.P2FP.A.E0	wajab-i		OK		
+VERB.P3MS.A.E0	wajab-i		OK		
+VERB.P3FS.A.E0	wajab-i		OK		
+VERB.P3MD.A.E0	wajab-i		OK		
+VERB.P3FD.A.E0	wajab-i		OK		
+VERB.P3MP.A.E0	wajab-i		OK		
+VERB.P3FP.A.E0	wajab-i		OK		
+VERB.P1S.P.E0	wajab-i		OK		
+VERB.P1P.P.E0	wajab-i		OK		
+VERB.P2MS.P.E0	wajab-i		OK		
+VERB.P2FS.P.E0	wajab-i		OK		
+VERB.P2D.P.E0	wajab-i		OK		
+VERB.P2MP.P.E0	wajab-i		OK		
+VERB.P2FP.P.E0	wajab-i		OK		
+VERB.P3MS.P.E0	wajab-i		OK		
+VERB.P3FS.P.E0	wajab-i		OK		
+VERB.P3MD.P.E0	wajab-i		OK		
+VERB.P3FD.P.E0	wajab-i		OK		
+VERB.P3MP.P.E0	wajab-i		OK		
+VERB.P3FP.P.E0	wajab-i		OK		
+VERB.P1S.A	{isotamar~	Aisotamorartu	OK		
+VERB.P1P.A	{isotamar~	AisotamorarnA	OK		
+VERB.P2MS.A	{isotamar~	Aisotamorarta	OK		
+VERB.P2FS.A	{isotamar~	Aisotamorarti	OK		
+VERB.P2D.A	{isotamar~	AisotamorartumA	OK		
+VERB.P2MP.A	{isotamar~	Aisotamorartum	OK		
+VERB.P2FP.A	{isotamar~	Aisotamorartun~a	OK		
+VERB.P3MS.A	{isotamar~	Aisotamar~a	OK		
+VERB.P3FS.A	{isotamar~	Aisotamar~at	OK		
+VERB.P3MD.A	{isotamar~	Aisotamar~A	OK		
+VERB.P3FD.A	{isotamar~	Aisotamar~atA	OK		
+VERB.P3MP.A	{isotamar~	Aisotamar~uwA	OK		
+VERB.P3FP.A	{isotamar~	Aisotamorarna	OK		
+VERB.P1S.P	{isotamar~	Ausotumorirtu	OK		
+VERB.P1P.P	{isotamar~	AusotumorirnA	OK		
+VERB.P2MS.P	{isotamar~	Ausotumorirta	OK		
+VERB.P2FS.P	{isotamar~	Ausotumorirti	OK		
+VERB.P2D.P	{isotamar~	AusotumorirtumA	OK		
+VERB.P2MP.P	{isotamar~	Ausotumorirtum	OK		
+VERB.P2FP.P	{isotamar~	Ausotumorirtun~a	OK		
+VERB.P3MS.P	{isotamar~	Ausotumir~a	OK		
+VERB.P3FS.P	{isotamar~	Ausotumir~at	OK		
+VERB.P3MD.P	{isotamar~	Ausotumir~A	OK		
+VERB.P3FD.P	{isotamar~	Ausotumir~atA	OK		
+VERB.P3MP.P	{isotamar~	Ausotumir~uwA	OK		
+VERB.P3FP.P	{isotamar~	Ausotumorirna	OK		
+VERB.P1S.A.E0	{isotamar~	Aisotamorartuhu	OK		
+VERB.P1P.A.E0	{isotamar~	AisotamorarnAhu	OK		
+VERB.P2MS.A.E0	{isotamar~	Aisotamorartahu	OK		
+VERB.P2FS.A.E0	{isotamar~	Aisotamorartihi	OK		
+VERB.P2D.A.E0	{isotamar~	AisotamorartumAhu	OK		
+VERB.P2MP.A.E0	{isotamar~	Aisotamorartumuwhu	OK		
+VERB.P2FP.A.E0	{isotamar~	Aisotamorartun~ahu	OK		
+VERB.P3MS.A.E0	{isotamar~	Aisotamar~ahu	OK		
+VERB.P3FS.A.E0	{isotamar~	Aisotamar~athu	OK		
+VERB.P3MD.A.E0	{isotamar~	Aisotamar~Ahu	OK		
+VERB.P3FD.A.E0	{isotamar~	Aisotamar~atAhu	OK		
+VERB.P3MP.A.E0	{isotamar~	Aisotamar~uwhu	OK		
+VERB.P3FP.A.E0	{isotamar~	Aisotamorarnahu	OK		
+VERB.P1S.P.E0	{isotamar~		OK		
+VERB.P1P.P.E0	{isotamar~		OK		
+VERB.P2MS.P.E0	{isotamar~		OK		
+VERB.P2FS.P.E0	{isotamar~		OK		
+VERB.P2D.P.E0	{isotamar~		OK		
+VERB.P2MP.P.E0	{isotamar~		OK		
+VERB.P2FP.P.E0	{isotamar~		OK		
+VERB.P3MS.P.E0	{isotamar~		OK		
+VERB.P3FS.P.E0	{isotamar~		OK		
+VERB.P3MD.P.E0	{isotamar~		OK		
+VERB.P3FD.P.E0	{isotamar~		OK		
+VERB.P3MP.P.E0	{isotamar~		OK		
+VERB.P3FP.P.E0	{isotamar~		OK		
+VERB.P1S.A	>asA'	>asa>tu	OK		
+VERB.P1P.A	>asA'	>asa>nA	OK		
+VERB.P2MS.A	>asA'	>asa>ta	OK		
+VERB.P2FS.A	>asA'	>asa>ti	OK		
+VERB.P2D.A	>asA'	>asa>tumA	OK		
+VERB.P2MP.A	>asA'	>asa>tum	OK		
+VERB.P2FP.A	>asA'	>asa>tun~a	OK		
+VERB.P3MS.A	>asA'	>asA'a	OK		
+VERB.P3FS.A	>asA'	>asA'at	OK		
+VERB.P3MD.A	>asA'	>asA'A	OK		
+VERB.P3FD.A	>asA'	>asA'atA	OK		
+VERB.P3MP.A	>asA'	>asA&uwA	OK		
+VERB.P3FP.A	>asA'	>asa>na	OK		
+VERB.P1S.P	>asA'	>usi}tu	OK		
+VERB.P1P.P	>asA'	>usi}nA	OK		
+VERB.P2MS.P	>asA'	>usi}ta	OK		
+VERB.P2FS.P	>asA'	>usi}ti	OK		
+VERB.P2D.P	>asA'	>usi}tumA	OK		
+VERB.P2MP.P	>asA'	>usi}tum	OK		
+VERB.P2FP.P	>asA'	>usi}tun~a	OK		
+VERB.P3MS.P	>asA'	>usiy'a	OK		
+VERB.P3FS.P	>asA'	>usiy}at	OK		
+VERB.P3MD.P	>asA'	>usiy}A	OK		
+VERB.P3FD.P	>asA'	>usiy}atA	OK		
+VERB.P3MP.P	>asA'	>usiy}uwA	OK		
+VERB.P3FP.P	>asA'	>usi}na	OK		
+VERB.P1S.A.E0	>asA'	>asa>tuhu	OK		
+VERB.P1P.A.E0	>asA'	>asa>nAhu	OK		
+VERB.P2MS.A.E0	>asA'	>asa>tahu	OK		
+VERB.P2FS.A.E0	>asA'	>asa>tihi	OK		
+VERB.P2D.A.E0	>asA'	>asa>tumAhu	OK		
+VERB.P2MP.A.E0	>asA'	>asa>tumuwhu	OK		
+VERB.P2FP.A.E0	>asA'	>asa>tun~ahu	OK		
+VERB.P3MS.A.E0	>asA'	>asA'ahu	OK		
+VERB.P3FS.A.E0	>asA'	>asA'athu	OK		
+VERB.P3MD.A.E0	>asA'	>asA'Ahu	OK		
+VERB.P3FD.A.E0	>asA'	>asA'atAhu	OK		
+VERB.P3MP.A.E0	>asA'	>asA&uwhu	OK		
+VERB.P3FP.A.E0	>asA'	>asa>nahu	OK		
+VERB.P1S.P.E0	>asA'		OK		
+VERB.P1P.P.E0	>asA'		OK		
+VERB.P2MS.P.E0	>asA'		OK		
+VERB.P2FS.P.E0	>asA'		OK		
+VERB.P2D.P.E0	>asA'		OK		
+VERB.P2MP.P.E0	>asA'		OK		
+VERB.P2FP.P.E0	>asA'		OK		
+VERB.P3MS.P.E0	>asA'		OK		
+VERB.P3FS.P.E0	>asA'		OK		
+VERB.P3MD.P.E0	>asA'		OK		
+VERB.P3FD.P.E0	>asA'		OK		
+VERB.P3MP.P.E0	>asA'		OK		
+VERB.P3FP.P.E0	>asA'		OK		
+VERB.P1S.A	bAt-i	bit~u	OK		
+VERB.P1P.A	bAt-i	bitnA	OK		
+VERB.P2MS.A	bAt-i	bit~a	OK		
+VERB.P2FS.A	bAt-i	bit~i	OK		
+VERB.P2D.A	bAt-i	bit~umA	OK		
+VERB.P2MP.A	bAt-i	bit~um	OK		
+VERB.P2FP.A	bAt-i	bit~un~a	OK		
+VERB.P3MS.A	bAt-i	bAta	OK		
+VERB.P3FS.A	bAt-i	bAtat	OK		
+VERB.P3MD.A	bAt-i	bAtA	OK		
+VERB.P3FD.A	bAt-i	bAtatA	OK		
+VERB.P3MP.A	bAt-i	bAtuwA	OK		
+VERB.P3FP.A	bAt-i	bitna	OK		
+VERB.P1S.P	bAt-i	but~u	OK		
+VERB.P1P.P	bAt-i	butnA	OK		
+VERB.P2MS.P	bAt-i	but~a	OK		
+VERB.P2FS.P	bAt-i	but~i	OK		
+VERB.P2D.P	bAt-i	but~umA	OK		
+VERB.P2MP.P	bAt-i	but~um	OK		
+VERB.P2FP.P	bAt-i	but~un~a	OK		
+VERB.P3MS.P	bAt-i	biyta	OK		
+VERB.P3FS.P	bAt-i	biytat	OK		
+VERB.P3MD.P	bAt-i	biytA	OK		
+VERB.P3FD.P	bAt-i	biytatA	OK		
+VERB.P3MP.P	bAt-i	biytuwA	OK		
+VERB.P3FP.P	bAt-i	butna	OK		
+VERB.P1S.A.E0	bAt-i	bit~uhu	OK		
+VERB.P1P.A.E0	bAt-i	bitnAhu	OK		
+VERB.P2MS.A.E0	bAt-i	bit~ahu	OK		
+VERB.P2FS.A.E0	bAt-i	bit~ihi	OK		
+VERB.P2D.A.E0	bAt-i	bit~umAhu	OK		
+VERB.P2MP.A.E0	bAt-i	bit~umuwhu	OK		
+VERB.P2FP.A.E0	bAt-i	bit~un~ahu	OK		
+VERB.P3MS.A.E0	bAt-i	bAtahu	OK		
+VERB.P3FS.A.E0	bAt-i	bAtathu	OK		
+VERB.P3MD.A.E0	bAt-i	bAtAhu	OK		
+VERB.P3FD.A.E0	bAt-i	bAtatAhu	OK		
+VERB.P3MP.A.E0	bAt-i	bAtuwhu	OK		
+VERB.P3FP.A.E0	bAt-i	bitnahu	OK		
+VERB.P1S.P.E0	bAt-i		OK		
+VERB.P1P.P.E0	bAt-i		OK		
+VERB.P2MS.P.E0	bAt-i		OK		
+VERB.P2FS.P.E0	bAt-i		OK		
+VERB.P2D.P.E0	bAt-i		OK		
+VERB.P2MP.P.E0	bAt-i		OK		
+VERB.P2FP.P.E0	bAt-i		OK		
+VERB.P3MS.P.E0	bAt-i		OK		
+VERB.P3FS.P.E0	bAt-i		OK		
+VERB.P3MD.P.E0	bAt-i		OK		
+VERB.P3FD.P.E0	bAt-i		OK		
+VERB.P3MP.P.E0	bAt-i		OK		
+VERB.P3FP.P.E0	bAt-i		OK		
+VERB.P1S.A	bada>-a	bada>tu	OK		
+VERB.P1P.A	bada>-a	bada>nA	OK		
+VERB.P2MS.A	bada>-a	bada>ta	OK		
+VERB.P2FS.A	bada>-a	bada>ti	OK		
+VERB.P2D.A	bada>-a	bada>tumA	OK		
+VERB.P2MP.A	bada>-a	bada>tum	OK		
+VERB.P2FP.A	bada>-a	bada>tun~a	OK		
+VERB.P3MS.A	bada>-a	bada>a	OK		
+VERB.P3FS.A	bada>-a	bada>at	OK		
+VERB.P3MD.A	bada>-a	bada|	OK		
+VERB.P3FD.A	bada>-a	bada>atA	OK		
+VERB.P3MP.A	bada>-a	bada&uwA	OK		
+VERB.P3FP.A	bada>-a	bada>na	OK		
+VERB.P1S.P	bada>-a	budi}tu	OK		
+VERB.P1P.P	bada>-a	budi}nA	OK		
+VERB.P2MS.P	bada>-a	budi}ta	OK		
+VERB.P2FS.P	bada>-a	budi}ti	OK		
+VERB.P2D.P	bada>-a	budi}tumA	OK		
+VERB.P2MP.P	bada>-a	budi}tum	OK		
+VERB.P2FP.P	bada>-a	budi}tun~a	OK		
+VERB.P3MS.P	bada>-a	budi}a	OK		
+VERB.P3FS.P	bada>-a	budi}at	OK		
+VERB.P3MD.P	bada>-a	budi}A	OK		
+VERB.P3FD.P	bada>-a	budi}atA	OK		
+VERB.P3MP.P	bada>-a	budi}uwA	OK		
+VERB.P3FP.P	bada>-a	budi}na	OK		
+VERB.P1S.A.E0	bada>-a	bada>tuhu	OK		
+VERB.P1P.A.E0	bada>-a	bada>nAhu	OK		
+VERB.P2MS.A.E0	bada>-a	bada>tahu	OK		
+VERB.P2FS.A.E0	bada>-a	bada>tihi	OK		
+VERB.P2D.A.E0	bada>-a	bada>tumAhu	OK		
+VERB.P2MP.A.E0	bada>-a	bada>tumuwhu	OK		
+VERB.P2FP.A.E0	bada>-a	bada>tun~ahu	OK		
+VERB.P3MS.A.E0	bada>-a	bada>ahu	OK		
+VERB.P3FS.A.E0	bada>-a	bada>athu	OK		
+VERB.P3MD.A.E0	bada>-a	bada|hu	OK		
+VERB.P3FD.A.E0	bada>-a	bada>atAhu	OK		
+VERB.P3MP.A.E0	bada>-a	bada&uwhu	OK		
+VERB.P3FP.A.E0	bada>-a	bada>nahu	OK		
+VERB.P1S.P.E0	bada>-a		OK		
+VERB.P1P.P.E0	bada>-a		OK		
+VERB.P2MS.P.E0	bada>-a		OK		
+VERB.P2FS.P.E0	bada>-a		OK		
+VERB.P2D.P.E0	bada>-a		OK		
+VERB.P2MP.P.E0	bada>-a		OK		
+VERB.P2FP.P.E0	bada>-a		OK		
+VERB.P3MS.P.E0	bada>-a		OK		
+VERB.P3FS.P.E0	bada>-a		OK		
+VERB.P3MD.P.E0	bada>-a		OK		
+VERB.P3FD.P.E0	bada>-a		OK		
+VERB.P3MP.P.E0	bada>-a		OK		
+VERB.P3FP.P.E0	bada>-a		OK		
+VERB.P1S.A	lafat-i	lafat~u	OK		
+VERB.P1P.A	lafat-i	lafatnA	OK		
+VERB.P2MS.A	lafat-i	lafat~a	OK		
+VERB.P2FS.A	lafat-i	lafat~i	OK		
+VERB.P2D.A	lafat-i	lafat~umA	OK		
+VERB.P2MP.A	lafat-i	lafat~um	OK		
+VERB.P2FP.A	lafat-i	lafat~un~a	OK		
+VERB.P3MS.A	lafat-i	lafata	OK		
+VERB.P3FS.A	lafat-i	lafatat	OK		
+VERB.P3MD.A	lafat-i	lafatA	OK		
+VERB.P3FD.A	lafat-i	lafatatA	OK		
+VERB.P3MP.A	lafat-i	lafatuwA	OK		
+VERB.P3FP.A	lafat-i	lafatna	OK		
+VERB.P1S.P	lafat-i	lufit~u	OK		
+VERB.P1P.P	lafat-i	lufitnA	OK		
+VERB.P2MS.P	lafat-i	lufit~a	OK		
+VERB.P2FS.P	lafat-i	lufit~i	OK		
+VERB.P2D.P	lafat-i	lufit~umA	OK		
+VERB.P2MP.P	lafat-i	lufit~um	OK		
+VERB.P2FP.P	lafat-i	lufit~un~a	OK		
+VERB.P3MS.P	lafat-i	lufita	OK		
+VERB.P3FS.P	lafat-i	lufitat	OK		
+VERB.P3MD.P	lafat-i	lufitA	OK		
+VERB.P3FD.P	lafat-i	lufitatA	OK		
+VERB.P3MP.P	lafat-i	lufituwA	OK		
+VERB.P3FP.P	lafat-i	lufitna	OK		
+VERB.P1S.A.E0	lafat-i	lafat~uhu	OK		
+VERB.P1P.A.E0	lafat-i	lafatnAhu	OK		
+VERB.P2MS.A.E0	lafat-i	lafat~ahu	OK		
+VERB.P2FS.A.E0	lafat-i	lafat~ihi	OK		
+VERB.P2D.A.E0	lafat-i	lafat~umAhu	OK		
+VERB.P2MP.A.E0	lafat-i	lafat~umuwhu	OK		
+VERB.P2FP.A.E0	lafat-i	lafat~un~ahu	OK		
+VERB.P3MS.A.E0	lafat-i	lafatahu	OK		
+VERB.P3FS.A.E0	lafat-i	lafatathu	OK		
+VERB.P3MD.A.E0	lafat-i	lafatAhu	OK		
+VERB.P3FD.A.E0	lafat-i	lafatatAhu	OK		
+VERB.P3MP.A.E0	lafat-i	lafatuwhu	OK		
+VERB.P3FP.A.E0	lafat-i	lafatnahu	OK		
+VERB.P1S.P.E0	lafat-i		OK		
+VERB.P1P.P.E0	lafat-i		OK		
+VERB.P2MS.P.E0	lafat-i		OK		
+VERB.P2FS.P.E0	lafat-i		OK		
+VERB.P2D.P.E0	lafat-i		OK		
+VERB.P2MP.P.E0	lafat-i		OK		
+VERB.P2FP.P.E0	lafat-i		OK		
+VERB.P3MS.P.E0	lafat-i		OK		
+VERB.P3FS.P.E0	lafat-i		OK		
+VERB.P3MD.P.E0	lafat-i		OK		
+VERB.P3FD.P.E0	lafat-i		OK		
+VERB.P3MP.P.E0	lafat-i		OK		
+VERB.P3FP.P.E0	lafat-i		OK		
+VERB.P1S.A	tam~-i	tamamtu	OK		
+VERB.P1P.A	tam~-i	tamamnA	OK		
+VERB.P2MS.A	tam~-i	tamamta	OK		
+VERB.P2FS.A	tam~-i	tamamti	OK		
+VERB.P2D.A	tam~-i	tamamtumA	OK		
+VERB.P2MP.A	tam~-i	tamamtum	OK		
+VERB.P2FP.A	tam~-i	tamamtun~a	OK		
+VERB.P3MS.A	tam~-i	tam~a	OK		
+VERB.P3FS.A	tam~-i	tam~at	OK		
+VERB.P3MD.A	tam~-i	tam~A	OK		
+VERB.P3FD.A	tam~-i	tam~atA	OK		
+VERB.P3MP.A	tam~-i	tam~uwA	OK		
+VERB.P3FP.A	tam~-i	tamamna	OK		
+VERB.P1S.P	tam~-i	tumimtu	OK		
+VERB.P1P.P	tam~-i	tumimnA	OK		
+VERB.P2MS.P	tam~-i	tumimta	OK		
+VERB.P2FS.P	tam~-i	tumimti	OK		
+VERB.P2D.P	tam~-i	tumimtumA	OK		
+VERB.P2MP.P	tam~-i	tumimtum	OK		
+VERB.P2FP.P	tam~-i	tumimtun~a	OK		
+VERB.P3MS.P	tam~-i	tum~a	OK		
+VERB.P3FS.P	tam~-i	tum~at	OK		
+VERB.P3MD.P	tam~-i	tum~A	OK		
+VERB.P3FD.P	tam~-i	tum~atA	OK		
+VERB.P3MP.P	tam~-i	tum~uwA	OK		
+VERB.P3FP.P	tam~-i	tumimna	OK		
+VERB.P1S.A.E0	tam~-i		OK		
+VERB.P1P.A.E0	tam~-i		OK		
+VERB.P2MS.A.E0	tam~-i		OK		
+VERB.P2FS.A.E0	tam~-i		OK		
+VERB.P2D.A.E0	tam~-i		OK		
+VERB.P2MP.A.E0	tam~-i		OK		
+VERB.P2FP.A.E0	tam~-i		OK		
+VERB.P3MS.A.E0	tam~-i		OK		
+VERB.P3FS.A.E0	tam~-i		OK		
+VERB.P3MD.A.E0	tam~-i		OK		
+VERB.P3FD.A.E0	tam~-i		OK		
+VERB.P3MP.A.E0	tam~-i		OK		
+VERB.P3FP.A.E0	tam~-i		OK		
+VERB.P1S.P.E0	tam~-i		OK		
+VERB.P1P.P.E0	tam~-i		OK		
+VERB.P2MS.P.E0	tam~-i		OK		
+VERB.P2FS.P.E0	tam~-i		OK		
+VERB.P2D.P.E0	tam~-i		OK		
+VERB.P2MP.P.E0	tam~-i		OK		
+VERB.P2FP.P.E0	tam~-i		OK		
+VERB.P3MS.P.E0	tam~-i		OK		
+VERB.P3FS.P.E0	tam~-i		OK		
+VERB.P3MD.P.E0	tam~-i		OK		
+VERB.P3FD.P.E0	tam~-i		OK		
+VERB.P3MP.P.E0	tam~-i		OK		
+VERB.P3FP.P.E0	tam~-i		OK		
+VERB.P1S.A	$an~-u	$anantu	OK		
+VERB.P1P.A	$an~-u	$anan~A	OK		
+VERB.P2MS.A	$an~-u	$ananta	OK		
+VERB.P2FS.A	$an~-u	$ananti	OK		
+VERB.P2D.A	$an~-u	$anantumA	OK		
+VERB.P2MP.A	$an~-u	$anantum	OK		
+VERB.P2FP.A	$an~-u	$anantun~a	OK		
+VERB.P3MS.A	$an~-u	$an~a	OK		
+VERB.P3FS.A	$an~-u	$an~at	OK		
+VERB.P3MD.A	$an~-u	$an~A	OK		
+VERB.P3FD.A	$an~-u	$an~atA	OK		
+VERB.P3MP.A	$an~-u	$an~uwA	OK		
+VERB.P3FP.A	$an~-u	$anan~a	OK		
+VERB.P1S.P	$an~-u	$unintu	OK		
+VERB.P1P.P	$an~-u	$unin~A	OK		
+VERB.P2MS.P	$an~-u	$uninta	OK		
+VERB.P2FS.P	$an~-u	$uninti	OK		
+VERB.P2D.P	$an~-u	$unintumA	OK		
+VERB.P2MP.P	$an~-u	$unintum	OK		
+VERB.P2FP.P	$an~-u	$unintun~a	OK		
+VERB.P3MS.P	$an~-u	$un~a	OK		
+VERB.P3FS.P	$an~-u	$un~at	OK		
+VERB.P3MD.P	$an~-u	$un~A	OK		
+VERB.P3FD.P	$an~-u	$un~atA	OK		
+VERB.P3MP.P	$an~-u	$un~uwA	OK		
+VERB.P3FP.P	$an~-u	$unin~a	OK		
+VERB.P1S.A.E0	$an~-u	$anantuhu	OK		
+VERB.P1P.A.E0	$an~-u	$anan~Ahu	OK		
+VERB.P2MS.A.E0	$an~-u	$anantahu	OK		
+VERB.P2FS.A.E0	$an~-u	$anantihi	OK		
+VERB.P2D.A.E0	$an~-u	$anantumAhu	OK		
+VERB.P2MP.A.E0	$an~-u	$anantumuwhu	OK		
+VERB.P2FP.A.E0	$an~-u	$anantun~ahu	OK		
+VERB.P3MS.A.E0	$an~-u	$an~ahu	OK		
+VERB.P3FS.A.E0	$an~-u	$an~athu	OK		
+VERB.P3MD.A.E0	$an~-u	$an~Ahu	OK		
+VERB.P3FD.A.E0	$an~-u	$an~atAhu	OK		
+VERB.P3MP.A.E0	$an~-u	$an~uwhu	OK		
+VERB.P3FP.A.E0	$an~-u	$anan~ahu	OK		
+VERB.P1S.P.E0	$an~-u		OK		
+VERB.P1P.P.E0	$an~-u		OK		
+VERB.P2MS.P.E0	$an~-u		OK		
+VERB.P2FS.P.E0	$an~-u		OK		
+VERB.P2D.P.E0	$an~-u		OK		
+VERB.P2MP.P.E0	$an~-u		OK		
+VERB.P2FP.P.E0	$an~-u		OK		
+VERB.P3MS.P.E0	$an~-u		OK		
+VERB.P3FS.P.E0	$an~-u		OK		
+VERB.P3MD.P.E0	$an~-u		OK		
+VERB.P3FD.P.E0	$an~-u		OK		
+VERB.P3MP.P.E0	$an~-u		OK		
+VERB.P3FP.P.E0	$an~-u		OK		
+VERB.P1S.A	vabat-u	vabat~u	OK		
+VERB.P1P.A	vabat-u	vabatnA	OK		
+VERB.P2MS.A	vabat-u	vabat~a	OK		
+VERB.P2FS.A	vabat-u	vabat~i	OK		
+VERB.P2D.A	vabat-u	vabat~umA	OK		
+VERB.P2MP.A	vabat-u	vabat~um	OK		
+VERB.P2FP.A	vabat-u	vabat~un~a	OK		
+VERB.P3MS.A	vabat-u	vabata	OK		
+VERB.P3FS.A	vabat-u	vabatat	OK		
+VERB.P3MD.A	vabat-u	vabatA	OK		
+VERB.P3FD.A	vabat-u	vabatatA	OK		
+VERB.P3MP.A	vabat-u	vabatuwA	OK		
+VERB.P3FP.A	vabat-u	vabatna	OK		
+VERB.P1S.P	vabat-u	vubit~u	OK		
+VERB.P1P.P	vabat-u	vubitnA	OK		
+VERB.P2MS.P	vabat-u	vubit~a	OK		
+VERB.P2FS.P	vabat-u	vubit~i	OK		
+VERB.P2D.P	vabat-u	vubit~umA	OK		
+VERB.P2MP.P	vabat-u	vubit~um	OK		
+VERB.P2FP.P	vabat-u	vubit~un~a	OK		
+VERB.P3MS.P	vabat-u	vubita	OK		
+VERB.P3FS.P	vabat-u	vubitat	OK		
+VERB.P3MD.P	vabat-u	vubitA	OK		
+VERB.P3FD.P	vabat-u	vubitatA	OK		
+VERB.P3MP.P	vabat-u	vubituwA	OK		
+VERB.P3FP.P	vabat-u	vubitna	OK		
+VERB.P1S.A.E0	vabat-u		OK		
+VERB.P1P.A.E0	vabat-u		OK		
+VERB.P2MS.A.E0	vabat-u		OK		
+VERB.P2FS.A.E0	vabat-u		OK		
+VERB.P2D.A.E0	vabat-u		OK		
+VERB.P2MP.A.E0	vabat-u		OK		
+VERB.P2FP.A.E0	vabat-u		OK		
+VERB.P3MS.A.E0	vabat-u		OK		
+VERB.P3FS.A.E0	vabat-u		OK		
+VERB.P3MD.A.E0	vabat-u		OK		
+VERB.P3FD.A.E0	vabat-u		OK		
+VERB.P3MP.A.E0	vabat-u		OK		
+VERB.P3FP.A.E0	vabat-u		OK		
+VERB.P1S.P.E0	vabat-u		OK		
+VERB.P1P.P.E0	vabat-u		OK		
+VERB.P2MS.P.E0	vabat-u		OK		
+VERB.P2FS.P.E0	vabat-u		OK		
+VERB.P2D.P.E0	vabat-u		OK		
+VERB.P2MP.P.E0	vabat-u		OK		
+VERB.P2FP.P.E0	vabat-u		OK		
+VERB.P3MS.P.E0	vabat-u		OK		
+VERB.P3FS.P.E0	vabat-u		OK		
+VERB.P3MD.P.E0	vabat-u		OK		
+VERB.P3FD.P.E0	vabat-u		OK		
+VERB.P3MP.P.E0	vabat-u		OK		
+VERB.P3FP.P.E0	vabat-u		OK		
+VERB.P1S.A	tamak~an	tamak~antu	OK		
+VERB.P1P.A	tamak~an	tamak~an~A	OK		
+VERB.P2MS.A	tamak~an	tamak~anta	OK		
+VERB.P2FS.A	tamak~an	tamak~anti	OK		
+VERB.P2D.A	tamak~an	tamak~antumA	OK		
+VERB.P2MP.A	tamak~an	tamak~antum	OK		
+VERB.P2FP.A	tamak~an	tamak~antun~a	OK		
+VERB.P3MS.A	tamak~an	tamak~ana	OK		
+VERB.P3FS.A	tamak~an	tamak~anat	OK		
+VERB.P3MD.A	tamak~an	tamak~anA	OK		
+VERB.P3FD.A	tamak~an	tamak~anatA	OK		
+VERB.P3MP.A	tamak~an	tamak~anuwA	OK		
+VERB.P3FP.A	tamak~an	tamak~an~a	OK		
+VERB.P1S.P	tamak~an	tumuk~intu	OK		
+VERB.P1P.P	tamak~an	tumuk~in~A	OK		
+VERB.P2MS.P	tamak~an	tumuk~inta	OK		
+VERB.P2FS.P	tamak~an	tumuk~inti	OK		
+VERB.P2D.P	tamak~an	tumuk~intumA	OK		
+VERB.P2MP.P	tamak~an	tumuk~intum	OK		
+VERB.P2FP.P	tamak~an	tumuk~intun~a	OK		
+VERB.P3MS.P	tamak~an	tumuk~ina	OK		
+VERB.P3FS.P	tamak~an	tumuk~inat	OK		
+VERB.P3MD.P	tamak~an	tumuk~inA	OK		
+VERB.P3FD.P	tamak~an	tumuk~inatA	OK		
+VERB.P3MP.P	tamak~an	tumuk~inuwA	OK		
+VERB.P3FP.P	tamak~an	tumuk~in~a	OK		
+VERB.P1S.A.E0	tamak~an		OK		
+VERB.P1P.A.E0	tamak~an		OK		
+VERB.P2MS.A.E0	tamak~an		OK		
+VERB.P2FS.A.E0	tamak~an		OK		
+VERB.P2D.A.E0	tamak~an		OK		
+VERB.P2MP.A.E0	tamak~an		OK		
+VERB.P2FP.A.E0	tamak~an		OK		
+VERB.P3MS.A.E0	tamak~an		OK		
+VERB.P3FS.A.E0	tamak~an		OK		
+VERB.P3MD.A.E0	tamak~an		OK		
+VERB.P3FD.A.E0	tamak~an		OK		
+VERB.P3MP.A.E0	tamak~an		OK		
+VERB.P3FP.A.E0	tamak~an		OK		
+VERB.P1S.P.E0	tamak~an		OK		
+VERB.P1P.P.E0	tamak~an		OK		
+VERB.P2MS.P.E0	tamak~an		OK		
+VERB.P2FS.P.E0	tamak~an		OK		
+VERB.P2D.P.E0	tamak~an		OK		
+VERB.P2MP.P.E0	tamak~an		OK		
+VERB.P2FP.P.E0	tamak~an		OK		
+VERB.P3MS.P.E0	tamak~an		OK		
+VERB.P3FS.P.E0	tamak~an		OK		
+VERB.P3MD.P.E0	tamak~an		OK		
+VERB.P3FD.P.E0	tamak~an		OK		
+VERB.P3MP.P.E0	tamak~an		OK		
+VERB.P3FP.P.E0	tamak~an		OK		
+VERB.P1S.A	baqiy-a	baqiytu	OK		
+VERB.P1P.A	baqiy-a	baqiynA	OK		
+VERB.P2MS.A	baqiy-a	baqiyta	OK		
+VERB.P2FS.A	baqiy-a	baqiyti	OK		
+VERB.P2D.A	baqiy-a	baqiytumA	OK		
+VERB.P2MP.A	baqiy-a	baqiytum	OK		
+VERB.P2FP.A	baqiy-a	baqiytun~a	OK		
+VERB.P3MS.A	baqiy-a	baqiya	OK		
+VERB.P3FS.A	baqiy-a	baqiyat	OK		
+VERB.P3MD.A	baqiy-a	baqiyA	OK		
+VERB.P3FD.A	baqiy-a	baqiyatA	OK		
+VERB.P3MP.A	baqiy-a	baquwA	OK		
+VERB.P3FP.A	baqiy-a	baqiyna	OK		
+VERB.P1S.P	baqiy-a	buqiytu	OK		
+VERB.P1P.P	baqiy-a	buqiynA	OK		
+VERB.P2MS.P	baqiy-a	buqiyta	OK		
+VERB.P2FS.P	baqiy-a	buqiyti	OK		
+VERB.P2D.P	baqiy-a	buqiytumA	OK		
+VERB.P2MP.P	baqiy-a	buqiytum	OK		
+VERB.P2FP.P	baqiy-a	buqiytun~a	OK		
+VERB.P3MS.P	baqiy-a	buqiya	OK		
+VERB.P3FS.P	baqiy-a	buqiyat	OK		
+VERB.P3MD.P	baqiy-a	buqiyA	OK		
+VERB.P3FD.P	baqiy-a	buqiyatA	OK		
+VERB.P3MP.P	baqiy-a	buquwA	OK		
+VERB.P3FP.P	baqiy-a	buqiyna	OK		
+VERB.P1S.A.E0	baqiy-a	baqiytuhu	OK		
+VERB.P1P.A.E0	baqiy-a	baqiynAhu	OK		
+VERB.P2MS.A.E0	baqiy-a	baqiytahu	OK		
+VERB.P2FS.A.E0	baqiy-a	baqiytihi	OK		
+VERB.P2D.A.E0	baqiy-a	baqiytumAhu	OK		
+VERB.P2MP.A.E0	baqiy-a	baqiytumuwhu	OK		
+VERB.P2FP.A.E0	baqiy-a	baqiytun~ahu	OK		
+VERB.P3MS.A.E0	baqiy-a	baqiyahu	OK		
+VERB.P3FS.A.E0	baqiy-a	baqiyathu	OK		
+VERB.P3MD.A.E0	baqiy-a	baqiyAhu	OK		
+VERB.P3FD.A.E0	baqiy-a	baqiyatAhu	OK		
+VERB.P3MP.A.E0	baqiy-a	baquwhu	OK		
+VERB.P3FP.A.E0	baqiy-a	baqiynahu	OK		
+VERB.P1S.P.E0	baqiy-a		OK		
+VERB.P1P.P.E0	baqiy-a		OK		
+VERB.P2MS.P.E0	baqiy-a		OK		
+VERB.P2FS.P.E0	baqiy-a		OK		
+VERB.P2D.P.E0	baqiy-a		OK		
+VERB.P2MP.P.E0	baqiy-a		OK		
+VERB.P2FP.P.E0	baqiy-a		OK		
+VERB.P3MS.P.E0	baqiy-a		OK		
+VERB.P3FS.P.E0	baqiy-a		OK		
+VERB.P3MD.P.E0	baqiy-a		OK		
+VERB.P3FD.P.E0	baqiy-a		OK		
+VERB.P3MP.P.E0	baqiy-a		OK		
+VERB.P3FP.P.E0	baqiy-a		OK		
+VERB.P1S.A	{irota>aY	Airota>aytu	OK		
+VERB.P1P.A	{irota>aY	Airota>aynA	OK		
+VERB.P2MS.A	{irota>aY	Airota>ayta	OK		
+VERB.P2FS.A	{irota>aY	Airota>ayti	OK		
+VERB.P2D.A	{irota>aY	Airota>aytumA	OK		
+VERB.P2MP.A	{irota>aY	Airota>aytum	OK		
+VERB.P2FP.A	{irota>aY	Airota>aytun~a	OK		
+VERB.P3MS.A	{irota>aY	Airota>aY	OK		
+VERB.P3FS.A	{irota>aY	Airota>at	OK		
+VERB.P3MD.A	{irota>aY	Airota>ayA	OK		
+VERB.P3FD.A	{irota>aY	Airota>atA	OK		
+VERB.P3MP.A	{irota>aY	Airota>awoA	OK		
+VERB.P3FP.A	{irota>aY	Airota>ayna	OK		
+VERB.P1S.P	{irota>aY	Aurotu}iytu	OK		
+VERB.P1P.P	{irota>aY	Aurotu}iynA	OK		
+VERB.P2MS.P	{irota>aY	Aurotu}iyta	OK		
+VERB.P2FS.P	{irota>aY	Aurotu}iyti	OK		
+VERB.P2D.P	{irota>aY	Aurotu}iytumA	OK		
+VERB.P2MP.P	{irota>aY	Aurotu}iytum	OK		
+VERB.P2FP.P	{irota>aY	Aurotu}iytun~a	OK		
+VERB.P3MS.P	{irota>aY	Aurotu}iya	OK		
+VERB.P3FS.P	{irota>aY	Aurotu}iyat	OK		
+VERB.P3MD.P	{irota>aY	Aurotu}iyA	OK		
+VERB.P3FD.P	{irota>aY	Aurotu}iyatA	OK		
+VERB.P3MP.P	{irota>aY	Aurotu&uwA	OK		
+VERB.P3FP.P	{irota>aY	Aurotu}iyna	OK		
+VERB.P1S.A.E0	{irota>aY	Airota>aytuhu	OK		
+VERB.P1P.A.E0	{irota>aY	Airota>aynAhu	OK		
+VERB.P2MS.A.E0	{irota>aY	Airota>aytahu	OK		
+VERB.P2FS.A.E0	{irota>aY	Airota>aytihi	OK		
+VERB.P2D.A.E0	{irota>aY	Airota>aytumAhu	OK		
+VERB.P2MP.A.E0	{irota>aY	Airota>aytumuwhu	OK		
+VERB.P2FP.A.E0	{irota>aY	Airota>aytun~ahu	OK		
+VERB.P3MS.A.E0	{irota>aY	Airota>aAhu	OK		
+VERB.P3FS.A.E0	{irota>aY	Airota>athu	OK		
+VERB.P3MD.A.E0	{irota>aY	Airota>ayAhu	OK		
+VERB.P3FD.A.E0	{irota>aY	Airota>atAhu	OK		
+VERB.P3MP.A.E0	{irota>aY	Airota>awohu	OK		
+VERB.P3FP.A.E0	{irota>aY	Airota>aynahu	OK		
+VERB.P1S.P.E0	{irota>aY		OK		
+VERB.P1P.P.E0	{irota>aY		OK		
+VERB.P2MS.P.E0	{irota>aY		OK		
+VERB.P2FS.P.E0	{irota>aY		OK		
+VERB.P2D.P.E0	{irota>aY		OK		
+VERB.P2MP.P.E0	{irota>aY		OK		
+VERB.P2FP.P.E0	{irota>aY		OK		
+VERB.P3MS.P.E0	{irota>aY		OK		
+VERB.P3FS.P.E0	{irota>aY		OK		
+VERB.P3MD.P.E0	{irota>aY		OK		
+VERB.P3FD.P.E0	{irota>aY		OK		
+VERB.P3MP.P.E0	{irota>aY		OK		
+VERB.P3FP.P.E0	{irota>aY		OK		
+VERB.P1S.A	daEA-u	daEawtu	OK		
+VERB.P1P.A	daEA-u	daEawnA	OK		
+VERB.P2MS.A	daEA-u	daEawta	OK		
+VERB.P2FS.A	daEA-u	daEawti	OK		
+VERB.P2D.A	daEA-u	daEawtumA	OK		
+VERB.P2MP.A	daEA-u	daEawtum	OK		
+VERB.P2FP.A	daEA-u	daEawtun~a	OK		
+VERB.P3MS.A	daEA-u	daEaA	OK		
+VERB.P3FS.A	daEA-u	daEat	OK		
+VERB.P3MD.A	daEA-u	daEawA	OK		
+VERB.P3FD.A	daEA-u	daEatA	OK		
+VERB.P3MP.A	daEA-u	daEawoA	OK		
+VERB.P3FP.A	daEA-u	daEawna	OK		
+VERB.P1S.P	daEA-u	duEiytu	OK		
+VERB.P1P.P	daEA-u	duEiynA	OK		
+VERB.P2MS.P	daEA-u	duEiyta	OK		
+VERB.P2FS.P	daEA-u	duEiyti	OK		
+VERB.P2D.P	daEA-u	duEiytumA	OK		
+VERB.P2MP.P	daEA-u	duEiytum	OK		
+VERB.P2FP.P	daEA-u	duEiytun~a	OK		
+VERB.P3MS.P	daEA-u	duEiya	OK		
+VERB.P3FS.P	daEA-u	duEiyat	OK		
+VERB.P3MD.P	daEA-u	duEiyA	OK		
+VERB.P3FD.P	daEA-u	duEiyatA	OK		
+VERB.P3MP.P	daEA-u	duEuwA	OK		
+VERB.P3FP.P	daEA-u	duEiyna	OK		
+VERB.P1S.A.E0	daEA-u	daEawtuhu	OK		
+VERB.P1P.A.E0	daEA-u	daEawnAhu	OK		
+VERB.P2MS.A.E0	daEA-u	daEawtahu	OK		
+VERB.P2FS.A.E0	daEA-u	daEawtihi	OK		
+VERB.P2D.A.E0	daEA-u	daEawtumAhu	OK		
+VERB.P2MP.A.E0	daEA-u	daEawtumuwhu	OK		
+VERB.P2FP.A.E0	daEA-u	daEawtun~ahu	OK		
+VERB.P3MS.A.E0	daEA-u	daEaAhu	OK		
+VERB.P3FS.A.E0	daEA-u	daEathu	OK		
+VERB.P3MD.A.E0	daEA-u	daEawAhu	OK		
+VERB.P3FD.A.E0	daEA-u	daEatAhu	OK		
+VERB.P3MP.A.E0	daEA-u	daEawohu	OK		
+VERB.P3FP.A.E0	daEA-u	daEawnahu	OK		
+VERB.P1S.P.E0	daEA-u		OK		
+VERB.P1P.P.E0	daEA-u		OK		
+VERB.P2MS.P.E0	daEA-u		OK		
+VERB.P2FS.P.E0	daEA-u		OK		
+VERB.P2D.P.E0	daEA-u		OK		
+VERB.P2MP.P.E0	daEA-u		OK		
+VERB.P2FP.P.E0	daEA-u		OK		
+VERB.P3MS.P.E0	daEA-u		OK		
+VERB.P3FS.P.E0	daEA-u		OK		
+VERB.P3MD.P.E0	daEA-u		OK		
+VERB.P3FD.P.E0	daEA-u		OK		
+VERB.P3MP.P.E0	daEA-u		OK		
+VERB.P3FP.P.E0	daEA-u		OK		
+VERB.P1S.A	raDiy-a	raDiytu	OK		
+VERB.P1P.A	raDiy-a	raDiynA	OK		
+VERB.P2MS.A	raDiy-a	raDiyta	OK		
+VERB.P2FS.A	raDiy-a	raDiyti	OK		
+VERB.P2D.A	raDiy-a	raDiytumA	OK		
+VERB.P2MP.A	raDiy-a	raDiytum	OK		
+VERB.P2FP.A	raDiy-a	raDiytun~a	OK		
+VERB.P3MS.A	raDiy-a	raDiya	OK		
+VERB.P3FS.A	raDiy-a	raDiyat	OK		
+VERB.P3MD.A	raDiy-a	raDiyA	OK		
+VERB.P3FD.A	raDiy-a	raDiyatA	OK		
+VERB.P3MP.A	raDiy-a	raDuwA	OK		
+VERB.P3FP.A	raDiy-a	raDiyna	OK		
+VERB.P1S.P	raDiy-a	ruDiytu	OK		
+VERB.P1P.P	raDiy-a	ruDiynA	OK		
+VERB.P2MS.P	raDiy-a	ruDiyta	OK		
+VERB.P2FS.P	raDiy-a	ruDiyti	OK		
+VERB.P2D.P	raDiy-a	ruDiytumA	OK		
+VERB.P2MP.P	raDiy-a	ruDiytum	OK		
+VERB.P2FP.P	raDiy-a	ruDiytun~a	OK		
+VERB.P3MS.P	raDiy-a	ruDiya	OK		
+VERB.P3FS.P	raDiy-a	ruDiyat	OK		
+VERB.P3MD.P	raDiy-a	ruDiyA	OK		
+VERB.P3FD.P	raDiy-a	ruDiyatA	OK		
+VERB.P3MP.P	raDiy-a	ruDuwA	OK		
+VERB.P3FP.P	raDiy-a	ruDiyna	OK		
+VERB.P1S.A.E0	raDiy-a		OK		
+VERB.P1P.A.E0	raDiy-a		OK		
+VERB.P2MS.A.E0	raDiy-a		OK		
+VERB.P2FS.A.E0	raDiy-a		OK		
+VERB.P2D.A.E0	raDiy-a		OK		
+VERB.P2MP.A.E0	raDiy-a		OK		
+VERB.P2FP.A.E0	raDiy-a		OK		
+VERB.P3MS.A.E0	raDiy-a		OK		
+VERB.P3FS.A.E0	raDiy-a		OK		
+VERB.P3MD.A.E0	raDiy-a		OK		
+VERB.P3FD.A.E0	raDiy-a		OK		
+VERB.P3MP.A.E0	raDiy-a		OK		
+VERB.P3FP.A.E0	raDiy-a		OK		
+VERB.P1S.P.E0	raDiy-a		OK		
+VERB.P1P.P.E0	raDiy-a		OK		
+VERB.P2MS.P.E0	raDiy-a		OK		
+VERB.P2FS.P.E0	raDiy-a		OK		
+VERB.P2D.P.E0	raDiy-a		OK		
+VERB.P2MP.P.E0	raDiy-a		OK		
+VERB.P2FP.P.E0	raDiy-a		OK		
+VERB.P3MS.P.E0	raDiy-a		OK		
+VERB.P3FS.P.E0	raDiy-a		OK		
+VERB.P3MD.P.E0	raDiy-a		OK		
+VERB.P3FD.P.E0	raDiy-a		OK		
+VERB.P3MP.P.E0	raDiy-a		OK		
+VERB.P3FP.P.E0	raDiy-a		OK		
+VERB.P1S.A	bat~-u	batat~u	OK		
+VERB.P1P.A	bat~-u	batatnA	OK		
+VERB.P2MS.A	bat~-u	batat~a	OK		
+VERB.P2FS.A	bat~-u	batat~i	OK		
+VERB.P2D.A	bat~-u	batat~umA	OK		
+VERB.P2MP.A	bat~-u	batat~um	OK		
+VERB.P2FP.A	bat~-u	batat~un~a	OK		
+VERB.P3MS.A	bat~-u	bat~a	OK		
+VERB.P3FS.A	bat~-u	bat~at	OK		
+VERB.P3MD.A	bat~-u	bat~A	OK		
+VERB.P3FD.A	bat~-u	bat~atA	OK		
+VERB.P3MP.A	bat~-u	bat~uwA	OK		
+VERB.P3FP.A	bat~-u	batatna	OK		
+VERB.P1S.P	bat~-u	butit~u	OK		
+VERB.P1P.P	bat~-u	butitnA	OK		
+VERB.P2MS.P	bat~-u	butit~a	OK		
+VERB.P2FS.P	bat~-u	butit~i	OK		
+VERB.P2D.P	bat~-u	butit~umA	OK		
+VERB.P2MP.P	bat~-u	butit~um	OK		
+VERB.P2FP.P	bat~-u	butit~un~a	OK		
+VERB.P3MS.P	bat~-u	but~a	OK		
+VERB.P3FS.P	bat~-u	but~at	OK		
+VERB.P3MD.P	bat~-u	but~A	OK		
+VERB.P3FD.P	bat~-u	but~atA	OK		
+VERB.P3MP.P	bat~-u	but~uwA	OK		
+VERB.P3FP.P	bat~-u	butitna	OK		
+VERB.P1S.A.E0	bat~-u	batat~uhu	OK		
+VERB.P1P.A.E0	bat~-u	batatnAhu	OK		
+VERB.P2MS.A.E0	bat~-u	batat~ahu	OK		
+VERB.P2FS.A.E0	bat~-u	batat~ihi	OK		
+VERB.P2D.A.E0	bat~-u	batat~umAhu	OK		
+VERB.P2MP.A.E0	bat~-u	batat~umuwhu	OK		
+VERB.P2FP.A.E0	bat~-u	batat~un~ahu	OK		
+VERB.P3MS.A.E0	bat~-u	bat~ahu	OK		
+VERB.P3FS.A.E0	bat~-u	bat~athu	OK		
+VERB.P3MD.A.E0	bat~-u	bat~Ahu	OK		
+VERB.P3FD.A.E0	bat~-u	bat~atAhu	OK		
+VERB.P3MP.A.E0	bat~-u	bat~uwhu	OK		
+VERB.P3FP.A.E0	bat~-u	batatnahu	OK		
+VERB.P1S.P.E0	bat~-u		OK		
+VERB.P1P.P.E0	bat~-u		OK		
+VERB.P2MS.P.E0	bat~-u		OK		
+VERB.P2FS.P.E0	bat~-u		OK		
+VERB.P2D.P.E0	bat~-u		OK		
+VERB.P2MP.P.E0	bat~-u		OK		
+VERB.P2FP.P.E0	bat~-u		OK		
+VERB.P3MS.P.E0	bat~-u		OK		
+VERB.P3FS.P.E0	bat~-u		OK		
+VERB.P3MD.P.E0	bat~-u		OK		
+VERB.P3FD.P.E0	bat~-u		OK		
+VERB.P3MP.P.E0	bat~-u		OK		
+VERB.P3FP.P.E0	bat~-u		OK		
+VERB.P1S.A	>aEAn	>aEantu	OK		
+VERB.P1P.A	>aEAn	>aEan~A	OK		
+VERB.P2MS.A	>aEAn	>aEanta	OK		
+VERB.P2FS.A	>aEAn	>aEanti	OK		
+VERB.P2D.A	>aEAn	>aEantumA	OK		
+VERB.P2MP.A	>aEAn	>aEantum	OK		
+VERB.P2FP.A	>aEAn	>aEantun~a	OK		
+VERB.P3MS.A	>aEAn	>aEAna	OK		
+VERB.P3FS.A	>aEAn	>aEAnat	OK		
+VERB.P3MD.A	>aEAn	>aEAnA	OK		
+VERB.P3FD.A	>aEAn	>aEAnatA	OK		
+VERB.P3MP.A	>aEAn	>aEAnuwA	OK		
+VERB.P3FP.A	>aEAn	>aEan~a	OK		
+VERB.P1S.P	>aEAn	>uEintu	OK		
+VERB.P1P.P	>aEAn	>uEin~A	OK		
+VERB.P2MS.P	>aEAn	>uEinta	OK		
+VERB.P2FS.P	>aEAn	>uEinti	OK		
+VERB.P2D.P	>aEAn	>uEintumA	OK		
+VERB.P2MP.P	>aEAn	>uEintum	OK		
+VERB.P2FP.P	>aEAn	>uEintun~a	OK		
+VERB.P3MS.P	>aEAn	>uEiyna	OK		
+VERB.P3FS.P	>aEAn	>uEiynat	OK		
+VERB.P3MD.P	>aEAn	>uEiynA	OK		
+VERB.P3FD.P	>aEAn	>uEiynatA	OK		
+VERB.P3MP.P	>aEAn	>uEiynuwA	OK		
+VERB.P3FP.P	>aEAn	>uEin~a	OK		
+VERB.P1S.A.E0	>aEAn		OK		
+VERB.P1P.A.E0	>aEAn		OK		
+VERB.P2MS.A.E0	>aEAn		OK		
+VERB.P2FS.A.E0	>aEAn		OK		
+VERB.P2D.A.E0	>aEAn		OK		
+VERB.P2MP.A.E0	>aEAn		OK		
+VERB.P2FP.A.E0	>aEAn		OK		
+VERB.P3MS.A.E0	>aEAn		OK		
+VERB.P3FS.A.E0	>aEAn		OK		
+VERB.P3MD.A.E0	>aEAn		OK		
+VERB.P3FD.A.E0	>aEAn		OK		
+VERB.P3MP.A.E0	>aEAn		OK		
+VERB.P3FP.A.E0	>aEAn		OK		
+VERB.P1S.P.E0	>aEAn		OK		
+VERB.P1P.P.E0	>aEAn		OK		
+VERB.P2MS.P.E0	>aEAn		OK		
+VERB.P2FS.P.E0	>aEAn		OK		
+VERB.P2D.P.E0	>aEAn		OK		
+VERB.P2MP.P.E0	>aEAn		OK		
+VERB.P2FP.P.E0	>aEAn		OK		
+VERB.P3MS.P.E0	>aEAn		OK		
+VERB.P3FS.P.E0	>aEAn		OK		
+VERB.P3MD.P.E0	>aEAn		OK		
+VERB.P3FD.P.E0	>aEAn		OK		
+VERB.P3MP.P.E0	>aEAn		OK		
+VERB.P3FP.P.E0	>aEAn		OK		
+VERB.P1S.A	>amAt	>amat~u	OK		
+VERB.P1P.A	>amAt	>amatnA	OK		
+VERB.P2MS.A	>amAt	>amat~a	OK		
+VERB.P2FS.A	>amAt	>amat~i	OK		
+VERB.P2D.A	>amAt	>amat~umA	OK		
+VERB.P2MP.A	>amAt	>amat~um	OK		
+VERB.P2FP.A	>amAt	>amat~un~a	OK		
+VERB.P3MS.A	>amAt	>amAta	OK		
+VERB.P3FS.A	>amAt	>amAtat	OK		
+VERB.P3MD.A	>amAt	>amAtA	OK		
+VERB.P3FD.A	>amAt	>amAtatA	OK		
+VERB.P3MP.A	>amAt	>amAtuwA	OK		
+VERB.P3FP.A	>amAt	>amatna	OK		
+VERB.P1S.P	>amAt	>umit~u	OK		
+VERB.P1P.P	>amAt	>umitnA	OK		
+VERB.P2MS.P	>amAt	>umit~a	OK		
+VERB.P2FS.P	>amAt	>umit~i	OK		
+VERB.P2D.P	>amAt	>umit~umA	OK		
+VERB.P2MP.P	>amAt	>umit~um	OK		
+VERB.P2FP.P	>amAt	>umit~un~a	OK		
+VERB.P3MS.P	>amAt	>umiyta	OK		
+VERB.P3FS.P	>amAt	>umiytat	OK		
+VERB.P3MD.P	>amAt	>umiytA	OK		
+VERB.P3FD.P	>amAt	>umiytatA	OK		
+VERB.P3MP.P	>amAt	>umiytuwA	OK		
+VERB.P3FP.P	>amAt	>umitna	OK		
+VERB.P1S.A.E0	>amAt		OK		
+VERB.P1P.A.E0	>amAt		OK		
+VERB.P2MS.A.E0	>amAt		OK		
+VERB.P2FS.A.E0	>amAt		OK		
+VERB.P2D.A.E0	>amAt		OK		
+VERB.P2MP.A.E0	>amAt		OK		
+VERB.P2FP.A.E0	>amAt		OK		
+VERB.P3MS.A.E0	>amAt		OK		
+VERB.P3FS.A.E0	>amAt		OK		
+VERB.P3MD.A.E0	>amAt		OK		
+VERB.P3FD.A.E0	>amAt		OK		
+VERB.P3MP.A.E0	>amAt		OK		
+VERB.P3FP.A.E0	>amAt		OK		
+VERB.P1S.P.E0	>amAt		OK		
+VERB.P1P.P.E0	>amAt		OK		
+VERB.P2MS.P.E0	>amAt		OK		
+VERB.P2FS.P.E0	>amAt		OK		
+VERB.P2D.P.E0	>amAt		OK		
+VERB.P2MP.P.E0	>amAt		OK		
+VERB.P2FP.P.E0	>amAt		OK		
+VERB.P3MS.P.E0	>amAt		OK		
+VERB.P3FS.P.E0	>amAt		OK		
+VERB.P3MD.P.E0	>amAt		OK		
+VERB.P3FD.P.E0	>amAt		OK		
+VERB.P3MP.P.E0	>amAt		OK		
+VERB.P3FP.P.E0	>amAt		OK		
+VERB.P1S.A	Tara>-a	Tara>tu	OK		
+VERB.P1P.A	Tara>-a	Tara>nA	OK		
+VERB.P2MS.A	Tara>-a	Tara>ta	OK		
+VERB.P2FS.A	Tara>-a	Tara>ti	OK		
+VERB.P2D.A	Tara>-a	Tara>tumA	OK		
+VERB.P2MP.A	Tara>-a	Tara>tum	OK		
+VERB.P2FP.A	Tara>-a	Tara>tun~a	OK		
+VERB.P3MS.A	Tara>-a	Tara>a	OK		
+VERB.P3FS.A	Tara>-a	Tara>at	OK		
+VERB.P3MD.A	Tara>-a	Tara|	OK		
+VERB.P3FD.A	Tara>-a	Tara>atA	OK		
+VERB.P3MP.A	Tara>-a	Tara&uwA	OK		
+VERB.P3FP.A	Tara>-a	Tara>na	OK		
+VERB.P1S.P	Tara>-a	Turi}tu	OK		
+VERB.P1P.P	Tara>-a	Turi}nA	OK		
+VERB.P2MS.P	Tara>-a	Turi}ta	OK		
+VERB.P2FS.P	Tara>-a	Turi}ti	OK		
+VERB.P2D.P	Tara>-a	Turi}tumA	OK		
+VERB.P2MP.P	Tara>-a	Turi}tum	OK		
+VERB.P2FP.P	Tara>-a	Turi}tun~a	OK		
+VERB.P3MS.P	Tara>-a	Turi}a	OK		
+VERB.P3FS.P	Tara>-a	Turi}at	OK		
+VERB.P3MD.P	Tara>-a	Turi}A	OK		
+VERB.P3FD.P	Tara>-a	Turi}atA	OK		
+VERB.P3MP.P	Tara>-a	Turi}uwA	OK		
+VERB.P3FP.P	Tara>-a	Turi}na	OK		
+VERB.P1S.A.E0	Tara>-a		OK		
+VERB.P1P.A.E0	Tara>-a		OK		
+VERB.P2MS.A.E0	Tara>-a		OK		
+VERB.P2FS.A.E0	Tara>-a		OK		
+VERB.P2D.A.E0	Tara>-a		OK		
+VERB.P2MP.A.E0	Tara>-a		OK		
+VERB.P2FP.A.E0	Tara>-a		OK		
+VERB.P3MS.A.E0	Tara>-a		OK		
+VERB.P3FS.A.E0	Tara>-a		OK		
+VERB.P3MD.A.E0	Tara>-a		OK		
+VERB.P3FD.A.E0	Tara>-a		OK		
+VERB.P3MP.A.E0	Tara>-a		OK		
+VERB.P3FP.A.E0	Tara>-a		OK		
+VERB.P1S.P.E0	Tara>-a		OK		
+VERB.P1P.P.E0	Tara>-a		OK		
+VERB.P2MS.P.E0	Tara>-a		OK		
+VERB.P2FS.P.E0	Tara>-a		OK		
+VERB.P2D.P.E0	Tara>-a		OK		
+VERB.P2MP.P.E0	Tara>-a		OK		
+VERB.P2FP.P.E0	Tara>-a		OK		
+VERB.P3MS.P.E0	Tara>-a		OK		
+VERB.P3FS.P.E0	Tara>-a		OK		
+VERB.P3MD.P.E0	Tara>-a		OK		
+VERB.P3FD.P.E0	Tara>-a		OK		
+VERB.P3MP.P.E0	Tara>-a		OK		
+VERB.P3FP.P.E0	Tara>-a		OK		
+VERB.P1S.A	{isotA'	Aisota>tu	OK		
+VERB.P1P.A	{isotA'	Aisota>nA	OK		
+VERB.P2MS.A	{isotA'	Aisota>ta	OK		
+VERB.P2FS.A	{isotA'	Aisota>ti	OK		
+VERB.P2D.A	{isotA'	Aisota>tumA	OK		
+VERB.P2MP.A	{isotA'	Aisota>tum	OK		
+VERB.P2FP.A	{isotA'	Aisota>tun~a	OK		
+VERB.P3MS.A	{isotA'	AisotA'a	OK		
+VERB.P3FS.A	{isotA'	AisotA'at	OK		
+VERB.P3MD.A	{isotA'	AisotA'A	OK		
+VERB.P3FD.A	{isotA'	AisotA'atA	OK		
+VERB.P3MP.A	{isotA'	AisotA&uwA	OK		
+VERB.P3FP.A	{isotA'	Aisota>na	OK		
+VERB.P1S.P	{isotA'	Ausoti}tu	OK		
+VERB.P1P.P	{isotA'	Ausoti}nA	OK		
+VERB.P2MS.P	{isotA'	Ausoti}ta	OK		
+VERB.P2FS.P	{isotA'	Ausoti}ti	OK		
+VERB.P2D.P	{isotA'	Ausoti}tumA	OK		
+VERB.P2MP.P	{isotA'	Ausoti}tum	OK		
+VERB.P2FP.P	{isotA'	Ausoti}tun~a	OK		
+VERB.P3MS.P	{isotA'	Ausotiy'a	OK		
+VERB.P3FS.P	{isotA'	Ausotiy}at	OK		
+VERB.P3MD.P	{isotA'	Ausotiy}A	OK		
+VERB.P3FD.P	{isotA'	Ausotiy}atA	OK		
+VERB.P3MP.P	{isotA'	Ausotiy}uwA	OK		
+VERB.P3FP.P	{isotA'	Ausoti}na	OK		
+VERB.P1S.A.E0	{isotA'		OK		
+VERB.P1P.A.E0	{isotA'		OK		
+VERB.P2MS.A.E0	{isotA'		OK		
+VERB.P2FS.A.E0	{isotA'		OK		
+VERB.P2D.A.E0	{isotA'		OK		
+VERB.P2MP.A.E0	{isotA'		OK		
+VERB.P2FP.A.E0	{isotA'		OK		
+VERB.P3MS.A.E0	{isotA'		OK		
+VERB.P3FS.A.E0	{isotA'		OK		
+VERB.P3MD.A.E0	{isotA'		OK		
+VERB.P3FD.A.E0	{isotA'		OK		
+VERB.P3MP.A.E0	{isotA'		OK		
+VERB.P3FP.A.E0	{isotA'		OK		
+VERB.P1S.P.E0	{isotA'		OK		
+VERB.P1P.P.E0	{isotA'		OK		
+VERB.P2MS.P.E0	{isotA'		OK		
+VERB.P2FS.P.E0	{isotA'		OK		
+VERB.P2D.P.E0	{isotA'		OK		
+VERB.P2MP.P.E0	{isotA'		OK		
+VERB.P2FP.P.E0	{isotA'		OK		
+VERB.P3MS.P.E0	{isotA'		OK		
+VERB.P3FS.P.E0	{isotA'		OK		
+VERB.P3MD.P.E0	{isotA'		OK		
+VERB.P3FD.P.E0	{isotA'		OK		
+VERB.P3MP.P.E0	{isotA'		OK		
+VERB.P3FP.P.E0	{isotA'		OK		
+VERB.P1S.A	{iToma>an~	AiToma>onantu	OK		
+VERB.P1P.A	{iToma>an~	AiToma>onan~A	OK		
+VERB.P2MS.A	{iToma>an~	AiToma>onanta	OK		
+VERB.P2FS.A	{iToma>an~	AiToma>onanti	OK		
+VERB.P2D.A	{iToma>an~	AiToma>onantumA	OK		
+VERB.P2MP.A	{iToma>an~	AiToma>onantum	OK		
+VERB.P2FP.A	{iToma>an~	AiToma>onantun~a	OK		
+VERB.P3MS.A	{iToma>an~	AiToma>an~a	OK		
+VERB.P3FS.A	{iToma>an~	AiToma>an~at	OK		
+VERB.P3MD.A	{iToma>an~	AiToma>an~A	OK		
+VERB.P3FD.A	{iToma>an~	AiToma>an~atA	OK		
+VERB.P3MP.A	{iToma>an~	AiToma>an~uwA	OK		
+VERB.P3FP.A	{iToma>an~	AiToma>onan~a	OK		
+VERB.P1S.P	{iToma>an~	AuTomu&onintu	OK		
+VERB.P1P.P	{iToma>an~	AuTomu&onin~A	OK		
+VERB.P2MS.P	{iToma>an~	AuTomu&oninta	OK		
+VERB.P2FS.P	{iToma>an~	AuTomu&oninti	OK		
+VERB.P2D.P	{iToma>an~	AuTomu&onintumA	OK		
+VERB.P2MP.P	{iToma>an~	AuTomu&onintum	OK		
+VERB.P2FP.P	{iToma>an~	AuTomu&onintun~a	OK		
+VERB.P3MS.P	{iToma>an~	AuTomu&in~a	OK		
+VERB.P3FS.P	{iToma>an~	AuTomu&in~at	OK		
+VERB.P3MD.P	{iToma>an~	AuTomu&in~A	OK		
+VERB.P3FD.P	{iToma>an~	AuTomu&in~atA	OK		
+VERB.P3MP.P	{iToma>an~	AuTomu&in~uwA	OK		
+VERB.P3FP.P	{iToma>an~	AuTomu&onin~a	OK		
+VERB.P1S.A.E0	{iToma>an~		OK		
+VERB.P1P.A.E0	{iToma>an~		OK		
+VERB.P2MS.A.E0	{iToma>an~		OK		
+VERB.P2FS.A.E0	{iToma>an~		OK		
+VERB.P2D.A.E0	{iToma>an~		OK		
+VERB.P2MP.A.E0	{iToma>an~		OK		
+VERB.P2FP.A.E0	{iToma>an~		OK		
+VERB.P3MS.A.E0	{iToma>an~		OK		
+VERB.P3FS.A.E0	{iToma>an~		OK		
+VERB.P3MD.A.E0	{iToma>an~		OK		
+VERB.P3FD.A.E0	{iToma>an~		OK		
+VERB.P3MP.A.E0	{iToma>an~		OK		
+VERB.P3FP.A.E0	{iToma>an~		OK		
+VERB.P1S.P.E0	{iToma>an~		OK		
+VERB.P1P.P.E0	{iToma>an~		OK		
+VERB.P2MS.P.E0	{iToma>an~		OK		
+VERB.P2FS.P.E0	{iToma>an~		OK		
+VERB.P2D.P.E0	{iToma>an~		OK		
+VERB.P2MP.P.E0	{iToma>an~		OK		
+VERB.P2FP.P.E0	{iToma>an~		OK		
+VERB.P3MS.P.E0	{iToma>an~		OK		
+VERB.P3FS.P.E0	{iToma>an~		OK		
+VERB.P3MD.P.E0	{iToma>an~		OK		
+VERB.P3FD.P.E0	{iToma>an~		OK		
+VERB.P3MP.P.E0	{iToma>an~		OK		
+VERB.P3FP.P.E0	{iToma>an~		OK		
+VERB.P1S.A	mat~-u	matat~u	OK		
+VERB.P1P.A	mat~-u	matatnA	OK		
+VERB.P2MS.A	mat~-u	matat~a	OK		
+VERB.P2FS.A	mat~-u	matat~i	OK		
+VERB.P2D.A	mat~-u	matat~umA	OK		
+VERB.P2MP.A	mat~-u	matat~um	OK		
+VERB.P2FP.A	mat~-u	matat~un~a	OK		
+VERB.P3MS.A	mat~-u	mat~a	OK		
+VERB.P3FS.A	mat~-u	mat~at	OK		
+VERB.P3MD.A	mat~-u	mat~A	OK		
+VERB.P3FD.A	mat~-u	mat~atA	OK		
+VERB.P3MP.A	mat~-u	mat~uwA	OK		
+VERB.P3FP.A	mat~-u	matatna	OK		
+VERB.P1S.P	mat~-u	mutit~u	OK		
+VERB.P1P.P	mat~-u	mutitnA	OK		
+VERB.P2MS.P	mat~-u	mutit~a	OK		
+VERB.P2FS.P	mat~-u	mutit~i	OK		
+VERB.P2D.P	mat~-u	mutit~umA	OK		
+VERB.P2MP.P	mat~-u	mutit~um	OK		
+VERB.P2FP.P	mat~-u	mutit~un~a	OK		
+VERB.P3MS.P	mat~-u	mut~a	OK		
+VERB.P3FS.P	mat~-u	mut~at	OK		
+VERB.P3MD.P	mat~-u	mut~A	OK		
+VERB.P3FD.P	mat~-u	mut~atA	OK		
+VERB.P3MP.P	mat~-u	mut~uwA	OK		
+VERB.P3FP.P	mat~-u	mutitna	OK		
+VERB.P1S.A.E0	mat~-u		OK		
+VERB.P1P.A.E0	mat~-u		OK		
+VERB.P2MS.A.E0	mat~-u		OK		
+VERB.P2FS.A.E0	mat~-u		OK		
+VERB.P2D.A.E0	mat~-u		OK		
+VERB.P2MP.A.E0	mat~-u		OK		
+VERB.P2FP.A.E0	mat~-u		OK		
+VERB.P3MS.A.E0	mat~-u		OK		
+VERB.P3FS.A.E0	mat~-u		OK		
+VERB.P3MD.A.E0	mat~-u		OK		
+VERB.P3FD.A.E0	mat~-u		OK		
+VERB.P3MP.A.E0	mat~-u		OK		
+VERB.P3FP.A.E0	mat~-u		OK		
+VERB.P1S.P.E0	mat~-u		OK		
+VERB.P1P.P.E0	mat~-u		OK		
+VERB.P2MS.P.E0	mat~-u		OK		
+VERB.P2FS.P.E0	mat~-u		OK		
+VERB.P2D.P.E0	mat~-u		OK		
+VERB.P2MP.P.E0	mat~-u		OK		
+VERB.P2FP.P.E0	mat~-u		OK		
+VERB.P3MS.P.E0	mat~-u		OK		
+VERB.P3FS.P.E0	mat~-u		OK		
+VERB.P3MD.P.E0	mat~-u		OK		
+VERB.P3FD.P.E0	mat~-u		OK		
+VERB.P3MP.P.E0	mat~-u		OK		
+VERB.P3FP.P.E0	mat~-u		OK		
+VERB.P1S.A	jA'	ji}tu	OK		
+VERB.P1P.A	jA'	ji}nA	OK		
+VERB.P2MS.A	jA'	ji}ta	OK		
+VERB.P2FS.A	jA'	ji}ti	OK		
+VERB.P2D.A	jA'	ji}tumA	OK		
+VERB.P2MP.A	jA'	ji}tum	OK		
+VERB.P2FP.A	jA'	ji}tun~a	OK		
+VERB.P3MS.A	jA'	jA'a	OK		
+VERB.P3FS.A	jA'	jA'at	OK		
+VERB.P3MD.A	jA'	jA'A	OK		
+VERB.P3FD.A	jA'	jA'atA	OK		
+VERB.P3MP.A	jA'	jA&uwA	OK		
+VERB.P3FP.A	jA'	ji}na	OK		
+VERB.P1S.P	jA'	ji}tu	OK		
+VERB.P1P.P	jA'	ji}nA	OK		
+VERB.P2MS.P	jA'	ji}ta	OK		
+VERB.P2FS.P	jA'	ji}ti	OK		
+VERB.P2D.P	jA'	ji}tumA	OK		
+VERB.P2MP.P	jA'	ji}tum	OK		
+VERB.P2FP.P	jA'	ji}tun~a	OK		
+VERB.P3MS.P	jA'	jiy'a	OK		
+VERB.P3FS.P	jA'	jiy}at	OK		
+VERB.P3MD.P	jA'	jiy}A	OK		
+VERB.P3FD.P	jA'	jiy}atA	OK		
+VERB.P3MP.P	jA'	jiy}uwA	OK		
+VERB.P3FP.P	jA'	ji}na	OK		
+VERB.P1S.A.E0	jA'	ji}tuhu	OK		
+VERB.P1P.A.E0	jA'	ji}nAhu	OK		
+VERB.P2MS.A.E0	jA'	ji}tahu	OK		
+VERB.P2FS.A.E0	jA'	ji}tihi	OK		
+VERB.P2D.A.E0	jA'	ji}tumAhu	OK		
+VERB.P2MP.A.E0	jA'	ji}tumuwhu	OK		
+VERB.P2FP.A.E0	jA'	ji}tun~ahu	OK		
+VERB.P3MS.A.E0	jA'	jA'ahu	OK		
+VERB.P3FS.A.E0	jA'	jA'athu	OK		
+VERB.P3MD.A.E0	jA'	jA'Ahu	OK		
+VERB.P3FD.A.E0	jA'	jA'atAhu	OK		
+VERB.P3MP.A.E0	jA'	jA&uwhu	OK		
+VERB.P3FP.A.E0	jA'	ji}nahu	OK		
+VERB.P1S.P.E0	jA'		OK		
+VERB.P1P.P.E0	jA'		OK		
+VERB.P2MS.P.E0	jA'		OK		
+VERB.P2FS.P.E0	jA'		OK		
+VERB.P2D.P.E0	jA'		OK		
+VERB.P2MP.P.E0	jA'		OK		
+VERB.P2FP.P.E0	jA'		OK		
+VERB.P3MS.P.E0	jA'		OK		
+VERB.P3FS.P.E0	jA'		OK		
+VERB.P3MD.P.E0	jA'		OK		
+VERB.P3FD.P.E0	jA'		OK		
+VERB.P3MP.P.E0	jA'		OK		
+VERB.P3FP.P.E0	jA'		OK		
+VERB.P1S.A	xalA-u	xalawtu	OK		
+VERB.P1P.A	xalA-u	xalawnA	OK		
+VERB.P2MS.A	xalA-u	xalawta	OK		
+VERB.P2FS.A	xalA-u	xalawti	OK		
+VERB.P2D.A	xalA-u	xalawtumA	OK		
+VERB.P2MP.A	xalA-u	xalawtum	OK		
+VERB.P2FP.A	xalA-u	xalawtun~a	OK		
+VERB.P3MS.A	xalA-u	xalaA	OK		
+VERB.P3FS.A	xalA-u	xalat	OK		
+VERB.P3MD.A	xalA-u	xalawA	OK		
+VERB.P3FD.A	xalA-u	xalatA	OK		
+VERB.P3MP.A	xalA-u	xalawoA	OK		
+VERB.P3FP.A	xalA-u	xalawna	OK		
+VERB.P1S.P	xalA-u	xuliytu	OK		
+VERB.P1P.P	xalA-u	xuliynA	OK		
+VERB.P2MS.P	xalA-u	xuliyta	OK		
+VERB.P2FS.P	xalA-u	xuliyti	OK		
+VERB.P2D.P	xalA-u	xuliytumA	OK		
+VERB.P2MP.P	xalA-u	xuliytum	OK		
+VERB.P2FP.P	xalA-u	xuliytun~a	OK		
+VERB.P3MS.P	xalA-u	xuliya	OK		
+VERB.P3FS.P	xalA-u	xuliyat	OK		
+VERB.P3MD.P	xalA-u	xuliyA	OK		
+VERB.P3FD.P	xalA-u	xuliyatA	OK		
+VERB.P3MP.P	xalA-u	xuluwA	OK		
+VERB.P3FP.P	xalA-u	xuliyna	OK		
+VERB.P1S.A.E0	xalA-u		OK		
+VERB.P1P.A.E0	xalA-u		OK		
+VERB.P2MS.A.E0	xalA-u		OK		
+VERB.P2FS.A.E0	xalA-u		OK		
+VERB.P2D.A.E0	xalA-u		OK		
+VERB.P2MP.A.E0	xalA-u		OK		
+VERB.P2FP.A.E0	xalA-u		OK		
+VERB.P3MS.A.E0	xalA-u		OK		
+VERB.P3FS.A.E0	xalA-u		OK		
+VERB.P3MD.A.E0	xalA-u		OK		
+VERB.P3FD.A.E0	xalA-u		OK		
+VERB.P3MP.A.E0	xalA-u		OK		
+VERB.P3FP.A.E0	xalA-u		OK		
+VERB.P1S.P.E0	xalA-u		OK		
+VERB.P1P.P.E0	xalA-u		OK		
+VERB.P2MS.P.E0	xalA-u		OK		
+VERB.P2FS.P.E0	xalA-u		OK		
+VERB.P2D.P.E0	xalA-u		OK		
+VERB.P2MP.P.E0	xalA-u		OK		
+VERB.P2FP.P.E0	xalA-u		OK		
+VERB.P3MS.P.E0	xalA-u		OK		
+VERB.P3FS.P.E0	xalA-u		OK		
+VERB.P3MD.P.E0	xalA-u		OK		
+VERB.P3FD.P.E0	xalA-u		OK		
+VERB.P3MP.P.E0	xalA-u		OK		
+VERB.P3FP.P.E0	xalA-u		OK		
+VERB.P1S.A	HA$A	HA$aytu	OK		
+VERB.P1P.A	HA$A	HA$aynA	OK		
+VERB.P2MS.A	HA$A	HA$ayta	OK		
+VERB.P2FS.A	HA$A	HA$ayti	OK		
+VERB.P2D.A	HA$A	HA$aytumA	OK		
+VERB.P2MP.A	HA$A	HA$aytum	OK		
+VERB.P2FP.A	HA$A	HA$aytun~a	OK		
+VERB.P3MS.A	HA$A	HA$aA	OK		
+VERB.P3FS.A	HA$A	HA$at	OK		
+VERB.P3MD.A	HA$A	HA$ayA	OK		
+VERB.P3FD.A	HA$A	HA$atA	OK		
+VERB.P3MP.A	HA$A	HA$awoA	OK		
+VERB.P3FP.A	HA$A	HA$ayna	OK		
+VERB.P1S.P	HA$A		OK		
+VERB.P1P.P	HA$A		OK		
+VERB.P2MS.P	HA$A		OK		
+VERB.P2FS.P	HA$A		OK		
+VERB.P2D.P	HA$A		OK		
+VERB.P2MP.P	HA$A		OK		
+VERB.P2FP.P	HA$A		OK		
+VERB.P3MS.P	HA$A		OK		
+VERB.P3FS.P	HA$A		OK		
+VERB.P3MD.P	HA$A		OK		
+VERB.P3FD.P	HA$A		OK		
+VERB.P3MP.P	HA$A		OK		
+VERB.P3FP.P	HA$A		OK		
+VERB.P1S.A.E0	HA$A	HA$aytuhu	OK		
+VERB.P1P.A.E0	HA$A	HA$aynAhu	OK		
+VERB.P2MS.A.E0	HA$A	HA$aytahu	OK		
+VERB.P2FS.A.E0	HA$A	HA$aytihi	OK		
+VERB.P2D.A.E0	HA$A	HA$aytumAhu	OK		
+VERB.P2MP.A.E0	HA$A	HA$aytumuwhu	OK		
+VERB.P2FP.A.E0	HA$A	HA$aytun~ahu	OK		
+VERB.P3MS.A.E0	HA$A	HA$aAhu	OK		
+VERB.P3FS.A.E0	HA$A	HA$athu	OK		
+VERB.P3MD.A.E0	HA$A	HA$ayAhu	OK		
+VERB.P3FD.A.E0	HA$A	HA$atAhu	OK		
+VERB.P3MP.A.E0	HA$A	HA$awohu	OK		
+VERB.P3FP.A.E0	HA$A	HA$aynahu	OK		
+VERB.P1S.P.E0	HA$A		OK		
+VERB.P1P.P.E0	HA$A		OK		
+VERB.P2MS.P.E0	HA$A		OK		
+VERB.P2FS.P.E0	HA$A		OK		
+VERB.P2D.P.E0	HA$A		OK		
+VERB.P2MP.P.E0	HA$A		OK		
+VERB.P2FP.P.E0	HA$A		OK		
+VERB.P3MS.P.E0	HA$A		OK		
+VERB.P3FS.P.E0	HA$A		OK		
+VERB.P3MD.P.E0	HA$A		OK		
+VERB.P3FD.P.E0	HA$A		OK		
+VERB.P3MP.P.E0	HA$A		OK		
+VERB.P3FP.P.E0	HA$A		OK		
+VERB.P1S.A	qar~-a	qarartu	OK		
+VERB.P1P.A	qar~-a	qararnA	OK		
+VERB.P2MS.A	qar~-a	qararta	OK		
+VERB.P2FS.A	qar~-a	qararti	OK		
+VERB.P2D.A	qar~-a	qarartumA	OK		
+VERB.P2MP.A	qar~-a	qarartum	OK		
+VERB.P2FP.A	qar~-a	qarartun~a	OK		
+VERB.P3MS.A	qar~-a	qar~a	OK		
+VERB.P3FS.A	qar~-a	qar~at	OK		
+VERB.P3MD.A	qar~-a	qar~A	OK		
+VERB.P3FD.A	qar~-a	qar~atA	OK		
+VERB.P3MP.A	qar~-a	qar~uwA	OK		
+VERB.P3FP.A	qar~-a	qararna	OK		
+VERB.P1S.P	qar~-a	qurirtu	OK		
+VERB.P1P.P	qar~-a	qurirnA	OK		
+VERB.P2MS.P	qar~-a	qurirta	OK		
+VERB.P2FS.P	qar~-a	qurirti	OK		
+VERB.P2D.P	qar~-a	qurirtumA	OK		
+VERB.P2MP.P	qar~-a	qurirtum	OK		
+VERB.P2FP.P	qar~-a	qurirtun~a	OK		
+VERB.P3MS.P	qar~-a	qur~a	OK		
+VERB.P3FS.P	qar~-a	qur~at	OK		
+VERB.P3MD.P	qar~-a	qur~A	OK		
+VERB.P3FD.P	qar~-a	qur~atA	OK		
+VERB.P3MP.P	qar~-a	qur~uwA	OK		
+VERB.P3FP.P	qar~-a	qurirna	OK		
+VERB.P1S.A.E0	qar~-a	qarartuhu	OK		
+VERB.P1P.A.E0	qar~-a	qararnAhu	OK		
+VERB.P2MS.A.E0	qar~-a	qarartahu	OK		
+VERB.P2FS.A.E0	qar~-a	qarartihi	OK		
+VERB.P2D.A.E0	qar~-a	qarartumAhu	OK		
+VERB.P2MP.A.E0	qar~-a	qarartumuwhu	OK		
+VERB.P2FP.A.E0	qar~-a	qarartun~ahu	OK		
+VERB.P3MS.A.E0	qar~-a	qar~ahu	OK		
+VERB.P3FS.A.E0	qar~-a	qar~athu	OK		
+VERB.P3MD.A.E0	qar~-a	qar~Ahu	OK		
+VERB.P3FD.A.E0	qar~-a	qar~atAhu	OK		
+VERB.P3MP.A.E0	qar~-a	qar~uwhu	OK		
+VERB.P3FP.A.E0	qar~-a	qararnahu	OK		
+VERB.P1S.P.E0	qar~-a		OK		
+VERB.P1P.P.E0	qar~-a		OK		
+VERB.P2MS.P.E0	qar~-a		OK		
+VERB.P2FS.P.E0	qar~-a		OK		
+VERB.P2D.P.E0	qar~-a		OK		
+VERB.P2MP.P.E0	qar~-a		OK		
+VERB.P2FP.P.E0	qar~-a		OK		
+VERB.P3MS.P.E0	qar~-a		OK		
+VERB.P3FS.P.E0	qar~-a		OK		
+VERB.P3MD.P.E0	qar~-a		OK		
+VERB.P3FD.P.E0	qar~-a		OK		
+VERB.P3MP.P.E0	qar~-a		OK		
+VERB.P3FP.P.E0	qar~-a		OK		
+VERB.P1S.A	Hay~A	Hay~aytu	OK		
+VERB.P1P.A	Hay~A	Hay~aynA	OK		
+VERB.P2MS.A	Hay~A	Hay~ayta	OK		
+VERB.P2FS.A	Hay~A	Hay~ayti	OK		
+VERB.P2D.A	Hay~A	Hay~aytumA	OK		
+VERB.P2MP.A	Hay~A	Hay~aytum	OK		
+VERB.P2FP.A	Hay~A	Hay~aytun~a	OK		
+VERB.P3MS.A	Hay~A	Hay~aA	OK		
+VERB.P3FS.A	Hay~A	Hay~at	OK		
+VERB.P3MD.A	Hay~A	Hay~ayA	OK		
+VERB.P3FD.A	Hay~A	Hay~atA	OK		
+VERB.P3MP.A	Hay~A	Hay~awoA	OK		
+VERB.P3FP.A	Hay~A	Hay~ayna	OK		
+VERB.P1S.P	Hay~A	Huy~iytu	OK		
+VERB.P1P.P	Hay~A	Huy~iynA	OK		
+VERB.P2MS.P	Hay~A	Huy~iyta	OK		
+VERB.P2FS.P	Hay~A	Huy~iyti	OK		
+VERB.P2D.P	Hay~A	Huy~iytumA	OK		
+VERB.P2MP.P	Hay~A	Huy~iytum	OK		
+VERB.P2FP.P	Hay~A	Huy~iytun~a	OK		
+VERB.P3MS.P	Hay~A	Huy~iya	OK		
+VERB.P3FS.P	Hay~A	Huy~iyat	OK		
+VERB.P3MD.P	Hay~A	Huy~iyA	OK		
+VERB.P3FD.P	Hay~A	Huy~iyatA	OK		
+VERB.P3MP.P	Hay~A	Huy~uwA	OK		
+VERB.P3FP.P	Hay~A	Huy~iyna	OK		
+VERB.P1S.A.E0	Hay~A	Hay~aytuhu	OK		
+VERB.P1P.A.E0	Hay~A	Hay~aynAhu	OK		
+VERB.P2MS.A.E0	Hay~A	Hay~aytahu	OK		
+VERB.P2FS.A.E0	Hay~A	Hay~aytihi	OK		
+VERB.P2D.A.E0	Hay~A	Hay~aytumAhu	OK		
+VERB.P2MP.A.E0	Hay~A	Hay~aytumuwhu	OK		
+VERB.P2FP.A.E0	Hay~A	Hay~aytun~ahu	OK		
+VERB.P3MS.A.E0	Hay~A	Hay~aAhu	OK		
+VERB.P3FS.A.E0	Hay~A	Hay~athu	OK		
+VERB.P3MD.A.E0	Hay~A	Hay~ayAhu	OK		
+VERB.P3FD.A.E0	Hay~A	Hay~atAhu	OK		
+VERB.P3MP.A.E0	Hay~A	Hay~awohu	OK		
+VERB.P3FP.A.E0	Hay~A	Hay~aynahu	OK		
+VERB.P1S.P.E0	Hay~A		OK		
+VERB.P1P.P.E0	Hay~A		OK		
+VERB.P2MS.P.E0	Hay~A		OK		
+VERB.P2FS.P.E0	Hay~A		OK		
+VERB.P2D.P.E0	Hay~A		OK		
+VERB.P2MP.P.E0	Hay~A		OK		
+VERB.P2FP.P.E0	Hay~A		OK		
+VERB.P3MS.P.E0	Hay~A		OK		
+VERB.P3FS.P.E0	Hay~A		OK		
+VERB.P3MD.P.E0	Hay~A		OK		
+VERB.P3FD.P.E0	Hay~A		OK		
+VERB.P3MP.P.E0	Hay~A		OK		
+VERB.P3FP.P.E0	Hay~A		OK		
+VERB.P1S.A	laj~-a	lajijtu	OK		
+VERB.P1P.A	laj~-a	lajijnA	OK		
+VERB.P2MS.A	laj~-a	lajijta	OK		
+VERB.P2FS.A	laj~-a	lajijti	OK		
+VERB.P2D.A	laj~-a	lajijtumA	OK		
+VERB.P2MP.A	laj~-a	lajijtum	OK		
+VERB.P2FP.A	laj~-a	lajijtun~a	OK		
+VERB.P3MS.A	laj~-a	laj~a	OK		
+VERB.P3FS.A	laj~-a	laj~at	OK		
+VERB.P3MD.A	laj~-a	laj~A	OK		
+VERB.P3FD.A	laj~-a	laj~atA	OK		
+VERB.P3MP.A	laj~-a	laj~uwA	OK		
+VERB.P3FP.A	laj~-a	lajijna	OK		
+VERB.P1S.P	laj~-a	lujijtu	OK		
+VERB.P1P.P	laj~-a	lujijnA	OK		
+VERB.P2MS.P	laj~-a	lujijta	OK		
+VERB.P2FS.P	laj~-a	lujijti	OK		
+VERB.P2D.P	laj~-a	lujijtumA	OK		
+VERB.P2MP.P	laj~-a	lujijtum	OK		
+VERB.P2FP.P	laj~-a	lujijtun~a	OK		
+VERB.P3MS.P	laj~-a	luj~a	OK		
+VERB.P3FS.P	laj~-a	luj~at	OK		
+VERB.P3MD.P	laj~-a	luj~A	OK		
+VERB.P3FD.P	laj~-a	luj~atA	OK		
+VERB.P3MP.P	laj~-a	luj~uwA	OK		
+VERB.P3FP.P	laj~-a	lujijna	OK		
+VERB.P1S.A.E0	laj~-a		OK		
+VERB.P1P.A.E0	laj~-a		OK		
+VERB.P2MS.A.E0	laj~-a		OK		
+VERB.P2FS.A.E0	laj~-a		OK		
+VERB.P2D.A.E0	laj~-a		OK		
+VERB.P2MP.A.E0	laj~-a		OK		
+VERB.P2FP.A.E0	laj~-a		OK		
+VERB.P3MS.A.E0	laj~-a		OK		
+VERB.P3FS.A.E0	laj~-a		OK		
+VERB.P3MD.A.E0	laj~-a		OK		
+VERB.P3FD.A.E0	laj~-a		OK		
+VERB.P3MP.A.E0	laj~-a		OK		
+VERB.P3FP.A.E0	laj~-a		OK		
+VERB.P1S.P.E0	laj~-a		OK		
+VERB.P1P.P.E0	laj~-a		OK		
+VERB.P2MS.P.E0	laj~-a		OK		
+VERB.P2FS.P.E0	laj~-a		OK		
+VERB.P2D.P.E0	laj~-a		OK		
+VERB.P2MP.P.E0	laj~-a		OK		
+VERB.P2FP.P.E0	laj~-a		OK		
+VERB.P3MS.P.E0	laj~-a		OK		
+VERB.P3FS.P.E0	laj~-a		OK		
+VERB.P3MD.P.E0	laj~-a		OK		
+VERB.P3FD.P.E0	laj~-a		OK		
+VERB.P3MP.P.E0	laj~-a		OK		
+VERB.P3FP.P.E0	laj~-a		OK		
+VERB.P1S.A	layosa	lastu	OK		
+VERB.P1P.A	layosa	lasnA	OK		
+VERB.P2MS.A	layosa	lasta	OK		
+VERB.P2FS.A	layosa	lasti	OK		
+VERB.P2D.A	layosa	lastumA	OK		
+VERB.P2MP.A	layosa	lastum	OK		
+VERB.P2FP.A	layosa	lastun~a	OK		
+VERB.P3MS.A	layosa	layosa	OK		
+VERB.P3FS.A	layosa	layosat	OK		
+VERB.P3MD.A	layosa	layosA	OK		
+VERB.P3FD.A	layosa	layosatA	OK		
+VERB.P3MP.A	layosa	layosuwA	OK		
+VERB.P3FP.A	layosa	lasna	OK		
+VERB.P1S.P	layosa		OK		
+VERB.P1P.P	layosa		OK		
+VERB.P2MS.P	layosa		OK		
+VERB.P2FS.P	layosa		OK		
+VERB.P2D.P	layosa		OK		
+VERB.P2MP.P	layosa		OK		
+VERB.P2FP.P	layosa		OK		
+VERB.P3MS.P	layosa		OK		
+VERB.P3FS.P	layosa		OK		
+VERB.P3MD.P	layosa		OK		
+VERB.P3FD.P	layosa		OK		
+VERB.P3MP.P	layosa		OK		
+VERB.P3FP.P	layosa		OK		
+VERB.P1S.A.E0	layosa		OK		
+VERB.P1P.A.E0	layosa		OK		
+VERB.P2MS.A.E0	layosa		OK		
+VERB.P2FS.A.E0	layosa		OK		
+VERB.P2D.A.E0	layosa		OK		
+VERB.P2MP.A.E0	layosa		OK		
+VERB.P2FP.A.E0	layosa		OK		
+VERB.P3MS.A.E0	layosa		OK		
+VERB.P3FS.A.E0	layosa		OK		
+VERB.P3MD.A.E0	layosa		OK		
+VERB.P3FD.A.E0	layosa		OK		
+VERB.P3MP.A.E0	layosa		OK		
+VERB.P3FP.A.E0	layosa		OK		
+VERB.P1S.P.E0	layosa		OK		
+VERB.P1P.P.E0	layosa		OK		
+VERB.P2MS.P.E0	layosa		OK		
+VERB.P2FS.P.E0	layosa		OK		
+VERB.P2D.P.E0	layosa		OK		
+VERB.P2MP.P.E0	layosa		OK		
+VERB.P2FP.P.E0	layosa		OK		
+VERB.P3MS.P.E0	layosa		OK		
+VERB.P3FS.P.E0	layosa		OK		
+VERB.P3MD.P.E0	layosa		OK		
+VERB.P3FD.P.E0	layosa		OK		
+VERB.P3MP.P.E0	layosa		OK		
+VERB.P3FP.P.E0	layosa		OK		
+VERB.P1S.A	na>aY-a	na>aytu	OK		
+VERB.P1P.A	na>aY-a	na>aynA	OK		
+VERB.P2MS.A	na>aY-a	na>ayta	OK		
+VERB.P2FS.A	na>aY-a	na>ayti	OK		
+VERB.P2D.A	na>aY-a	na>aytumA	OK		
+VERB.P2MP.A	na>aY-a	na>aytum	OK		
+VERB.P2FP.A	na>aY-a	na>aytun~a	OK		
+VERB.P3MS.A	na>aY-a	na>aY	OK		
+VERB.P3FS.A	na>aY-a	na>at	OK		
+VERB.P3MD.A	na>aY-a	na>ayA	OK		
+VERB.P3FD.A	na>aY-a	na>atA	OK		
+VERB.P3MP.A	na>aY-a	na>awoA	OK		
+VERB.P3FP.A	na>aY-a	na>ayna	OK		
+VERB.P1S.P	na>aY-a	nu}iytu	OK		
+VERB.P1P.P	na>aY-a	nu}iynA	OK		
+VERB.P2MS.P	na>aY-a	nu}iyta	OK		
+VERB.P2FS.P	na>aY-a	nu}iyti	OK		
+VERB.P2D.P	na>aY-a	nu}iytumA	OK		
+VERB.P2MP.P	na>aY-a	nu}iytum	OK		
+VERB.P2FP.P	na>aY-a	nu}iytun~a	OK		
+VERB.P3MS.P	na>aY-a	nu}iya	OK		
+VERB.P3FS.P	na>aY-a	nu}iyat	OK		
+VERB.P3MD.P	na>aY-a	nu}iyA	OK		
+VERB.P3FD.P	na>aY-a	nu}iyatA	OK		
+VERB.P3MP.P	na>aY-a	nu&uwA	OK		
+VERB.P3FP.P	na>aY-a	nu}iyna	OK		
+VERB.P1S.A.E0	na>aY-a		OK		
+VERB.P1P.A.E0	na>aY-a		OK		
+VERB.P2MS.A.E0	na>aY-a		OK		
+VERB.P2FS.A.E0	na>aY-a		OK		
+VERB.P2D.A.E0	na>aY-a		OK		
+VERB.P2MP.A.E0	na>aY-a		OK		
+VERB.P2FP.A.E0	na>aY-a		OK		
+VERB.P3MS.A.E0	na>aY-a		OK		
+VERB.P3FS.A.E0	na>aY-a		OK		
+VERB.P3MD.A.E0	na>aY-a		OK		
+VERB.P3FD.A.E0	na>aY-a		OK		
+VERB.P3MP.A.E0	na>aY-a		OK		
+VERB.P3FP.A.E0	na>aY-a		OK		
+VERB.P1S.P.E0	na>aY-a		OK		
+VERB.P1P.P.E0	na>aY-a		OK		
+VERB.P2MS.P.E0	na>aY-a		OK		
+VERB.P2FS.P.E0	na>aY-a		OK		
+VERB.P2D.P.E0	na>aY-a		OK		
+VERB.P2MP.P.E0	na>aY-a		OK		
+VERB.P2FP.P.E0	na>aY-a		OK		
+VERB.P3MS.P.E0	na>aY-a		OK		
+VERB.P3FS.P.E0	na>aY-a		OK		
+VERB.P3MD.P.E0	na>aY-a		OK		
+VERB.P3FD.P.E0	na>aY-a		OK		
+VERB.P3MP.P.E0	na>aY-a		OK		
+VERB.P3FP.P.E0	na>aY-a		OK		
+VERB.P1S.A	nA'-i	ni}tu	OK		
+VERB.P1P.A	nA'-i	ni}nA	OK		
+VERB.P2MS.A	nA'-i	ni}ta	OK		
+VERB.P2FS.A	nA'-i	ni}ti	OK		
+VERB.P2D.A	nA'-i	ni}tumA	OK		
+VERB.P2MP.A	nA'-i	ni}tum	OK		
+VERB.P2FP.A	nA'-i	ni}tun~a	OK		
+VERB.P3MS.A	nA'-i	nA'a	OK		
+VERB.P3FS.A	nA'-i	nA'at	OK		
+VERB.P3MD.A	nA'-i	nA'A	OK		
+VERB.P3FD.A	nA'-i	nA'atA	OK		
+VERB.P3MP.A	nA'-i	nA&uwA	OK		
+VERB.P3FP.A	nA'-i	ni}na	OK		
+VERB.P1S.P	nA'-i	ni}tu	OK		
+VERB.P1P.P	nA'-i	ni}nA	OK		
+VERB.P2MS.P	nA'-i	ni}ta	OK		
+VERB.P2FS.P	nA'-i	ni}ti	OK		
+VERB.P2D.P	nA'-i	ni}tumA	OK		
+VERB.P2MP.P	nA'-i	ni}tum	OK		
+VERB.P2FP.P	nA'-i	ni}tun~a	OK		
+VERB.P3MS.P	nA'-i	niy'a	OK		
+VERB.P3FS.P	nA'-i	niy}at	OK		
+VERB.P3MD.P	nA'-i	niy}A	OK		
+VERB.P3FD.P	nA'-i	niy}atA	OK		
+VERB.P3MP.P	nA'-i	niy}uwA	OK		
+VERB.P3FP.P	nA'-i	ni}na	OK		
+VERB.P1S.P.E0	nA'-i		OK		
+VERB.P1P.P.E0	nA'-i		OK		
+VERB.P2MS.P.E0	nA'-i		OK		
+VERB.P2FS.P.E0	nA'-i		OK		
+VERB.P2D.P.E0	nA'-i		OK		
+VERB.P2MP.P.E0	nA'-i		OK		
+VERB.P2FP.P.E0	nA'-i		OK		
+VERB.P3MS.P.E0	nA'-i		OK		
+VERB.P3FS.P.E0	nA'-i		OK		
+VERB.P3MD.P.E0	nA'-i		OK		
+VERB.P3FD.P.E0	nA'-i		OK		
+VERB.P3MP.P.E0	nA'-i		OK		
+VERB.P3FP.P.E0	nA'-i		OK		
+VERB.P1S.A	hAE-a	huEtu	OK		
+VERB.P1P.A	hAE-a	huEnA	OK		
+VERB.P2MS.A	hAE-a	huEta	OK		
+VERB.P2FS.A	hAE-a	huEti	OK		
+VERB.P2D.A	hAE-a	huEtumA	OK		
+VERB.P2MP.A	hAE-a	huEtum	OK		
+VERB.P2FP.A	hAE-a	huEtun~a	OK		
+VERB.P3MS.A	hAE-a	hAEa	OK		
+VERB.P3FS.A	hAE-a	hAEat	OK		
+VERB.P3MD.A	hAE-a	hAEA	OK		
+VERB.P3FD.A	hAE-a	hAEatA	OK		
+VERB.P3MP.A	hAE-a	hAEuwA	OK		
+VERB.P3FP.A	hAE-a	huEna	OK		
+VERB.P1S.P	hAE-a	huEtu	OK		
+VERB.P1P.P	hAE-a	huEnA	OK		
+VERB.P2MS.P	hAE-a	huEta	OK		
+VERB.P2FS.P	hAE-a	huEti	OK		
+VERB.P2D.P	hAE-a	huEtumA	OK		
+VERB.P2MP.P	hAE-a	huEtum	OK		
+VERB.P2FP.P	hAE-a	huEtun~a	OK		
+VERB.P3MS.P	hAE-a	hiyEa	OK		
+VERB.P3FS.P	hAE-a	hiyEat	OK		
+VERB.P3MD.P	hAE-a	hiyEA	OK		
+VERB.P3FD.P	hAE-a	hiyEatA	OK		
+VERB.P3MP.P	hAE-a	hiyEuwA	OK		
+VERB.P3FP.P	hAE-a	huEna	OK		
+VERB.P1S.A.E0	hAE-a	huEtuhu	OK		
+VERB.P1P.A.E0	hAE-a	huEnAhu	OK		
+VERB.P2MS.A.E0	hAE-a	huEtahu	OK		
+VERB.P2FS.A.E0	hAE-a	huEtihi	OK		
+VERB.P2D.A.E0	hAE-a	huEtumAhu	OK		
+VERB.P2MP.A.E0	hAE-a	huEtumuwhu	OK		
+VERB.P2FP.A.E0	hAE-a	huEtun~ahu	OK		
+VERB.P3MS.A.E0	hAE-a	hAEahu	OK		
+VERB.P3FS.A.E0	hAE-a	hAEathu	OK		
+VERB.P3MD.A.E0	hAE-a	hAEAhu	OK		
+VERB.P3FD.A.E0	hAE-a	hAEatAhu	OK		
+VERB.P3MP.A.E0	hAE-a	hAEuwhu	OK		
+VERB.P3FP.A.E0	hAE-a	huEnahu	OK		
+VERB.P1S.P.E0	hAE-a		OK		
+VERB.P1P.P.E0	hAE-a		OK		
+VERB.P2MS.P.E0	hAE-a		OK		
+VERB.P2FS.P.E0	hAE-a		OK		
+VERB.P2D.P.E0	hAE-a		OK		
+VERB.P2MP.P.E0	hAE-a		OK		
+VERB.P2FP.P.E0	hAE-a		OK		
+VERB.P3MS.P.E0	hAE-a		OK		
+VERB.P3FS.P.E0	hAE-a		OK		
+VERB.P3MD.P.E0	hAE-a		OK		
+VERB.P3FD.P.E0	hAE-a		OK		
+VERB.P3MP.P.E0	hAE-a		OK		
+VERB.P3FP.P.E0	hAE-a		OK		

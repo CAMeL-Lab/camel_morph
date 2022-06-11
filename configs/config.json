@@ -7,14 +7,14 @@
                 "About",
                 "Header"]
             },
-        "db_dir": "db_iterations_local",
-        "repr_lemmas_dir": "conjugation_local/repr_lemmas",
-        "tables_dir": "conjugation_local/tables",
-        "paradigm_debugging_dir": "conjugation_local/paradigm_debugging",
-        "banks_dir": "conjugation_local/banks",
+        "db_dir": "databases",
+        "repr_lemmas_dir": "debugging_output/repr_lemmas",
+        "tables_dir": "debugging_output/tables",
+        "paradigm_debugging_dir": "debugging_output/paradigm_debugging",
+        "banks_dir": "debugging_output/banks",
         "camel_tools": "/Users/chriscay/Library/Mobile Documents/com~apple~CloudDocs/NYUAD/camel_tools",
         "service_account": "/Users/chriscay/.config/gspread/service_account.json",
-        "paradigms_config": "config_paradigms.json",
+        "paradigms_config": "configs/config_paradigms.json",
         "banks_spreadsheet": "Paradigm-Banks"
     },
 

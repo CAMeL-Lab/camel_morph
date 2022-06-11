@@ -1,0 +1,992 @@
+SIGNATURE	LEMMA	DIAC	QC	COMMENTS	STATUS
+VERB.I1S.AI	kAn	Aakuwn	OK		
+VERB.I1P.AI	kAn	nikuwn	OK		
+VERB.I2MS.AI	kAn	tikuwn	OK		
+VERB.I2FS.AI	kAn	tikuwniy	OK		
+VERB.I2P.AI	kAn	tikuwnuwA	OK		
+VERB.I3MS.AI	kAn	yikuwn	OK	yukuwn	
+VERB.I3FS.AI	kAn	tikuwn	OK	tukuwn	
+VERB.I3P.AI	kAn	yikuwnuwA	OK		
+VERB.I1S.AI.E0	kAn		OK		
+VERB.I1P.AI.E0	kAn		OK		
+VERB.I2MS.AI.E0	kAn		OK		
+VERB.I2FS.AI.E0	kAn		OK		
+VERB.I2P.AI.E0	kAn		OK		
+VERB.I3MS.AI.E0	kAn		OK		
+VERB.I3FS.AI.E0	kAn		OK		
+VERB.I3P.AI.E0	kAn		OK		
+VERB.I1S.AI	qAl	Aaquwl	OK		
+VERB.I1P.AI	qAl	niquwl	OK		
+VERB.I2MS.AI	qAl	tiquwl	OK		
+VERB.I2FS.AI	qAl	tiquwliy	OK		
+VERB.I2P.AI	qAl	tiquwluwA	OK		
+VERB.I3MS.AI	qAl	yiquwl	OK	yuquwl	
+VERB.I3FS.AI	qAl	tiquwl	OK	tuquwl	
+VERB.I3P.AI	qAl	yiquwluwA	OK		
+VERB.I1S.AI.E0	qAl	Aaquwluh	OK		
+VERB.I1P.AI.E0	qAl	niquwluh	OK		
+VERB.I2MS.AI.E0	qAl	tiquwluh	OK		
+VERB.I2FS.AI.E0	qAl	tiquwliyuh	PROB		
+VERB.I2P.AI.E0	qAl	tiquwluwuh	PROB		
+VERB.I3MS.AI.E0	qAl	yiquwluh	OK		
+VERB.I3FS.AI.E0	qAl	tiquwluh	OK		
+VERB.I3P.AI.E0	qAl	yiquwluwuh	PROB		
+VERB.I1S.AI	xal~aY	Aaxal~iy	OK		
+VERB.I1P.AI	xal~aY	nixal~iy	OK		
+VERB.I2MS.AI	xal~aY	tixal~iy	OK		
+VERB.I2FS.AI	xal~aY	tixal~iy	OK		
+VERB.I2P.AI	xal~aY	tixal~uwA	OK		
+VERB.I3MS.AI	xal~aY	yixal~iy	OK		
+VERB.I3FS.AI	xal~aY	tixal~iy	OK		
+VERB.I3P.AI	xal~aY	yixal~uwA	OK		
+VERB.I1S.AI.E0	xal~aY	Aaxal~iyuh	PROB		
+VERB.I1P.AI.E0	xal~aY	nixal~iyuh	PROB		
+VERB.I2MS.AI.E0	xal~aY	tixal~iyuh	PROB		
+VERB.I2FS.AI.E0	xal~aY	tixal~iyuh	PROB		
+VERB.I2P.AI.E0	xal~aY	tixal~uwuh	PROB		
+VERB.I3MS.AI.E0	xal~aY	yixal~iyuh	PROB		
+VERB.I3FS.AI.E0	xal~aY	tixal~iyuh	PROB		
+VERB.I3P.AI.E0	xal~aY	yixal~uwuh	PROB		
+VERB.I1S.AI	jih	Aajiy	OK		
+VERB.I1P.AI	jih	nijiy	OK		
+VERB.I2MS.AI	jih	tijiy	OK		
+VERB.I2FS.AI	jih	tijiy	OK		
+VERB.I2P.AI	jih	tijuwA	OK		
+VERB.I3MS.AI	jih	yijiy	OK		
+VERB.I3FS.AI	jih	tijiy	OK		
+VERB.I3P.AI	jih	yijuwA	OK		
+VERB.I1S.AI.E0	jih		OK		
+VERB.I1P.AI.E0	jih		OK		
+VERB.I2MS.AI.E0	jih		OK		
+VERB.I2FS.AI.E0	jih		OK		
+VERB.I2P.AI.E0	jih		OK		
+VERB.I3MS.AI.E0	jih		OK		
+VERB.I3FS.AI.E0	jih		OK		
+VERB.I3P.AI.E0	jih		OK		
+VERB.I1S.AI	Hab~	AaHib~	OK		
+VERB.I1P.AI	Hab~	niHib~	OK		
+VERB.I2MS.AI	Hab~	tiHib~	OK		
+VERB.I2FS.AI	Hab~	tiHib~iy	OK		
+VERB.I2P.AI	Hab~	tiHib~uwA	OK		
+VERB.I3MS.AI	Hab~	yiHib~	OK		
+VERB.I3FS.AI	Hab~	tiHib~	OK		
+VERB.I3P.AI	Hab~	yiHib~uwA	OK		
+VERB.I1S.AI.E0	Hab~	AaHib~uh	OK		
+VERB.I1P.AI.E0	Hab~	niHib~uh	OK		
+VERB.I2MS.AI.E0	Hab~	tiHib~uh	OK		
+VERB.I2FS.AI.E0	Hab~	tiHib~iyuh	PROB		
+VERB.I2P.AI.E0	Hab~	tiHib~uwuh	PROB		
+VERB.I3MS.AI.E0	Hab~	yiHib~uh	OK		
+VERB.I3FS.AI.E0	Hab~	tiHib~uh	OK		
+VERB.I3P.AI.E0	Hab~	yiHib~uwuh	PROB		
+VERB.I1S.AI	>axoTa>	AaxoTa>	OK		
+VERB.I1P.AI	>axoTa>	nixoTa>	OK		
+VERB.I2MS.AI	>axoTa>	tixoTa>	OK		
+VERB.I2FS.AI	>axoTa>	tixoTa}iy	OK		
+VERB.I2P.AI	>axoTa>	tixoTa&uwA	OK		
+VERB.I3MS.AI	>axoTa>	yixoTa>	OK		
+VERB.I3FS.AI	>axoTa>	tixoTa>	OK		
+VERB.I3P.AI	>axoTa>	yixoTa&uwA	OK		
+VERB.I1S.AI.E0	>axoTa>		OK		
+VERB.I1P.AI.E0	>axoTa>		OK		
+VERB.I2MS.AI.E0	>axoTa>		OK		
+VERB.I2FS.AI.E0	>axoTa>		OK		
+VERB.I2P.AI.E0	>axoTa>		OK		
+VERB.I3MS.AI.E0	>axoTa>		OK		
+VERB.I3FS.AI.E0	>axoTa>		OK		
+VERB.I3P.AI.E0	>axoTa>		OK		
+VERB.I1P.AI	tam~	nitim~	OK		
+VERB.I2MS.AI	tam~	titim~	OK		
+VERB.I2FS.AI	tam~	titim~iy	OK		
+VERB.I2P.AI	tam~	titim~uwA	OK		
+VERB.I3MS.AI	tam~	yitim~	OK		
+VERB.I3FS.AI	tam~	titim~	OK		
+VERB.I3P.AI	tam~	yitim~uwA	OK		
+VERB.I1S.AI.E0	tam~		OK		
+VERB.I1P.AI.E0	tam~		OK		
+VERB.I2MS.AI.E0	tam~		OK		
+VERB.I2FS.AI.E0	tam~		OK		
+VERB.I2P.AI.E0	tam~		OK		
+VERB.I3MS.AI.E0	tam~		OK		
+VERB.I3FS.AI.E0	tam~		OK		
+VERB.I3P.AI.E0	tam~		OK		
+VERB.I1S.AI	bada>	Aabda>	OK		
+VERB.I1P.AI	bada>	nibda>	OK		
+VERB.I2MS.AI	bada>	tibda>	OK		
+VERB.I2FS.AI	bada>	tibda}iy	OK		
+VERB.I2P.AI	bada>	tibda&uwA	OK		
+VERB.I3MS.AI	bada>	yibda>	OK		
+VERB.I3FS.AI	bada>	tibda>	OK		
+VERB.I3P.AI	bada>	yibda&uwA	OK		
+VERB.I1S.AI.E0	bada>	Aabda>uh	OK		
+VERB.I1P.AI.E0	bada>	nibda>uh	OK		
+VERB.I2MS.AI.E0	bada>	tibda>uh	OK		
+VERB.I2FS.AI.E0	bada>	tibda}iyuh	PROB		
+VERB.I2P.AI.E0	bada>	tibda&uwuh	PROB		
+VERB.I3MS.AI.E0	bada>	yibda>uh	OK		
+VERB.I3FS.AI.E0	bada>	tibda>uh	OK		
+VERB.I3P.AI.E0	bada>	yibda&uwuh	PROB		
+VERB.I1S.AI	>asA'	Aasiy'	OK		
+VERB.I1P.AI	>asA'	nisiy'	OK		
+VERB.I2MS.AI	>asA'	tisiy'	OK		
+VERB.I2FS.AI	>asA'	tisiy}iy	OK		
+VERB.I2P.AI	>asA'	tisiy}uwA	OK		
+VERB.I3MS.AI	>asA'	yisiy'	OK		
+VERB.I3FS.AI	>asA'	tisiy'	OK		
+VERB.I3P.AI	>asA'	yisiy}uwA	OK		
+VERB.I1S.AI.E0	>asA'		OK		
+VERB.I1P.AI.E0	>asA'		OK		
+VERB.I2MS.AI.E0	>asA'		OK		
+VERB.I2FS.AI.E0	>asA'		OK		
+VERB.I2P.AI.E0	>asA'		OK		
+VERB.I3MS.AI.E0	>asA'		OK		
+VERB.I3FS.AI.E0	>asA'		OK		
+VERB.I3P.AI.E0	>asA'		OK		
+VERB.I1S.AI	>aDA'	AaDiy'	OK		
+VERB.I1P.AI	>aDA'	niDiy'	OK		
+VERB.I2MS.AI	>aDA'	tiDiy'	OK		
+VERB.I2FS.AI	>aDA'	tiDiy}iy	OK		
+VERB.I2P.AI	>aDA'	tiDiy}uwA	OK		
+VERB.I3MS.AI	>aDA'	yiDiy'	OK		
+VERB.I3FS.AI	>aDA'	tiDiy'	OK		
+VERB.I3P.AI	>aDA'	yiDiy}uwA	OK		
+VERB.I1S.AI.E0	>aDA'	AaDiy}uh	OK		
+VERB.I1P.AI.E0	>aDA'	niDiy}uh	OK		
+VERB.I2MS.AI.E0	>aDA'	tiDiy}uh	OK		
+VERB.I2FS.AI.E0	>aDA'	tiDiy}iyuh	PROB		
+VERB.I2P.AI.E0	>aDA'	tiDiy}uwuh	PROB		
+VERB.I3MS.AI.E0	>aDA'	yiDiy}uh	OK		
+VERB.I3FS.AI.E0	>aDA'	tiDiy}uh	OK		
+VERB.I3P.AI.E0	>aDA'	yiDiy}uwuh	PROB		
+VERB.I1S.AI	kal		PROB		
+VERB.I1P.AI	kal	nAkul	OK		
+VERB.I2MS.AI	kal	tAkul	OK		
+VERB.I2FS.AI	kal	tAkuliy	PROB		
+VERB.I2P.AI	kal	tAkuluwA	PROB		
+VERB.I3MS.AI	kal	yAkul	OK		
+VERB.I3FS.AI	kal	tAkul	OK		
+VERB.I3P.AI	kal	yAkuluwA	PROB		
+VERB.I1S.AI.E0	kal		OK		
+VERB.I1P.AI.E0	kal		OK		
+VERB.I2MS.AI.E0	kal		OK		
+VERB.I2FS.AI.E0	kal		OK		
+VERB.I2P.AI.E0	kal		OK		
+VERB.I3MS.AI.E0	kal		OK		
+VERB.I3FS.AI.E0	kal		OK		
+VERB.I3P.AI.E0	kal		OK		
+VERB.I1S.AI	rad~		PROB		
+VERB.I1P.AI	rad~	nurud~	OK		
+VERB.I2MS.AI	rad~	turud~	OK		
+VERB.I2FS.AI	rad~	turud~iy	OK		
+VERB.I2P.AI	rad~	turud~uwA	OK		
+VERB.I3MS.AI	rad~	yurud~	OK		
+VERB.I3FS.AI	rad~	turud~	OK		
+VERB.I3P.AI	rad~	yurud~uwA	OK		
+VERB.I1P.AI.E0	rad~	nurud~uh	OK		
+VERB.I2MS.AI.E0	rad~	turud~uh	OK		
+VERB.I2FS.AI.E0	rad~	turud~iyuh	PROB		
+VERB.I2P.AI.E0	rad~	turud~uwuh	PROB		
+VERB.I3MS.AI.E0	rad~	yurud~uh	OK		
+VERB.I3FS.AI.E0	rad~	turud~uh	OK		
+VERB.I3P.AI.E0	rad~	yurud~uwuh	PROB		
+VERB.I1S.AI	Aitoman~aY	Aatoman~aY	OK		
+VERB.I1P.AI	Aitoman~aY	nitoman~aY	OK		
+VERB.I2MS.AI	Aitoman~aY	titoman~aY	OK		
+VERB.I2FS.AI	Aitoman~aY	titoman~iy	OK		
+VERB.I2P.AI	Aitoman~aY	titoman~uwA	OK		
+VERB.I3MS.AI	Aitoman~aY	yitoman~aY	OK		
+VERB.I3FS.AI	Aitoman~aY	titoman~aY	OK		
+VERB.I3P.AI	Aitoman~aY	yitoman~uwA	OK		
+VERB.I1S.AI.E0	Aitoman~aY		OK		
+VERB.I1P.AI.E0	Aitoman~aY		OK		
+VERB.I2MS.AI.E0	Aitoman~aY		OK		
+VERB.I2FS.AI.E0	Aitoman~aY		OK		
+VERB.I2P.AI.E0	Aitoman~aY		OK		
+VERB.I3MS.AI.E0	Aitoman~aY		OK		
+VERB.I3FS.AI.E0	Aitoman~aY		OK		
+VERB.I3P.AI.E0	Aitoman~aY		OK		
+VERB.I1S.AI	hidiy	AahdA	OK		
+VERB.I1P.AI	hidiy	nihdA	OK		
+VERB.I2MS.AI	hidiy	tihdA	OK		
+VERB.I2FS.AI	hidiy	tihdiy	OK		
+VERB.I2P.AI	hidiy	tihduwA	OK		
+VERB.I3MS.AI	hidiy	yihdA	OK		
+VERB.I3FS.AI	hidiy	tihdA	OK		
+VERB.I3P.AI	hidiy	yihduwA	OK		
+VERB.I1S.AI.E0	hidiy		OK		
+VERB.I1P.AI.E0	hidiy		OK		
+VERB.I2MS.AI.E0	hidiy		OK		
+VERB.I2FS.AI.E0	hidiy		OK		
+VERB.I2P.AI.E0	hidiy		OK		
+VERB.I3MS.AI.E0	hidiy		OK		
+VERB.I3FS.AI.E0	hidiy		OK		
+VERB.I3P.AI.E0	hidiy		OK		
+VERB.I1S.AI	Aitosab~	Aatosab~	OK		
+VERB.I1S.AI	Aitosab~	Aatovab~	PROB		
+VERB.I1P.AI	Aitosab~	nitosab~	OK		
+VERB.I1P.AI	Aitosab~	nitovab~	PROB		
+VERB.I2MS.AI	Aitosab~	titosab~	OK		
+VERB.I2MS.AI	Aitosab~	titovab~	PROB		
+VERB.I2FS.AI	Aitosab~	titosab~iy	OK		
+VERB.I2FS.AI	Aitosab~	titovab~iy	PROB		
+VERB.I2P.AI	Aitosab~	titosab~uwA	OK		
+VERB.I2P.AI	Aitosab~	titovab~uwA	PROB		
+VERB.I3MS.AI	Aitosab~	yitosab~	OK		
+VERB.I3MS.AI	Aitosab~	yitovab~	PROB		
+VERB.I3FS.AI	Aitosab~	titosab~	OK		
+VERB.I3FS.AI	Aitosab~	titovab~	PROB		
+VERB.I3P.AI	Aitosab~	yitosab~uwA	OK		
+VERB.I3P.AI	Aitosab~	yitovab~uwA	PROB		
+VERB.I1S.AI.E0	Aitosab~		OK		
+VERB.I1P.AI.E0	Aitosab~		OK		
+VERB.I2MS.AI.E0	Aitosab~		OK		
+VERB.I2FS.AI.E0	Aitosab~		OK		
+VERB.I2P.AI.E0	Aitosab~		OK		
+VERB.I3MS.AI.E0	Aitosab~		OK		
+VERB.I3FS.AI.E0	Aitosab~		OK		
+VERB.I3P.AI.E0	Aitosab~		OK		
+VERB.I1S.AI	AinoTalaq	AanoTiliq	OK		
+VERB.I1P.AI	AinoTalaq	ninoTiliq	OK		
+VERB.I2MS.AI	AinoTalaq	tinoTiliq	OK		
+VERB.I2FS.AI	AinoTalaq	tinoTiliqiy	OK		
+VERB.I2P.AI	AinoTalaq	tinoTiliquwA	OK	tinoTilquwA	
+VERB.I3MS.AI	AinoTalaq	yinoTiliq	OK		
+VERB.I3FS.AI	AinoTalaq	tinoTiliq	OK		
+VERB.I3P.AI	AinoTalaq	yinoTiliquwA	OK		
+VERB.I1S.AI.E0	AinoTalaq		OK		
+VERB.I1P.AI.E0	AinoTalaq		OK		
+VERB.I2MS.AI.E0	AinoTalaq		OK		
+VERB.I2FS.AI.E0	AinoTalaq		OK		
+VERB.I2P.AI.E0	AinoTalaq		OK		
+VERB.I3MS.AI.E0	AinoTalaq		OK		
+VERB.I3FS.AI.E0	AinoTalaq		OK		
+VERB.I3P.AI.E0	AinoTalaq		OK		
+VERB.I1S.AI	Aitowaf~aY	Aatowaf~aY	OK		
+VERB.I1P.AI	Aitowaf~aY	nitowaf~aY	OK		
+VERB.I2MS.AI	Aitowaf~aY	titowaf~aY	OK		
+VERB.I2FS.AI	Aitowaf~aY	titowaf~iy	OK		
+VERB.I2P.AI	Aitowaf~aY	titowaf~uwA	OK		
+VERB.I3MS.AI	Aitowaf~aY	yitowaf~aY	OK		
+VERB.I3FS.AI	Aitowaf~aY	titowaf~aY	OK		
+VERB.I3P.AI	Aitowaf~aY	yitowaf~uwA	OK		
+VERB.I1S.AI.E0	Aitowaf~aY		OK		
+VERB.I1P.AI.E0	Aitowaf~aY		OK		
+VERB.I2MS.AI.E0	Aitowaf~aY		OK		
+VERB.I2FS.AI.E0	Aitowaf~aY		OK		
+VERB.I2P.AI.E0	Aitowaf~aY		OK		
+VERB.I3MS.AI.E0	Aitowaf~aY		OK		
+VERB.I3FS.AI.E0	Aitowaf~aY		OK		
+VERB.I3P.AI.E0	Aitowaf~aY		OK		
+VERB.I1P.AI	Aid~aY	nid~aY	PROB	class #-iy in IV	
+VERB.I2FS.AI	Aid~aY	tid~iy	OK		
+VERB.I2P.AI	Aid~aY	tid~uwA	OK		
+VERB.I3MS.AI	Aid~aY	yid~aY	PROB	yid~iy	
+VERB.I3P.AI	Aid~aY	yid~uwA	OK		
+VERB.I1S.AI.E0	Aid~aY	Aad~Auh	PROB		
+VERB.I1P.AI.E0	Aid~aY	nid~Auh	PROB		
+VERB.I2MS.AI.E0	Aid~aY	tid~Auh	PROB		
+VERB.I2FS.AI.E0	Aid~aY	tid~iyuh	PROB		
+VERB.I2P.AI.E0	Aid~aY	tid~uwuh	PROB		
+VERB.I3MS.AI.E0	Aid~aY	yid~Auh	PROB		
+VERB.I3FS.AI.E0	Aid~aY	tid~Auh	PROB		
+VERB.I3P.AI.E0	Aid~aY	yid~uwuh	PROB		
+VERB.I2FS.AI.E0	Aisota>oSal	tisota>oSiliyuh	PROB		
+VERB.I2FS.AI.E0	Aisota>oSal	tisota>oSaliyuh	PROB		
+VERB.I2P.AI.E0	Aisota>oSal	tisota>oSiluwuh	PROB		
+VERB.I2P.AI.E0	Aisota>oSal	tisota>oSaluwuh	PROB		
+VERB.I3P.AI.E0	Aisota>oSal	yisota>oSiluwuh	PROB		
+VERB.I3P.AI.E0	Aisota>oSal	yisota>oSaluwuh	PROB		
+VERB.I1P.AI	baS~	nubuS~	OK		
+VERB.I2MS.AI	baS~	tubuS~	OK		
+VERB.I2FS.AI	baS~	tubuS~iy	OK		
+VERB.I2P.AI	baS~	tubuS~uwA	OK		
+VERB.I3MS.AI	baS~	yubuS~	OK		
+VERB.I3FS.AI	baS~	tubuS~	OK		
+VERB.I3P.AI	baS~	yubuS~uwA	OK		
+VERB.I1S.AI.E0	baS~		OK		
+VERB.I1P.AI.E0	baS~		OK		
+VERB.I2MS.AI.E0	baS~		OK		
+VERB.I2FS.AI.E0	baS~		OK		
+VERB.I2P.AI.E0	baS~		OK		
+VERB.I3MS.AI.E0	baS~		OK		
+VERB.I3FS.AI.E0	baS~		OK		
+VERB.I3P.AI.E0	baS~		OK		
+VERB.I1S.AI	banaY	AabnaYiy	PROB		
+VERB.I1P.AI	banaY	nibnaYiy	PROB		
+VERB.I2MS.AI	banaY	tibnaYiy	PROB		
+VERB.I2FS.AI	banaY	tibnaYiy	PROB		
+VERB.I2P.AI	banaY	tibnaYuwA	PROB		
+VERB.I3MS.AI	banaY	yibnaYiy	PROB		
+VERB.I3FS.AI	banaY	tibnaYiy	PROB		
+VERB.I3P.AI	banaY	yibnaYuwA	PROB		
+VERB.I1S.AI.E0	banaY	Aabniyuh	PROB		
+VERB.I1S.AI.E0	banaY	AabnaYiyuh	PROB		
+VERB.I1P.AI.E0	banaY	nibniyuh	PROB		
+VERB.I1P.AI.E0	banaY	nibnaYiyuh	PROB		
+VERB.I2MS.AI.E0	banaY	tibniyuh	PROB		
+VERB.I2MS.AI.E0	banaY	tibnaYiyuh	PROB		
+VERB.I2FS.AI.E0	banaY	tibniyuh	PROB		
+VERB.I2FS.AI.E0	banaY	tibnaYiyuh	PROB		
+VERB.I2P.AI.E0	banaY	tibnuwuh	PROB		
+VERB.I2P.AI.E0	banaY	tibnaYuwuh	PROB		
+VERB.I3MS.AI.E0	banaY	yibniyuh	PROB		
+VERB.I3MS.AI.E0	banaY	yibnaYiyuh	PROB		
+VERB.I3FS.AI.E0	banaY	tibniyuh	PROB		
+VERB.I3FS.AI.E0	banaY	tibnaYiyuh	PROB		
+VERB.I3P.AI.E0	banaY	yibnuwuh	PROB		
+VERB.I3P.AI.E0	banaY	yibnaYuwuh	PROB		
+VERB.I1S.AI	xa*		PROB		
+VERB.I1P.AI	xa*	nAxu*	OK		
+VERB.I2MS.AI	xa*	tAxu*	OK		
+VERB.I2FS.AI	xa*	tAxu*iy	PROB	check # needed	
+VERB.I2P.AI	xa*	tAxu*uwA	PROB		
+VERB.I3MS.AI	xa*	yAxu*	OK		
+VERB.I3FS.AI	xa*	tAxu*	OK		
+VERB.I3P.AI	xa*	yAxu*uwA	PROB		
+VERB.I1S.AI.E0	xa*		PROB		
+VERB.I1P.AI.E0	xa*	nAxu*uh	PROB	nAx*uh	
+VERB.I2MS.AI.E0	xa*	tAxu*uh	PROB		
+VERB.I2FS.AI.E0	xa*	tAxu*iyuh	PROB		
+VERB.I2P.AI.E0	xa*	tAxu*uwuh	PROB		
+VERB.I3MS.AI.E0	xa*	yAxu*uh	PROB		
+VERB.I3FS.AI.E0	xa*	tAxu*uh	PROB		
+VERB.I3P.AI.E0	xa*	yAxu*uwuh	PROB		
+VERB.I1S.AI	ra>af	Aar>af	OK		
+VERB.I2MS.AI	ra>af	tir>af	OK		
+VERB.I2MS.AI	ra>af	tur>uf	PROB		
+VERB.I2FS.AI	ra>af	tir>afiy	OK		
+VERB.I2FS.AI	ra>af	tur>ufiy	PROB		
+VERB.I2P.AI	ra>af	tir>afuwA	OK		
+VERB.I2P.AI	ra>af	tur>ufuwA	PROB		
+VERB.I3MS.AI	ra>af	yir>af	OK		
+VERB.I3MS.AI	ra>af	yur>uf	PROB		
+VERB.I3FS.AI	ra>af	tir>af	OK		
+VERB.I3FS.AI	ra>af	tur>uf	PROB		
+VERB.I3P.AI	ra>af	yir>afuwA	OK		
+VERB.I3P.AI	ra>af	yur>ufuwA	PROB		
+VERB.I1S.AI.E0	ra>af		OK		
+VERB.I1P.AI.E0	ra>af		OK		
+VERB.I2MS.AI.E0	ra>af		OK		
+VERB.I2FS.AI.E0	ra>af		OK		
+VERB.I2P.AI.E0	ra>af		OK		
+VERB.I3MS.AI.E0	ra>af		OK		
+VERB.I3FS.AI.E0	ra>af		OK		
+VERB.I3P.AI.E0	ra>af		OK		
+VERB.I1S.AI	rajA	Aarjuw	OK		
+VERB.I1P.AI	rajA	nirjuw	OK	nurjuw	
+VERB.I2MS.AI	rajA	tirjuw	OK		
+VERB.I2FS.AI	rajA	tirjiy	OK		
+VERB.I2P.AI	rajA	tirjuwA	OK		
+VERB.I3MS.AI	rajA	yirjuw	OK		
+VERB.I3FS.AI	rajA	tirjuw	OK		
+VERB.I3P.AI	rajA	yirjuwA	OK		
+VERB.I1S.AI.E0	rajA	Aarjuwuh	PROB		
+VERB.I2MS.AI.E0	rajA	tirjuwuh	PROB		
+VERB.I2FS.AI.E0	rajA	tirjiyuh	PROB		
+VERB.I2P.AI.E0	rajA	tirjuwuh	PROB		
+VERB.I3MS.AI.E0	rajA	yirjuwuh	PROB		
+VERB.I3FS.AI.E0	rajA	tirjuwuh	PROB		
+VERB.I3P.AI.E0	rajA	yirjuwuh	PROB		
+VERB.I1S.AI	EanaY		PROB	h-pref	
+VERB.I1P.AI	EanaY	naEniy	OK		
+VERB.I2MS.AI	EanaY	taEniy	OK		
+VERB.I2FS.AI	EanaY	taEniy	OK		
+VERB.I2P.AI	EanaY	taEnuwA	OK		
+VERB.I3MS.AI	EanaY	yaEniy	OK		
+VERB.I3FS.AI	EanaY	taEniy	OK		
+VERB.I3P.AI	EanaY	yaEnuwA	OK		
+VERB.I1S.AI.E0	EanaY		PROB		
+VERB.I1P.AI.E0	EanaY	naEniyuh	PROB		
+VERB.I2MS.AI.E0	EanaY	taEniyuh	PROB		
+VERB.I2FS.AI.E0	EanaY	taEniyuh	PROB		
+VERB.I2P.AI.E0	EanaY	taEnuwuh	PROB		
+VERB.I3MS.AI.E0	EanaY	yaEniyuh	PROB		
+VERB.I3FS.AI.E0	EanaY	taEniyuh	PROB		
+VERB.I1S.AI	daxal		PROB		
+VERB.I1P.AI	daxal	nudxul	OK		
+VERB.I2MS.AI	daxal	tudxul	OK		
+VERB.I2FS.AI	daxal	tudxuliy	OK		
+VERB.I2P.AI	daxal	tudxuluwA	OK		
+VERB.I3MS.AI	daxal	yudxul	OK		
+VERB.I3FS.AI	daxal	tudxul	OK		
+VERB.I3P.AI	daxal	yudxuluwA	OK		
+VERB.I1S.AI.E0	daxal		PROB		
+VERB.I1P.AI.E0	daxal	nudxuluh	OK		
+VERB.I2MS.AI.E0	daxal	tudxuluh	OK		
+VERB.I2FS.AI.E0	daxal	tudxuliyuh	PROB		
+VERB.I2P.AI.E0	daxal	tudxuluwuh	PROB		
+VERB.I3MS.AI.E0	daxal	yudxuluh	OK		
+VERB.I3FS.AI.E0	daxal	tudxuluh	OK		
+VERB.I3P.AI.E0	daxal	yudxuluwuh	PROB		
+VERB.I1S.AI	xaraj		PROB		
+VERB.I1P.AI	xaraj	nuxruj	OK		
+VERB.I2MS.AI	xaraj	tuxruj	OK		
+VERB.I2FS.AI	xaraj	tuxrujiy	OK		
+VERB.I2P.AI	xaraj	tuxrujuwA	OK		
+VERB.I3MS.AI	xaraj	yuxruj	OK		
+VERB.I3FS.AI	xaraj	tuxruj	OK		
+VERB.I3P.AI	xaraj	yuxrujuwA	OK		
+VERB.I1S.AI.E0	xaraj		OK		
+VERB.I1P.AI.E0	xaraj		OK		
+VERB.I2MS.AI.E0	xaraj		OK		
+VERB.I2FS.AI.E0	xaraj		OK		
+VERB.I2P.AI.E0	xaraj		OK		
+VERB.I3MS.AI.E0	xaraj		OK		
+VERB.I3FS.AI.E0	xaraj		OK		
+VERB.I3P.AI.E0	xaraj		OK		
+VERB.I1S.AI	fataY	Aaftiy	OK		
+VERB.I1S.AI	fataY	AaftaYiy	PROB		
+VERB.I1P.AI	fataY	niftiy	OK		
+VERB.I1P.AI	fataY	niftaYiy	PROB		
+VERB.I2MS.AI	fataY	tiftiy	OK		
+VERB.I2MS.AI	fataY	tiftaYiy	PROB		
+VERB.I2FS.AI	fataY	tiftiy	OK		
+VERB.I2FS.AI	fataY	tiftaYiy	PROB		
+VERB.I2P.AI	fataY	tiftuwA	OK		
+VERB.I2P.AI	fataY	tiftaYuwA	PROB		
+VERB.I3MS.AI	fataY	yiftiy	OK		
+VERB.I3MS.AI	fataY	yiftaYiy	PROB		
+VERB.I3FS.AI	fataY	tiftiy	OK		
+VERB.I3FS.AI	fataY	tiftaYiy	PROB		
+VERB.I3P.AI	fataY	yiftuwA	OK		
+VERB.I3P.AI	fataY	yiftaYuwA	PROB		
+VERB.I1S.AI.E0	fataY		OK		
+VERB.I1P.AI.E0	fataY		OK		
+VERB.I2MS.AI.E0	fataY		OK		
+VERB.I2FS.AI.E0	fataY		OK		
+VERB.I2P.AI.E0	fataY		OK		
+VERB.I3MS.AI.E0	fataY		OK		
+VERB.I3FS.AI.E0	fataY		OK		
+VERB.I3P.AI.E0	fataY		OK		
+VERB.I1S.AI	qarA	AaqrA	OK		
+VERB.I1P.AI	qarA	niqrA	OK		
+VERB.I2MS.AI	qarA	tiqrA	OK		
+VERB.I2FS.AI	qarA	tiqriy	OK		
+VERB.I2P.AI	qarA	tiqruwA	OK		
+VERB.I3MS.AI	qarA	yiqrA	OK		
+VERB.I3FS.AI	qarA	tiqrA	OK		
+VERB.I3P.AI	qarA	yiqruwA	OK		
+VERB.I1S.AI.E0	qarA	AaqrAuh	PROB		
+VERB.I2MS.AI.E0	qarA	tiqrAuh	PROB		
+VERB.I2FS.AI.E0	qarA	tiqriyuh	PROB		
+VERB.I2P.AI.E0	qarA	tiqruwuh	PROB		
+VERB.I3MS.AI.E0	qarA	yiqrAuh	PROB		
+VERB.I3FS.AI.E0	qarA	tiqrAuh	PROB		
+VERB.I3P.AI.E0	qarA	yiqruwuh	PROB		
+VERB.I2FS.AI.E0	qAl	tiquwliyh	OK		
+VERB.I2P.AI.E0	qAl	tiquwluwh	OK		
+VERB.I3P.AI.E0	qAl	yiquwluwh	OK		
+VERB.I1S.AI.E0	xal~aY	Aaxal~iyh	OK		
+VERB.I1P.AI.E0	xal~aY	nixal~iyh	OK		
+VERB.I2MS.AI.E0	xal~aY	tixal~iyh	OK		
+VERB.I2FS.AI.E0	xal~aY	tixal~iyh	OK		
+VERB.I2P.AI.E0	xal~aY	tixal~uwh	OK		
+VERB.I3MS.AI.E0	xal~aY	yixal~iyh	OK		
+VERB.I3FS.AI.E0	xal~aY	tixal~iyh	OK		
+VERB.I3P.AI.E0	xal~aY	yixal~uwh	OK		
+VERB.I2FS.AI.E0	Hab~	tiHib~iyh	OK		
+VERB.I2P.AI.E0	Hab~	tiHib~uwh	OK		
+VERB.I3P.AI.E0	Hab~	yiHib~uwh	OK		
+VERB.I1S.AI	tam~	Atim~	OK		
+VERB.I2FS.AI.E0	bada>	tibda}iyh	OK		
+VERB.I2P.AI.E0	bada>	tibda&uwh	OK		
+VERB.I3P.AI.E0	bada>	yibda&uwh	OK		
+VERB.I2FS.AI.E0	>aDA'	tiDiy}iyh	OK		
+VERB.I2P.AI.E0	>aDA'	tiDiy}uwh	OK		
+VERB.I3P.AI.E0	>aDA'	yiDiy}uwh	OK		
+VERB.I2FS.AI.E0	rad~	turud~iyh	OK		
+VERB.I2P.AI.E0	rad~	turud~uwh	OK		
+VERB.I3P.AI.E0	rad~	yurud~uwh	OK		
+VERB.I1S.AI	Aitoman~aY	Atoman~aY	PROB		
+VERB.I1S.AI	Aitosab~	Atosab~	PROB		
+VERB.I1S.AI	Aitosab~	Atovab~	PROB		
+VERB.I1S.AI	Aitowaf~aY	Atowaf~aY	PROB		
+VERB.I1S.AI.E0	Aid~aY	Aad~Ah	PROB		
+VERB.I1P.AI.E0	Aid~aY	nid~Ah	PROB		
+VERB.I2MS.AI.E0	Aid~aY	tid~Ah	PROB		
+VERB.I2FS.AI.E0	Aid~aY	tid~iyh	OK		
+VERB.I2P.AI.E0	Aid~aY	tid~uwh	OK		
+VERB.I3MS.AI.E0	Aid~aY	yid~Ah	PROB		
+VERB.I3FS.AI.E0	Aid~aY	tid~Ah	PROB		
+VERB.I3P.AI.E0	Aid~aY	yid~uwh	OK		
+VERB.I1S.AI.E0	banaY	AabnaYiyh	PROB		
+VERB.I1P.AI.E0	banaY	nibnaYiyh	PROB		
+VERB.I2MS.AI.E0	banaY	tibnaYiyh	PROB		
+VERB.I2FS.AI.E0	banaY	tibnaYiyh	PROB		
+VERB.I2P.AI.E0	banaY	tibnaYuwh	PROB		
+VERB.I3MS.AI.E0	banaY	yibnaYiyh	PROB		
+VERB.I3FS.AI.E0	banaY	tibnaYiyh	PROB		
+VERB.I3P.AI.E0	banaY	yibnaYuwh	PROB		
+VERB.I2FS.AI.E0	xa*	tAxu*iyh	PROB		
+VERB.I2P.AI.E0	xa*	tAxu*uwh	PROB		
+VERB.I3P.AI.E0	xa*	yAxu*uwh	PROB		
+VERB.I1S.AI.E0	rajA	Aarjuwh	OK		
+VERB.I1P.AI.E0	rajA	nirjuwh	OK		
+VERB.I2MS.AI.E0	rajA	tirjuwh	OK		
+VERB.I2FS.AI.E0	rajA	tirjiyh	OK		
+VERB.I2P.AI.E0	rajA	tirjuwh	OK		
+VERB.I3MS.AI.E0	rajA	yirjuwh	OK		
+VERB.I3FS.AI.E0	rajA	tirjuwh	OK		
+VERB.I3P.AI.E0	rajA	yirjuwh	OK		
+VERB.I1P.AI.E0	EanaY	naEniyh	OK		
+VERB.I2MS.AI.E0	EanaY	taEniyh	OK		
+VERB.I2FS.AI.E0	EanaY	taEniyh	OK		
+VERB.I2P.AI.E0	EanaY	taEnuwh	OK		
+VERB.I3MS.AI.E0	EanaY	yaEniyh	OK		
+VERB.I3FS.AI.E0	EanaY	taEniyh	OK		
+VERB.I3P.AI.E0	EanaY	yaEnuwh	OK		
+VERB.I2FS.AI.E0	daxal	tudxuliyh	OK		
+VERB.I2P.AI.E0	daxal	tudxuluwh	OK		
+VERB.I3P.AI.E0	daxal	yudxuluwh	OK		
+VERB.I1S.AI.E0	qarA	AaqrAh	OK		
+VERB.I1P.AI.E0	qarA	niqrAh	OK		
+VERB.I2MS.AI.E0	qarA	tiqrAh	OK		
+VERB.I2FS.AI.E0	qarA	tiqriyh	OK		
+VERB.I2P.AI.E0	qarA	tiqruwh	OK		
+VERB.I3MS.AI.E0	qarA	yiqrAh	OK		
+VERB.I3FS.AI.E0	qarA	tiqrAh	OK		
+VERB.I3P.AI.E0	qarA	yiqruwh	OK		
+VERB.I1P.AI	ra>af	nur>uf	OK		
+VERB.I1S.AI	Aisota>oSal	Aasota>oSil	OK		
+VERB.I1P.AI	Aisota>oSal	nisota>oSil	OK		
+VERB.I2MS.AI	Aisota>oSal	tisota>oSil	OK		
+VERB.I2FS.AI	Aisota>oSal	tisota>oSiliy	OK		
+VERB.I2P.AI	Aisota>oSal	tisota>oSiluwA	OK		
+VERB.I3MS.AI	Aisota>oSal	yisota>oSil	OK		
+VERB.I3FS.AI	Aisota>oSal	tisota>oSil	OK		
+VERB.I3P.AI	Aisota>oSal	yisota>oSiluwA	OK		
+VERB.I1S.AI.E0	Aisota>oSal	Aasota>oSiluh	OK		
+VERB.I1P.AI.E0	Aisota>oSal	nisota>oSiluh	OK		
+VERB.I2MS.AI.E0	Aisota>oSal	tisota>oSiluh	OK		
+VERB.I2FS.AI.E0	Aisota>oSal	tisota>oSiliyh	OK		
+VERB.I2P.AI.E0	Aisota>oSal	tisota>oSiluwh	OK		
+VERB.I3MS.AI.E0	Aisota>oSal	yisota>oSiluh	OK		
+VERB.I3FS.AI.E0	Aisota>oSal	tisota>oSiluh	OK		
+VERB.I3P.AI.E0	Aisota>oSal	yisota>oSiluwh	OK		
+VERB.I1S.AI	banaY	Aaboniy	OK		
+VERB.I1P.AI	banaY	niboniy	OK		
+VERB.I2MS.AI	banaY	tiboniy	OK		
+VERB.I2FS.AI	banaY	tiboniy	OK		
+VERB.I2P.AI	banaY	tibonuwA	OK		
+VERB.I3MS.AI	banaY	yiboniy	OK		
+VERB.I3FS.AI	banaY	tiboniy	OK		
+VERB.I3P.AI	banaY	yibonuwA	OK		
+VERB.I1S.AI.E0	banaY	Aaboniyh	OK		
+VERB.I1P.AI.E0	banaY	niboniyh	OK		
+VERB.I2MS.AI.E0	banaY	tiboniyh	OK		
+VERB.I2FS.AI.E0	banaY	tiboniyh	OK		
+VERB.I2P.AI.E0	banaY	tibonuwh	OK		
+VERB.I3MS.AI.E0	banaY	yiboniyh	OK		
+VERB.I3FS.AI.E0	banaY	tiboniyh	OK		
+VERB.I3P.AI.E0	banaY	yibonuwh	OK		
+VERB.I1P.AI	>akal	nAkul	OK		
+VERB.I2MS.AI	>akal	tAkul	OK		
+VERB.I2FS.AI	>akal	tAkuliy	PROB	check # needed	
+VERB.I2P.AI	>akal	tAkuluwA	PROB	check # needed	
+VERB.I3MS.AI	>akal	yAkul	OK		
+VERB.I3FS.AI	>akal	tAkul	OK		
+VERB.I3P.AI	>akal	yAkuluwA	PROB	check # needed	
+VERB.I1S.AI	Ainota$ar	Aanti$ir	PROB		
+VERB.I1S.AI	>akal	|kul	OK		
+VERB.I1S.AI	rad~	Aarud~	OK		
+VERB.I1S.AI.E0	rad~	Aarud~uh	OK		
+VERB.I1S.AI	Aitogar~ab	Aatogar~ab	OK		
+VERB.I1S.AI	Ainotaxab	Aanotixib	OK		
+VERB.I1S.AI	baS~	AabuS~	OK		
+VERB.I1S.AI	xa*	|xu*	OK		
+VERB.I1S.AI	EanaY	AaEniy	OK	h-pref	
+VERB.I1S.AI.E0	EanaY	AaEniyh	OK		
+VERB.I1S.AI	daxal	Aadxul	OK		
+VERB.I1S.AI.E0	daxal	Aadxuluh	OK		
+VERB.I1S.AI	xaraj	Aaxruj	OK		
+VERB.I1S.AI	Ainota$ar	Aanoti$ir	OK		
+VERB.I1S.AI.E0	Ainota$ar		OK		
+VERB.I1S.AI.E0	xa*	|xu*uh	PROB		
+VERB.I1P.AI	Aitogar~ab	nitogar~ab	OK		
+VERB.I2MS.AI	Aitogar~ab	titogar~ab	OK		
+VERB.I2FS.AI	Aitogar~ab	titogar~abiy	OK		
+VERB.I2P.AI	Aitogar~ab	titogar~abuwA	OK		
+VERB.I3MS.AI	Aitogar~ab	yitogar~ab	OK		
+VERB.I3FS.AI	Aitogar~ab	titogar~ab	OK		
+VERB.I3P.AI	Aitogar~ab	yitogar~abuwA	OK		
+VERB.I1S.AI.E0	Aitogar~ab		OK		
+VERB.I1P.AI.E0	Aitogar~ab		OK		
+VERB.I2MS.AI.E0	Aitogar~ab		OK		
+VERB.I2FS.AI.E0	Aitogar~ab		OK		
+VERB.I2P.AI.E0	Aitogar~ab		OK		
+VERB.I3MS.AI.E0	Aitogar~ab		OK		
+VERB.I3FS.AI.E0	Aitogar~ab		OK		
+VERB.I3P.AI.E0	Aitogar~ab		OK		
+VERB.I1S.AI	Aid~aY	Aad~iy	OK		
+VERB.I1P.AI	Aid~aY	nid~iy	OK	class #-iy in IV	
+VERB.I2MS.AI	Aid~aY	tid~iy	OK		
+VERB.I3MS.AI	Aid~aY	yid~iy	OK	yid~iy	
+VERB.I3FS.AI	Aid~aY	tid~iy	OK		
+VERB.I1S.AI.E0	Aid~aY	Aad~iyh	OK		
+VERB.I1P.AI.E0	Aid~aY	nid~iyh	OK		
+VERB.I2MS.AI.E0	Aid~aY	tid~iyh	OK		
+VERB.I3MS.AI.E0	Aid~aY	yid~iyh	OK		
+VERB.I3FS.AI.E0	Aid~aY	tid~iyh	OK		
+VERB.I1S.AI	nisiy	AansaY	OK		
+VERB.I1P.AI	nisiy	ninsaY	OK		
+VERB.I2MS.AI	nisiy	tinsaY	OK		
+VERB.I2FS.AI	nisiy	tinsiy	OK		
+VERB.I2P.AI	nisiy	tinsuwA	OK		
+VERB.I3MS.AI	nisiy	yinsaY	OK		
+VERB.I3FS.AI	nisiy	tinsaY	OK		
+VERB.I3P.AI	nisiy	yinsuwA	OK		
+VERB.I1S.AI.E0	nisiy	AansAh	OK		
+VERB.I1P.AI.E0	nisiy	ninsAh	OK		
+VERB.I2MS.AI.E0	nisiy	tinsAh	OK		
+VERB.I2FS.AI.E0	nisiy	tinsiyh	OK		
+VERB.I2P.AI.E0	nisiy	tinsuwh	OK		
+VERB.I3MS.AI.E0	nisiy	yinsAh	OK		
+VERB.I3FS.AI.E0	nisiy	tinsAh	OK		
+VERB.I3P.AI.E0	nisiy	yinsuwh	OK		
+VERB.I1S.A	Aitogar~ab	Aatogar~ab	OK		
+VERB.I1P.A	Aitogar~ab	nitogar~ab	OK		
+VERB.I2MS.A	Aitogar~ab	titogar~ab	OK		
+VERB.I2FS.A	Aitogar~ab	titogar~abiy	OK		
+VERB.I2P.A	Aitogar~ab	titogar~abuwA	OK		
+VERB.I3MS.A	Aitogar~ab	yitogar~ab	OK		
+VERB.I3FS.A	Aitogar~ab	titogar~ab	OK		
+VERB.I3P.A	Aitogar~ab	yitogar~abuwA	OK		
+VERB.I1S.A.E0	Aitogar~ab		OK		
+VERB.I1P.A.E0	Aitogar~ab		OK		
+VERB.I2MS.A.E0	Aitogar~ab		OK		
+VERB.I2FS.A.E0	Aitogar~ab		OK		
+VERB.I2P.A.E0	Aitogar~ab		OK		
+VERB.I3MS.A.E0	Aitogar~ab		OK		
+VERB.I3FS.A.E0	Aitogar~ab		OK		
+VERB.I3P.A.E0	Aitogar~ab		OK		
+VERB.I1S.A	Aisota>oSal	Aasota>oSil	OK		
+VERB.I1P.A	Aisota>oSal	nisota>oSil	OK		
+VERB.I2MS.A	Aisota>oSal	tisota>oSil	OK		
+VERB.I2FS.A	Aisota>oSal	tisota>oSiliy	OK		
+VERB.I2P.A	Aisota>oSal	tisota>oSiluwA	OK		
+VERB.I3MS.A	Aisota>oSal	yisota>oSil	OK		
+VERB.I3FS.A	Aisota>oSal	tisota>oSil	OK		
+VERB.I3P.A	Aisota>oSal	yisota>oSiluwA	OK		
+VERB.I1S.A.E0	Aisota>oSal	Aasota>oSiluh	OK		
+VERB.I1P.A.E0	Aisota>oSal	nisota>oSiluh	OK		
+VERB.I2MS.A.E0	Aisota>oSal	tisota>oSiluh	OK		
+VERB.I2FS.A.E0	Aisota>oSal	tisota>oSiliyh	OK		
+VERB.I2P.A.E0	Aisota>oSal	tisota>oSiluwh	OK		
+VERB.I3MS.A.E0	Aisota>oSal	yisota>oSiluh	OK		
+VERB.I3FS.A.E0	Aisota>oSal	tisota>oSiluh	OK		
+VERB.I3P.A.E0	Aisota>oSal	yisota>oSiluwh	OK		
+VERB.I1S.A	Aid~aY	Aad~iy	OK		
+VERB.I1P.A	Aid~aY	nid~iy	OK	class #-iy in IV	
+VERB.I2MS.A	Aid~aY	tid~iy	OK		
+VERB.I2FS.A	Aid~aY	tid~iy	OK		
+VERB.I2P.A	Aid~aY	tid~uwA	OK		
+VERB.I3MS.A	Aid~aY	yid~iy	OK	yid~iy	
+VERB.I3FS.A	Aid~aY	tid~iy	OK		
+VERB.I3P.A	Aid~aY	yid~uwA	OK		
+VERB.I1S.A.E0	Aid~aY	Aad~iyh	OK		
+VERB.I1P.A.E0	Aid~aY	nid~iyh	OK		
+VERB.I2MS.A.E0	Aid~aY	tid~iyh	OK		
+VERB.I2FS.A.E0	Aid~aY	tid~iyh	OK		
+VERB.I2P.A.E0	Aid~aY	tid~uwh	OK		
+VERB.I3MS.A.E0	Aid~aY	yid~iyh	OK		
+VERB.I3FS.A.E0	Aid~aY	tid~iyh	OK		
+VERB.I3P.A.E0	Aid~aY	yid~uwh	OK		
+VERB.I1S.A	jih	Aajiy	OK		
+VERB.I1P.A	jih	nijiy	OK		
+VERB.I2MS.A	jih	tijiy	OK		
+VERB.I2FS.A	jih	tijiy	OK		
+VERB.I2P.A	jih	tijuwA	OK		
+VERB.I3MS.A	jih	yijiy	OK		
+VERB.I3FS.A	jih	tijiy	OK		
+VERB.I3P.A	jih	yijuwA	OK		
+VERB.I1S.A.E0	jih		OK		
+VERB.I1P.A.E0	jih		OK		
+VERB.I2MS.A.E0	jih		OK		
+VERB.I2FS.A.E0	jih		OK		
+VERB.I2P.A.E0	jih		OK		
+VERB.I3MS.A.E0	jih		OK		
+VERB.I3FS.A.E0	jih		OK		
+VERB.I3P.A.E0	jih		OK		
+VERB.I1S.A	Hab~	AaHib~	OK		
+VERB.I1P.A	Hab~	niHib~	OK		
+VERB.I2MS.A	Hab~	tiHib~	OK		
+VERB.I2FS.A	Hab~	tiHib~iy	OK		
+VERB.I2P.A	Hab~	tiHib~uwA	OK		
+VERB.I3MS.A	Hab~	yiHib~	OK		
+VERB.I3FS.A	Hab~	tiHib~	OK		
+VERB.I3P.A	Hab~	yiHib~uwA	OK		
+VERB.I1S.A.E0	Hab~	AaHib~uh	OK		
+VERB.I1P.A.E0	Hab~	niHib~uh	OK		
+VERB.I2MS.A.E0	Hab~	tiHib~uh	OK		
+VERB.I2FS.A.E0	Hab~	tiHib~iyh	OK		
+VERB.I2P.A.E0	Hab~	tiHib~uwh	OK		
+VERB.I3MS.A.E0	Hab~	yiHib~uh	OK		
+VERB.I3FS.A.E0	Hab~	tiHib~uh	OK		
+VERB.I3P.A.E0	Hab~	yiHib~uwh	OK		
+VERB.I1S.A	>axoTa>	AaxoTa>	OK		
+VERB.I1P.A	>axoTa>	nixoTa>	OK		
+VERB.I2MS.A	>axoTa>	tixoTa>	OK		
+VERB.I2FS.A	>axoTa>	tixoTa}iy	OK		
+VERB.I2P.A	>axoTa>	tixoTa&uwA	OK		
+VERB.I3MS.A	>axoTa>	yixoTa>	OK		
+VERB.I3FS.A	>axoTa>	tixoTa>	OK		
+VERB.I3P.A	>axoTa>	yixoTa&uwA	OK		
+VERB.I1S.A.E0	>axoTa>		OK		
+VERB.I1P.A.E0	>axoTa>		OK		
+VERB.I2MS.A.E0	>axoTa>		OK		
+VERB.I2FS.A.E0	>axoTa>		OK		
+VERB.I2P.A.E0	>axoTa>		OK		
+VERB.I3MS.A.E0	>axoTa>		OK		
+VERB.I3FS.A.E0	>axoTa>		OK		
+VERB.I3P.A.E0	>axoTa>		OK		
+VERB.I1S.A	Aitosab~	Aatosab~	OK		
+VERB.I1P.A	Aitosab~	nitosab~	OK		
+VERB.I2MS.A	Aitosab~	titosab~	OK		
+VERB.I2FS.A	Aitosab~	titosab~iy	OK		
+VERB.I2P.A	Aitosab~	titosab~uwA	OK		
+VERB.I3MS.A	Aitosab~	yitosab~	OK		
+VERB.I3FS.A	Aitosab~	titosab~	OK		
+VERB.I3P.A	Aitosab~	yitosab~uwA	OK		
+VERB.I1S.A.E0	Aitosab~		OK		
+VERB.I1P.A.E0	Aitosab~		OK		
+VERB.I2MS.A.E0	Aitosab~		OK		
+VERB.I2FS.A.E0	Aitosab~		OK		
+VERB.I2P.A.E0	Aitosab~		OK		
+VERB.I3MS.A.E0	Aitosab~		OK		
+VERB.I3FS.A.E0	Aitosab~		OK		
+VERB.I3P.A.E0	Aitosab~		OK		
+VERB.I1S.A	bada>	Aabda>	OK		
+VERB.I1P.A	bada>	nibda>	OK		
+VERB.I2MS.A	bada>	tibda>	OK		
+VERB.I2FS.A	bada>	tibda}iy	OK		
+VERB.I2P.A	bada>	tibda&uwA	OK		
+VERB.I3MS.A	bada>	yibda>	OK		
+VERB.I3FS.A	bada>	tibda>	OK		
+VERB.I3P.A	bada>	yibda&uwA	OK		
+VERB.I1S.A.E0	bada>	Aabda>uh	OK		
+VERB.I1P.A.E0	bada>	nibda>uh	OK		
+VERB.I2MS.A.E0	bada>	tibda>uh	OK		
+VERB.I2FS.A.E0	bada>	tibda}iyh	OK		
+VERB.I2P.A.E0	bada>	tibda&uwh	OK		
+VERB.I3MS.A.E0	bada>	yibda>uh	OK		
+VERB.I3FS.A.E0	bada>	tibda>uh	OK		
+VERB.I3P.A.E0	bada>	yibda&uwh	OK		
+VERB.I1S.A	>asA'	Aasiy'	OK		
+VERB.I1P.A	>asA'	nisiy'	OK		
+VERB.I2MS.A	>asA'	tisiy'	OK		
+VERB.I2FS.A	>asA'	tisiy}iy	OK		
+VERB.I2P.A	>asA'	tisiy}uwA	OK		
+VERB.I3MS.A	>asA'	yisiy'	OK		
+VERB.I3FS.A	>asA'	tisiy'	OK		
+VERB.I3P.A	>asA'	yisiy}uwA	OK		
+VERB.I1S.A.E0	>asA'		OK		
+VERB.I1P.A.E0	>asA'		OK		
+VERB.I2MS.A.E0	>asA'		OK		
+VERB.I2FS.A.E0	>asA'		OK		
+VERB.I2P.A.E0	>asA'		OK		
+VERB.I3MS.A.E0	>asA'		OK		
+VERB.I3FS.A.E0	>asA'		OK		
+VERB.I3P.A.E0	>asA'		OK		
+VERB.I1S.A	>aDA'	AaDiy'	OK		
+VERB.I1P.A	>aDA'	niDiy'	OK		
+VERB.I2MS.A	>aDA'	tiDiy'	OK		
+VERB.I2FS.A	>aDA'	tiDiy}iy	OK		
+VERB.I2P.A	>aDA'	tiDiy}uwA	OK		
+VERB.I3MS.A	>aDA'	yiDiy'	OK		
+VERB.I3FS.A	>aDA'	tiDiy'	OK		
+VERB.I3P.A	>aDA'	yiDiy}uwA	OK		
+VERB.I1S.A.E0	>aDA'	AaDiy}uh	OK		
+VERB.I1P.A.E0	>aDA'	niDiy}uh	OK		
+VERB.I2MS.A.E0	>aDA'	tiDiy}uh	OK		
+VERB.I2FS.A.E0	>aDA'	tiDiy}iyh	OK		
+VERB.I2P.A.E0	>aDA'	tiDiy}uwh	OK		
+VERB.I3MS.A.E0	>aDA'	yiDiy}uh	OK		
+VERB.I3FS.A.E0	>aDA'	tiDiy}uh	OK		
+VERB.I3P.A.E0	>aDA'	yiDiy}uwh	OK		
+VERB.I1S.A	>akal	|kul	OK		
+VERB.I1P.A	>akal	nAkul	OK		
+VERB.I2MS.A	>akal	tAkul	OK		
+VERB.I2FS.A	>akal	tAkliy	OK	check # needed	
+VERB.I2P.A	>akal	tAkluwA	OK	check # needed	
+VERB.I3MS.A	>akal	yAkul	OK		
+VERB.I3FS.A	>akal	tAkul	OK		
+VERB.I3P.A	>akal	yAkluwA	OK	check # needed	
+VERB.I1S.A.E0	>akal	|kluh	OK		
+VERB.I1P.A.E0	>akal	nAkluh	OK		
+VERB.I2MS.A.E0	>akal	tAkluh	OK		
+VERB.I2FS.A.E0	>akal	tAkliyh	OK		
+VERB.I2P.A.E0	>akal	tAkluwh	OK		
+VERB.I3MS.A.E0	>akal	yAkluh	OK		
+VERB.I3FS.A.E0	>akal	tAkluh	OK		
+VERB.I3P.A.E0	>akal	yAkluwh	OK		
+VERB.I1S.A	rad~	Aarud~	OK		
+VERB.I1P.A	rad~	nurud~	OK		
+VERB.I2MS.A	rad~	turud~	OK		
+VERB.I2FS.A	rad~	turud~iy	OK		
+VERB.I2P.A	rad~	turud~uwA	OK		
+VERB.I3MS.A	rad~	yurud~	OK		
+VERB.I3FS.A	rad~	turud~	OK		
+VERB.I3P.A	rad~	yurud~uwA	OK		
+VERB.I1S.A.E0	rad~	Aarud~uh	OK		
+VERB.I1P.A.E0	rad~	nurud~uh	OK		
+VERB.I2MS.A.E0	rad~	turud~uh	OK		
+VERB.I2FS.A.E0	rad~	turud~iyh	OK		
+VERB.I2P.A.E0	rad~	turud~uwh	OK		
+VERB.I3MS.A.E0	rad~	yurud~uh	OK		
+VERB.I3FS.A.E0	rad~	turud~uh	OK		
+VERB.I3P.A.E0	rad~	yurud~uwh	OK		
+VERB.I1S.A	Aitoman~aY	Aatoman~aY	OK		
+VERB.I1P.A	Aitoman~aY	nitoman~aY	OK		
+VERB.I2MS.A	Aitoman~aY	titoman~aY	OK		
+VERB.I2FS.A	Aitoman~aY	titoman~iy	OK		
+VERB.I2P.A	Aitoman~aY	titoman~uwA	OK		
+VERB.I3MS.A	Aitoman~aY	yitoman~aY	OK		
+VERB.I3FS.A	Aitoman~aY	titoman~aY	OK		
+VERB.I3P.A	Aitoman~aY	yitoman~uwA	OK		
+VERB.I1S.A.E0	Aitoman~aY		OK		
+VERB.I1P.A.E0	Aitoman~aY		OK		
+VERB.I2MS.A.E0	Aitoman~aY		OK		
+VERB.I2FS.A.E0	Aitoman~aY		OK		
+VERB.I2P.A.E0	Aitoman~aY		OK		
+VERB.I3MS.A.E0	Aitoman~aY		OK		
+VERB.I3FS.A.E0	Aitoman~aY		OK		
+VERB.I3P.A.E0	Aitoman~aY		OK		
+VERB.I1S.A	hidiy	AahdA	OK		
+VERB.I1P.A	hidiy	nihdA	OK		
+VERB.I2MS.A	hidiy	tihdA	OK		
+VERB.I2FS.A	hidiy	tihdiy	OK		
+VERB.I2P.A	hidiy	tihduwA	OK		
+VERB.I3MS.A	hidiy	yihdA	OK		
+VERB.I3FS.A	hidiy	tihdA	OK		
+VERB.I3P.A	hidiy	yihduwA	OK		
+VERB.I1S.A.E0	hidiy		OK		
+VERB.I1P.A.E0	hidiy		OK		
+VERB.I2MS.A.E0	hidiy		OK		
+VERB.I2FS.A.E0	hidiy		OK		
+VERB.I2P.A.E0	hidiy		OK		
+VERB.I3MS.A.E0	hidiy		OK		
+VERB.I3FS.A.E0	hidiy		OK		
+VERB.I3P.A.E0	hidiy		OK		
+VERB.I1S.A	nisiy	AansaY	OK		
+VERB.I1P.A	nisiy	ninsaY	OK		
+VERB.I2MS.A	nisiy	tinsaY	OK		
+VERB.I2FS.A	nisiy	tinsiy	OK		
+VERB.I2P.A	nisiy	tinsuwA	OK		
+VERB.I3MS.A	nisiy	yinsaY	OK		
+VERB.I3FS.A	nisiy	tinsaY	OK		
+VERB.I3P.A	nisiy	yinsuwA	OK		
+VERB.I1S.A.E0	nisiy	AansAh	OK		
+VERB.I1P.A.E0	nisiy	ninsAh	OK		
+VERB.I2MS.A.E0	nisiy	tinsAh	OK		
+VERB.I2FS.A.E0	nisiy	tinsiyh	OK		
+VERB.I2P.A.E0	nisiy	tinsuwh	OK		
+VERB.I3MS.A.E0	nisiy	yinsAh	OK		
+VERB.I3FS.A.E0	nisiy	tinsAh	OK		
+VERB.I3P.A.E0	nisiy	yinsuwh	OK		
+VERB.I1S.A	baS~	AabuS~	OK		
+VERB.I1P.A	baS~	nubuS~	OK		
+VERB.I2MS.A	baS~	tubuS~	OK		
+VERB.I2FS.A	baS~	tubuS~iy	OK		
+VERB.I2P.A	baS~	tubuS~uwA	OK		
+VERB.I3MS.A	baS~	yubuS~	OK		
+VERB.I3FS.A	baS~	tubuS~	OK		
+VERB.I3P.A	baS~	yubuS~uwA	OK		
+VERB.I1S.A.E0	baS~		OK		
+VERB.I1P.A.E0	baS~		OK		
+VERB.I2MS.A.E0	baS~		OK		
+VERB.I2FS.A.E0	baS~		OK		
+VERB.I2P.A.E0	baS~		OK		
+VERB.I3MS.A.E0	baS~		OK		
+VERB.I3FS.A.E0	baS~		OK		
+VERB.I3P.A.E0	baS~		OK		
+VERB.I1S.A	rajA	Aarjuw	OK		
+VERB.I1P.A	rajA	nirjuw	OK	nurjuw	
+VERB.I2MS.A	rajA	tirjuw	OK		
+VERB.I2FS.A	rajA	tirjiy	OK		
+VERB.I2P.A	rajA	tirjuwA	OK		
+VERB.I3MS.A	rajA	yirjuw	OK		
+VERB.I3FS.A	rajA	tirjuw	OK		
+VERB.I3P.A	rajA	yirjuwA	OK		
+VERB.I1S.A.E0	rajA	Aarjuwh	OK		
+VERB.I1P.A.E0	rajA	nirjuwh	OK		
+VERB.I2MS.A.E0	rajA	tirjuwh	OK		
+VERB.I2FS.A.E0	rajA	tirjiyh	OK		
+VERB.I2P.A.E0	rajA	tirjuwh	OK		
+VERB.I3MS.A.E0	rajA	yirjuwh	OK		
+VERB.I3FS.A.E0	rajA	tirjuwh	OK		
+VERB.I3P.A.E0	rajA	yirjuwh	OK		
+VERB.I1S.A	EanaY	AaEniy	OK	h-pref	
+VERB.I1P.A	EanaY	naEniy	OK		
+VERB.I2MS.A	EanaY	taEniy	OK		
+VERB.I2FS.A	EanaY	taEniy	OK		
+VERB.I2P.A	EanaY	taEnuwA	OK		
+VERB.I3MS.A	EanaY	yaEniy	OK		
+VERB.I3FS.A	EanaY	taEniy	OK		
+VERB.I3P.A	EanaY	yaEnuwA	OK		
+VERB.I1S.A.E0	EanaY	AaEniyh	OK		
+VERB.I1P.A.E0	EanaY	naEniyh	OK		
+VERB.I2MS.A.E0	EanaY	taEniyh	OK		
+VERB.I2FS.A.E0	EanaY	taEniyh	OK		
+VERB.I2P.A.E0	EanaY	taEnuwh	OK		
+VERB.I3MS.A.E0	EanaY	yaEniyh	OK		
+VERB.I3FS.A.E0	EanaY	taEniyh	OK		
+VERB.I3P.A.E0	EanaY	yaEnuwh	OK		
+VERB.I1S.A	daxal	Aadxul	OK		
+VERB.I1P.A	daxal	nudxul	OK		
+VERB.I2MS.A	daxal	tudxul	OK		
+VERB.I2FS.A	daxal	tudxuliy	OK		
+VERB.I2P.A	daxal	tudxuluwA	OK		
+VERB.I3MS.A	daxal	yudxul	OK		
+VERB.I3FS.A	daxal	tudxul	OK		
+VERB.I3P.A	daxal	yudxuluwA	OK		
+VERB.I1S.A.E0	daxal	Aadxuluh	OK		
+VERB.I1P.A.E0	daxal	nudxuluh	OK		
+VERB.I2MS.A.E0	daxal	tudxuluh	OK		
+VERB.I2FS.A.E0	daxal	tudxuliyh	OK		
+VERB.I2P.A.E0	daxal	tudxuluwh	OK		
+VERB.I3MS.A.E0	daxal	yudxuluh	OK		
+VERB.I3FS.A.E0	daxal	tudxuluh	OK		
+VERB.I3P.A.E0	daxal	yudxuluwh	OK		
+VERB.I1S.A	xaraj	Aaxruj	OK		
+VERB.I1P.A	xaraj	nuxruj	OK		
+VERB.I2MS.A	xaraj	tuxruj	OK		
+VERB.I2FS.A	xaraj	tuxrujiy	OK		
+VERB.I2P.A	xaraj	tuxrujuwA	OK		
+VERB.I3MS.A	xaraj	yuxruj	OK		
+VERB.I3FS.A	xaraj	tuxruj	OK		
+VERB.I3P.A	xaraj	yuxrujuwA	OK		
+VERB.I1S.A.E0	xaraj		OK		
+VERB.I1P.A.E0	xaraj		OK		
+VERB.I2MS.A.E0	xaraj		OK		
+VERB.I2FS.A.E0	xaraj		OK		
+VERB.I2P.A.E0	xaraj		OK		
+VERB.I3MS.A.E0	xaraj		OK		
+VERB.I3FS.A.E0	xaraj		OK		
+VERB.I3P.A.E0	xaraj		OK		
+VERB.I1S.A	qarA	AaqrA	OK		
+VERB.I1P.A	qarA	niqrA	OK		
+VERB.I2MS.A	qarA	tiqrA	OK		
+VERB.I2FS.A	qarA	tiqriy	OK		
+VERB.I2P.A	qarA	tiqruwA	OK		
+VERB.I3MS.A	qarA	yiqrA	OK		
+VERB.I3FS.A	qarA	tiqrA	OK		
+VERB.I3P.A	qarA	yiqruwA	OK		
+VERB.I1S.A.E0	qarA	AaqrAh	OK		
+VERB.I1P.A.E0	qarA	niqrAh	OK		
+VERB.I2MS.A.E0	qarA	tiqrAh	OK		
+VERB.I2FS.A.E0	qarA	tiqriyh	OK		
+VERB.I2P.A.E0	qarA	tiqruwh	OK		
+VERB.I3MS.A.E0	qarA	yiqrAh	OK		
+VERB.I3FS.A.E0	qarA	tiqrAh	OK		
+VERB.I3P.A.E0	qarA	yiqruwh	OK		
+VERB.I2FS.AI	>akal	tAkliy	OK	check # needed	
+VERB.I2P.AI	>akal	tAkluwA	OK	check # needed	
+VERB.I3P.AI	>akal	yAkluwA	OK	check # needed	
+VERB.I1S.AI.E0	>akal	|kluh	OK		
+VERB.I1P.AI.E0	>akal	nAkluh	OK		
+VERB.I2MS.AI.E0	>akal	tAkluh	OK		
+VERB.I2FS.AI.E0	>akal	tAkliyh	OK		
+VERB.I2P.AI.E0	>akal	tAkluwh	OK		
+VERB.I3MS.AI.E0	>akal	yAkluh	OK		
+VERB.I3FS.AI.E0	>akal	tAkluh	OK		
+VERB.I3P.AI.E0	>akal	yAkluwh	OK		

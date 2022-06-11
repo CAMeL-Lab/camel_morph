@@ -1,63 +1,66 @@
-,DEFINE,FIELD,VAR,MATCH,REPLACE,Linguistic Rule,Example,
+,DEFINE,FIELD,VARIANT,MATCH,REPLACE,Linguistic Rule,Example,
 0,#POSTREGEX,diac,EGY,([aiu]#)([^aiA])[aiu]#([^aiu][aiuA]),$1$2$3,(1) v# => 0 / v# C _ C V,sAmi#H+i#nA >> sAmi#H+nA,
 1,#POSTREGEX,diac,EGY,([aiu]|uw|aw|iy|ay|A)([^aiA])[aiu]#([^aiu][aiuA]),$1$2$3,(2) v# => 0 / V C _ C V,katab+a#hA >> katab+hA	 $ATi#rap >> $ATrap,
 2,#POSTREGEX,diac,EGY,((uw|aw|iy|ay|A))[aiu]#,$1,(3) v# => 0 / V: + _,ram+uw+a#hA >> ram+uw+hA,
-3,#POSTREGEX,diac,EGY,#,,(5) remove all #,katabt$ >> katabti$,
+3,#POSTREGEX,diac,EGY,#,,(5) remove all #, sAmi#H+nA >>  sAmiH+nA,
 4,#POSTREGEX,diac,EGY,([^aiuywA]|\b)([^aiuywA])([^aiuywA]),$1$2i$3,(4) 0 => i / (C|^) C _ C,katabta#hA >> katabtahA; btiktib >> bitiktib,
 5,,,,,,,,
 6,POSTREGEX,diac,EGY,([aiu]#)([^aiAM]o?)[aiu]#([^aiu]o?[aiuAM]),$1$2$3,(1) v# => 0 / v# C _ C V,sAmi#H+i#nA >> sAmi#H+nA,
 7,POSTREGEX,diac,EGY,([aiu]|uw|aw|iy|ay|A|M)([^aiAM]o?)[aiu]#([^aiu]o?[aiuAM]),$1$2$3,(2) v# => 0 / V C _ C V,"katab+a#hA >> katab+hA, $ATi#rap >> $ATrap",
 8,POSTREGEX,diac,EGY,((uw|aw|iy|ay|A|M))[aiu]#,$1,(3) v# => 0 / V: + _,ram+uw+a#hA >> ram+uw+hA,
-9,POSTREGEX,diac,EGY,#,,(5) remove all #,katabt$ >> katabti$,
+9,POSTREGEX,diac,EGY,#,,(5) remove all #,sAmi#H+nA >>  sAmiH+nA,
 10,POSTREGEX,diac,EGY,^([^aiuywAM])([^aiuywAM]),$1i$2,(4) 0 => i / ^ C _ C,katabta#hA >> katabtahA; btiktib >> bitiktib,
 11,POSTREGEX,diac,EGY,([^aiuywAM]o?)([^aiuywAM]o?)([^aiuywAM]o?)$,$1$2i$3,(4) 0 => i / C C _ C,katabta#hA >> katabtahA; btiktib >> bitiktib,
 12,,,,,,,,
-13,,,,,,,,
-14,,,,,,,,
+13,POSTREGEX,diac,GLF,[aiu]#([^aiu]o?[aiuAM]),$1,(1) v# => 0 / _ C V,Eara#fawA >> Earf+awA,
+14,POSTREGEX,diac,GLF,#,,(5) remove all #,Eara#fnA >> Earaf+nA,
 15,,,,,,,,
-16,DEFINE,diac,EGY,Input,Reference,Status,,
-17,CHECK,diac,EGY,katabta#hA,katabtahA,TRUE,katabta#hA,katabtahA
-18,CHECK,diac,EGY,sAmi#Htu#kuw,sAmiHtukuw,TRUE,sAmi#Htu#kuw,sAmiHtukuw
-19,CHECK,diac,EGY,sAmi#Ht$,sAmiHti$,TRUE,sAmi#Ht$,sAmiHti$
-20,CHECK,diac,EGY,ramuwa#hA,ramuwhA,TRUE,ramuwa#hA,ramuwhA
-21,CHECK,diac,EGY,$ATi#rap,$ATrap,TRUE,$ATi#rap,$ATrap
-22,CHECK,diac,EGY,kataba#hA,katabhA,TRUE,kataba#hA,katabhA
-23,CHECK,diac,EGY,sAmi#Hi#nA,sAmiHnA,TRUE,sAmi#HnA,sAmiHnA
-24,CHECK,diac,EGY,$ATi#riyn,$ATriyn,TRUE,$ATi#riyn,$ATriyn
-25,CHECK,diac,EGY,sAmi#Hu#h,sAmHuh,TRUE,sAmi#Hu#h,sAmHuh
-26,CHECK,diac,EGY,ramitu#h,ramituh,TRUE,ramitu#h,ramituh
-27,CHECK,diac,EGY,ramit$,ramit$,TRUE,ramit$,ramit$
-28,CHECK,diac,EGY,katabt$,katabti$,TRUE,katabt$,katabti$
-29,CHECK,diac,EGY,katab$,katab$,TRUE,katab$,katab$
-30,CHECK,diac,EGY,ramayt$,ramayt$,TRUE,ramayt$,ramayt$
-31,CHECK,diac,EGY,makatabi#kiy$,makatabkiy$,TRUE,makatabi#kiy$,makatabkiy$
-32,CHECK,diac,EGY,makatabtu#huw$,makatabtuhuw$,TRUE,makatabtu#huw$,makatabtuhuw$
-33,CHECK,diac,EGY,makatabu#huw$,makatabhuw$,TRUE,makatabu#huw$,makatabhuw$
-34,CHECK,diac,EGY,ma_sAmi#H$,ma_sAmiH$,TRUE,ma_sAmi#H$,ma_sAmiH$
-35,CHECK,diac,EGY,ma_sAmi#Ht$,ma_sAmiHti$,TRUE,ma_sAmi#Ht$,ma_sAmiHti$
-36,CHECK,diac,EGY,ma_sakat~$,ma_sakat~i$,TRUE,ma_sakat~$,ma_sakat~i$
-37,CHECK,diac,EGY,ma_tim$iy$,ma_tim$iy$,TRUE,ma_tim$iy$,ma_tim$iy$
-38,CHECK,diac,EGY,btim$iy,bitim$iy,TRUE,btim$iy,bitim$iy
-39,CHECK,diac,EGY,nisi#yuwA,nisyuwA,TRUE,nisi#yuwA,nisyuwA
-40,CHECK,diac,EGY,nisi#yuwA,nisyuwA,TRUE,nisi#yuwA,nisyuwA
-41,CHECK,diac,EGY,nisi#yt,nisiyt,TRUE,nisi#yt,nisiyt
-42,CHECK,diac,EGY,nisi#yit,nisyit,TRUE,nisi#yit,nisyit
-43,CHECK,diac,EGY,Aisotazadtiy,Aisotazadtiy,TRUE,Aisotazadtiy,Aisotazadtiy
-44,CHECK,diac,EGY,tAku#luwA,,FALSE,tAku#luwA,tAkluwA
-45,CHECK,diac,EGY,nAku#l,,FALSE,nAku#l,nAkul
-46,,,,,,,,
-47,,,,,,,,
-48,,,,,,,,
-49,Postregex files. used byt the CamelDBMaker,,,,,,,
-50,DEFINE,FIELD,VAR,Match,Replace,Linguistic Rule,,
-51,#POSTREGEX,diac,EGY,Al\#+\S[SD],al,,,
-52,,,,,,,,
-53,,,,,,,,
-54,,,,,,,,
+16,,,,,,,,
+17,,,,,,,,
+18,,,,,,,,
+19,DEFINE,diac,EGY,Input,Reference,Status,,
+20,CHECK,diac,EGY,katabta#hA,katabtahA,TRUE,katabta#hA,katabtahA
+21,CHECK,diac,EGY,sAmi#Htu#kuw,sAmiHtukuw,TRUE,sAmi#Htu#kuw,sAmiHtukuw
+22,CHECK,diac,EGY,sAmi#Ht$,sAmiHti$,TRUE,sAmi#Ht$,sAmiHti$
+23,CHECK,diac,EGY,ramuwa#hA,ramuwhA,TRUE,ramuwa#hA,ramuwhA
+24,CHECK,diac,EGY,$ATi#rap,$ATrap,TRUE,$ATi#rap,$ATrap
+25,CHECK,diac,EGY,kataba#hA,katabhA,TRUE,kataba#hA,katabhA
+26,CHECK,diac,EGY,sAmi#Hi#nA,sAmiHnA,TRUE,sAmi#HnA,sAmiHnA
+27,CHECK,diac,EGY,$ATi#riyn,$ATriyn,TRUE,$ATi#riyn,$ATriyn
+28,CHECK,diac,EGY,sAmi#Hu#h,sAmHuh,TRUE,sAmi#Hu#h,sAmHuh
+29,CHECK,diac,EGY,ramitu#h,ramituh,TRUE,ramitu#h,ramituh
+30,CHECK,diac,EGY,ramit$,ramit$,TRUE,ramit$,ramit$
+31,CHECK,diac,EGY,katabt$,katabti$,TRUE,katabt$,katabti$
+32,CHECK,diac,EGY,katab$,katab$,TRUE,katab$,katab$
+33,CHECK,diac,EGY,ramayt$,ramayt$,TRUE,ramayt$,ramayt$
+34,CHECK,diac,EGY,makatabi#kiy$,makatabkiy$,TRUE,makatabi#kiy$,makatabkiy$
+35,CHECK,diac,EGY,makatabtu#huw$,makatabtuhuw$,TRUE,makatabtu#huw$,makatabtuhuw$
+36,CHECK,diac,EGY,makatabu#huw$,makatabhuw$,TRUE,makatabu#huw$,makatabhuw$
+37,CHECK,diac,EGY,ma_sAmi#H$,ma_sAmiH$,TRUE,ma_sAmi#H$,ma_sAmiH$
+38,CHECK,diac,EGY,ma_sAmi#Ht$,ma_sAmiHti$,TRUE,ma_sAmi#Ht$,ma_sAmiHti$
+39,CHECK,diac,EGY,ma_sakat~$,ma_sakat~i$,TRUE,ma_sakat~$,ma_sakat~i$
+40,CHECK,diac,EGY,ma_tim$iy$,ma_tim$iy$,TRUE,ma_tim$iy$,ma_tim$iy$
+41,CHECK,diac,EGY,btim$iy,bitim$iy,TRUE,btim$iy,bitim$iy
+42,CHECK,diac,EGY,nisi#yuwA,nisyuwA,TRUE,nisi#yuwA,nisyuwA
+43,CHECK,diac,EGY,nisi#yuwA,nisyuwA,TRUE,nisi#yuwA,nisyuwA
+44,CHECK,diac,EGY,nisi#yt,nisiyt,TRUE,nisi#yt,nisiyt
+45,CHECK,diac,EGY,nisi#yit,nisyit,TRUE,nisi#yit,nisyit
+46,CHECK,diac,EGY,Aisotazadtiy,Aisotazadtiy,TRUE,Aisotazadtiy,Aisotazadtiy
+47,CHECK,diac,EGY,tAku#luwA,,FALSE,tAku#luwA,tAkluwA
+48,CHECK,diac,EGY,nAku#l,,FALSE,nAku#l,nAkul
+49,,,,,,,,
+50,,,,,,,,
+51,,,,,,,,
+52,Postregex files. used byt the CamelDBMaker,,,,,,,
+53,DEFINE,FIELD,VAR,Match,Replace,Linguistic Rule,,
+54,#POSTREGEX,diac,EGY,Al\#+\S[SD],al,,,
 55,,,,,,,,
 56,,,,,,,,
 57,,,,,,,,
-58,OUTPUT in DB should look like:,,,,,,,
-59,###POSTREGEX###,,,,,,,
-60,diac,1,#\\+*([\u062a\u062b\u062f\u0630\u0631\u0632\u0633\u0634\u0635\u0636\u0637\u0638\u0644]),\u2432,,,,
-61,diac,1,#\+*[شسيببيلي],ال,,,,
+58,,,,,,,,
+59,,,,,,,,
+60,,,,,,,,
+61,OUTPUT in DB should look like:,,,,,,,
+62,###POSTREGEX###,,,,,,,
+63,diac,1,#\\+*([\u062a\u062b\u062f\u0630\u0631\u0632\u0633\u0634\u0635\u0636\u0637\u0638\u0644]),\u2432,,,,
+64,diac,1,#\+*[شسيببيلي],ال,,,,

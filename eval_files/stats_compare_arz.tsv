@@ -1,0 +1,8 @@
+noan	1743	0	0	0
+only_baseline	1541	0	5749	0
+only_camel	2769	6588	0	0
+equal	3818	6905	6905	6905
+disjoint	1439	3778	3819	0
+overlap	3280	16227	16803	7854
+camel_superset	3196	14910	7303	7303
+baseline_superset	2553	7245	12829	7245

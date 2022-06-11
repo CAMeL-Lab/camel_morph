@@ -57,9 +57,9 @@
 55,{isota1o2a3,{isota1a2~,{isota1a2~,c-suff + a-# gem,c-suff,a-# gem,38,{isotadaq~_1,sotadoqiq,be_fine;be_thin,(.).(.).(.).(.).(.),$1o$2a$3o$4a$5,c-suff + u-# gem,c-suff,u-# gem,sotadoqaq,0,,DONE
 56,{isota1o2a3,{isota1a2~,{isota1a2~,v-suff + a-# #n gem,v-suff,a-# #n gem,2,{isotakan~_1,sotakin~,be_concealed;be_hidden,(.).(.).(.).(.)~,$1o$2a$3a$4~,v-suff + u-# #n gem,v-suff,u-# #n gem,sotakan~,0,,DONE
 57,{isota1o2a3,{isota1a2~,{isota1a2~,c-suff + a-# #n gem,c-suff,a-# #n gem,2,{isotakan~_1,sotakonin,be_concealed;be_hidden,(.).(.).(.).(.).(.),$1o$2a$3o$4a$5,c-suff + u-# #n gem,c-suff,u-# #n gem,sotakonan,0,,DONE
-58,{isota1o2a3,{isota1a@o3,{isota1aAo3,v-suff + a-# hollow,v-suff,a-# hollow,55,{isotaTAE_1,sotaTiyE,be_able;be_capable,(.).(.).(.).y(.),$1o$2a$3A$4,v-suff + u-# hollow,v-suff,u-# hollow,sotaTAE,1,,DONE
+58,{isota1o2a3,{isota1a@o3,{isota1aAo3,v-suff + a-# hollow,v-suff,a-# hollow,55,{isotaTAE_1,sotaTiyE,be_able;be_capable,(.).(.).(.).(.)(.),$1o$2a$3A$5,v-suff + u-# hollow,v-suff,u-# hollow,sotaTAE,1,,DONE
 59,{isota1o2a3,{isota1a@o3,{isota1aAo3,c-suff + a-# hollow,c-suff,a-# hollow,53,{isotaTAE_1,sotaTiE,be_able;be_capable,(.).(.).(.).(.),$1o$2a$3a$4,c-suff + u-# hollow,c-suff,u-# hollow,sotaTaE,1,,DONE
-60,{isota1o2a3,{isota1a@o3,{isota1aAo3,v-suff + a-# #n hollow,v-suff,a-# #n hollow,4,{isotabAn_1,sotabiyn,clarify;explain,(.).(.).(.).y(.),$1o$2a$3A$4,v-suff + u-# #n hollow,v-suff,u-# #n hollow,sotabAn,1,,DONE
+60,{isota1o2a3,{isota1a@o3,{isota1aAo3,v-suff + a-# #n hollow,v-suff,a-# #n hollow,4,{isotabAn_1,sotabiyn,clarify;explain,(.).(.).(.).(.)(.),$1o$2a$3A$5,v-suff + u-# #n hollow,v-suff,u-# #n hollow,sotabAn,1,,DONE
 61,{isota1o2a3,{isota1a@o3,{isota1aAo3,c-suff + a-# #n hollow,c-suff,a-# #n hollow,4,{isotabAn_1,sotabin,clarify;explain,(.).(.).(.).(.),$1o$2a$3a$4,c-suff + u-# #n hollow,c-suff,u-# #n hollow,sotaban,1,,DONE
 62,1A2a3,1@ya>,1Aya>,u-#,,u-#,1,hAya>_1,hAyi},agree_with,(.)A(.).(.),$1A$2a>,u-#,,u-#,hAya>,0,,DONE
 63,{isota1o2a3,{isota1o2a3,{isota1o2a3,a-#,,a-#,196,{isotaTorad_1,sotaTorid,proceed;continue,(.).(.).(.).(.).(.),$1o$2a$3o$4a$5,u-#,,u-#,sotaTorad,1,,DONE
@@ -92,9 +92,9 @@
 90,>1o2a3,>a1a2~,>a1a2~,v-suff + u-# #n gem,v-suff,u-# #n gem,1,>aman~_1,min~,exhaust;tire,(.).(.)~,$1a$2~,v-suff + u-# #n gem,v-suff,u-# #n gem,man~,0,,DONE
 91,>1o2a3,>a1a2~,>a1a2~,c-suff + u-# #n gem,c-suff,u-# #n gem,1,>aman~_1,monin,exhaust;tire,(.).(.).(.),$1o$2a$3,c-suff + u-# #n gem,c-suff,u-# #n gem,monan,0,,DONE
 92,>1o2a3,>a1a@o3,>a1aAo3,c-suff + u-# hollow,c-suff,u-# hollow,107,>axAl_1,xil,be_vague;be_doubtful;be_intricate,(.).(.),$1a$2,c-suff + u-# hollow,c-suff,u-# hollow,xal,1,,DONE
-93,>1o2a3,>a1a@o3,>a1aAo3,v-suff + u-# hollow,v-suff,u-# hollow,107,>axAl_1,xiyl,be_vague;be_doubtful;be_intricate,(.).y(.),$1A$2,v-suff + u-# hollow,v-suff,u-# hollow,xAl,1,,DONE
+93,>1o2a3,>a1a@o3,>a1aAo3,v-suff + u-# hollow,v-suff,u-# hollow,107,>axAl_1,xiyl,be_vague;be_doubtful;be_intricate,(.).(.)(.),$1A$3,v-suff + u-# hollow,v-suff,u-# hollow,xAl,1,,DONE
 94,>1o2a3,>a1a@o3,>a1aAo3,c-suff + u-# #n hollow,c-suff,u-# #n hollow,5,>adAn_1,din,condemn;censure,(.).(.),$1a$2,c-suff + u-# #n hollow,c-suff,u-# #n hollow,dan,1,,DONE
-95,>1o2a3,>a1a@o3,>a1aAo3,v-suff + u-# #n,v-suff,u-# #n,5,>adAn_1,diyn,condemn;censure,(.).y(.),$1A$2,v-suff + u-# #n,v-suff,u-# #n,dAn,1,,DONE
+95,>1o2a3,>a1a@o3,>a1aAo3,v-suff + u-# #n,v-suff,u-# #n,5,>adAn_1,diyn,condemn;censure,(.).(.)(.),$1A$3,v-suff + u-# #n,v-suff,u-# #n,dAn,1,,DONE
 96,>1o2a3,>a1a@o>,>a1aAo>,v-suff + u-# #-iy' hollow,v-suff,u-# #-iy' hollow,4,>aDA'_1,D,shine;illuminate,(.),$1,u-# #-A' hollow,,u-# #-A' hollow,D,0,,DONE
 97,>1o2a3,>a1a@o>,>a1aAo>,u-# #-iy' hollow,,u-# #-iy' hollow,2,>asA'_1,s,harm;offend,(.),$1,u-# #-A' hollow,,u-# #-A' hollow,s,0,,DONE
 98,>1o2a3,>a1o2a3,>a1o2a3,u-#,,u-#,485,>a$okal_1,$okil,be_ambiguous;be_complicated,(.).(.).(.),$1o$2a$3,u-#,,u-#,$okal,1,,DONE
@@ -168,7 +168,7 @@
 166,1a2a3,1a2a3,1a2a3,a-# #n,,a-# #n,58,Eajan-ui_1,Eojun,knead;discuss,(.).(.).(.),$1o$2a$3,u-# #n,,u-# #n,Eojan,0,,DONE
 167,1a2a3,1a2a>,1a2a>,a-# #-a>,,a-# #-a>,45,dana>-a_1,don,be_vile;be_despicable,(.).(.),$1o$2,u-# #-a>,,u-# #-a>,don,1,,DONE
 168,1a2a3,1a2a>,1a2a>,a-# #-u&,,a-# #-u&,1,hana>-u_1,hon,be_beneficial;be_wholesome,(.).(.),$1o$2,u-# #-a>,,u-# #-a>,hon,1,,DONE
-169,1a2a3,1a2a>,1a2a>,a-#,,a-#,1,hana>-i_1,honi},be_beneficial;be_wholesome,(.).(.).},$1o$2,u-# #-a>,,u-# #-a>,hon,1,,DONE
+169,1a2a3,1a2a>,1a2a>,a-#,,a-#,1,hana>-i_1,honi},be_beneficial;be_wholesome,(.).(.).(.),$1o$2,u-# #-a>,,u-# #-a>,hon,1,,DONE
 170,1a2a3,1a2a@,1a2aA,a-# #-uw defective,,a-# #-uw defective,131,HajA-u_1,Hoj,deem,(.).(.),$1o$2,u-# #-aY defective,,u-# #-aY defective,Hoj,0,,DONE
 171,1a2a3,1a2a#,1a2aY,a-# #-iy defective,,a-# #-iy defective,68,naEaY-a_1,noE,announce_the_death_of,(.).(.),$1o$2,u-# #-aY defective,,u-# #-aY defective,noE,1,,DONE
 172,1a2a3,1a2a#,1a2aY,a-# #-aY defective,,a-# #-aY defective,10,dahaY-a_1,doh,befall;strike,(.).(.),$1o$2,u-# #-aY defective,,u-# #-aY defective,doh,1,,DONE
@@ -211,9 +211,9 @@
 209,1a2a3,1u2iy,1u2iy,a-# #-aY defective,,a-# #-aY defective,1,zuhiy-a_1,zoh,be_conceited;be_boastful,(.).(.),$1o$2,u-# #-aY defective,,u-# #-aY defective,zoh,1,,DONE
 210,1a2a3,1u2~,1u2~,v-suff + a-# gem,v-suff,a-# gem,1,kuz~_1,kaz~,have_tetanus,(.).(.)~,$1a$2~,v-suff + u-# gem,v-suff,u-# gem,kaz~,0,,DONE
 211,1a2a3,1u2~,1u2~,c-suff + a-# gem,c-suff,a-# gem,1,kuz~_1,kozaz,have_tetanus,(.).(.).(.),$1a$2a$3,c-suff + u-# gem,c-suff,u-# gem,kazaz,0,,DONE
-212,>1o2a3,>awo2a3,>awo2a3,u-#,,u-#,50,>awo$ak_1,w$ik,be_on_the_verge_of;be_about_to;almost,w(.).(.),w$1a$2,u-#,,u-#,w$ak,1,,DONE
-213,>1o2a3,>awo2a>,>awo2a>,u-#,,u-#,3,>awoma>_1,wmi},signal;motion,w(.).(.),w$1a>,u-#,,u-#,wma>,0,,DONE
-214,>1o2a3,>ayo2a3,>ayo2a3,u-#,,u-#,6,>ayobas_1,wbis,make_dry;desiccate,w(.).(.),w$1a$2,u-#,,u-#,wbas,1,,DONE
+212,>1o2a3,>awo2a3,>awo2a3,u-#,,u-#,50,>awo$ak_1,w$ik,be_on_the_verge_of;be_about_to;almost,(.)(.).(.),$1$2a$3,u-#,,u-#,w$ak,1,,DONE
+213,>1o2a3,>awo2a>,>awo2a>,u-#,,u-#,3,>awoma>_1,wmi},signal;motion,(.)(.).(.),$1$2a>,u-#,,u-#,wma>,0,,DONE
+214,>1o2a3,>ayo2a3,>ayo2a3,u-#,,u-#,6,>ayobas_1,wbis,make_dry;desiccate,(.)(.).(.),$1$2a$3,u-#,,u-#,wbas,1,,DONE
 215,1a2a3,>a2a@,>a2aA,a-# >-# #-uw defective,,a-# >-# #-uw defective,2,>alA-u_1,l,neglect;desist_from,(.),$1,u-# >-# #-uw defective,,u-# >-# #-aY defective,l,0,,DONE
 216,1a2a3,>a2a#,>a2aY,a-# >-# #-aY defective,,a-# >-# #-aY defective,1,>abaY-a_1,b,deny;refuse,(.),$1,u-# >-# #-aY defective,,u-# >-# #-aY defective,b,1,,DONE
 217,1a2a3,>a2a#,>a2aY,a-# >-# #-iy defective,,a-# >-# #-iy defective,2,>ataY-i_1,t,arrive;come;reach,(.),$1,u-# >-# #-iy defective,,u-# >-# #-aY defective,t,1,,DONE
@@ -300,7 +300,7 @@
 298,ta1a2~3,ta1a2~a>,ta1a2~a>,a-# #-a>,,a-# #-a>,9,tabar~a>_1,tabar~,be_absolved;be_innocent,ta(.).(.)~,ta$1a$2~,u-# #-a>,,u-# #-a>,tabar~,1,,DONE
 299,ta1a2~3,ta1a2~a#,ta1a2~aY,a-# #-aY defective,,a-# #-aY defective,79,ta*ar~aY_1,ta*ar~,climb;take_refuge,ta(.).(.)~,ta$1a$2~,u-# #-aY defective,,u-# #-aY defective,ta*ar~,0,,DONE
 300,ta1a2~3,ta1a2~a#,ta1a2~aY,a-# #-aY gem defective,,a-# #-aY gem defective,2,tafaD~aY_1,tafaD~,be_idle;have_free_time;be_free_from,ta(.).(.)~,ta$1a$2~,u-# #-aY gem defective,,u-# #-aY gem defective,tafaD~,0,,DONE
-301,>1o2a3,>ayo2a3,>ayo2a3,u-# #n,,u-# #n,1,>ayoqan_1,wqin,ascertain;be_convinced,w(.).(.),w$1a$2,u-# #n,,u-# #n,wqan,1,,DONE
+301,>1o2a3,>ayo2a3,>ayo2a3,u-# #n,,u-# #n,1,>ayoqan_1,wqin,ascertain;be_convinced,(.)(.).(.),$1$2a$3,u-# #n,,u-# #n,wqan,1,,DONE
 302,ta1a2~3,ta1a>~a3,ta1a>~a3,a-#,,a-#,3,tara>~af_1,tara>~af,show_mercy;have_pity,ta(.).(.)~.(.),ta$1a$2~a$3,u-#,,u-#,tara>~af,0,,DONE
 303,ta1a2~3,ta1a>~a#,ta1a>~aY,a-# #-aY defective,,a-# #-aY defective,1,tara>~aY_1,tara>~,think;believe,ta(.).(.)~,ta$1a$2~,u-# #-aY defective,,u-# #-aY defective,tara>~,1,,DONE
 304,ta1a2~3,ta1aw~a3,ta1aw~a3,a-#,,a-#,73,ta*aw~aq_1,ta*aw~aq,perceive;taste,ta(.).(.)~.(.),ta$1a$2~a$3,u-#,,u-#,ta*aw~aq,0,,DONE
@@ -350,8 +350,8 @@
 348,ta1a2o3o4a5,ta>a2o3o4a5,ta>a2o3o4a5,a-#,,a-#,-,ta>anokolaz,ta>anokolaz,-,ta(.).(.).(.).(.).(.),tu$1u$2o$3o$4i$5,u-#,,u-#,tu>unokoliz,1,,DONE
 349,1a2a3,1a>a#,1a>aY,a-# #-iy defective,,a-# #->ay defective,-,Sa>aY-a_1,S,-,(.),$1o>,u-# #-aY defective,,u-# #-aY defective,So>,0,,DONE
 350,1A2a3,>@2a3,>A2a3,u-# >-# #n,,u-# >-#,-,|nas_1,nis,-,(.).(.),$1a$2,u-# >-# #n,,u-# >-#,nas,1,,DONE
-351,1A2a3,>@2a3,>A2a3,u-# >-# #n,,u-#,-,|nas_1,&Anis,-,&A(.).(.),&A$1a$2,u-# >-# #n,,u-#,&Anas,1,,DONE
-352,1a2~a3,>aw~a3,>aw~a3,u-# >-# #n,,u-#,-,>aw~al_1,>aw~il,-,>a(.)~.(.),&a$1~a$2,u-# >-# #n,,u-#,&aw~al,0,,DONE
+351,1A2a3,>@2a3,>A2a3,u-# >-# #n,,u-#,-,|nas_1,&Anis,-,(.)A(.).(.),$1A$2a$3,u-# >-# #n,,u-#,&Anas,1,,DONE
+352,1a2~a3,>aw~a3,>aw~a3,u-# >-# #n,,u-#,-,>aw~al_1,>aw~il,-,(.)a(.)~.(.),$1a$2~a$3,u-# >-# #n,,u-#,>aw~al,0,,DONE
 353,1a2a3,>a2i3,>a2i3,a-# >-# #n,,a-# >-#,-,>ahil-a_1,hal,-,(.).(.),$1a$2,u-# >-# #n,,u-# >-#,hal,1,,DONE
 354,1a2a3,1a2a@,1a2aA,a-# #-uw defective,,a-# #-iy defective,-,HajA-i_1,Hoj,-,(.).(.),$1o$2,u-# #-aY defective,,u-# #-aY defective,Hoj,0,,DONE
 355,1A2a3,>@2a#,>A2aY,a-# >-# #-iy defective,,u-# #-iy defective,-,|laY_1,&Al,-,(.)(.)(.),$1$2$3,u-# >-# #-iy defective,,u-# #-aY defective,&Al,1,,DONE
