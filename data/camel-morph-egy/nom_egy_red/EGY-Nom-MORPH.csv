@@ -1,0 +1,301 @@
+,LINE,DEFINE,CLASS,MORPHEME,MORPH,BW,GLOSS,FEAT,COND-T,COND-S,NOTES,EXAMPLES,STATUS,NSTAT,Check
+0,1,MORPH,[QUES],_,_,_,_,prc3:0,_,_,Clitics,,DROP,,
+1,,,,,,,,,,,,,,,
+2,3,,,,,,,,,,,,,,
+3,4,MORPH,[CONJ],_,_,_,_,prc2:0,_,_,Clitics,,,,
+4,5,MORPH,[CONJ],fa/CONJ,fa,fa/CONJ,so/and,prc2:fa_conj,_,_,Clitics,,,,
+5,6,#MORPH,[CONJ],fa/PART_CONNECT,fa,fa/CONNEC_PART,so/then,prc2:fa_conn,_,_,Clitics,,,,
+6,7,#MORPH,[CONJ],fa/PART_RC,fa,fa/RC_PART,so/then,prc2:fa_rc,_,_,Clitics,,,,
+7,8,#MORPH,[CONJ],fa/CONJ_SUB,fa,fa/SUB_CONJ,because/therefore/as_a_result,prc2:fa_sub,_,_,Clitics,,,,
+8,9,MORPH,[CONJ],wi/CONJ,wi,wi/CONJ,and,prc2:wi_conj,_,_,Clitics,,,,
+9,10,#MORPH,[CONJ],wi/PART,wi,wi/PART,[part.],prc2:wi_part,_,_,Clitics,,,,
+10,11,#MORPH,[CONJ],wi/SUB_CONJ,wi,wi/SUB_CONJ,while,prc2:wi_sub,_,_,Clitics,,,,
+11,12,,,,,,,,,,,,,,
+12,13,MORPH,[PREP],_,_,_,_,prc1:0,_,_,Clitics,,,,
+13,14,MORPH,[PREP],bi/PREP,bi,bi/PREP,with/by,prc1:bi_prep,_,_,Clitics,,,,
+14,15,MORPH,[PREP],fi/PREP,fi,fi/PREP,in,prc1:fi_prep,_,_,Clitics,,,,
+15,16,MORPH,[PREP],li/PREP,li,li/PREP,for/to,prc1:li_prep,_,li/PREP,Clitics,,,,
+16,17,#MORPH,[PREP],Ea/PREP,Ea,Ea/PREP,to,prc1:Ea_prep,_,_,Clitics,,,,
+17,18,#MORPH,[PREP],bi/PART,bi,bi/PART,[part.],prc1:bi_part,_,_,Clitics,,,,
+18,19,,,,,,,,,,,,,,
+19,20,#MORPH,[EMPH],_,_,_,_,prc1:0,_,_,Clitics,,DROP,,
+20,,,,,,,,,,,,,,,
+21,22,,,,,,,,,,,,,,
+22,23,MORPH,[ART],_,_,_,_,prc0:0,_,_,Clitics,"بيت، لغة , لِلُغة",DROP,,
+23,24,MORPH,[ART],Al/PART_DET,Al#,Al/DET,the,prc0:Al_det stt:d,!li/PREP,_,Clitics,البيت، اللغة,,,
+24,27,MORPH,[ART],Al/PART_DET,l#,Al/DET,the,prc0:Al_det stt:d,li/PREP !L#,_,Clitics,للبيت،,,,
+25,26,MORPH,[ART],Al/PART_DET,#,Al/DET,the,prc0:Al_det stt:d,li/PREP L#,_,Clitics,لِلُّغة,,,
+26,27,,,,,,,,,,,,,,
+27,28,,,,,,,,,,,,,,
+28,100,#Buffers,,,,,,,,,,,,,
+29,101,MORPH,[NBuff],Buffer,_,_,,,else,,Buffer Base,,,,
+30,102,MORPH,[NBuff],Buffer#aY-Ap-y,aY,aY/STEM,,,#aY-Ap-y MS enc0:0,,Buffer #aY-Ap-y,مستوى,,,
+31,103,MORPH,[NBuff],Buffer#aY-Ap-y,A,A/STEM,,,#aY-Ap-y MS !enc0:0,,Buffer #aY-Ap-y,"مستواه,مستوايا",,,
+32,104,MORPH,[NBuff],Buffer#aY-Ap-y,ay,ay/STEM,,,#aY-Ap-y MD||FD||FP,,Buffer #aY-Ap-y,"مستويين, مستويات، وفيتين",,,
+33,105,MORPH,[NBuff],Buffer#aY-Ap-y,i,i/STEM,,,#aY-Ap-y FD,,Buffer #aY-Ap-y,حمتين ,,,
+34,105.1,MORPH,[NBuff],Buffer#aY-Ap-y,A,A/STEM,,,#aY-Ap-y FS,,Buffer #aY-Ap-y,مباراة,,,مباراتين مباريتين 
+35,106,MORPH,[NBuff],Buffer#aY-Ap-y,_,_,,,#aY-Ap-y MP,,Buffer #aY-Ap-y,مصطفين,,,
+36,107,MORPH,[NBuff],Buffer#A-Ap-w,A,A/STEM,,,#A-Ap-w MS,,Buffer #A-Ap-w,أسطا,,,
+37,108,MORPH,[NBuff],Buffer#A-Ap-w,ay,ay/STEM,,,#A-Ap-w MD,,Buffer #A-Ap-w,اسطيين,,,"usually we say both اسطوين , اسطيين"
+38,108,MORPH,[NBuff],Buffer#A-Ap-w,aw,aw/STEM,,,#A-Ap-w FP,,Buffer #A-Ap-w,أسطوات، أدوات,,,
+39,109,MORPH,[NBuff],Buffer#A-Ap-w,A,A/STEM,,,#A-Ap-w FS||FD,,Buffer #A-Ap-w,اداة أداتين ,,,
+40,110,MORPH,[NBuff],Buffer#A-Ap-w,_,_,,,#A-Ap-w MP,,Buffer #A-Ap-w,,,,
+41,111,MORPH,[NBuff],Buffer#A',','/STEM,,Word end,#A' MS enc0:0,,Buffer #A',بناء،غباء,,,
+42,112,MORPH,[NBuff],Buffer#A',','/STEM,, pron,#A' MS !enc0:0 else,,Buffer #A',غباءها,,,
+43,113,MORPH,[NBuff],Buffer#A',&,&/STEM,, pron,#A' MS !enc0:0 C:POSS_PRON-u,,Buffer #A',غباؤه,,,
+44,114,MORPH,[NBuff],Buffer#A',},}/STEM,, pron,#A' MS !enc0:0 C:POSS_PRON-iy,,Buffer #A',غبائي,,,
+45,114,MORPH,[NBuff],Buffer#A',},}/STEM,, pron,#A' MS !enc0:0 C:POSS_PRON-i,,Buffer #A',غبائك,,,
+46,116,MORPH,[NBuff],Buffer#A',},}/STEM,,%y-suff,#A' MD||MP||FD y-suff,,Buffer #A',"بنائين،بنائتين, غبائين ",,,
+47,117,MORPH,[NBuff],Buffer#A',','/STEM,,"a-suff, A-suff",#A' FS||FP,,Buffer #A',"بناءة, بناءات",,,
+48,118,MORPH,[NBuff],Buffer#A-A',-,-,,no pron/word end,#A-A' MS enc0:0,,Buffer #A-A',استثنا,,,
+49,119,MORPH,[NBuff],Buffer#A-A',','/STEM,, pron,#A-A' MS !enc0:0 else,,Buffer #A-A',"استثناءها, استثناءهم",,,
+50,120,MORPH,[NBuff],Buffer#A-A',&,&/STEM,,u-suff + pron,#A-A' MS !enc0:0 C:POSS_PRON-u,,Buffer #A-A',استثناؤه,,,
+51,114,MORPH,[NBuff],Buffer#A-A',},}/STEM,, pron,#A-A' MS !enc0:0 C:POSS_PRON-iy,,Buffer #A-A',استثنائي ,,,
+52,114,MORPH,[NBuff],Buffer#A-A',},}/STEM,, pron,#A-A' MS !enc0:0 C:POSS_PRON-i,,Buffer #A-A',استثنائك ,,,
+53,123,MORPH,[NBuff],Buffer#A-A',},}/STEM,,%y-suff,#A-A' MD y-suff,,Buffer #A-A',استثنائين,,,
+54,125,MORPH,[NBuff],Buffer#A-A',','/STEM,,% A-suff,#A-A' FP,,Buffer #A-A',استثناءات,,,
+55,123,MORPH,[NBuff],Buffer#A-A',},}/STEM,,%y-suff,#A-A' MP y-suff,,Buffer #A-A',,,,
+56,124,MORPH,[NBuff],Buffer#A'-w,','/STEM,,% a-suff,#A'-w FS||FD,,Buffer #A'-w,صحراء سماء,,,
+57,,,,,,,,,,,,,,,
+58,126,MORPH,[NBuff],Buffer#a>,a>,a>/STEM,,word end,#a> MS enc0:0,,Buffer #a>,مبدأ,,,The #a> can be reduced to 4 lines
+59,127,MORPH,[NBuff],Buffer#a>,a>,a>/STEM,,pron,#a> MS !enc0:0 else,,Buffer #a>,مبدأها,,,
+60,128,MORPH,[NBuff],Buffer#a>,a&,&/STEM,,pron,#a> MS !enc0:0 C:POSS_PRON-u,,Buffer #a>,مبدؤه,,,
+61,129,MORPH,[NBuff],Buffer#a>,a},}/STEM,,pron,#a> MS !enc0:0 C:POSS_PRON-iy,,Buffer #a>,مبدئي,,,
+62,129,MORPH,[NBuff],Buffer#a>,a},}/STEM,,pron,#a> MS !enc0:0 C:POSS_PRON-i ,,Buffer #a>,مبدئك,,,
+63,130,MORPH,[NBuff],Buffer#a>,a>,a>/STEM,,,#a> FS enc0:0,,Buffer #a>,مكافأة,,,
+64,130,MORPH,[NBuff],Buffer#a>,},}/STEM,,,#a> FS !enc0:0 ,,Buffer #a>,مكافئتي، مكافئته,,,
+65,130,MORPH,[NBuff],Buffer#a>,},}/STEM,,,#a> FD||MD,,Buffer #a>,مكافئتين، مبدئين,,,
+66,131,MORPH,[NBuff],Buffer#a>,_,_,,,#a> FP||MD A-suff,,Buffer #a>,مكافآت ,,,
+67,,,,,,,,,,,,,,,
+68,,,,,,,,,,,,,,,
+69,134,MORPH,[NBuff],Buffer#a>,},}/STEM,,%y-suff,#a> MP y-suff,,Buffer #a>,المُكافئين,,,
+70,,,,,,,,,,,,,,,
+71,136,MORPH,[NBuff],Buffer#iy~,iy,iy~/STEM,,,#iy~ MS ,,Buffer #iy~,محامي ,,,
+72,137,MORPH,[NBuff],Buffer#iy~,_,_,,,#iy~ MP,,Buffer #iy~,محامين,,,
+73,138,MORPH,[NBuff],Buffer#iy~,iy~,iy~/STEM,,else,#iy~ MD||FS||FD||FP,,Buffer #iy~,محامي,,,
+74,,,,,,,,,,,,,,,
+75,140,MORPH,[NBuff],Buffer#A}iy~,}iy,}iy/STEM,,,#A}iy MS !i-suff,,Buffer #A}iy,رائي,,,
+76,,,,,,,,,,,,,,,
+77,,,,,,,,,,,,,,,
+78,143,MORPH,[NBuff],Buffer#A}iy~,}iy~,}iy/STEM,,,#A}iy~ MD||MP||FS||FD||FP,,Buffer #A}iy,رائية، رائيان,,,
+79,144,MORPH,[NBuff],Buffer#aA,A,A/STEM,,,#A MS,,Buffer #aA,ايدولوجيا,,,
+80,145,MORPH,[NBuff],Buffer#aA,_,_,,,#A MD||MP||FS||FD||FP,,Buffer #aA,ايدولوجيتان ايدولوجيات,,,not present for some combinations]
+81,146,MORPH,[NBuff],Buffer#w',','/STEM,,,#w' MS enc0:0,,Buffer #w',موبوء,,,hamza conditions can be reduced 
+82,147,MORPH,[NBuff],Buffer#w',','/STEM,,,#w' MS !enc0:0 else,,Buffer #w',موبوء,,,
+83,148,MORPH,[NBuff],Buffer#w',},}/STEM,,,#w' MS !enc0:0 C:POSS_PRON-iy,,Buffer #w',موبوئي ,,,
+84,148,MORPH,[NBuff],Buffer#w',},}/STEM,,,#w' MS !enc0:0 C:POSS_PRON-i ,,Buffer #w',موبوئك,,,
+85,149,MORPH,[NBuff],Buffer#w',','/STEM,,,#w'FS||FD||FP,,Buffer #w',موبوءان موبوءين موبوءة موبوءتان موبوءات,,,%a-suffs
+86,,,,,,,,,,,,,,,
+87,151,MORPH,[NBuff],Buffer#w',},}/STEM,,,#w' MD||MP y-suff,,Buffer #w',موبوئين,,,
+88,152,MORPH,[NBuff],Buffer#w',u&,u&/STEM,,,#u& MS enc0:0,,Buffer #u&,أكمؤ,,,hamza conditions can be reduced 
+89,153,MORPH,[NBuff],Buffer#w',u&,u&/STEM,,,#u& MS !enc0:0 else,,Buffer #u&,أكمؤه,,,
+90,154,MORPH,[NBuff],Buffer#w',u},u}/STEM,,,#u& MS !enc0:0 C:POSS_PRON-iy,,Buffer #u&,أكمئي,,,
+91,154,MORPH,[NBuff],Buffer#w',u},u}/STEM,,,#u& MS !enc0:0 C:POSS_PRON-i,,Buffer #u&,أكمئك,,,
+92,155,MORPH,[NBuff],Buffer#w',u&,u&/STEM,,,#u& FS||FD||FP,,Buffer #u&,,,,%a-suffs
+93,,,,,,,,,,,,,,,
+94,157,MORPH,[NBuff],Buffer#w',u},u}/STEM,,,#u& MD||MP y-suff,,Buffer #u&,,,,
+95,158,MORPH,[NBuff],Buffer#o' ,','/STEM,,,#o' MS enc0:0,,Buffer #o',جزء,,,hamza conditions can be reduced 
+96,159,MORPH,[NBuff],Buffer#o' ,','/STEM,,,#o' MS !enc0:0 else,,Buffer #o',جزءك,,,
+97,160,MORPH,[NBuff],Buffer#o' ,&,&/STEM,,,#o' MS !enc0:0 C:POSS_PRON-u,,Buffer #o',جزؤه,,,
+98,161,MORPH,[NBuff],Buffer#o' ,},}/STEM,,,#o' MS !enc0:0 C:POSS_PRON-iy,,Buffer #o',جزئي,,,
+99,161,MORPH,[NBuff],Buffer#o' ,},}/STEM,,,#o' MS !enc0:0 C:POSS_PRON-i,,Buffer #o',جزئك,,,
+100,162,MORPH,[NBuff],Buffer#o' ,>,>/STEM,,,#o' FS,,Buffer #o',,,,%a-suffs
+101,163,###MORPH,[NBuff],Buffer#o' ,_,,,,#o' FP A-suff,,Buffer #o',جزآن,,,another spelling; deactivated
+102,164,MORPH,[NBuff],Buffer#o' ,','/STEM,,,#o' FP A-suff,,Buffer #o',,,,
+103,167,MORPH,[NBuff],Buffer#o' ,},}/STEM,,,#o' MD||MP||FD y-suff,,Buffer #o',جزئين,,,
+104,167,MORPH,[NBuff],Buffer#ap,ap,ap/STEM,,,#ap FS enc0:0,,Buffer #ap,عملية,,,
+105,167,MORPH,[NBuff],Buffer#ap,ip,ip/STEM,,,#ap FS else,,Buffer #ap,عملية,,,
+106,167,MORPH,[NBuff],Buffer#ap,it,it/STEM,,,#ap FS !enc0:0,,Buffer #ap,عمليته,,,
+107,167,MORPH,[NBuff],Buffer#ap,i,i/STEM,,,#ap FD||FP,,Buffer #ap,عمليات,,,
+108,,,,,,,,,,,,,,,
+109,167,MORPH,[NBuff],Buffer#ap-a,ap,ap/STEM,,,#ap FS enc0:0,,Buffer #ap-a,رئة,,,
+110,167,MORPH,[NBuff],Buffer#ap-a,at,at/STEM,,,#ap FS !enc0:0,,Buffer #ap-a,رئته,,,
+111,167,MORPH,[NBuff],Buffer#ap-a,a,a/STEM,,,#ap FD||FP,,Buffer #ap-a,رئتين,,,
+112,167,MORPH,[NBuff],Buffer#ap-o,ap,ap/STEM,,,#ap FS enc0:0,,Buffer #ap-o,كتابة,,,
+113,167,MORPH,[NBuff],Buffer#ap-o,t,t/STEM,,,#ap FS !enc0:0,,Buffer #ap-o,كتابته,,,
+114,167,MORPH,[NBuff],Buffer#ap-o,-,-/STEM,,,#ap FD||FP,,Buffer #ap-o,كتابتين,,,
+115,,,,,,,,,,,,,,,
+116,,,,,,,,,,,,,,,
+117,,,,,,,,,,,,,,,
+118,300.1111,MORPH,[NSuff.XXIN],NSuff.MSIN,N,N/CASE_INDEF_NOM,[masc.sg.indef.nom.],form_gen:m form_num:s stt:i cas:n,else,MS u-suff,Base Triptote-Sound,كتابٌ,DROP,,0
+119,300.11111,MORPH,[NSuff.XXIN],NSuff.MSIN,K,K/CASE_INDEF_NOM,[masc.sg.indef.nom.],form_gen:m form_num:s stt:i cas:n,#iy||#A}iy,MS i-suff,#iy,محامٍ,DROP,,1
+120,300.11111,MORPH,[NSuff.XXIN],NSuff.MSIN,u,u/CASE_INDEF_NOM,[masc.sg.indef.nom.],form_gen:m form_num:s stt:i cas:n,@dip,MS,Diptote-Sound,مصانعُ,DROP,,1
+121,300.11111,MORPH,[NSuff.XXIN],NSuff.MSIN,F,F/CASE_INDEF_NOM,[masc.sg.indef.nom.],form_gen:m form_num:s stt:i cas:n,#aY-Ap-y||#A-Ap-w,MS,#aY-Ap-y,فتىً,DROP,,1
+122,300.11111,MORPH,[NSuff.XXIN],NSuff.MSIN,_,(null)/CASE_INDEF_NOM,[masc.sg.indef.nom.],form_gen:m form_num:s stt:i cas:n,#aA||Mono,MS,#aA,ايدولوجيا,DROP,,1
+123,300.1112,MORPH,[NSuff.XXIA],NSuff.MSIA,AF,AF/CASE_INDEF_ACC,[masc.sg.indef.acc.],form_gen:m form_num:s stt:i cas:a,else,MS a-suff AF-suff,Base Triptote-Sound,كتاباً,DROP,,0
+124,300.11121,MORPH,[NSuff.XXIA],NSuff.MSIA,a,a/CASE_INDEF_ACC,[masc.sg.indef.acc.],form_gen:m form_num:s stt:i cas:a,@dip,MS,Diptote-Sound,مصانعَ,DROP,,1
+125,300.11121,MORPH,[NSuff.XXIA],NSuff.MSIA,F,F/CASE_INDEF_ACC,[masc.sg.indef.acc.],form_gen:m form_num:s stt:i cas:a,#aY-Ap-y||#A-Ap-w,MS,#aY-Ap-y,فتىً,DROP,,1
+126,300.11121,MORPH,[NSuff.XXIA],NSuff.MSIA,F,F/CASE_INDEF_ACC,[masc.sg.indef.acc.],form_gen:m form_num:s stt:i cas:a,#A'||#A'wy||#a>,MS a-suff,#A'||#A'wy,صحراء,DROP,,1
+127,300.11121,MORPH,[NSuff.XXIA],NSuff.MSIA,_,(null)/CASE_INDEF_ACC,[masc.sg.indef.acc.],form_gen:m form_num:s stt:i cas:a,#aA||Mono,MS,#aA,ايدولوجيا,DROP,,1
+128,300.1113,MORPH,[NSuff.XXIG],NSuff.MSIG,K,K/CASE_INDEF_GEN,[masc.sg.indef.gen.],form_gen:m form_num:s stt:i cas:g,else,MS i-suff,Base Triptote-Sound,كتابٍ,DROP,,0
+129,300.11131,MORPH,[NSuff.XXIG],NSuff.MSIG,a,a/CASE_INDEF_GEN,[masc.sg.indef.gen.],form_gen:m form_num:s stt:i cas:g,@dip,MS,Diptote-Sound,مصانعَ,DROP,,1
+130,300.11131,MORPH,[NSuff.XXIG],NSuff.MSIG,F,F/CASE_INDEF_GEN,[masc.sg.indef.gen.],form_gen:m form_num:s stt:i cas:g,#aY-Ap-y||#A-Ap-w,MS,#aY-Ap-y,فتىً,DROP,,1
+131,300.11131,MORPH,[NSuff.XXIG],NSuff.MSIG,_,(null)/CASE_INDEF_GEN,[masc.sg.indef.gen.],form_gen:m form_num:s stt:i cas:g,#aA||Mono,MS,#aA,ايدولوجيا,DROP,,1
+132,300.1114,MORPH,[NSuff.XXIU],NSuff.MSIU,_,_,[masc.sg.],form_gen:m form_num:s stt:i cas:u,_,MS UCase,Base UCase,كتاب,,,0
+133,300.1121,MORPH,[NSuff.XXDN],NSuff.MSDN,u,u/CASE_DEF_NOM,[masc.sg.def.nom.],form_gen:m form_num:s stt:d cas:n,else,MS u-suff,Base Triptote-Sound,الكتابُ,DROP,,0
+134,300.11211,MORPH,[NSuff.XXDN],NSuff.MSDN,_,(null)/CASE_DEF_NOM,[masc.sg.def.nom.],form_gen:m form_num:s stt:d cas:n,#iy||#A}iy,MS C:iy#,#iy,المحامي,DROP,,1
+135,300.11211,MORPH,[NSuff.XXDN],NSuff.MSDN,_,(null)/CASE_DEF_NOM,[masc.sg.def.nom.],form_gen:m form_num:s stt:d cas:n,#aY-Ap-y||#A-Ap-w||#aA||Mono,MS,#aY-Ap-y,الفتى الايدولوجيا,DROP,,1
+136,300.1122,MORPH,[NSuff.XXDA],NSuff.MSDA,a,a/CASE_DEF_ACC,[masc.sg.def.acc.],form_gen:m form_num:s stt:d cas:a,_,MS a-suff,Base Triptote-Sound,الكتابَ,DROP,,0
+137,300.11221,MORPH,[NSuff.XXDA],NSuff.MSDA,_,(null)/CASE_DEF_ACC,[masc.sg.def.acc.],form_gen:m form_num:s stt:d cas:a,#aY-Ap-y||#A-Ap-w||#aA||Mono,MS,#aY-Ap-y,الفتى,DROP,,1
+138,300.1123,MORPH,[NSuff.XXDG],NSuff.MSDG,i,i/CASE_DEF_GEN,[masc.sg.def.gen.],form_gen:m form_num:s stt:d cas:g,_,MS i-suff,Base Triptote-Sound,الكتابِ,DROP,,0
+139,300.11231,MORPH,[NSuff.XXDG],NSuff.MSDG,_,(null)/CASE_DEF_GEN,[masc.sg.def.gen.],form_gen:m form_num:s stt:d cas:g,#iy||#A}iy,MS C:iy#,#iy,المحامي,DROP,,1
+140,300.11231,MORPH,[NSuff.XXDG],NSuff.MSDG,_,(null)/CASE_DEF_GEN,[masc.sg.def.gen.],form_gen:m form_num:s stt:d cas:g,#aY-Ap-y||#A-Ap-w||#aA||Mono,MS,#aY-Ap-y,الفتى,DROP,,1
+141,300.1124,MORPH,[NSuff.XXDU],NSuff.MSDU,_,_,[masc.sg.],form_gen:m form_num:s stt:d cas:u,_,MS UCase,Base UCase,الكتاب,,,0
+142,300.1131,MORPH,[NSuff.XXCN],NSuff.MSCN,u,u/CASE_DEF_NOM,[masc.sg.const.nom.],form_gen:m form_num:s stt:c cas:n,else !C:POSS_PRON-iy,MS u-suff,Base Triptote-Sound,كتابُ,DROP,,0
+143,300.1131,MORPH,[NSuff.XXCN],NSuff.MSCN,_,(null)/CASE_DEF_NOM,[masc.sg.const.nom.],form_gen:m form_num:s stt:c cas:n,else C:POSS_PRON-iy,MS i-suff,Base Triptote-Sound,كتابِي,DROP,,0
+144,300.11311,MORPH,[NSuff.XXCN],NSuff.MSCN,uw,uw/CASE_DEF_NOM,[masc.sg.const.nom.],form_gen:m form_num:s stt:c cas:n,else !C:POSS_PRON-iy,FIVE-NOUNS,FIVE-NOUNS,أبو أبوه,DROP,,1
+145,300.11311,MORPH,[NSuff.XXCN],NSuff.MSCN,_,(null)/CASE_DEF_NOM,[masc.sg.const.nom.],form_gen:m form_num:s stt:c cas:n,else C:POSS_PRON-iy,FIVE-NOUNS,FIVE-NOUNS,أبي,DROP,,1
+146,300.11311,MORPH,[NSuff.XXCN],NSuff.MSCN,_,(null)/CASE_DEF_NOM,[masc.sg.const.nom.],form_gen:m form_num:s stt:c cas:n,#iy||#A}iy,MS C:iy#,#iy,محامي، محاميهِ، محاميَّ,DROP,,1
+147,300.11311,MORPH,[NSuff.XXCN],NSuff.MSCN,_,(null)/CASE_DEF_NOM,[masc.sg.const.nom.],form_gen:m form_num:s stt:c cas:n,#aY-Ap-y||#aA-Ap-w||#aA||Mono,MS,#aY-Ap-y,فتى,DROP,,1
+148,300.1132,MORPH,[NSuff.XXCA],NSuff.MSCA,a,a/CASE_DEF_ACC,[masc.sg.const.acc.],form_gen:m form_num:s stt:c cas:a,else !C:POSS_PRON-iy,MS a-suff,Base Triptote-Sound,كتابَ,DROP,,0
+149,300.1132,MORPH,[NSuff.XXCA],NSuff.MSCA,_,(null)/CASE_DEF_ACC,[masc.sg.const.acc.],form_gen:m form_num:s stt:c cas:a,else C:POSS_PRON-iy,MS i-suff,Base Triptote-Sound,كتابِي,DROP,,0
+150,300.11321,MORPH,[NSuff.XXCA],NSuff.MSCA,A,A/CASE_DEF_ACC,[masc.sg.const.acc.],form_gen:m form_num:s stt:c cas:a,else !C:POSS_PRON-iy,FIVE-NOUNS,FIVE-NOUNS,أبا أباه,DROP,,1
+151,300.11321,MORPH,[NSuff.XXCA],NSuff.MSCA,_,(null)/CASE_DEF_ACC,[masc.sg.const.acc.],form_gen:m form_num:s stt:c cas:a,else C:POSS_PRON-iy,FIVE-NOUNS,FIVE-NOUNS,أبي,DROP,,1
+152,300.11321,MORPH,[NSuff.XXCA],NSuff.MSCA,_,(null)/CASE_DEF_ACC,[masc.sg.const.acc.],form_gen:m form_num:s stt:c cas:a,#aY-Ap-y||#aA-Ap-w||#aA||Mono,MS,#aY-Ap-y,فتى,DROP,,1
+153,300.1133,MORPH,[NSuff.XXCG],NSuff.MSCG,i,i/CASE_DEF_GEN,[masc.sg.const.gen.],form_gen:m form_num:s stt:c cas:g,else !C:POSS_PRON-iy,MS i-suff C:i#,Base Triptote-Sound,كتابِ,DROP,,0
+154,300.1133,MORPH,[NSuff.XXCG],NSuff.MSCG,_,(null)/CASE_DEF_GEN,[masc.sg.const.gen.],form_gen:m form_num:s stt:c cas:g,else C:POSS_PRON-iy,MS i-suff,Base Triptote-Sound,كتابِي,DROP,,0
+155,300.11331,MORPH,[NSuff.XXCG],NSuff.MSCG,iy,iy/CASE_DEF_GEN,[masc.sg.const.gen.],form_gen:m form_num:s stt:c cas:g,else !C:POSS_PRON-iy,FIVE-NOUNS,FIVE-NOUNS,أبي أبيه,DROP,,1
+156,300.11331,MORPH,[NSuff.XXCG],NSuff.MSCG,_,(null)/CASE_DEF_GEN,[masc.sg.const.gen.],form_gen:m form_num:s stt:c cas:g,else C:POSS_PRON-iy,FIVE-NOUNS,FIVE-NOUNS,أبي,DROP,,1
+157,300.11331,MORPH,[NSuff.XXCG],NSuff.MSCG,_,(null)/CASE_DEF_GEN,[masc.sg.const.gen.],form_gen:m form_num:s stt:c cas:g,#iy||#A}iy,MS C:iy#,#iy,محامي، محاميهِ، محاميَّ,DROP,,1
+158,300.11331,MORPH,[NSuff.XXCG],NSuff.MSCG,_,(null)/CASE_DEF_GEN,[masc.sg.const.gen.],form_gen:m form_num:s stt:c cas:g,#aY-Ap-y||#aA-Ap-w||#aA||Mono,MS,#aY-Ap-y,فتى ايدولوجيا,DROP,,1
+159,300.1134,MORPH,[NSuff.XXCU],NSuff.MSCU,_,_,[masc.sg.],form_gen:m form_num:s stt:c cas:u,_,MS UCase,Base UCase,كتاب,,,0
+160,300.1211,MORPH,[NSuff.XXIN],NSuff.MDIN,Ani,Ani/NSUFF_MASC_DU_NOM,two_[masc.du.indef.nom.],form_gen:m form_num:d stt:i cas:n,else,MD,Base Triptote-Sound,كتابان,DROP,,0
+161,300.12111,MORPH,[NSuff.XXIN],NSuff.MDIN,|ni,|ni/NSUFF_MASC_DU_NOM,two_[masc.du.indef.nom.],form_gen:m form_num:d stt:i cas:n,#a>,MD A-suff,#a>,مبدآن,DROP,,1
+162,300.1212,MORPH,[NSuff.XXIA],NSuff.MDIA,ayoni,ayoni/NSUFF_MASC_DU_ACC,two_[masc.du.indef.acc.],form_gen:m form_num:d stt:i cas:a,_,MD,Base Triptote-Sound,كتابين,DROP,,0
+163,300.1213,MORPH,[NSuff.XXIG],NSuff.MDIG,ayoni,ayoni/NSUFF_MASC_DU_GEN,two_[masc.du.indef.gen.],form_gen:m form_num:d stt:i cas:g,_,MD,Base Triptote-Sound,كتابين,DROP,,0
+164,300.1214,MORPH,[NSuff.XXIU],NSuff.MDIU,ayon,ayon/NSUFF_MASC_DU,two_[masc.du.],form_gen:m form_num:d stt:i cas:u,,MD UCase,Base UCase,كتابين,,,0
+165,300.1221,MORPH,[NSuff.XXDN],NSuff.MDDN,Ani,Ani/NSUFF_MASC_DU_NOM,two_[masc.du.def.nom.],form_gen:m form_num:d stt:d cas:n,_,MD,Base Triptote-Sound,كتابان,DROP,,0
+166,300.12211,MORPH,[NSuff.XXDN],NSuff.MDDN,|ni,|ni/NSUFF_MASC_DU_NOM,two_[masc.du.def.nom.],form_gen:m form_num:d stt:d cas:n,#a>,MD A-suff,#a>,مبدآن,DROP,,1
+167,300.1222,MORPH,[NSuff.XXDA],NSuff.MDDA,ayoni,ayoni/NSUFF_MASC_DU_ACC,two_[masc.du.def.acc.],form_gen:m form_num:d stt:d cas:a,_,MD,Base Triptote-Sound,كتابين,DROP,,0
+168,300.1223,MORPH,[NSuff.XXDG],NSuff.MDDG,ayoni,ayoni/NSUFF_MASC_DU_GEN,two_[masc.du.def.gen.],form_gen:m form_num:d stt:d cas:g,_,MD,Base Triptote-Sound,كتابين,DROP,,0
+169,300.1224,MORPH,[NSuff.XXDU],NSuff.MDDU,ayon,ayon/NSUFF_MASC_DU,two_[masc.du.],form_gen:m form_num:d stt:d cas:u,,MD UCase,Base UCase,كتابين,,,0
+170,300.1231,MORPH,[NSuff.XXCN],NSuff.MDCN,A,A/NSUFF_MASC_DU_NOM_POSS,two_[masc.du.const.nom.],form_gen:m form_num:d stt:c cas:n,_,MD C:A#,Base Triptote-Sound,كتابا، كتاباه، كتابايَ,DROP,,0
+171,300.12311,MORPH,[NSuff.XXCN],NSuff.MDCN,|,|/NSUFF_MASC_DU_NOM_POSS,two_[masc.du.const.nom.],form_gen:m form_num:d stt:c cas:n,#a> ,MD A-suff C:A#,#a>,مبدآ، مبدآي,DROP,,1
+172,300.1232,MORPH,[NSuff.XXCA],NSuff.MDCA,ayo,ayo/NSUFF_MASC_DU_ACC_POSS,two_[masc.du.const.acc.],form_gen:m form_num:d stt:c cas:a,!C:POSS_PRON-iy,MD C:ay#,Base Triptote-Sound,كتابي، كتابيهِ,DROP,,0
+173,300.1232,MORPH,[NSuff.XXCA],NSuff.MDCA,ay,ayo/NSUFF_MASC_DU_ACC_POSS,two_[masc.du.const.acc.],form_gen:m form_num:d stt:c cas:a,C:POSS_PRON-iy,MD C:ay#,Base Triptote-Sound,كتابَيَّ,DROP,,0
+174,300.1233,MORPH,[NSuff.XXCG],NSuff.MDCG,ayo,ayo/NSUFF_MASC_DU_GEN_POSS,two_[masc.du.const.gen.],form_gen:m form_num:d stt:c cas:g,!C:POSS_PRON-iy,MD C:ay#,Base Triptote-Sound,كتابي، كتابيهِ,DROP,,0
+175,300.1233,MORPH,[NSuff.XXCG],NSuff.MDCG,ay,ayo/NSUFF_MASC_DU_GEN_POSS,two_[masc.du.const.gen.],form_gen:m form_num:d stt:c cas:g,C:POSS_PRON-iy,MD C:ay#,Base Triptote-Sound,كتابَيَّ,DROP,,0
+176,300.1234,MORPH,[NSuff.XXCU],NSuff.MDCU,ayon,ayon/NSUFF_MASC_DU,two_[masc.du.],form_gen:m form_num:d stt:c cas:u,,MD UCase,Base UCase,كتابين,,,0
+177,300.1311,MORPH,[NSuff.XXIN],NSuff.MPIN,uwna,uwna/NSUFF_MASC_PL_NOM,[masc.pl.indef.nom],form_gen:m form_num:p stt:i cas:n,else,MP w-suff,Base Triptote-Sound,موظفون,DROP,,0
+178,300.13111,MORPH,[NSuff.XXIN],NSuff.MPIN,awona,awona/NSUFF_MASC_PL_NOM,[masc.pl.indef.nom],form_gen:m form_num:p stt:i cas:n,#aY-Ap-y||#aA-Ap-w,MP,#aY-Ap-y,مصطفَون,DROP,,1
+179,300.1312,MORPH,[NSuff.XXIA],NSuff.MPIA,iyna,iyna/NSUFF_MASC_PL_ACC,[masc.pl.indef.acc.],form_gen:m form_num:p stt:i cas:a,else,MP y-suff,Base Triptote-Sound,موظفين,DROP,,0
+180,300.13121,MORPH,[NSuff.XXIA],NSuff.MPIA,ayona,ayona/NSUFF_MASC_PL_ACC,[masc.pl.indef.acc.],form_gen:m form_num:p stt:i cas:a,#aY-Ap-y||#aA-Ap-w,MP,#aY-Ap-y,مصطفَين,DROP,,1
+181,300.1313,MORPH,[NSuff.XXIG],NSuff.MPIG,iyna,iyna/NSUFF_MASC_PL_GEN,[masc.pl.indef.gen.],form_gen:m form_num:p stt:i cas:g,else,MP y-suff,Base Triptote-Sound,موظفين,DROP,,0
+182,300.13131,MORPH,[NSuff.XXIG],NSuff.MPIG,ayona,ayona/NSUFF_MASC_PL_GEN,[masc.pl.indef.gen.],form_gen:m form_num:p stt:i cas:g,#aY-Ap-y||#aA-Ap-w,MP,#aY-Ap-y,مصطفَين,DROP,,1
+183,300.1314,MORPH,[NSuff.XXIU],NSuff.MPIU,iyn,iyn/NSUFF_MASC_PL,[masc.pl.],form_gen:m form_num:p stt:i cas:u,else,MP y-suff UCase,Base UCase,موظفين,,,0
+184,300.1321,MORPH,[NSuff.XXDN],NSuff.MPDN,uwna,uwna/NSUFF_MASC_PL_NOM,[masc.pl.def.nom.],form_gen:m form_num:p stt:d cas:n,else,MP w-suff,Base Triptote-Sound,موظفون,DROP,,0
+185,300.13211,MORPH,[NSuff.XXDN],NSuff.MPDN,awona,awona/NSUFF_MASC_PL_NOM,[masc.pl.def.nom.],form_gen:m form_num:p stt:d cas:n,#aY-Ap-y||#aA-Ap-w,MP,#aY-Ap-y,مصطفَون,DROP,,1
+186,300.1322,MORPH,[NSuff.XXDA],NSuff.MPDA,iyna,iyna/NSUFF_MASC_PL_ACC,[masc.pl.def.acc.],form_gen:m form_num:p stt:d cas:a,else,MP y-suff,Base Triptote-Sound,موظفين,DROP,,0
+187,300.13221,MORPH,[NSuff.XXDA],NSuff.MPDA,ayona,ayona/NSUFF_MASC_PL_ACC,[masc.pl.def.acc.],form_gen:m form_num:p stt:d cas:a,#aY-Ap-y||#aA-Ap-w,MP,#aY-Ap-y,مصطفَين,DROP,,1
+188,300.1323,MORPH,[NSuff.XXDG],NSuff.MPDG,iyna,iyna/NSUFF_MASC_PL_GEN,[masc.pl.def.gen.],form_gen:m form_num:p stt:d cas:g,else,MP y-suff,Base Triptote-Sound,موظفين,DROP,,0
+189,300.13231,MORPH,[NSuff.XXDG],NSuff.MPDG,ayona,ayona/NSUFF_MASC_PL_GEN,[masc.pl.def.gen.],form_gen:m form_num:p stt:d cas:g,#aY-Ap-y||#aA-Ap-w,MP,#aY-Ap-y,مصطفَين,DROP,,1
+190,300.1324,MORPH,[NSuff.XXDU],NSuff.MPDU,iyn,iyn/NSUFF_MASC_PL,[masc.pl.],form_gen:m form_num:p stt:d cas:u,else,MP y-suff UCase,Base UCase,موظفين,,,0
+191,300.1331,MORPH,[NSuff.XXCN],NSuff.MPCN,uw,uw/NSUFF_MASC_PL_NOM_POSS,[masc.pl.const.nom.],form_gen:m form_num:p stt:c cas:n,!C:POSS_PRON-iy,MP w-suff,Base Triptote-Sound,موظفو، موظفوهُ,DROP,,0
+192,300.1331,MORPH,[NSuff.XXCN],NSuff.MPCN,iy,iy/NSUFF_MASC_PL_NOM_POSS,[masc.pl.const.nom.],form_gen:m form_num:p stt:c cas:n,C:POSS_PRON-iy,MP y-suff C:iy#,Base Triptote-Sound,موظفيَّ,DROP,,0
+193,300.13311,MORPH,[NSuff.XXCN],NSuff.MPCN,aw,aw/NSUFF_MASC_PL_NOM_POSS,[masc.pl.const.nom.],form_gen:m form_num:p stt:c cas:n,#aY-Ap-y||#aA-Ap-w !C:POSS_PRON-iy,MP,#aY-Ap-y,مصطفَو,DROP,,1
+194,300.13311,MORPH,[NSuff.XXCN],NSuff.MPCN,ay,ay/NSUFF_MASC_PL_NOM_POSS,[masc.pl.const.nom.],form_gen:m form_num:p stt:c cas:n,#aY-Ap-y||#aA-Ap-w C:POSS_PRON-iy,MP C:ay#,#aY-Ap-y,مصطفَي,DROP,,1
+195,300.1332,MORPH,[NSuff.XXCA],NSuff.MPCA,iy,iy/NSUFF_MASC_PL_ACC_POSS,[masc.pl.const.acc.],form_gen:m form_num:p stt:c cas:a,else,MP y-suff C:iy#,Base Triptote-Sound,موظفي، موظفيَّ، موظفيهِ,DROP,,0
+196,300.13321,MORPH,[NSuff.XXCA],NSuff.MPCA,ay,ay/NSUFF_MASC_PL_ACC_POSS,[masc.pl.const.acc.],form_gen:m form_num:p stt:c cas:a,#aY-Ap-y||#aA-Ap-w,MP C:ay#,#aY-Ap-y,مصطفَي,DROP,,1
+197,300.1333,MORPH,[NSuff.XXCG],NSuff.MPCG,iy,iy/NSUFF_MASC_PL_GEN_POSS,[masc.pl.const.gen.],form_gen:m form_num:p stt:c cas:g,else,MP y-suff C:iy#,Base Triptote-Sound,موظفي، موظفيَّ، موظفيهِ,DROP,,0
+198,300.13331,MORPH,[NSuff.XXCG],NSuff.MPCG,ay,ay/NSUFF_MASC_PL_GEN_POSS,[masc.pl.const.gen.],form_gen:m form_num:p stt:c cas:g,#aY-Ap-y||#aA-Ap-w,MP C:ay#,#aY-Ap-y,مصطفَي,DROP,,1
+199,300.1334,MORPH,[NSuff.XXCU],NSuff.MPCU,iyn,iyn/NSUFF_MASC_PL,[masc.pl.],form_gen:m form_num:p stt:c cas:u,else,MP y-suff UCase,Base UCase,موظفين,,,0
+200,300.2111,MORPH,[NSuff.XXIN],NSuff.FSIN,ap+N,ap/NSUFF_FEM_SG+N/CASE_INDEF_NOM,[fem.sg.]_+_[indef.nom.],form_gen:f form_num:s stt:i cas:n,else,FS,Base Triptote-Sound,كتابةٌ,DROP,,0
+201,300.21111,MORPH,[NSuff.XXIN],NSuff.FSIN,ap+u,ap/NSUFF_FEM_SG+u/CASE_INDEF_NOM,[fem.sg.]_+_[indef.nom.],form_gen:f form_num:s stt:i cas:n,@dip,FS,Diptote-Sound,عنترةُ,DROP,,1
+202,300.2112,MORPH,[NSuff.XXIA],NSuff.FSIA,ap+F,ap/NSUFF_FEM_SG+F/CASE_INDEF_ACC,[fem.sg.]_+_[indef.acc.],form_gen:f form_num:s stt:i cas:a,else,FS,Base Triptote-Sound,كتابةً,DROP,,0
+203,300.21121,MORPH,[NSuff.XXIA],NSuff.FSIA,ap+a,ap/NSUFF_FEM_SG+a/CASE_INDEF_ACC,[fem.sg.]_+_[indef.acc.],form_gen:f form_num:s stt:i cas:a,@dip,FS,Diptote-Sound,عنترةَ,DROP,,1
+204,300.2113,MORPH,[NSuff.XXIG],NSuff.FSIG,ap+K,ap/NSUFF_FEM_SG+K/CASE_INDEF_GEN,[fem.sg.]_+_[indef.gen.],form_gen:f form_num:s stt:i cas:g,else,FS,Base Triptote-Sound,كتابةٍ,DROP,,0
+205,300.21131,MORPH,[NSuff.XXIG],NSuff.FSIG,ap+a,ap/NSUFF_FEM_SG+a/CASE_INDEF_GEN,[fem.sg.]_+_[indef.gen.],form_gen:f form_num:s stt:i cas:g,@dip,FS,Diptote-Sound,عنترةَ,DROP,,1
+206,300.21131,MORPH,[NSuff.XXIG],NSuff.FSIG,ap+K,ap/NSUFF_FEM_SG+K/CASE_INDEF_GEN,[fem.sg.]_+_[indef.gen.],form_gen:f form_num:s stt:i,X100,FS100,Compound Hundreds,خمسمئة,DROP,,1
+207,300.2114,MORPH,[NSuff.XXIU],NSuff.FSIU,ap,ap/NSUFF_FEM_SG,[fem.sg.],form_gen:f form_num:s stt:i cas:u,,FS UCase,Base UCase,كتابة,,,0
+208,300.2121,MORPH,[NSuff.XXDN],NSuff.FSDN,ap+u,ap/NSUFF_FEM_SG+u/CASE_DEF_NOM,[fem.sg.]_+_[def.nom.],form_gen:f form_num:s stt:d cas:n,_,FS,Base Triptote-Sound,كتابةُ,DROP,,0
+209,300.2122,MORPH,[NSuff.XXDA],NSuff.FSDA,ap+a,ap/NSUFF_FEM_SG+a/CASE_DEF_ACC,[fem.sg.]_+_[def.acc.],form_gen:f form_num:s stt:d cas:a,_,FS,Base Triptote-Sound,كتابةَ,DROP,,0
+210,300.2123,MORPH,[NSuff.XXDG],NSuff.FSDG,ap+i,ap/NSUFF_FEM_SG+i/CASE_DEF_GEN,[fem.sg.]_+_[def.gen.],form_gen:f form_num:s stt:d cas:g,_,FS,Base Triptote-Sound,كتابةِ,DROP,,0
+211,300.21231,MORPH,[NSuff.XXDG],NSuff.FSDG,ap+i,ap/NSUFF_FEM_SG+i/CASE_DEF_GEN,[fem.sg.]_+_[def.gen.],form_gen:f form_num:s stt:d,X100,FS100,Compound Hundreds,خمسمئة,DROP,,1
+212,300.2124,MORPH,[NSuff.XXDU],NSuff.FSDU,ap,ap/NSUFF_FEM_SG,[fem.sg.],form_gen:f form_num:s stt:d cas:u,_,FS UCase,Base UCase,الكتابة,,,0
+213,300.2131,MORPH,[NSuff.XXCN],NSuff.FSCN,ap+u,ap/NSUFF_FEM_SG+u/CASE_DEF_NOM,[fem.sg.]_+_[const.nom.],form_gen:f form_num:s stt:c cas:n,else,FS,Base Triptote-Sound,كتابةُ,DROP,,0
+214,300.2131,MORPH,[NSuff.XXCN],NSuff.FSCN,at+u,ap/NSUFF_FEM_SG+u/CASE_DEF_NOM,[fem.sg.]_+_[const.nom.],form_gen:f form_num:s stt:c cas:n,C:POSS_PRON,FS,Base Triptote-Sound,كتابتُهُ,DROP,,0
+215,300.2131,MORPH,[NSuff.XXCN],NSuff.FSCN,at,ap/NSUFF_FEM_SG,[fem.sg.]_+_[const.nom.],form_gen:f form_num:s stt:c cas:n,C:POSS_PRON-iy,FS,Base Triptote-Sound,كتابتِي,DROP,,0
+216,300.2132,MORPH,[NSuff.XXCA],NSuff.FSCA,ap+a,ap/NSUFF_FEM_SG+a/CASE_DEF_ACC,[fem.sg.]_+_[const.acc.],form_gen:f form_num:s stt:c cas:a,else,FS,Base Triptote-Sound,كتابةَ,DROP,,0
+217,300.2132,MORPH,[NSuff.XXCA],NSuff.FSCA,at+a,ap/NSUFF_FEM_SG+a/CASE_DEF_ACC,[fem.sg.]_+_[const.acc.],form_gen:f form_num:s stt:c cas:a,C:POSS_PRON,FS,Base Triptote-Sound,كتابتَهُ,DROP,,0
+218,300.2132,MORPH,[NSuff.XXCA],NSuff.FSCA,at,ap/NSUFF_FEM_SG,[fem.sg.]_+_[const.acc.],form_gen:f form_num:s stt:c cas:a,C:POSS_PRON-iy,FS,Base Triptote-Sound,كتابتِي,DROP,,0
+219,300.2133,MORPH,[NSuff.XXCG],NSuff.FSCG,ap+i,ap/NSUFF_FEM_SG+i/CASE_DEF_GEN,[fem.sg.]_+_[const.gen.],form_gen:f form_num:s stt:c cas:g,else,FS,Base Triptote-Sound,كتابةِ,DROP,,0
+220,300.2133,MORPH,[NSuff.XXCG],NSuff.FSCG,at+i,ap/NSUFF_FEM_SG+i/CASE_DEF_GEN,[fem.sg.]_+_[const.gen.],form_gen:f form_num:s stt:c cas:g,C:POSS_PRON,FS C:i#,Base Triptote-Sound,كتابتِهِ,DROP,,0
+221,300.2133,MORPH,[NSuff.XXCG],NSuff.FSCG,at,ap/NSUFF_FEM_SG,[fem.sg.]_+_[const.gen.],form_gen:f form_num:s stt:c cas:g,C:POSS_PRON-iy,FS,Base Triptote-Sound,كتابتِي,DROP,,0
+222,300.21331,MORPH,[NSuff.XXCG],NSuff.FSCG,ap+i,ap/NSUFF_FEM_SG+i/CASE_DEF_GEN,[fem.sg.]_+_[const.gen.],form_gen:f form_num:s stt:c,X100,FS100,Compound Hundreds,خمسمئة,DROP,,1
+223,300.2134,MORPH,[NSuff.XXCU],NSuff.FSCU,ip,ip/NSUFF_FEM_SG,[fem.sg.],form_gen:f form_num:s stt:c cas:u,else,FS UCase,Base UCase,كتابة,,,0
+224,300.2134,MORPH,[NSuff.XXCU],NSuff.FSCU,it,ip/NSUFF_FEM_SG,[fem.sg.],form_gen:f form_num:s stt:c cas:u,!ACTPART !enc0:0,FS UCase,Base UCase, عربيته,,,1
+225,300.2134,MORPH,[NSuff.XXCU],NSuff.FSCU,A,ap/NSUFF_FEM_SG,[fem.sg.],form_gen:f form_num:s stt:c cas:u,ACTPART !enc0:0,FS UCase,Base UCase,شايفاه,,,1
+226,300.2211,MORPH,[NSuff.XXIN],NSuff.FDIN,atAni,atAni/NSUFF_FEM_DU_NOM,two_[fem.du.indef.nom.],form_gen:f form_num:d stt:i cas:n,_,FD,Base Triptote-Sound,,DROP,,0
+227,300.2212,MORPH,[NSuff.XXIA],NSuff.FDIA,atayoni,atayoni/NSUFF_FEM_DU_ACC,two_[fem.du.indef.acc.],form_gen:f form_num:d stt:i cas:a,_,FD,Base Triptote-Sound,,DROP,,0
+228,300.2213,MORPH,[NSuff.XXIG],NSuff.FDIG,atayoni,atayoni/NSUFF_FEM_DU_GEN,two_[fem.du.indef.gen.],form_gen:f form_num:d stt:i cas:g,_,FD,Base Triptote-Sound,,DROP,,0
+229,300.2214,MORPH,[NSuff.XXIU],NSuff.FDIU,atayon,atayon/NSUFF_FEM_DU,two_[fem.du.],form_gen:f form_num:d stt:i cas:u,_,FD UCase,Base UCase,كتابتين,,,0
+230,300.2221,MORPH,[NSuff.XXDN],NSuff.FDDN,atAni,atAni/NSUFF_FEM_DU_NOM,two_[fem.du.def.nom.],form_gen:f form_num:d stt:d cas:n,_,FD,Base Triptote-Sound,,DROP,,0
+231,300.2222,MORPH,[NSuff.XXDA],NSuff.FDDA,atayoni,atayoni/NSUFF_FEM_DU_ACC,two_[fem.du.def.acc.],form_gen:f form_num:d stt:d cas:a,_,FD,Base Triptote-Sound,,DROP,,0
+232,300.2223,MORPH,[NSuff.XXDG],NSuff.FDDG,atayoni,atayoni/NSUFF_FEM_DU_GEN,two_[fem.du.def.gen.],form_gen:f form_num:d stt:d cas:g,_,FD,Base Triptote-Sound,,DROP,,0
+233,300.2224,MORPH,[NSuff.XXDU],NSuff.FDDU,atayon,atayon/NSUFF_FEM_DU,two_[fem.du.],form_gen:f form_num:d stt:d cas:u,_,FD UCase,Base UCase,كتابتين,,,0
+234,300.2231,MORPH,[NSuff.XXCN],NSuff.FDCN,atA,atA/NSUFF_FEM_DU_NOM_POSS,two_[fem.du.const.nom.],form_gen:f form_num:d stt:c cas:n,_,FD C:A#,Base Triptote-Sound,,DROP,,0
+235,300.2232,MORPH,[NSuff.XXCA],NSuff.FDCA,atayo,atayo/NSUFF_FEM_DU_ACC_POSS,two_[fem.du.const.acc.],form_gen:f form_num:d stt:c cas:a,!C:POSS_PRON-iy,FD C:ay#,Base Triptote-Sound,,DROP,,0
+236,300.2232,MORPH,[NSuff.XXCA],NSuff.FDCA,atay,atayo/NSUFF_FEM_DU_ACC_POSS,two_[fem.du.const.acc.],form_gen:f form_num:d stt:c cas:a,C:POSS_PRON-iy,FD C:ay#,Base Triptote-Sound,,DROP,,0
+237,300.2233,MORPH,[NSuff.XXCG],NSuff.FDCG,atayo,atayo/NSUFF_FEM_DU_GEN_POSS,two_[fem.du.const.gen.],form_gen:f form_num:d stt:c cas:g,!C:POSS_PRON-iy,FD C:ay#,Base Triptote-Sound,,DROP,,0
+238,300.2233,MORPH,[NSuff.XXCG],NSuff.FDCG,atay,atayo/NSUFF_FEM_DU_GEN_POSS,two_[fem.du.const.gen.],form_gen:f form_num:d stt:c cas:g,C:POSS_PRON-iy,FD C:ay#,Base Triptote-Sound,,DROP,,0
+239,300.2234,MORPH,[NSuff.XXCU],NSuff.FDCU,atayon,atayon/NSUFF_FEM_DU,two_[fem.du.],form_gen:f form_num:d stt:c cas:u,_,FD UCase,Base UCase,كتابتين,,,0
+240,300.2311,MORPH,[NSuff.XXIN],NSuff.FPIN,At+N,At/NSUFF_FEM_PL+N/CASE_INDEF_NOM,[fem.pl.]_+_[indef.nom.],form_gen:f form_num:p stt:i cas:n,else,FP,Base Triptote-Sound,,DROP,,0
+241,300.23111,MORPH,[NSuff.XXIN],NSuff.FPIN,|t+N,|t/NSUFF_FEM_PL+N/CASE_INDEF_NOM,[fem.pl.]_+_[indef.nom.],form_gen:f form_num:p stt:i cas:n,#a>,FP A-suff,#a>,مكافآت,DROP,,1
+242,300.2312,MORPH,[NSuff.XXIA],NSuff.FPIA,At+K,At/NSUFF_FEM_PL+K/CASE_INDEF_ACC,[fem.pl.]_+_[indef.acc.],form_gen:f form_num:p stt:i cas:a,else,FP,Base Triptote-Sound,,DROP,,0
+243,300.23121,MORPH,[NSuff.XXIA],NSuff.FPIA,|t+K,|t/NSUFF_FEM_PL+K/CASE_INDEF_ACC,[fem.pl.]_+_[indef.acc.],form_gen:f form_num:p stt:i cas:a,#a>,FP A-suff,#a>,مكافآت,DROP,,1
+244,300.2313,MORPH,[NSuff.XXIG],NSuff.FPIG,At+K,At/NSUFF_FEM_PL+K/CASE_INDEF_GEN,[fem.pl.]_+_[indef.gen.],form_gen:f form_num:p stt:i cas:g,else,FP,Base Triptote-Sound,,DROP,,0
+245,300.23131,MORPH,[NSuff.XXIG],NSuff.FPIG,|t+K,|t/NSUFF_FEM_PL+K/CASE_INDEF_GEN,[fem.pl.]_+_[indef.gen.],form_gen:f form_num:p stt:i cas:g,#a>,FP A-suff,#a>,مكافآت,DROP,,1
+246,300.2314,MORPH,[NSuff.XXIU],NSuff.FPIU,At,At/NSUFF_FEM_PL,[fem.pl.],form_gen:f form_num:p stt:i cas:u,else,FP UCase,Base UCase,موظفات,,,0
+247,300.23141,MORPH,[NSuff.XXIU],NSuff.FPIU,|t,|t/NSUFF_FEM_PL,[fem.pl.],form_gen:f form_num:p stt:i cas:u,#a>,FP A-suff UCase,#a> UCase ,مكافآت,,,1
+248,300.2321,MORPH,[NSuff.XXDN],NSuff.FPDN,At+u,At/NSUFF_FEM_PL+u/CASE_DEF_NOM,[fem.pl.]_+_[def.nom.],form_gen:f form_num:p stt:d cas:n,else,FP,Base Triptote-Sound,,DROP,,0
+249,300.23211,MORPH,[NSuff.XXDN],NSuff.FPDN,|t+u,|t/NSUFF_FEM_PL+u/CASE_DEF_NOM,[fem.pl.]_+_[def.nom.],form_gen:f form_num:p stt:d cas:n,#a>,FP A-suff,#a>,المكافآت,DROP,,1
+250,300.2322,MORPH,[NSuff.XXDA],NSuff.FPDA,At+i,At/NSUFF_FEM_PL+i/CASE_DEF_ACC,[fem.pl.]_+_[def.acc.],form_gen:f form_num:p stt:d cas:a,else,FP,Base Triptote-Sound,,DROP,,0
+251,300.23221,MORPH,[NSuff.XXDA],NSuff.FPDA,|t+i,|t/NSUFF_FEM_PL+i/CASE_DEF_ACC,[fem.pl.]_+_[def.acc.],form_gen:f form_num:p stt:d cas:a,#a>,FP A-suff,#a>,المكافآت,DROP,,1
+252,300.2323,MORPH,[NSuff.XXDG],NSuff.FPDG,At+i,At/NSUFF_FEM_PL+i/CASE_DEF_GEN,[fem.pl.]_+_[def.gen.],form_gen:f form_num:p stt:d cas:g,else,FP,Base Triptote-Sound,,DROP,,0
+253,300.23231,MORPH,[NSuff.XXDG],NSuff.FPDG,|t+i,|t/NSUFF_FEM_PL+i/CASE_DEF_GEN,[fem.pl.]_+_[def.gen.],form_gen:f form_num:p stt:d cas:g,#a>,FP A-suff,#a>,المكافآت,DROP,,1
+254,300.2324,MORPH,[NSuff.XXDU],NSuff.FPDU,At,At/NSUFF_FEM_PL,[fem.pl.],form_gen:f form_num:p stt:d cas:u,else,FP UCase,Base UCase,موظفات,,,0
+255,300.23241,MORPH,[NSuff.XXDU],NSuff.FPDU,|t,|t/NSUFF_FEM_PL,[fem.pl.],form_gen:f form_num:p stt:d cas:u,#a>,FP A-suff UCase,#a> UCase ,مكافآت,,,1
+256,300.2331,MORPH,[NSuff.XXCN],NSuff.FPCN,At+u,At/NSUFF_FEM_PL+u/CASE_DEF_NOM,[fem.pl.]_+_[const.nom.],form_gen:f form_num:p stt:c cas:n,!C:POSS_PRON-iy,FP,Base Triptote-Sound,,DROP,,0
+257,300.2331,MORPH,[NSuff.XXCN],NSuff.FPCN,At,At/NSUFF_FEM_PL+(null)/CASE_DEF_NOM,[fem.pl.]_+_[const.nom.],form_gen:f form_num:p stt:c cas:n,C:POSS_PRON-iy,FP,Base Triptote-Sound,,DROP,,0
+258,300.23311,MORPH,[NSuff.XXCN],NSuff.FPCN,|t+u,|t/NSUFF_FEM_PL+u/CASE_DEF_NOM,[fem.pl.]_+_[const.nom.],form_gen:f form_num:p stt:c cas:n,#a> !C:POSS_PRON-iy,FP A-suff,#a>,مكافآت,DROP,,1
+259,300.23311,MORPH,[NSuff.XXCN],NSuff.FPCN,|t,|t/NSUFF_FEM_PL+(null)/CASE_DEF_NOM,[fem.pl.]_+_[const.nom.],form_gen:f form_num:p stt:c cas:n,#a> C:POSS_PRON-iy,FP A-suff,#a>,مكافآتي,DROP,,1
+260,300.2332,MORPH,[NSuff.XXCA],NSuff.FPCA,At+i,At/NSUFF_FEM_PL+i/CASE_DEF_ACC,[fem.pl.]_+_[const.acc.],form_gen:f form_num:p stt:c cas:a,!C:POSS_PRON-iy,FP C:i#,Base Triptote-Sound,,DROP,,0
+261,300.2332,MORPH,[NSuff.XXCA],NSuff.FPCA,At,At/NSUFF_FEM_PL+(null)/CASE_DEF_ACC,[fem.pl.]_+_[const.acc.],form_gen:f form_num:p stt:c cas:a,C:POSS_PRON-iy,FP,Base Triptote-Sound,,DROP,,0
+262,300.23321,MORPH,[NSuff.XXCA],NSuff.FPCA,|t+i,|t/NSUFF_FEM_PL+i/CASE_DEF_ACC,[fem.pl.]_+_[const.acc.],form_gen:f form_num:p stt:c cas:a,#a> !C:POSS_PRON-iy,FP A-suff C:i#,#a>,مكافآت,DROP,,1
+263,300.23321,MORPH,[NSuff.XXCA],NSuff.FPCA,|t,|t/NSUFF_FEM_PL+(null)/CASE_DEF_ACC,[fem.pl.]_+_[const.acc.],form_gen:f form_num:p stt:c cas:a,#a> C:POSS_PRON-iy,FP A-suff,#a>,مكافآتي,DROP,,1
+264,300.2333,MORPH,[NSuff.XXCG],NSuff.FPCG,At+i,At/NSUFF_FEM_PL+i/CASE_DEF_GEN,[fem.pl.]_+_[const.gen.],form_gen:f form_num:p stt:c cas:g,!C:POSS_PRON-iy,FP C:i#,Base Triptote-Sound,,DROP,,0
+265,300.2333,MORPH,[NSuff.XXCG],NSuff.FPCG,At,At/NSUFF_FEM_PL+(null)/CASE_DEF_GEN,[fem.pl.]_+_[const.gen.],form_gen:f form_num:p stt:c cas:g,C:POSS_PRON-iy,FP,Base Triptote-Sound,,DROP,,0
+266,300.23331,MORPH,[NSuff.XXCG],NSuff.FPCG,|t+i,|t/NSUFF_FEM_PL+i/CASE_DEF_GEN,[fem.pl.]_+_[const.gen.],form_gen:f form_num:p stt:c cas:g,#a> !C:POSS_PRON-iy,FP A-suff C:i#,#a>,مكافآت,DROP,,1
+267,300.23331,MORPH,[NSuff.XXCG],NSuff.FPCG,|t,|t/NSUFF_FEM_PL+(null)/CASE_DEF_GEN,[fem.pl.]_+_[const.gen.],form_gen:f form_num:p stt:c cas:g,#a> C:POSS_PRON-iy,FP A-suff,#a>,مكافآتي,DROP,,1
+268,300.2334,MORPH,[NSuff.XXCU],NSuff.FPCU,At,At/NSUFF_FEM_PL,[fem.pl.],form_gen:f form_num:p stt:c cas:u,else,FP UCase,Base UCase,موظفات,,,0
+269,300.23341,MORPH,[NSuff.XXCU],NSuff.FPCU,|t,|t/NSUFF_FEM_PL,[fem.pl.],form_gen:f form_num:p stt:c cas:u,#a>,FP A-suff UCase,#a> UCase ,مكافآت,,,1
+270,,,,,,,,,,,,,,,
+271,9.0,#,Pronomonial clitics,,,,,,,,,,,,
+272,200.0,MORPH,[PRON],_,_,_,_,enc0:0,,_,_,,,DONE,
+273,200.1011,MORPH,[PRON] ,niy/PRON.1S,i#niy,niy/XVSUFF_DO:1S,me,enc0:1s_dobj,ACTPART,enc0 enc0:1*,_+niy,,,DONE,
+274,200.1031,MORPH,[PRON] ,nA/PRON.1P,i#nA,nA/XVSUFF_DO:1P,us,enc0:1p_dobj,ACTPART,enc0 enc0:1*,_+nA,,,DONE,
+275,200.2111,MORPH,[PRON] ,ak/PRON.2MS,a#k,ak/XVSUFF_DO:2MS,you [masc.sg.],enc0:2ms_dobj,ACTPART,enc0 enc0:2*,_+ak,,,DONE,
+276,200.2212,MORPH,[PRON] ,ik/PRON.2FS,ik,ik/XVSUFF_DO:2FS,you [fem.sg.],enc0:2fs_dobj,ACTPART else,enc0 enc0:2*,_+ik,,,DONE,
+277,200.2215,MORPH,[PRON] ,ik/PRON.2FS,i#kiy,kiy/XVSUFF_DO:2FS,you [fem.sg.],enc0:2fs_dobj,ACTPART #^V,enc0 enc0:2*,_+ik,,,DONE,
+278,200.2215,MORPH,[PRON] ,ik/PRON.2FS,i#kiy,kiy/XVSUFF_DO:2FS,you [fem.sg.],enc0:2fs_dobj,ACTPART #NEG,enc0 enc0:2*,_+ik,,,DONE,
+279,200.2031,MORPH,[PRON] ,kuw/PRON.2P,u#kuw,kuw/XVSUFF_DO:2P,you,enc0:2p_dobj,ACTPART,enc0 enc0:2*,_+kuw,,,DONE,
+280,200.3111,MORPH,[PRON] ,uh/PRON.3MS,u#h,uh/XVSUFF_DO:3MS,him,enc0:3ms_dobj,ACTPART else,enc0,_+uh,,,DONE,
+281,200.3114,MORPH,[PRON] ,uh/PRON.3MS,u#huw,uh/XVSUFF_DO:3MS,him,enc0:3ms_dobj,ACTPART #NEG,enc0,_+uh,,,DONE,
+282,200.3211,MORPH,[PRON] ,hA/PRON.3FS,a#hA,hA/XVSUFF_DO:3FS,her,enc0:3fs_dobj,ACTPART,enc0,_+hA,,,DONE,
+283,200.3031,MORPH,[PRON] ,hum/PRON.3P,u#hum ,hum/XVSUFF_DO:3P,them,enc0:3p_dobj,ACTPART,enc0,_+hum,,,DONE,
+284,,,,,,,,,,,,,,,
+285,,,,,,,,,,,,,,,
+286,200.1031,MORPH,[PRON] ,nA/PRON.1P,i#nA,nA/POSS_PRON_1P,us,enc0:1p_poss,!ACTPART,C:POSS_PRON,,,,,
+287,200.2111,MORPH,[PRON] ,ak/PRON.2MS,a#k,ak/POSS_PRON_2MS,you [masc.sg.],enc0:2ms_poss,!ACTPART,C:POSS_PRON,,,,,
+288,200.2212,MORPH,[PRON] ,ik/PRON.2FS,ik,ik/POSS_PRON_2FS,you [fem.sg.],enc0:2fs_poss,!ACTPART else,C:POSS_PRON-i,,,,,
+289,200.2215,MORPH,[PRON] ,ik/PRON.2FS,i#kiy,kiy/POSS_PRON_2FS,you [fem.sg.],enc0:2fs_poss,!ACTPART #^V,C:POSS_PRON-i,,,,,
+290,200.2215,MORPH,[PRON] ,ik/PRON.2FS,i#kiy,kiy/POSS_PRON_2FS,you [fem.sg.],enc0:2fs_poss,!ACTPART #NEG,C:POSS_PRON-i,,,,,
+291,200.2031,MORPH,[PRON] ,kuw/PRON.2P,u#kuw,kuw/POSS_PRON_2P,you,enc0:2p_poss,!ACTPART,C:POSS_PRON-i,,,,,
+292,200.3111,MORPH,[PRON] ,uh/PRON.3MS,u#h,uh/POSS_PRON_3MS,him,enc0:3ms_poss,!ACTPART else,C:POSS_PRON-u,,,,,
+293,200.3114,MORPH,[PRON] ,uh/PRON.3MS,u#huw,uh/POSS_PRON_3MS,him,enc0:3ms_poss,!ACTPART #NEG,C:POSS_PRON-u,,,,,
+294,200.3211,MORPH,[PRON] ,hA/PRON.3FS,a#hA,hA/POSS_PRON_3FS,her,enc0:3fs_poss,!ACTPART,C:POSS_PRON,,,,,
+295,200.3031,MORPH,[PRON] ,hum/PRON.3P,u#hum ,hum/POSS_PRON_3P,them,enc0:3p_poss,!ACTPART,C:POSS_PRON,,,,,
+296,,,,,,,,,,,,,,,
+297,200.1011,MORPH,[PRON] ,iy/PRON.1S,iy,iy/POSS_PRON_1S,me,enc0:1s_poss,!ACTPART,C:POSS_PRON-iy,,,,,
+298,200.1011,MORPH,[PRON] ,iy/PRON.1S,ya,iy/POSS_PRON_1S,my,enc0:1s_poss,!ACTPART C:A#,C:POSS_PRON-iy,,,,,
+299,200.1011,MORPH,[PRON] ,iy/PRON.1S,~a,iy/POSS_PRON_1S,my,enc0:1s_poss,!ACTPART C:ay#||C:iy#,C:POSS_PRON-iy,,,,,

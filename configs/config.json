@@ -1,6 +1,6 @@
 {
     "global": {
-        "data-dir": "data",
+        "data_dir": "data",
         "specs": {
             "spreadsheet": "header-morph-order-sheets",
             "sheets": [
@@ -19,15 +19,15 @@
     },
 
     "local": {
-        "all_msa_order-v4_red": {
+        "all_aspects_msa_red": {
             "dialect": "msa",
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4",
-                "morph": "MSA-MORPH-Verbs-v4",
+                "order": "MSA-Verb-ORDER",
+                "morph": "MSA-Verb-MORPH",
                 "passive": {
-                    "MSA-LEX-PV": "PV-Patterns",
-                    "MSA-LEX-IV": "IV-Patterns"
+                    "MSA-Verb-LEX-PV": "MSA-Verb-PV-Passive-Patterns",
+                    "MSA-Verb-LEX-IV": "MSA-Verb-IV-Passive-Patterns"
                 },
                 "exclude": [
                     "RED"
@@ -36,14 +36,14 @@
             "lexicon": {
                 "spreadsheet": "msa-verb-lex",
                 "sheets": [
-                    "MSA-LEX-PV",
-                    "MSA-LEX-IV",
-                    "MSA-LEX-CV"
+                    "MSA-Verb-LEX-PV",
+                    "MSA-Verb-LEX-IV",
+                    "MSA-Verb-LEX-CV"
                 ],
                 "backoff": {
-                    "MSA-LEX-PV": "MSA-LEX-PV-ABSTRACT",
-                    "MSA-LEX-IV": "MSA-LEX-IV-ABSTRACT",
-                    "MSA-LEX-CV": "MSA-LEX-CV-ABSTRACT"
+                    "MSA-Verb-LEX-PV": "MSA-Verb-LEX-PV-ABSTRACT",
+                    "MSA-Verb-LEX-IV": "MSA-Verb-LEX-IV-ABSTRACT",
+                    "MSA-Verb-LEX-CV": "MSA-Verb-LEX-CV-ABSTRACT"
                 }
             },
             "db": "XYZ_msa_all_v1.0_red.db",
@@ -53,28 +53,28 @@
                 "gloss"
             ]
         },
-        "all_msa_order-v4": {
+        "all_aspects_msa": {
             "dialect": "msa",
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4",
-                "morph": "MSA-MORPH-Verbs-v4",
+                "order": "MSA-Verb-ORDER",
+                "morph": "MSA-Verb-MORPH",
                 "passive": {
-                    "MSA-LEX-PV": "PV-Patterns",
-                    "MSA-LEX-IV": "IV-Patterns"
+                    "MSA-Verb-LEX-PV": "MSA-Verb-PV-Passive-Patterns",
+                    "MSA-Verb-LEX-IV": "MSA-Verb-IV-Passive-Patterns"
                 }
             },
             "lexicon": {
                 "spreadsheet": "msa-verb-lex",
                 "sheets": [
-                    "MSA-LEX-PV",
-                    "MSA-LEX-IV",
-                    "MSA-LEX-CV"
+                    "MSA-Verb-LEX-PV",
+                    "MSA-Verb-LEX-IV",
+                    "MSA-Verb-LEX-CV"
                 ],
                 "backoff": {
-                    "MSA-LEX-PV": "MSA-LEX-PV-ABSTRACT",
-                    "MSA-LEX-IV": "MSA-LEX-IV-ABSTRACT",
-                    "MSA-LEX-CV": "MSA-LEX-CV-ABSTRACT"
+                    "MSA-Verb-LEX-PV": "MSA-Verb-LEX-PV-ABSTRACT",
+                    "MSA-Verb-LEX-IV": "MSA-Verb-LEX-IV-ABSTRACT",
+                    "MSA-Verb-LEX-CV": "MSA-Verb-LEX-CV-ABSTRACT"
                 }
             },
             "db": "XYZ_msa_all_v1.0.db",
@@ -84,14 +84,14 @@
                 "gloss"
             ]
         },
-        "pv_msa_order-v4": {
+        "pv_msa": {
             "dialect": "msa",
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4",
-                "morph": "MSA-MORPH-Verbs-v4",
+                "order": "MSA-Verb-ORDER",
+                "morph": "MSA-Verb-MORPH",
                 "passive": {
-                    "MSA-LEX-PV": "PV-Patterns"
+                    "MSA-Verb-LEX-PV": "MSA-Verb-PV-Passive-Patterns"
                 },
                 "exclude": [
                     "IV",
@@ -101,7 +101,7 @@
             "lexicon": {
                 "spreadsheet": "msa-verb-lex",
                 "sheets": [
-                    "MSA-LEX-PV"
+                    "MSA-Verb-LEX-PV"
                 ],
                 "backoff": "auto"
             },
@@ -124,14 +124,14 @@
                 "gloss"
             ]
         },
-        "pv_msa_order-v4_red": {
+        "pv_msa_red": {
             "dialect": "msa",
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4",
-                "morph": "MSA-MORPH-Verbs-v4",
+                "order": "MSA-Verb-ORDER",
+                "morph": "MSA-Verb-MORPH",
                 "passive": {
-                    "MSA-LEX-PV": "PV-Patterns"
+                    "MSA-Verb-LEX-PV": "MSA-Verb-PV-Passive-Patterns"
                 },
                 "exclude": [
                     "RED",
@@ -142,10 +142,10 @@
             "lexicon": {
                 "spreadsheet": "msa-verb-lex",
                 "sheets": [
-                    "MSA-LEX-PV"
+                    "MSA-Verb-LEX-PV"
                 ],
                 "backoff": {
-                    "MSA-LEX-PV": "MSA-LEX-PV-ABSTRACT"
+                    "MSA-Verb-LEX-PV": "MSA-Verb-LEX-PV-ABSTRACT"
                 }
             },
             "db": "XYZ_msa_pv_v1.0_red.db",
@@ -160,8 +160,8 @@
             "dialect": "msa",
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4",
-                "morph": "MSA-MORPH-Verbs-v4",
+                "order": "MSA-Verb-ORDER",
+                "morph": "MSA-Verb-MORPH",
                 "exclude": [
                     "RED",
                     "IV",
@@ -171,10 +171,10 @@
             "lexicon": {
                 "spreadsheet": "msa-verb-lex",
                 "sheets": [
-                    "MSA-LEX-PV"
+                    "MSA-Verb-LEX-PV"
                 ],
                 "backoff": {
-                    "MSA-LEX-PV": "MSA-LEX-PV-ABSTRACT"
+                    "MSA-Verb-LEX-PV": "MSA-Verb-LEX-PV-ABSTRACT"
                 }
             },
             "db": "XYZ_msa_pv_v1.0_red.db",
@@ -185,48 +185,12 @@
                 "gloss"
             ]
         },
-        "iv_msa_order-v3": {
-            "dialect": "msa",
-            "pruning": true,
-            "specs": {
-                "order": "ORDER-v3-IV",
-                "morph": "MSA-MORPH-Verbs-v4",
-                "passive": {
-                    "MSA-LEX-IV": "IV-Patterns"
-                },
-                "exclude": [
-                    "RED",
-                    "PV",
-                    "CV"
-                ]
-            },
-            "lexicon": {
-                "spreadsheet": "msa-verb-lex",
-                "sheets": [
-                    "MSA-LEX-IV"
-                ]
-            },
-            "db": "XYZ_msa_pv_v1.0_red.db",
-            "repr_lemmas": "repr_lemmas_iv_msa.pkl",
-            "debugging": {
-                "feats": {
-                    "asp:i mod:i": {
-                        "bank": "MSA-IV-Ind-Bank.tsv"
-                    }
-                }
-            },
-            "pos_type": "verbal",
-            "extended_lemma_keys": [
-                "lemma",
-                "gloss"
-            ]
-        },
         "iv_msa_no_pass": {
             "dialect": "msa",
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4",
-                "morph": "MSA-MORPH-Verbs-v4",
+                "order": "MSA-Verb-ORDER",
+                "morph": "MSA-Verb-MORPH",
                 "exclude": [
                     "RED",
                     "PV",
@@ -236,7 +200,7 @@
             "lexicon": {
                 "spreadsheet": "msa-verb-lex",
                 "sheets": [
-                    "MSA-LEX-IV"
+                    "MSA-Verb-LEX-IV"
                 ]
             },
             "db": "XYZ_msa_iv_v1.0.db",
@@ -247,14 +211,14 @@
                 "gloss"
             ]
         },
-        "iv_msa_order-v4": {
+        "iv_msa": {
             "dialect": "msa",
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4",
-                "morph": "MSA-MORPH-Verbs-v4",
+                "order": "MSA-Verb-ORDER",
+                "morph": "MSA-Verb-MORPH",
                 "passive": {
-                    "MSA-LEX-IV": "IV-Patterns"
+                    "MSA-Verb-LEX-IV": "MSA-Verb-IV-Passive-Patterns"
                 },
                 "exclude": [
                     "PV",
@@ -264,10 +228,10 @@
             "lexicon": {
                 "spreadsheet": "msa-verb-lex",
                 "sheets": [
-                    "MSA-LEX-IV"
+                    "MSA-Verb-LEX-IV"
                 ],
                 "backoff": {
-                    "MSA-LEX-IV": "MSA-LEX-IV-ABSTRACT"
+                    "MSA-Verb-LEX-IV": "MSA-Verb-LEX-IV-ABSTRACT"
                 }
             },
             "db": "XYZ_msa_iv_v1.0.db",
@@ -313,14 +277,14 @@
                 "gloss"
             ]
         },
-        "iv_msa_order-v4_red": {
+        "iv_msa_red": {
             "dialect": "msa",
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4",
-                "morph": "MSA-MORPH-Verbs-v4",
+                "order": "MSA-Verb-ORDER",
+                "morph": "MSA-Verb-MORPH",
                 "passive": {
-                    "MSA-LEX-IV": "IV-Patterns"
+                    "MSA-Verb-LEX-IV": "MSA-Verb-IV-Passive-Patterns"
                 },
                 "exclude": [
                     "RED",
@@ -331,10 +295,10 @@
             "lexicon": {
                 "spreadsheet": "msa-verb-lex",
                 "sheets": [
-                    "MSA-LEX-IV"
+                    "MSA-Verb-LEX-IV"
                 ],
                 "backoff": {
-                    "MSA-LEX-IV": "MSA-LEX-IV-ABSTRACT"
+                    "MSA-Verb-LEX-IV": "MSA-Verb-LEX-IV-ABSTRACT"
                 }
             },
             "db": "XYZ_msa_iv_v1.0_red.db",
@@ -345,12 +309,12 @@
                 "gloss"
             ]
         },
-        "cv_msa_order-v4": {
+        "cv_msa": {
             "dialect": "msa",
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4",
-                "morph": "MSA-MORPH-Verbs-v4",
+                "order": "MSA-Verb-ORDER",
+                "morph": "MSA-Verb-MORPH",
                 "exclude":[
                     "PV",
                     "IV"
@@ -359,10 +323,10 @@
             "lexicon": {
                 "spreadsheet": "msa-verb-lex",
                 "sheets": [
-                    "MSA-LEX-CV"
+                    "MSA-Verb-LEX-CV"
                 ],
                 "backoff": {
-                    "MSA-LEX-CV": "MSA-LEX-CV-ABSTRACT"
+                    "MSA-Verb-LEX-CV": "MSA-Verb-LEX-CV-ABSTRACT"
                 }
             },
             "db": "XYZ_msa_cv_v1.0.db",
@@ -396,12 +360,12 @@
                 "gloss"
             ]
         },
-        "cv_msa_order-v4_red": {
+        "cv_msa_red": {
             "dialect": "msa",
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4",
-                "morph": "MSA-MORPH-Verbs-v4",
+                "order": "MSA-Verb-ORDER",
+                "morph": "MSA-Verb-MORPH",
                 "exclude": [
                     "RED",
                     "PV",
@@ -411,10 +375,10 @@
             "lexicon": {
                 "spreadsheet": "msa-verb-lex",
                 "sheets": [
-                    "MSA-LEX-CV"
+                    "MSA-Verb-LEX-CV"
                 ],
                 "backoff": {
-                    "MSA-LEX-CV": "MSA-LEX-CV-ABSTRACT"
+                    "MSA-Verb-LEX-CV": "MSA-Verb-LEX-CV-ABSTRACT"
                 }
             },
             "db": "XYZ_msa_cv_v1.0_red.db",
@@ -425,12 +389,12 @@
                 "gloss"
             ]
         },
-        "pv_glf_order-v4_red": {
+        "pv_glf_red": {
             "dialect": "glf",
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4-GLF",
-                "morph": "GLF-MORPH-Verbs-v4",
+                "order": "GLF-Verb-ORDER",
+                "morph": "GLF-Verb-MORPH",
                 "postregex": "PostRegex",
                 "exclude": [
                     "IV",
@@ -441,7 +405,7 @@
             "lexicon": {
                 "spreadsheet": "glf-verb-lex",
                 "sheets": [
-                    "GLF-LEX-PV"
+                    "GLF-Verb-LEX-PV"
                 ]
             },
             "db": "XYZ_glf_pv_v1.0_red.db",
@@ -457,19 +421,19 @@
                     }
                 }
             },
-            "lexprob": "data/glf_verbs_lexprob.tsv",
+            "lexprob": "misc_files/glf_verbs_lexprob.tsv",
             "pos_type": "verbal",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
             ]
         },
-        "iv_glf_order-v4_red": {
+        "iv_glf_red": {
             "dialect": "glf",
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4-GLF",
-                "morph": "GLF-MORPH-Verbs-v4",
+                "order": "GLF-Verb-ORDER",
+                "morph": "GLF-Verb-MORPH",
                 "postregex": "PostRegex",
                 "exclude": [
                     "PV",
@@ -480,7 +444,7 @@
             "lexicon": {
                 "spreadsheet": "glf-verb-lex",
                 "sheets": [
-                    "GLF-LEX-IV"
+                    "GLF-Verb-LEX-IV"
                 ]
             },
             "db": "XYZ_glf_iv_v1.0_red.db",
@@ -496,19 +460,19 @@
                     }
                 }
             },
-            "lexprob": "data/glf_verbs_lexprob.tsv",
+            "lexprob": "misc_files/glf_verbs_lexprob.tsv",
             "pos_type": "verbal",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
             ]
         },
-        "cv_glf_order-v4_red": {
+        "cv_glf_red": {
             "dialect": "glf",
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4-GLF",
-                "morph": "GLF-MORPH-Verbs-v4",
+                "order": "GLF-Verb-ORDER",
+                "morph": "GLF-Verb-MORPH",
                 "postregex": "PostRegex",
                 "exclude": [
                     "PV",
@@ -519,7 +483,7 @@
             "lexicon": {
                 "spreadsheet": "glf-verb-lex",
                 "sheets": [
-                    "GLF-LEX-CV"
+                    "GLF-Verb-LEX-CV"
                 ]
             },
             "db": "XYZ_glf_cv_v1.0_red.db",
@@ -535,32 +499,32 @@
                     }
                 }
             },
-            "lexprob": "data/glf_verbs_lexprob.tsv",
+            "lexprob": "misc_files/glf_verbs_lexprob.tsv",
             "pos_type": "verbal",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
             ]
         },
-        "all_egy_order-v4": {
+        "all_aspects_egy": {
             "dialect": "egy",
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4-EGY",
-                "morph": "EGY-MORPH-Verbs-v4",
+                "order": "EGY-Verb-ORDER",
+                "morph": "EGY-Verb-MORPH",
                 "postregex": "PostRegex"
             },
             "lexicon": {
                 "spreadsheet": "egy-verb-lex",
                 "sheets": [
-                    "EGY-LEX-PV",
-                    "EGY-LEX-IV",
-                    "EGY-LEX-CV"
+                    "EGY-Verb-LEX-PV",
+                    "EGY-Verb-LEX-IV",
+                    "EGY-Verb-LEX-CV"
                 ],
                 "backoff": {
-                    "EGY-LEX-PV": "EGY-LEX-PV-ABSTRACT",
-                    "EGY-LEX-IV": "EGY-LEX-IV-ABSTRACT",
-                    "EGY-LEX-CV": "EGY-LEX-CV-ABSTRACT"
+                    "EGY-Verb-LEX-PV": "EGY-Verb-LEX-PV-ABSTRACT",
+                    "EGY-Verb-LEX-IV": "EGY-Verb-LEX-IV-ABSTRACT",
+                    "EGY-Verb-LEX-CV": "EGY-Verb-LEX-CV-ABSTRACT"
                 },
                 "get_patterns_from_sheet": true,
                 "override_explicit": true
@@ -571,12 +535,12 @@
                 "gloss"
             ]
         },
-        "pv_egy_order-v4": {
+        "pv_egy": {
             "dialect": "egy",
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4-EGY",
-                "morph": "EGY-MORPH-Verbs-v4",
+                "order": "EGY-Verb-ORDER",
+                "morph": "EGY-Verb-MORPH",
                 "postregex": "PostRegex",
                 "exclude": [
                     "IV",
@@ -586,7 +550,7 @@
             "lexicon": {
                 "spreadsheet": "egy-verb-lex",
                 "sheets": [
-                    "EGY-LEX-PV"
+                    "EGY-Verb-LEX-PV"
                 ],
                 "get_patterns_from_sheet": true,
                 "override_explicit": true
@@ -604,19 +568,19 @@
                     }
                 }
             },
-            "lexprob": "data/egy_verbs_lexprob.tsv",
+            "lexprob": "misc_files/egy_verbs_lexprob.tsv",
             "pos_type": "verbal",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
             ]
         },
-        "pv_egy_order-v4_red": {
+        "pv_egy_red": {
             "dialect": "egy",
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4-EGY",
-                "morph": "EGY-MORPH-Verbs-v4",
+                "order": "EGY-Verb-ORDER",
+                "morph": "EGY-Verb-MORPH",
                 "postregex": "PostRegex",
                 "exclude": [
                     "RED",
@@ -627,26 +591,26 @@
             "lexicon": {
                 "spreadsheet": "egy-verb-lex",
                 "sheets": [
-                    "EGY-LEX-PV"
+                    "EGY-Verb-LEX-PV"
                 ],
                 "get_patterns_from_sheet": true,
                 "override_explicit": true
             },
             "db": "XYZ_egy_pv_v1.0_red.db",
             "repr_lemmas": "repr_lemmas_pv_egy.pkl",
-            "lexprob": "data/egy_verbs_lexprob.tsv",
+            "lexprob": "misc_files/egy_verbs_lexprob.tsv",
             "pos_type": "verbal",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
             ]
         },
-        "iv_egy_order-v4": {
+        "iv_egy": {
             "dialect": "egy",
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4-EGY",
-                "morph": "EGY-MORPH-Verbs-v4",
+                "order": "EGY-Verb-ORDER",
+                "morph": "EGY-Verb-MORPH",
                 "postregex": "PostRegex",
                 "exclude": [
                     "PV",
@@ -656,7 +620,7 @@
             "lexicon": {
                 "spreadsheet": "egy-verb-lex",
                 "sheets": [
-                    "EGY-LEX-IV"
+                    "EGY-Verb-LEX-IV"
                 ],
                 "get_patterns_from_sheet": true,
                 "override_explicit": true
@@ -674,19 +638,19 @@
                     }
                 }
             },
-            "lexprob": "data/egy_verbs_lexprob.tsv",
+            "lexprob": "misc_files/egy_verbs_lexprob.tsv",
             "pos_type": "verbal",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
             ]
         },
-        "iv_egy_order-v4_red": {
+        "iv_egy_red": {
             "dialect": "egy",
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4-EGY",
-                "morph": "EGY-MORPH-Verbs-v4",
+                "order": "EGY-Verb-ORDER",
+                "morph": "EGY-Verb-MORPH",
                 "postregex": "PostRegex",
                 "exclude": [
                     "RED",
@@ -697,26 +661,26 @@
             "lexicon": {
                 "spreadsheet": "egy-verb-lex",
                 "sheets": [
-                    "EGY-LEX-IV"
+                    "EGY-Verb-LEX-IV"
                 ],
                 "get_patterns_from_sheet": true,
                 "override_explicit": true
             },
             "db": "XYZ_egy_iv_v1.0_red.db",
             "repr_lemmas": "repr_lemmas_iv_egy.pkl",
-            "lexprob": "data/egy_verbs_lexprob.tsv",
+            "lexprob": "misc_files/egy_verbs_lexprob.tsv",
             "pos_type": "verbal",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
             ]
         },
-        "cv_egy_order-v4": {
+        "cv_egy": {
             "dialect": "egy",
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4-EGY",
-                "morph": "EGY-MORPH-Verbs-v4",
+                "order": "EGY-Verb-ORDER",
+                "morph": "EGY-Verb-MORPH",
                 "postregex": "PostRegex",
                 "exclude": [
                     "PV",
@@ -726,7 +690,7 @@
             "lexicon": {
                 "spreadsheet": "egy-verb-lex",
                 "sheets": [
-                    "EGY-LEX-CV"
+                    "EGY-Verb-LEX-CV"
                 ],
                 "get_patterns_from_sheet": true,
                 "override_explicit": true
@@ -744,19 +708,19 @@
                     }
                 }
             },
-            "lexprob": "data/egy_verbs_lexprob.tsv",
+            "lexprob": "misc_files/egy_verbs_lexprob.tsv",
             "pos_type": "verbal",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
             ]
         },
-        "cv_egy_order-v4_red": {
+        "cv_egy_red": {
             "dialect": "egy",
             "pruning": true,
             "specs": {
-                "order": "ORDER-v4-EGY",
-                "morph": "EGY-MORPH-Verbs-v4",
+                "order": "EGY-Verb-ORDER",
+                "morph": "EGY-Verb-MORPH",
                 "postregex": "PostRegex",
                 "exclude": [
                     "RED",
@@ -767,7 +731,7 @@
             "lexicon": {
                 "spreadsheet": "egy-verb-lex",
                 "sheets": [
-                    "EGY-LEX-CV"
+                    "EGY-Verb-LEX-CV"
                 ],
                 "get_patterns_from_sheet": true,
                 "override_explicit": true
@@ -775,7 +739,7 @@
             "db": "XYZ_egy_cv_v1.0_red.db",
             "repr_lemmas": "repr_lemmas_cv_egy.pkl",
             "conj_tables": "conj_cv_egy_v1.0.tsv",
-            "lexprob": "data/egy_verbs_lexprob.tsv",
+            "lexprob": "misc_files/egy_verbs_lexprob.tsv",
             "pos_type": "verbal",
             "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
             "extended_lemma_keys": [
@@ -787,8 +751,8 @@
             "dialect": "msa",
             "pruning": true,
             "specs": {
-                "order": "ORDER-MSA-Nom",
-                "morph": "MSA-MORPH-Nom",
+                "order": "MSA-Nom-ORDER",
+                "morph": "MSA-Nom-MORPH",
                 "exclude": [
                     "RED"
                 ]
@@ -796,7 +760,7 @@
             "lexicon": {
                 "spreadsheet": "msa-nom-other-lex",
                 "sheets": [
-                    "MSA-LEX-Nom"
+                    "MSA-Nom-LEX"
                 ]
             },
             "db": "XYZ_msa_nom_v1.0_red.db",
@@ -833,8 +797,8 @@
             "split_or": true,
             "pruning": true,
             "specs": {
-                "order": "ORDER-MSA-Nom",
-                "morph": "MSA-MORPH-Nom",
+                "order": "MSA-Nom-ORDER",
+                "morph": "MSA-Nom-MORPH",
                 "exclude": [
                     "RED"
                 ]
@@ -842,7 +806,7 @@
             "lexicon": {
                 "spreadsheet": "msa-nom-other-lex",
                 "sheets": [
-                    "MSA-LEX-Nom"
+                    "MSA-Nom-LEX"
                 ]
             },
             "dialect": "msa",
@@ -881,8 +845,8 @@
             "split_or": true,
             "pruning": true,
             "specs": {
-                "order": "ORDER-MSA-Nom",
-                "morph": "MSA-MORPH-Nom",
+                "order": "MSA-Nom-ORDER",
+                "morph": "MSA-Nom-MORPH",
                 "exclude": [
                     "RED"
                 ]
@@ -890,7 +854,7 @@
             "lexicon": {
                 "spreadsheet": "msa-nom-other-lex",
                 "sheets": [
-                    "MSA-LEX-Nom"
+                    "MSA-Nom-LEX"
                 ]
             },
             "dialect": "msa",
@@ -930,13 +894,13 @@
             "pruning": true,
             "split_or": true,
             "specs": {
-                "order": "ORDER-MSA-Nom",
-                "morph": "MSA-MORPH-Nom"
+                "order": "MSA-Nom-ORDER",
+                "morph": "MSA-Nom-MORPH"
             },
             "lexicon": {
                 "spreadsheet": "msa-nom-other-lex",
                 "sheets": [
-                    "MSA-LEX-Nom"
+                    "MSA-Nom-LEX"
                 ]
             },
             "db": "XYZ_msa_nom_v1.0_red.db",
@@ -963,8 +927,8 @@
             "split_or": false,
             "pruning": true,
             "specs": {
-                "order": "ORDER-MSA-Nom",
-                "morph": "MSA-MORPH-Nom",
+                "order": "MSA-Nom-ORDER",
+                "morph": "MSA-Nom-MORPH",
                 "exclude": [
                     "RED"
                 ]
@@ -972,7 +936,7 @@
             "lexicon": {
                 "spreadsheet": "msa-nom-other-lex",
                 "sheets": [
-                    "MSA-LEX-Nom"
+                    "MSA-Nom-LEX"
                 ]
             },
             "dialect": "msa",
@@ -1002,22 +966,68 @@
                 "lemma"
             ]
         },
-        "msa_cr": {
+        "nom_egy_red": {
+            "dialect": "egy",
+            "pruning": true,
+            "specs": {
+                "order": "EGY-Nom-ORDER",
+                "morph": "EGY-Nom-MORPH",
+                "exclude": [
+                    "RED"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "egy-nom-other-lex",
+                "sheets": [
+                    "EGY-Nom-LEX"
+                ]
+            },
+            "db": "XYZ_egy_nom_v1.0_red.db",
+            "repr_lemmas": "repr_lemmas_nom_egy.pkl",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Nominals-Dialects",
+                "feats": {
+                    "": {
+                        "debugging_sheet": "EGY-Nom",
+                        "conj_tables": "conj_nom_egy_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_nom_egy_v1.0.tsv",
+                        "bank": "EGY-Nom-Bank.tsv"
+                    }
+                }
+            },
+            "pos_type": "nominal",
+            "class_keys": [
+                "cond_t",
+                "cond_s",
+                "gen",
+                "num",
+                "cas"
+            ],
+            "extended_lemma_keys": [
+                "lemma",
+                "form",
+                "pos",
+                "rat",
+                "cond_t",
+                "index"
+            ]
+        },
+        "msa_cam_ready_sigmorphon2022": {
             "dialect": "msa",
             "pruning": true,
             "specs": {
                 "spreadsheet": "CamelMorph-MSA-Specs-v1.0",
                 "sheets": {
-                    "order": "MSA-ORDER-Verbs",
-                    "morph": "MSA-MORPH-Verbs"
+                    "order": "MSA-Verb-ORDER",
+                    "morph": "MSA-Verb-MORPH"
                 }
             },
             "lexicon": {
                 "spreadsheet": "CamelMorph-MSA-Specs-v1.0",
                 "sheets": [
-                    "MSA-LEX-PV",
-                    "MSA-LEX-IV",
-                    "MSA-LEX-CV"
+                    "MSA-Verb-LEX-PV",
+                    "MSA-Verb-LEX-IV",
+                    "MSA-Verb-LEX-CV"
                 ]
             },
             "db": "XYZ_msa_cr_v1.0.db",
@@ -1027,23 +1037,23 @@
                 "gloss"
             ]
         },
-        "egy_cr": {
+        "egy_cam_ready_sigmorphon2022": {
             "dialect": "egy",
             "pruning": true,
             "specs": {
                 "postregex": "PostRegex",
                 "spreadsheet": "CamelMorph-EGY-Specs-v1.0",
                 "sheets": {
-                    "order": "EGY-ORDER-Verbs",
-                    "morph": "EGY-MORPH-Verbs"
+                    "order": "EGY-Verb-ORDER",
+                    "morph": "EGY-Verb-MORPH"
                 }
             },
             "lexicon": {
                 "spreadsheet": "CamelMorph-EGY-Specs-v1.0",
                 "sheets": [
-                    "EGY-LEX-PV",
-                    "EGY-LEX-IV",
-                    "EGY-LEX-CV"
+                    "EGY-Verb-LEX-PV",
+                    "EGY-Verb-LEX-IV",
+                    "EGY-Verb-LEX-CV"
                 ]
             },
             "db": "XYZ_egy_cr_v1.0.db",

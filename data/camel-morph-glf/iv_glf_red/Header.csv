@@ -1,0 +1,87 @@
+,CONTENT
+0,###DEFINES###
+1,DEFINE source source:lex source:punct source:foreign source:spvar source:digit source:backoff
+2,DEFINE prc1 prc1:0 prc1:laHa_rcfut prc1:laHa_emphfut prc1:li_jus prc1:<i$_interrog prc1:li_prep prc1:Ea_prep prc1:bi_prep prc1:bi_part prc1:Ha_fut prc1:ha_fut prc1:yA_voc prc1:la_prep prc1:na prc1:li_sub prc1:hA_dem prc1:ka_prep prc1:sa_fut prc1:wa_prep prc1:min_prep prc1:wA_voc prc1:bi_prog prc1:la_emph prc1:fiy_prep prc1:ta_prep prc1:la_rc prc1:libi_prep prc1:EalaY_prep
+3,DEFINE prc1.5 prc1.5:mA_neg prc1.5:0 prc1.5:lA_neg
+4,DEFINE vox vox:p vox:na vox:u vox:a
+5,DEFINE num num:s num:na num:d num:u num:p num:b
+6,DEFINE stt stt:u stt:i stt:na stt:c stt:d
+7,DEFINE cas cas:u cas:n cas:na cas:a cas:g
+8,DEFINE prc3 prc3:0 prc3:na prc3:>a_ques
+9,DEFINE gloss gloss:*open*
+10,DEFINE pos pos:noun pos:part_neg pos:pron_rel pos:noun_num pos:adv_interrog pos:part_voc pos:adj_comp pos:punc pos:conj_sub pos:part_fut pos:pron_exclam pos:part pos:part_verb pos:verb pos:digit pos:conj pos:pron_interrog pos:pron pos:abbrev pos:part_det pos:interj pos:adj_num pos:adv pos:part_restrict pos:adv_rel pos:adj pos:prep pos:part_interrog pos:verb_pseudo pos:noun_prop pos:part_focus pos:noun_quant pos:latin pos:pron_dem
+11,DEFINE prc2 prc2:fa_conn prc2:fa_rc prc2:na prc2:0 prc2:wa_part prc2:wa_sub prc2:fa_sub prc2:wa_conj prc2:fa_conj
+12,DEFINE diac diac:*open*
+13,DEFINE gen gen:na gen:m gen:f gen:b gen:u
+14,DEFINE prc0 prc0:na prc0:mA_part prc0:ma_neg prc0:Al_det prc0:AlmA_detneg prc0:mA_rel prc0:0 prc0:Aa_prondem
+15,DEFINE asp asp:p asp:na asp:c asp:i
+16,DEFINE rat rat:n rat:na rat:y rat:i rat:r rat:b rat:u
+17,DEFINE per per:na per:3 per:2 per:1
+18,DEFINE bw bw:*open*
+19,DEFINE mod mod:s mod:i mod:na mod:u mod:j mod:e mod:x
+20,DEFINE enc0 enc0:2p_dobj enc0:3p_dobj enc0:3mp_poss enc0:3d_dobj enc0:2mp_poss enc0:3d_pron enc0:3ms_pron enc0:3ms_poss enc0:man_interrog enc0:3mp_pron enc0:2d_pron enc0:3mp_dobj enc0:2fp_pron enc0:lA_neg enc0:man_rel enc0:1s_dobj enc0:2ms_pron enc0:2mp_pron enc0:ma_interrog enc0:na enc0:3fs_dobj enc0:mA_rel enc0:0 enc0:2fs_pron enc0:2fp_poss enc0:1s_poss enc0:Ah_voc enc0:2d_dobj enc0:2mp_dobj enc0:3fp_pron enc0:1p_poss enc0:ma_rel enc0:2fs_poss enc0:3ms_dobj enc0:mA_interrog enc0:3d_poss enc0:3fp_poss enc0:ma_sub enc0:2fp_dobj enc0:2d_poss enc0:1s_pron enc0:3fs_pron enc0:3fs_poss enc0:3fp_dobj enc0:1p_pron enc0:2fs_dobj enc0:2ms_poss enc0:1p_dobj enc0:2ms_dobj enc0:mA_sub
+21,DEFINE enc1 enc1:0 enc1:1s_dobj enc1:1p_dobj enc1:2mp_dobj enc1:2fs_dobj enc1:2d_dobj enc1:2ms_dobj enc1:2fp_dobj enc1:3ms_dobj enc1:3fs_dobj enc1:3d_dobj enc1:3mp_dobj enc1:3fp_dobj enc1:1s_iobj enc1:1p_iobj enc1:2ms_iobj enc1:2fs_iobj enc1:2p_iobj enc1:3ms_iobj enc1:3fs_iobj enc1:3p_iobj enc1:part_neg
+22,DEFINE enc2 enc2:0 enc2:na enc2:part_neg
+23,DEFINE lex lex:*open*
+24,DEFINE form_gen form_gen:na form_gen:m form_gen:f
+25,DEFINE form_num form_num:s form_num:na form_num:d form_num:u form_num:p
+26,DEFINE catib6 catib6:*open*
+27,DEFINE ud ud:*open*
+28,DEFINE d3seg d3seg:*open*
+29,DEFINE atbseg atbseg:*open*
+30,DEFINE d2seg d2seg:*open*
+31,DEFINE d1seg d1seg:*open*
+32,DEFINE d1tok d1tok:*open*
+33,DEFINE d2tok d2tok:*open*
+34,DEFINE atbtok atbtok:*open*
+35,DEFINE d3tok d3tok:*open*
+36,DEFINE pos_logprob pos_logprob:*open*
+37,DEFINE pos_lex_logprob pos_lex_logprob:*open*
+38,DEFINE lex_logprob lex_logprob:*open*
+39,DEFINE caphi caphi:*open*
+40,DEFINE root root:*open*
+41,DEFINE pattern pattern:*open*
+42,DEFINE bwtok bwtok:*open*
+43,###DEFAULTS###
+44,DEFAULT pos:prep diac:* lex:* bw:* gloss:* pos:prep prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:na per:na asp:na vox:na mod:na gen:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex form_gen:na form_num:na catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+45,DEFAULT pos:verb diac:* lex:* bw:* gloss:* pos:verb prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:3 asp:na vox:u mod:u gen:m num:s stt:na cas:na enc0:0 enc1:0 enc2:0 rat:n source:lex form_gen:m form_num:s catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+46,DEFAULT pos:adj_num diac:* lex:* bw:* gloss:* pos:adj_num prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na gen:- num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:n source:lex form_gen:m form_num:s catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+47,DEFAULT pos:pron_dem diac:* lex:* bw:* gloss:* pos:pron_dem prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na gen:- num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:y source:lex form_gen:m form_num:s catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+48,DEFAULT pos:pron_rel diac:* lex:* bw:* gloss:* pos:pron_rel prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na gen:- num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:y source:lex form_gen:m form_num:s catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+49,DEFAULT pos:latin diac:* lex:* bw:* gloss:* pos:latin prc3:na prc2:na prc1:na prc1.5:na prc0:na per:na asp:na vox:na mod:na gen:na num:na stt:na cas:na enc0:na enc1:na enc2:na rat:na source:lex form_gen:na form_num:na catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+50,DEFAULT pos:punc diac:* lex:* bw:* gloss:* pos:punc prc3:na prc2:na prc1:na prc1.5:na prc0:na per:na asp:na vox:na mod:na gen:na num:na stt:na cas:na enc0:na enc1:na enc2:na rat:na source:lex form_gen:na form_num:na catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+51,DEFAULT pos:conj_sub diac:* lex:* bw:* gloss:* pos:conj_sub prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:na per:na asp:na vox:na mod:na gen:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex form_gen:na form_num:na catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+52,DEFAULT pos:part_fut diac:* lex:* bw:* gloss:* pos:part_fut prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:na per:na asp:na vox:na mod:na gen:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex form_gen:na form_num:na catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+53,DEFAULT pos:noun_num diac:* lex:* bw:* gloss:* pos:noun_num prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na gen:- num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:y source:lex form_gen:m form_num:s catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+54,DEFAULT pos:part_neg diac:* lex:* bw:* gloss:* pos:part_neg prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:na per:na asp:na vox:na mod:na gen:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex form_gen:na form_num:na catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+55,DEFAULT pos:abbrev diac:* lex:* bw:* gloss:* pos:abbrev prc3:na prc2:na prc1:na prc1.5:na prc0:na per:na asp:na vox:na mod:na gen:na num:na stt:na cas:na enc0:na enc1:na enc2:na rat:na source:lex form_gen:na form_num:na catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+56,DEFAULT pos:pron diac:* lex:* bw:* gloss:* pos:pron prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:3 asp:na vox:na mod:na gen:- num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:y source:lex form_gen:m form_num:s catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+57,DEFAULT pos:noun_prop diac:* lex:* bw:* gloss:* pos:noun_prop prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na gen:- num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:r source:lex form_gen:m form_num:s catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+58,DEFAULT pos:pron_interrog diac:* lex:* bw:* gloss:* pos:pron_interrog prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na gen:- num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:y source:lex form_gen:m form_num:s catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+59,DEFAULT pos:* diac:* lex:* bw:* gloss:* pos:* prc3:na prc2:na prc1:na prc1.5:na prc0:na per:na asp:na vox:na mod:na gen:na num:na stt:na cas:na enc0:na enc1:na enc2:na rat:na source:lex form_gen:na form_num:na catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+60,DEFAULT pos:part_verb diac:* lex:* bw:* gloss:* pos:part_verb prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:na per:na asp:na vox:na mod:na gen:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex form_gen:na form_num:na catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+61,DEFAULT pos:digit diac:* lex:* bw:* gloss:* pos:digit prc3:na prc2:na prc1:na prc1.5:na prc0:na per:na asp:na vox:na mod:na gen:na num:na stt:na cas:na enc0:na enc1:na enc2:na rat:na source:lex form_gen:na form_num:na catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+62,DEFAULT pos:part diac:* lex:* bw:* gloss:* pos:part prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:na per:na asp:na vox:na mod:na gen:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex form_gen:na form_num:na catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+63,DEFAULT pos:adv diac:* lex:* bw:* gloss:* pos:adv prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na gen:- num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:y source:lex form_gen:m form_num:s catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+64,DEFAULT pos:part_det diac:* lex:* bw:* gloss:* pos:part_det prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:na per:na asp:na vox:na mod:na gen:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex form_gen:na form_num:na catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+65,DEFAULT pos:verb_pseudo diac:* lex:* bw:* gloss:* pos:verb_pseudo prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:na per:na asp:na vox:na mod:na gen:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:n source:lex form_gen:na form_num:na catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+66,DEFAULT pos:noun_quant diac:* lex:* bw:* gloss:* pos:noun_quant prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na gen:- num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:n source:lex form_gen:m form_num:s catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+67,DEFAULT pos:adv_interrog diac:* lex:* bw:* gloss:* pos:adv_interrog prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na gen:- num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:y source:lex form_gen:m form_num:s catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+68,DEFAULT pos:adj_comp diac:* lex:* bw:* gloss:* pos:adj_comp prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na gen:- num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:n source:lex form_gen:m form_num:s catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+69,DEFAULT pos:interj diac:* lex:* bw:* gloss:* pos:interj prc3:na prc2:na prc1:na prc1.5:na prc0:na per:na asp:na vox:na mod:na gen:na num:na stt:na cas:na enc0:na enc1:na enc2:na rat:na source:lex form_gen:na form_num:na catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+70,DEFAULT pos:part_restrict diac:* lex:* bw:* gloss:* pos:part_restrict prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:na per:na asp:na vox:na mod:na gen:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex form_gen:na form_num:na catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+71,DEFAULT pos:adj diac:* lex:* bw:* gloss:* pos:adj prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na gen:- num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:n source:lex form_gen:m form_num:s catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+72,DEFAULT pos:adv_rel diac:* lex:* bw:* gloss:* pos:adv_rel prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na gen:- num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:y source:lex form_gen:m form_num:s catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+73,DEFAULT pos:conj diac:* lex:* bw:* gloss:* pos:conj prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:na per:na asp:na vox:na mod:na gen:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex form_gen:na form_num:na catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+74,DEFAULT pos:noun diac:* lex:* bw:* gloss:* pos:noun prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na gen:- num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:i source:lex form_gen:m form_num:s catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+75,DEFAULT pos:part_interrog diac:* lex:* bw:* gloss:* pos:part_interrog prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:na per:na asp:na vox:na mod:na gen:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex form_gen:na form_num:na catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+76,DEFAULT pos:part_voc diac:* lex:* bw:* gloss:* pos:part_voc prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:na per:na asp:na vox:na mod:na gen:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex form_gen:na form_num:na catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+77,DEFAULT pos:part_focus diac:* lex:* bw:* gloss:* pos:part_focus prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:na per:na asp:na vox:na mod:na gen:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex form_gen:na form_num:na catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+78,DEFAULT pos:pron_exclam diac:* lex:* bw:* gloss:* pos:pron_exclam prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na gen:- num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:y source:lex form_gen:m form_num:s catib6:* ud:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* pos_lex_logprob:* lex_logprob:* root:* pattern:* caphi:*
+79,###ORDER###
+80,ORDER diac lex caphi gloss bw pos catib6 ud root pattern prc3 prc2 prc1 prc1.5 prc0 per asp vox mod form_gen gen form_num num stt cas enc0 enc1 enc2 rat source stem stemcat stemgloss d1seg d2seg d3seg atbseg d1tok d2tok d3tok atbtok bwtok pos_logprob lex_logprob pos_lex_logprob
+81,###TOKENIZATIONS###
+82,TOKENIZATION atbtok d3tok d2tok d1tok bwtok atbseg d3seg d2seg d1seg
+83,###STEMBACKOFF###
+84,STEMBACKOFF ALL N0 Nall CV IV PV
+85,STEMBACKOFF PROP N0
