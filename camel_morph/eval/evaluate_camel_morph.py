@@ -267,7 +267,7 @@ def evaluate_verbs_recall(data, eval_mode):
     print(
         f"Type space recall: {sum(case['count'] for case in correct_cases)/(sum(case['count'] for case in correct_cases) + sum(case['count'] for case in errors))}")
 
-    recall_print(errors, correct_cases, drop_cases, f'eval/{eval_mode}.tsv')
+    recall_print(errors, correct_cases, drop_cases, os.path.join(args.output_dir, f'{eval_mode}.tsv'))
 
 
 def compare_print(words, analyses_words, status, results_path, bw=False):
@@ -438,11 +438,11 @@ def evaluate_verbs_analyzer_comparison(data, n, eval_mode):
         pbar.update(1)
     pbar.close()
 
-    with open('eval/status_compare.tsv', 'w') as f:
+    with open(os.path.join(args.output_dir, 'status_compare.tsv'), 'w') as f:
         for line in status:
             print(*line, sep='\t', file=f)
 
-    compare_print(words, analyses, status, f'eval/{eval_mode}.tsv', bw=True)
+    compare_print(words, analyses, status, os.path.join(args.output_dir, f'{eval_mode}.tsv'), bw=True)
 
     return status
 
@@ -504,7 +504,7 @@ def compare_stats(compare_results):
         else:
             raise NotImplementedError
 
-    with open('eval/stats_compare_results.tsv', 'w') as f:
+    with open(os.path.join(args.output_dir, 'stats_compare_results.tsv'), 'w') as f:
         for row, info in stats.items():
             info = [info[k] for k in ['word_count',
                                       'analyses_camel', 'analyses_baseline', 'overlap']]
@@ -515,23 +515,25 @@ def compare_stats(compare_results):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-egy_magold_path", default='eval/ARZ-All-train.113012.magold',
+    parser.add_argument("-egy_magold_path", default='eval_files/ARZ-All-train.113012.magold',
                         type=str, help="Path of the file containing the EGY MAGOLD data to evaluate on.")
-    parser.add_argument("-msa_magold_path", default='eval/ATB123-train.102312.calima-msa-s31_0.3.0.magold',
+    parser.add_argument("-msa_magold_path", default='eval_files/ATB123-train.102312.calima-msa-s31_0.3.0.magold',
                         type=str, help="Path of the file containing the MSA MAGOLD data to evaluate on.")
-    parser.add_argument("-camel_tb_path", default='eval/camel_tb_uniq_types.txt',
+    parser.add_argument("-camel_tb_path", default='eval_files/camel_tb_uniq_types.txt',
                         type=str, help="Path of the file containing the MSA CAMeLTB data to evaluate on.")
-    parser.add_argument("-db_dir", default='db_iterations',
+    parser.add_argument("-db_dir", default='databases',
                         type=str, help="Path of the directory to load the DB from.")
-    parser.add_argument("-config_file", default='config_default.json',
+    parser.add_argument("-output_dir", default='eval_files',
+                        type=str, help="Path of the directory to output evaluation results.")
+    parser.add_argument("-config_file", default='configs/config.json',
                         type=str, help="Config file specifying which sheets to use.")
     parser.add_argument("-egy_config_name", default='all_aspects_egy',
                         type=str, help="Config name which specifies the path of the EGY Camel DB.")
     parser.add_argument("-msa_config_name", default='all_aspects_msa',
                         type=str, help="Config name which specifies the path of the MSA Camel DB.")
-    parser.add_argument("-msa_baseline_db", default='eval/calima-msa-s31_0.4.2.utf8.db',
+    parser.add_argument("-msa_baseline_db", default='eval_files/calima-msa-s31_0.4.2.utf8.db',
                         type=str, help="Path of the MSA baseline DB file we will be comparing against.")
-    parser.add_argument("-egy_baseline_db", default='eval/calima-egy-c044_0.2.0.utf8.db',
+    parser.add_argument("-egy_baseline_db", default='eval_files/calima-egy-c044_0.2.0.utf8.db',
                         type=str, help="Path of the EGY baseline DB file we will be comparing against.")
     parser.add_argument("-eval_mode", required=True,
                         choices=['recall_msa_magold_raw', 'recall_msa_magold_ldc_dediac',
@@ -543,15 +545,22 @@ if __name__ == "__main__":
                         type=str, help="What evaluation to perform.")
     parser.add_argument("-n", default=100,
                         type=int, help="Number of verbs to input to the two compared systems.")
-    parser.add_argument("-camel_tools", default='',
+    parser.add_argument("-camel_tools", default='local', choices=['local', 'official'],
                         type=str, help="Path of the directory containing the camel_tools modules.")
 
     random.seed(42)
 
     args = parser.parse_args()
 
-    if args.camel_tools:
-        sys.path.insert(0, args.camel_tools)
+    with open(args.config_file) as f:
+        config = json.load(f)
+        config_local = config['local']
+        config_egy = config_local[args.egy_config_name]
+        config_msa = config_local[args.msa_config_name]
+
+    if args.camel_tools == 'local':
+        camel_tools_dir = config['global']['camel_tools']
+        sys.path.insert(0, camel_tools_dir)
 
     from camel_tools.morphology.database import MorphologyDB
     from camel_tools.morphology.analyzer import Analyzer
@@ -560,12 +569,6 @@ if __name__ == "__main__":
 
     bw2ar = CharMapper.builtin_mapper('bw2ar')
     ar2bw = CharMapper.builtin_mapper('ar2bw')
-
-    with open(args.config_file) as f:
-        config = json.load(f)
-        config_local = config['local']
-        config_egy = config_local[args.egy_config_name]
-        config_msa = config_local[args.msa_config_name]
 
     print('Eval mode:', args.eval_mode)
     if 'msa' in args.eval_mode and 'egy' not in args.eval_mode:
@@ -642,7 +645,7 @@ if __name__ == "__main__":
         status = evaluate_verbs_analyzer_comparison(
             data, args.n, args.eval_mode)
 
-        with open('eval/status_compare.tsv') as f:
+        with open(os.path.join(args.output_dir, 'status_compare.tsv')) as f:
             compare_results = [line.strip().split('\t')
                                for line in f.readlines()]
             compare_stats(compare_results)

@@ -48,6 +48,9 @@ def download_sheets(lex=None, specs=None, save_dir=None, config=None, config_nam
             'sheets': [config_local['lexicon']['sheets']]
         }
 
+    print('LEX SHEETS BEING DOWNLOADED:', lex)
+    print('SPECS SHEETS BEING DOWNLOADED:', specs)
+
     for spreadsheets in [lex, specs]:
         for i, spreadsheet_name in enumerate(spreadsheets['spreadsheets']):
             spreadsheet = sa.open(spreadsheet_name)
@@ -88,7 +91,6 @@ if __name__ == "__main__":
                         type=str, help="Path of the JSON file containing the information about the service account used for the Google API.")
     args = parser.parse_args()
 
-    service_account = args.service_account
     save_dir = args.save_dir
     config = None
 
@@ -97,9 +99,9 @@ if __name__ == "__main__":
             config = json.load(f)
         config_local = config['local'][args.config_name]
         config_global = config['global']
-
-        service_account = config_global['service_account']
-        save_dir = config_global['data_dir']
+    
+    service_account = args.service_account if args.service_account else config_global['service_account']
+    save_dir = config_global['data_dir']
 
     download_sheets(args.lex, args.specs, save_dir,
                     config, args.config_name, service_account)

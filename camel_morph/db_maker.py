@@ -1,4 +1,3 @@
-import camel_morph.db_maker_utils as db_maker_utils
 import re
 import os
 from tqdm import tqdm
@@ -12,6 +11,8 @@ import sys
 from typing import Dict, Tuple, List, Optional
 
 import pandas as pd
+
+import db_maker_utils
 
 _required_verb_stem_feats = ['pos', 'asp', 'per', 'gen', 'num', 'vox', 'mod']
 _required_nom_stem_feats = ['pos', 'form_gen', 'form_num', 'gen', 'num', 'stt', 'cas']

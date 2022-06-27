@@ -1,27 +1,56 @@
-# CamelMorph
+# Camel Morph
 
 ## Introduction
 
-The work presented in this repository is part of a large effort on Arabic morphology under the name of the CamelMorph Project [^2]. CamelMorph’s goal is to build large open-source morphological models for Arabic and its dialects across many genres and domains. This repository contains code meant to build an ALMOR-style database from a set of morphological specification and lexicon spreadsheets, which can then be used by [Camel Tools](https://github.com/CAMeL-Lab/camel_tools)’s for morphological analysis, generation, and reinflection.
+The work presented in this repository is part of a large effort on Arabic morphology under the name of the Camel Morph Project [^2]. Camel Morph’s goal is to build large open-source morphological models for Arabic and its dialects across many genres and domains. This repository contains code meant to build an ALMOR-style database (DB) from a set of morphological specification and lexicon spreadsheets, which can then be used by [Camel Tools](https://github.com/CAMeL-Lab/camel_tools)’s for morphological analysis, generation, and reinflection.
 
-The following sections provide useful usage information about the repository. For pointers to the system used for the SIGMORPHON 2022 CamelMorph paper, check the [CamelMorph SIGMORPHON 2022](#camelmorph-sigmorphon-2022) section.
+<p align="center"> <img width="100%" height="100%" src="camel-morph-system.jpg"> </p>
 
-## CamelMorph SIGMORPHON 2022
+The following sections provide useful usage information about the repository. For pointers to the system used for the SIGMORPHON 2022 Camel Morph paper, check the [Camel Morph SIGMORPHON 2022](#camel-morph-sigmorphon-2022) section.
 
-This section guides you through the process of inspecting, making use of, and replicating the results obtained for the SIGMORPHON 2022 CamelMorph paper[^2]. Firstly, all the data can be 
+## Camel Morph SIGMORPHON 2022
 
-## Google Sheets
+This section guides you through the process of inspecting, making use of, and replicating the results obtained for the SIGMORPHON 2022 Camel Morph paper[^2]. Firstly, all the data can be obtained or viewed as described in the [Data](#data) section. However, all the data and code (including relevant Camel Tools modules) required to replicate the paper results are already contained in the `./sigmorphon2022_release` directory. The main goal of the Camel Morph DB Maker is to generate a database which can be parsed by the Camel Tools DB reader which can in turn be used by the Analyzer and Generator engines[^3]. To replicate the paper results, follow the below instructions. For a fuller picture of all configurations, see the [Instructions](#instructions) section.
 
-The data throughout this project is being managed through the Google Sheets interface, through which we can add, delete, or edit entries. TODO (add links)
+### Modern Standard Arabic (MSA) Results
+
+To generate the Mordern Standard Arabic verbal database, the results of which were described in the paper[^2], run the following two commands from the main repository directory:
+
+    cd sigmorphon2022_release
+    python db_maker.py -config_file config.json -config_name msa_cam_ready_sigmorphon2022 
+
+### Egyptian Arabic (EGY) Results
+
+To generate the Egyptian Arabic verbal database, the results of which were described in the paper[^2], run the following two commands from the main repository directory:
+
+    cd sigmorphon2022_release
+    python db_maker.py -config_file config.json -config_name egy_cam_ready_sigmorphon2022
+
+## Data
+
+The data throughout this project is being maintained through the Google Sheets interface which can be used to add, delete, or edit morphological specification entries. The following are links to the data and morphological specifications used for this project.
+
+### Continuously Updated Data
+
+- [MSA Verbs: Lexicon Specifications](https://docs.google.com/spreadsheets/d/1kqY3RvBFC6jK4mQLo9YYaaeIuzqjB5zGbLMXkFTZohU/edit?usp=sharing)
+- [EGY Verbs: Lexicon Specifications](https://docs.google.com/spreadsheets/d/1ZQtp-jRMM0HNeFQxp4M65beMYo4k9_UE4b3EUv1Iglg/edit?usp=sharing)
+- [MSA/EGY Verbs: Morph and Order Specifications](https://docs.google.com/spreadsheets/d/15SwTP1u6wlXZS-SfnG5Ypw7KFsig9dGdujZ0LuI_muw/edit?pli=1#gid=2036516603)
+
+### SIGMORPHON 2022 Data (frozen)
+
+- [MSA Specifications](https://docs.google.com/spreadsheets/d/1v9idxctnr6IsqG4c7bHs7lGx7GzbnTa2s4ghQCmLoPY/edit#gid=524706154)
+- [EGY Specifications](https://docs.google.com/spreadsheets/d/1OCqHIdeZpm9BNa-BiC7Xy6bAT_wkLnhuvKdo7X3-RtE/edit#gid=424095452)
 
 ## Installation
 
-To start working with the CamelMorph engine:
+To start working with the Camel Morph engine:
 
-1. Clone this repository and a [fork](https://github.com/christios/camel_tools) of the Camel Tools repository.
-2. Unzip both in a directory of your choice.
-3. Make sure that the following are installed using `pip install`: **Python 3.3** or newer, **NumPy 1.20** or newer, and **Pandas 1.4** or newer.
-4. Run all commands/scripts from the outer `camel_morph` directory.
+1. Clone (download) this repository.
+2. Clone (download) a [fork](https://github.com/christios/camel_tools) of the Camel Tools repository. The Camel Morph databases will currently only function using the latter instance of Camel Tools. The changes in this fork will eventually be integrated to the main Camel Tools library.
+3. Unzip both in a directory of your choice.
+4. Make sure that the following are installed using `pip install`: **Python 3.3** or newer, **NumPy 1.20** or newer, and **Pandas 1.4** or newer.
+5. Set the `CAMEL_TOOLS_PATH` value to the path of the Camel Tools fork repository in the configuration file that you will be using (default configuration file `./configs/config_default.json` provided; see [Configuration File Structure](#configuration-file-structure) section).
+6. Run all commands/scripts from the outer `camel_morph` directory.
 
 For instructions on how to run the different scripts, see the [Instructions](#instructions) section.
 
@@ -42,132 +71,76 @@ For instructions on how to run the different scripts, see the [Instructions](#in
 
 To generate databases, paradigm-specific inflection (conjugation/declension) tables, or evaluation tables, follow the below instructions. Note that the adjoining `Makefile` can be used to reproduce the experiments which were ran in-house by providing the (pipelines of) instructions that were used to carry them out. But first, it is important to understand the structure of the configuration file. Also, a default configuration file is included in the `./configs` directory for direct usage.
 
-### Configuration File Structure
+### Compiling a Database (DB Maker)
 
-In its most basic format, the configuration file should look like the following:
-
-    {
-        "global": {
-            "data_dir": DATA_DIR_PATH,
-            "specs": {
-                "sheets": [
-                    ABOUT-SHEET,
-                    HEADER-SHEET
-                ]
-            },
-            "db_dir": DB_OUTPUT_DIR,
-            "camel_tools": CAMEL_TOOLS_PATH
-        },
-        "local": {
-            CONFIG_NAME: {
-                "dialect": DIALECT,
-                "pruning": PRUNING,
-                "specs": {
-                    "sheets": {
-                        "order": ORDER-SHEET,
-                        "morph": MORPH-SHEET
-                    }
-                },
-                "lexicon": {
-                    "sheets": [
-                        LEX-SHEET-1,
-                        ...
-                    ]
-                },
-                "db": DB_NAME,
-                "pos_type": POS_TYPE
-            }
-        }
-    }
-
-where (content of placeholders below should be enclosed in double quotes):
-
-- `DATA_DIR_PATH`: path of the outermost data directory where all sheets are kept referenced from the outermost `camel_morph` directory (e.g., `data`)
-- `ABOUT-SHEET`: name of the sheet containing the *About* section which will go in the DB (e.g., `About`). Downloaded as specified in the [Google Sheets](#google-sheets) section.
-- `HEADER-SHEET`: same as `ABOUT-SHEET` (e.g., `Header`)
-- `DB_OUTPUT_DIR`: name of the directory to which the compiled DBs will be output.
-- `CAMEL_TOOLS_PATH`: path of the Camel Tools repository fork that should be cloned/downloaded as described in [Installation](#installation) section.
-- `CONFIG_NAME`: name of the configuration in the `local` section of the config file, to choose between a number of different configurations (e.g., `default_config`). This is also the name of the folder which contains the sheets that are specified for that configuration and the global section.
-- `DIALECT`: dialect being worked with (i.e., `msa` or `egy`). This is specified to further organize the configuration-specific data into high-level projects (i.e., `./data/camel-morph-msa` or `./data/camel-morph-egy`).
-- `PRUNING`: boolean (`true` or `false`). Used in the DB making process to speed up DB compilation. For this to be set to `true`, the Morph sheet must contain condition definitions (organization of conditions into categories).
-- `ORDER-SHEET`: same as `ABOUT-SHEET` (e.g., `MSA-Verb-ORDER`).
-- `MORPH-SHEET`: same as `ABOUT-SHEET` (e.g., `MSA-Verb-MORPH`).
-- `LEX-SHEET-1`: same as `ABOUT-SHEET` (e.g., `MSA-Verb-LEX-PV`). At least one lexicon sheet can be specified; the latter will be concatenated in pre-processing.
-- `DB_NAME`: name of the output DB.
-- `POS_TYPE`: type of the POS for which we are building the DB. Can either be `verbal` or `nominal`.
-
-### Downloading Files
-
-To download files from Google Drive, first, follow the instructions in the first 3:50 minutes of [this](https://www.youtube.com/watch?v=bu5wXjz2KvU) video to get API access to the Google Drive interface. Then, run the following command to download selected/individual sheets (not spreadsheets) in csv format from the following cloud [directory](https://drive.google.com/drive/folders/1yRq5PZ7rwQKzGCIIcoVPvgbTLHrkkxpE).
-
-    python download_sheets.py [-save_dir A] [-config_file B -config_name C] [-lex D1 D2 [...] [-lex ...] -specs E1 E2 [...] [-specs ...]]
-
-- `A`: path of the directory to save all the downloaded files in. It is `./data` by default (if it does not exist, it will be automatically created).
-- `B`: path of the configuration file (already included in repo, i.e., `./config.json`) which contains different configurations to run the DB on (previsouly the `PARAMS` sheet in the specs spreadsheet). Some pre-compiled configurations already exist in `config.json`, but new ones could be easily added on demand.
-- `C`: configuration name of one of the configurations contained in `A` which specifies what sheets to use for the DB (e.g., `pv_msa_red` for a DB using only PV MSA lexicon, the `Order-v4` order sheet, and a **red**uced morph file for more efficient debugging). It also specifies what the name of the output DB file will be.
-- Note that only one of `B` or `C` can be set. If `C` is set, then:
-  - `D`: used for lexicon sheets (usually contain `LEX` in their names)
-    - `D1`: name of spreadsheet
-    - `D2 [...]`: name of sheets contained in `D1` to download in csv format
-  - `E`: used for specs sheets (`ORDER`, `MORPH`, `HEADER`, ...)
-    - `E1`: name of spreadsheet (use `header-morph-order-sheets` for now)
-    - `E2 [...]`: name of sheets contained in `D1` to download in csv format
-
-### Compile Database
-
-The below command compiles the ALMOR-style database.
+The below command compiles an ALMOR-style database starting from a set of morphological specification files referenced in the specific configuration mentioned as an argument.
 
     python db_maker.py -config_file A -config_name B -camel_tools C [-output_dir D] [-run_profiling]
 
-- `A`: same as above.
-- `B`: same as above.
-- `C`: directory containing the CAMeL Tools modules (clone this from [this](https://github.com/christios/camel_tools) fork).
-- `D`: directory to save the generated DBs in. By default, `./db_iterations`
+- `A`: path of the configuration file which contains different configurations to run the DB on. Some pre-compiled configurations already exist in `./configs/config.json`, but new ones could be easily added. See [here](#configuration-file-structure) for an overview of the configuration file format. Defaults to `./configs/config_default.json`.
+- `B`: configuration name of one of the configurations contained in `A`. It contains script parameters, sheet paths, etc.
+- `C`: directory containing the CAMeL Tools modules (should be cloned as described [here](#installation)).
+- `D`: directory to save the generated DBs in. By default, `./databases`
 
 The following flag is optional:
 
 - `-run_profiling`: to generate an execution time profile of the specific configuration.
 
-### Generate Representative Lemmas List
+### Configuration File Structure
 
-The following script generates a list of representative lemmas to run the conjugation paradigms on (mainly for debugging). Unique lemmas are carefully chosen from distinct lemma classes based on stem, COND-T, COND-S, POS, and gloss information (and gender and number for nominals).
+In its most basic format, the configuration file should look like the example below in order to successfully run the scripts described in this guide.
 
-    python create_repr_lemmas_list.py -config_file A -config_name B -output_name C -pos_type D [-output_dir E]
+#### Default Configuration File
 
-To run the above command, the following flags are required:
+    {
+        "global": {
+            "data_dir": "DATA_DIR_PATH",
+            "specs": {
+                "sheets": [
+                    "ABOUT_SHEET",
+                    "HEADER_SHEET"
+                ]
+            },
+            "db_dir": "DB_OUTPUT_DIR",
+            "camel_tools": "CAMEL_TOOLS_PATH"
+        },
+        "local": {
+            "CONFIG_NAME": {
+                "dialect": "DIALECT",
+                "pruning": "PRUNING",
+                "specs": {
+                    "sheets": {
+                        "order": "ORDER_SHEET",
+                        "morph":" MORPH_SHEET"
+                    }
+                },
+                "lexicon": {
+                    "sheets": [
+                        "LEX_SHEET_1",
+                        ...
+                    ]
+                },
+                "db": "DB_NAME",
+                "pos_type": "POS_TYPE"
+            }
+        }
+    }
 
-- `A`: same as above.
-- `B`: same as above.
-- `C`: name of the output pickled dictionary. This is a pickle file (consider suffixing it with `.pkl` for consistency) containing lemmas and some info about them (`COND-S`, `COND-T`, `gen`, etc.).
-- `D`: POS type of the lemmas we want a representative list of. Choices are `verbal` or `nominal`.
-- `E`: path of the directory to output the file to. By default, `./conjugation/repr_lemmas` (if it does not exist, it will be automatically created).
+where:
 
-### Generate Conjugation Tables
+- `DATA_DIR_PATH`: path of the outermost data directory where all sheets are kept referenced from the outermost `camel_morph` directory (e.g., `data`)
+- `ABOUT_SHEET`: name of the sheet containing the *About* section which will go in the DB (e.g., `About`). Downloaded as specified in the [Google Sheets](#google-sheets) section.
+- `HEADER_SHEET`: same as `ABOUT_SHEET` (e.g., `Header`)
+- `DB_OUTPUT_DIR`: name of the directory to which the compiled DBs will be output.
+- `CAMEL_TOOLS_PATH`: path of the Camel Tools repository fork that should be cloned/downloaded as described in [Installation](#installation) section.
+- `CONFIG_NAME`: name of the configuration in the `local` section of the config file, to choose between a number of different configurations (e.g., `default_config`). This is also the name of the folder which contains the sheets that are specified for that configuration and the global section.
+- `DIALECT`: dialect being worked with (i.e., `msa` or `egy`). This is specified to further organize the configuration-specific data into high-level projects (i.e., `./data/camel-morph-msa` or `./data/camel-morph-egy`).
+- `PRUNING`: boolean (`true` or `false`). Used in the DB making process to speed up DB compilation. For this to be set to `true`, the Morph sheet must contain condition definitions (organization of conditions into categories).
+- `ORDER_SHEET`: same as `ABOUT_SHEET` (e.g., `MSA-Verb-ORDER`).
+- `MORPH_SHEET`: same as `ABOUT_SHEET` (e.g., `MSA-Verb-MORPH`).
+- `LEX_SHEET_1`: same as `ABOUT_SHEET` (e.g., `MSA-Verb-LEX-PV`). At least one lexicon sheet can be specified; the latter will be concatenated in pre-processing.
+- `DB_NAME`: name of the output DB.
+- `POS_TYPE`: type of the POS for which we are building the DB. Can either be `verbal` or `nominal`.
 
-**Note:** to use the below code, a specific fork of CAMeL tools needs to be downloaded for debugging purposes. After downloading it from [here](https://github.com/christios/camel_tools/tree/master), extract the `camel_tools` package from the outer `camel_tools` build folder and place it in `./`. Alternatively, create a new virtual environment and manually install the fork there as a library.
-
-    python generate_conj_table.py -paradigms A -repr_lemmas B -db C [-db_dir D] -pos_type E -dialect F -output_name G [-output_dir H] [-asp I] [-mod J]
-
-To run the above command, the following flags are required:
-
-- `A`: configuration file containing the paradigms from which to generate the tables. Paradigms are expressed as a set of signatures the syntax of which is as follows:
-
-        <POS_TYPE>.<A><P><G><N>.<S><C><V><M>.<P0123><E012>
-    where:
-
-  - `<POS_TYPE>` can be either `VERB` or `NOM`.
-  - `<A><P><G><N>.<S><C><V><M>` is as specified as in the [CAMeL POS](https://camel-guidelines.readthedocs.io/en/latest/morphology/) schema with the only exception that the plural value for `gen` is specified as `Q` instead of `P` (for ease of signature parsing)[^1].
-  - The last part specifies the presence of clitics. For instance, if we want a 0-enclitic to be present, we add `.E0`. If we want both a 0- and a 1- enclitic, we add `.E01`, etc.
-  
-- `B`: file containing the representative lemmas list and their debug info.
-- `C`: name of the DB file to use for generation.
-- `D`: path of the directory in which `C` is. By default `./db_iterations`
-- `E`: `verbal` or `nominal` (self-explanatory).
-- `F`: `msa`, `glf`, or `egy`.
-- `G`: name of the file to output the conjugation tables to. This file will be output by default to a directory called `conjugation/tables/`.
-- `H`: path of the directory to which `G` will be output. By default `./conjugation/tables` (if it does not exist, it will be automatically created).
-- `I`: `p`, `i`, or `c`. If we are generating verb conjugation tables, we need to specify what aspect we are generating for. Otherwise, do not use.
-- `J`: `i`, `s`, or `j`. If we are generating `IV` verb conjugation tables, we need to specify what mood we want to generate for. Otherwise, do not use.
-
-[^1]: The `Q` is reverted to a `P` when the signature is printed out again.
 [^2]: Habash, Nizar et al. "Morphotactic Modeling in an Open-source Multi-dialectal Arabic Morphological Analyzer and Generator", SIGMORPHON. 2022
+[^3]: Note that for the release directory, only the morphological components from Camel Tools were sourced from the actual library and were added to be imported locally.

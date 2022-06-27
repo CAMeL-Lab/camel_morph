@@ -7,7 +7,13 @@ import os
 import pickle
 import sys
 
-from camel_morph.utils.utils import _strip_brackets
+try:
+    from ..utils.utils import _strip_brackets
+except:
+    file_path = os.path.abspath(__file__).split('/')
+    package_path = '/'.join(file_path[:len(file_path) - 1 - file_path[::-1].index('camel_morph')])
+    sys.path.insert(0, package_path)
+    from camel_morph.utils.utils import _strip_brackets
 
 _test_features = ['pos', 'asp', 'vox', 'per', 'gen', 'num',
                  'mod', 'cas', 'enc0', 'prc0', 'prc1', 'prc2', 'prc3']

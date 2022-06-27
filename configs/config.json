@@ -1041,11 +1041,11 @@
             "dialect": "egy",
             "pruning": true,
             "specs": {
-                "postregex": "PostRegex",
                 "spreadsheet": "CamelMorph-EGY-Specs-v1.0",
                 "sheets": {
                     "order": "EGY-Verb-ORDER",
-                    "morph": "EGY-Verb-MORPH"
+                    "morph": "EGY-Verb-MORPH",
+                    "postregex": "PostRegex"
                 }
             },
             "lexicon": {
@@ -1057,6 +1057,32 @@
                 ]
             },
             "db": "XYZ_egy_cr_v1.0.db",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        },
+        "msa_cam_ready_sigmorphon2022_replicate": {
+            "dialect": "msa",
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "CamelMorph-MSA-Specs-v1.0",
+                "sheets": {
+                    "order": "MSA-Verb-ORDER",
+                    "morph": "MSA-Verb-MORPH"
+                }
+            },
+            "lexicon": {
+                "spreadsheet": "CamelMorph-MSA-Specs-v1.0",
+                "sheets": [
+                    "MSA-Verb-LEX-PV",
+                    "MSA-Verb-LEX-IV",
+                    "MSA-Verb-LEX-CV"
+                ]
+            },
+            "db": "msa_cam_ready_sigmorphon2022_v1.0.db",
+            "repr_lemmas": "repr_lemmas_pv_msa.pkl",
+            "pos_type": "verbal",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"

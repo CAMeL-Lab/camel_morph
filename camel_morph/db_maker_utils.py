@@ -107,7 +107,8 @@ def read_morph_specs(config:Dict, config_name:str) -> Tuple[Dict[str, pd.DataFra
     # Compiles the regex match expression from the sheet into a regex match expression that is
     # suitable for storing into the DB in Arabic script. Expects Safe BW transliteration in the sheet.
     POSTREGEX = None
-    postregex_path: Optional[str] = local_specs['specs'].get('postregex')
+    postregex_path: Optional[str] = local_specs['specs']['sheets'].get('postregex') \
+                                        if 'sheets' in local_specs['specs'] else local_specs['specs'].get('postregex')
     if postregex_path:
         POSTREGEX = pd.read_csv(os.path.join(data_dir, 'PostRegex.csv'))
         POSTREGEX = POSTREGEX[(POSTREGEX.DEFINE == 'POSTREGEX') & (POSTREGEX.VARIANT == local_specs['dialect'].upper())]

@@ -31,11 +31,7 @@
                 ]
             },
             "db": "XYZ_msa_cr_v1.0.db",
-            "pos_type": "verbal",
-            "extended_lemma_keys": [
-                "lemma",
-                "gloss"
-            ]
+            "pos_type": "verbal"
         }
     }
 }
