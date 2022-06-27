@@ -4,7 +4,7 @@
 
 The work presented in this repository is part of a large effort on Arabic morphology under the name of the Camel Morph Project [^2]. Camel Morph’s goal is to build large open-source morphological models for Arabic and its dialects across many genres and domains. This repository contains code meant to build an ALMOR-style database (DB) from a set of morphological specification and lexicon spreadsheets, which can then be used by [Camel Tools](https://github.com/CAMeL-Lab/camel_tools)’s for morphological analysis, generation, and reinflection.
 
-<p align="center"> <img width="100%" height="100%" src="camel-morph-system.jpg"> </p>
+<p align="center"> <img width="70%" height="70%" src="camel-morph-system.jpg"> </p>
 
 The following sections provide useful usage information about the repository. For pointers to the system used for the SIGMORPHON 2022 Camel Morph paper, check the [Camel Morph SIGMORPHON 2022](#camel-morph-sigmorphon-2022) section.
 
@@ -32,7 +32,7 @@ The data throughout this project is being maintained through the Google Sheets i
 
 ### Continuously Updated Data
 
-- [MSA Verbs: Lexicon Specifications](https://docs.google.com/spreadsheets/d/1kqY3RvBFC6jK4mQLo9YYaaeIuzqjB5zGbLMXkFTZohU/edit?usp=sharing)
+- <a href="https://docs.google.com/spreadsheets/d/1kqY3RvBFC6jK4mQLo9YYaaeIuzqjB5zGbLMXkFTZohU/edit?usp=sharing" target="_blank">MSA Verbs: Lexicon Specifications</a>
 - [EGY Verbs: Lexicon Specifications](https://docs.google.com/spreadsheets/d/1ZQtp-jRMM0HNeFQxp4M65beMYo4k9_UE4b3EUv1Iglg/edit?usp=sharing)
 - [MSA/EGY Verbs: Morph and Order Specifications](https://docs.google.com/spreadsheets/d/15SwTP1u6wlXZS-SfnG5Ypw7KFsig9dGdujZ0LuI_muw/edit?pli=1#gid=2036516603)
 
