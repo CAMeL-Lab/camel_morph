@@ -57,6 +57,7 @@ def make_db(config:Dict, config_name:str, output_dir:str):
         config_name (str): key of the specific ("local") configuration to get information from in the config file.
         output_dir (str): path of the directory to output the `db` file to.
     """
+    config_local = config['local'][config_name]
     c0 = process_time()
     
     print("\nLoading and processing sheets... [1/3]")
@@ -67,8 +68,9 @@ def make_db(config:Dict, config_name:str, output_dir:str):
         SHEETS, config['local'][config_name]['pruning'], cond2class)
     
     print("\nGenerating DB file... [3/3]")
-    print_almor_db(
-        os.path.join(output_dir, config['local'][config_name]['db']), db)
+    output_dir = os.path.join(output_dir, f"camel-morph-{config_local['dialect']}")
+    os.makedirs(output_dir, exist_ok=True)
+    print_almor_db(os.path.join(output_dir, config_local['db']), db)
     
     c1 = process_time()
     print(f"\nTotal time required: {strftime('%M:%S', gmtime(c1 - c0))}")

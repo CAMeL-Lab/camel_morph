@@ -1,0 +1,250 @@
+SIGNATURE	LEMMA	DIAC	QC	COMMENTS	STATUS
+VERB.C2MS.AI	kAn	kuwn	OK		
+VERB.C2FS.AI	kAn	kuwniy	OK		
+VERB.C2P.AI	kAn	kuwnuwA	OK		
+VERB.C2MS.AI.E0	kAn		OK		
+VERB.C2FS.AI.E0	kAn		OK		
+VERB.C2P.AI.E0	kAn		OK		
+VERB.C2MS.AI	qAl	quwl	OK		
+VERB.C2FS.AI	qAl	quwliy	OK		
+VERB.C2P.AI	qAl	quwluwA	OK		
+VERB.C2MS.AI	EanaY	AiEniy	OK		
+VERB.C2FS.AI	EanaY	AiEniy	OK		
+VERB.C2P.AI	EanaY	AiEnuwA	OK		
+VERB.C2MS.AI	AinotahaY	Ainotihiy	OK		
+VERB.C2FS.AI	AinotahaY	Ainotihiy	OK		
+VERB.C2P.AI	AinotahaY	AinotihuwA	OK		
+VERB.C2MS.AI.E0	AinotahaY		OK		
+VERB.C2FS.AI.E0	AinotahaY		OK		
+VERB.C2P.AI.E0	AinotahaY		OK		
+VERB.C2MS.AI	Hab~	Hib~	OK		
+VERB.C2FS.AI	Hab~	Hib~iy	OK		
+VERB.C2P.AI	Hab~	Hib~uwA	OK		
+VERB.C2MS.AI	>axoTa>	AixoTa>	OK		
+VERB.C2FS.AI	>axoTa>	AixoTa}iy	OK		
+VERB.C2P.AI	>axoTa>	AixoTa&uwA	OK		
+VERB.C2MS.AI.E0	>axoTa>		OK		
+VERB.C2FS.AI.E0	>axoTa>		OK		
+VERB.C2P.AI.E0	>axoTa>		OK		
+VERB.C2MS.AI	tam~	tim~	OK		
+VERB.C2FS.AI	tam~	tim~iy	OK		
+VERB.C2P.AI	tam~	tim~uwA	OK		
+VERB.C2MS.AI.E0	tam~		OK		
+VERB.C2FS.AI.E0	tam~		OK		
+VERB.C2P.AI.E0	tam~		OK		
+VERB.C2MS.AI	bada>	Aibda>	OK		
+VERB.C2FS.AI	bada>	Aibda}iy	OK		
+VERB.C2P.AI	bada>	Aibda&uwA	OK		
+VERB.C2FS.AI	>asA'	siy}iy	OK	>asiy}iy	
+VERB.C2P.AI	>asA'	siy}uwA	OK		
+VERB.C2MS.AI.E0	>asA'		OK		
+VERB.C2FS.AI.E0	>asA'		OK		
+VERB.C2P.AI.E0	>asA'		OK		
+VERB.C2MS.AI	>a$Ar	$iyr	OK		
+VERB.C2FS.AI	>a$Ar	$iyriy	OK	>a$iyriy	
+VERB.C2P.AI	>a$Ar	$iyruwA	OK		
+VERB.C2MS.AI.E0	>a$Ar		OK		
+VERB.C2FS.AI.E0	>a$Ar		OK		
+VERB.C2P.AI.E0	>a$Ar		OK		
+VERB.C2FS.AI	>aDA'	Diy}iy	OK	>aDiy}iy	
+VERB.C2P.AI	>aDA'	Diy}uwA	OK		
+VERB.C2FS.AI	Aitoman~aY	Aitoman~iy	OK		
+VERB.C2P.AI	Aitoman~aY	Aitoman~uwA	OK		
+VERB.C2MS.AI.E0	Aitoman~aY		OK		
+VERB.C2FS.AI.E0	Aitoman~aY		OK		
+VERB.C2P.AI.E0	Aitoman~aY		OK		
+VERB.C2FS.AI	hidiy	Aihdiy	OK		
+VERB.C2P.AI	hidiy	AihduwA	OK		
+VERB.C2MS.AI.E0	hidiy		OK		
+VERB.C2FS.AI.E0	hidiy		OK		
+VERB.C2P.AI.E0	hidiy		OK		
+VERB.C2MS.AI	Aitosab~	Aitovab~	PROB		
+VERB.C2MS.AI	Aitosab~	Aitosab~	OK		
+VERB.C2FS.AI	Aitosab~	Aitovab~iy	PROB		
+VERB.C2FS.AI	Aitosab~	Aitosab~iy	OK		
+VERB.C2P.AI	Aitosab~	Aitovab~uwA	PROB		
+VERB.C2P.AI	Aitosab~	Aitosab~uwA	OK		
+VERB.C2MS.AI.E0	Aitosab~		OK		
+VERB.C2FS.AI.E0	Aitosab~		OK		
+VERB.C2P.AI.E0	Aitosab~		OK		
+VERB.C2FS.AI	Aitowaf~aY	Aitowaf~iy	OK		
+VERB.C2P.AI	Aitowaf~aY	Aitowaf~uwA	OK		
+VERB.C2MS.AI.E0	Aitowaf~aY		OK		
+VERB.C2FS.AI.E0	Aitowaf~aY		OK		
+VERB.C2P.AI.E0	Aitowaf~aY		OK		
+VERB.C2FS.AI	Aid~aY	Aid~iy	OK		
+VERB.C2P.AI	Aid~aY	Aid~uwA	OK		
+VERB.C2FS.AI	qarA	Aiqriy	OK		
+VERB.C2P.AI	qarA	AiqruwA	OK		
+VERB.C2MS.AI	had~aY	had~aYiy	PROB		
+VERB.C2MS.AI	had~aY	had~iy	OK		
+VERB.C2FS.AI	had~aY	had~aYiy	PROB		
+VERB.C2FS.AI	had~aY	had~iy	OK		
+VERB.C2P.AI	had~aY	had~aYuwA	PROB		
+VERB.C2P.AI	had~aY	had~uwA	OK		
+VERB.C2MS.AI.E0	jih		OK		
+VERB.C2FS.AI.E0	jih		OK		
+VERB.C2P.AI.E0	jih		OK		
+VERB.C2MS.AI	rajA	Aurjuw	OK	no cv	
+VERB.C2FS.AI	rajA	Aurjiy	OK	no cv	
+VERB.C2P.AI	rajA	AurjuwA	OK	no cv	
+VERB.C2MS.AI	fataY	AiftaYiy	PROB		
+VERB.C2MS.AI	fataY	Aiftiy	OK		
+VERB.C2FS.AI	fataY	AiftaYiy	PROB		
+VERB.C2FS.AI	fataY	Aiftiy	OK		
+VERB.C2P.AI	fataY	AiftaYuwA	PROB		
+VERB.C2P.AI	fataY	AiftuwA	OK		
+VERB.C2MS.AI.E0	fataY		OK		
+VERB.C2FS.AI.E0	fataY		OK		
+VERB.C2P.AI.E0	fataY		OK		
+VERB.C2MS.AI	Aitokal~im	Aitokal~im	OK		
+VERB.C2FS.AI	Aitokal~im	Aitokal~imiy	OK		
+VERB.C2P.AI	Aitokal~im	Aitokal~imuwA	OK		
+VERB.C2MS.AI.E0	Aitokal~im		OK		
+VERB.C2FS.AI.E0	Aitokal~im		OK		
+VERB.C2P.AI.E0	Aitokal~im		OK		
+VERB.C2MS.AI	Eamal	AiEmil	OK		
+VERB.C2FS.AI	Eamal	AiEmiliy	OK		
+VERB.C2P.AI	Eamal	AiEmiluwA	OK		
+VERB.C2MS.AI	xal~aY	xal~iy	OK		
+VERB.C2FS.AI	xal~aY	xal~iy	OK		
+VERB.C2P.AI	xal~aY	xal~uwA	OK		
+VERB.C2MS.AI	Hav~	Hiv~	OK		
+VERB.C2FS.AI	Hav~	Hiv~iy	OK		
+VERB.C2P.AI	Hav~	Hiv~uwA	OK		
+VERB.C2MS.AI	baS~	buS~	OK		
+VERB.C2FS.AI	baS~	buS~iy	OK		
+VERB.C2P.AI	baS~	buS~uwA	OK		
+VERB.C2MS.AI.E0	baS~		OK		
+VERB.C2FS.AI.E0	baS~		OK		
+VERB.C2P.AI.E0	baS~		OK		
+VERB.C2FS.AI	nisiy	Ainsiy	OK		
+VERB.C2P.AI	nisiy	AinsuwA	OK		
+VERB.C2MS.AI	>asA'	siy}	OK		
+VERB.C2MS.AI	>aDA'	Diy}	OK		
+VERB.C2MS.AI	Aisota>oSal	Aisota>oSil	OK		
+VERB.C2FS.AI	Aisota>oSal	Aisota>oSiliy	OK		
+VERB.C2P.AI	Aisota>oSal	Aisota>oSiluwA	OK		
+VERB.C2MS.AI.E0	Aisota>oSal	Aisota>oSiluh	OK	no cv	
+VERB.C2FS.AI.E0	Aisota>oSal	Aisota>oSiliyh	OK	no cv	
+VERB.C2P.AI.E0	Aisota>oSal	Aisota>oSiluwh	OK	no cv	
+VERB.C2MS.AI	Aid~aY	Aid~iy	OK		
+VERB.C2MS.AI.E0	Aid~aY	Aid~iyh	OK		
+VERB.C2FS.AI.E0	Aid~aY	Aid~iyh	OK		
+VERB.C2P.AI.E0	Aid~aY	Aid~uwh	OK		
+VERB.C2MS.AI.E0	Hab~	Hib~uh	OK		
+VERB.C2FS.AI.E0	Hab~	Hib~iyh	OK		
+VERB.C2P.AI.E0	Hab~	Hib~uwh	OK		
+VERB.C2FS.AI.E0	bada>	Aibda}iyh	OK		
+VERB.C2P.AI.E0	bada>	Aibda&uwh	OK		
+VERB.C2MS.AI.E0	>aDA'	Diy}uh	OK	no cv	
+VERB.C2FS.AI.E0	>aDA'	Diy}iyh	OK	no cv	
+VERB.C2P.AI.E0	>aDA'	Diy}uwh	OK	no cv	
+VERB.C2FS.AI.E0	nisiy	Ainsiyh	OK	no cv	
+VERB.C2P.AI.E0	nisiy	Ainsuwh	OK	no cv	
+VERB.C2FS.AI.E0	qarA	Aiqriyh	OK	no cv	
+VERB.C2P.AI.E0	qarA	Aiqruwh	OK	no cv	
+VERB.C2MS.AI.E0	rajA	Aurjuwh	OK	no cv	
+VERB.C2FS.AI.E0	rajA	Aurjiyh	OK	no cv	
+VERB.C2P.AI.E0	rajA	Aurjuwh	OK	no cv	
+VERB.C2MS.AI	>asA'	siy'	OK	Hamza	
+VERB.C2MS.AI	>aDA'	Diy'	OK	Hamza	
+VERB.C2MS.AI	Aitoman~aY	Aitoman~aY	OK	no cv	
+VERB.C2MS.AI	hidiy	AihdA	OK	no cv	
+VERB.C2MS.AI	nisiy	AinsaY	OK	no cv	
+VERB.C2MS.AI.E0	nisiy	AinsAh	OK	no cv	
+VERB.C2MS.AI	qarA	AiqrA	OK	no cv	
+VERB.C2MS.AI.E0	qarA	AiqrAh	OK	no cv	
+VERB.C2MS.A	>a$Ar	$iyr	OK		
+VERB.C2FS.A	>a$Ar	$iyriy	OK	>a$iyriy	
+VERB.C2P.A	>a$Ar	$iyruwA	OK		
+VERB.C2MS.A.E0	>a$Ar		OK		
+VERB.C2FS.A.E0	>a$Ar		OK		
+VERB.C2P.A.E0	>a$Ar		OK		
+VERB.C2MS.A	Aisota>oSal	Aisota>oSil	OK		
+VERB.C2FS.A	Aisota>oSal	Aisota>oSiliy	OK		
+VERB.C2P.A	Aisota>oSal	Aisota>oSiluwA	OK		
+VERB.C2MS.A.E0	Aisota>oSal	Aisota>oSiluh	OK	no cv	
+VERB.C2FS.A.E0	Aisota>oSal	Aisota>oSiliyh	OK	no cv	
+VERB.C2P.A.E0	Aisota>oSal	Aisota>oSiluwh	OK	no cv	
+VERB.C2MS.A	Aid~aY	Aid~iy	OK		
+VERB.C2FS.A	Aid~aY	Aid~iy	OK		
+VERB.C2P.A	Aid~aY	Aid~uwA	OK		
+VERB.C2MS.A.E0	Aid~aY	Aid~iyh	OK		
+VERB.C2FS.A.E0	Aid~aY	Aid~iyh	OK		
+VERB.C2P.A.E0	Aid~aY	Aid~uwh	OK		
+VERB.C2MS.A	AinotahaY	Ainotihiy	OK		
+VERB.C2FS.A	AinotahaY	Ainotihiy	OK		
+VERB.C2P.A	AinotahaY	AinotihuwA	OK		
+VERB.C2MS.A.E0	AinotahaY		OK		
+VERB.C2FS.A.E0	AinotahaY		OK		
+VERB.C2P.A.E0	AinotahaY		OK		
+VERB.C2MS.A	Hab~	Hib~	OK		
+VERB.C2FS.A	Hab~	Hib~iy	OK		
+VERB.C2P.A	Hab~	Hib~uwA	OK		
+VERB.C2MS.A.E0	Hab~	Hib~uh	OK		
+VERB.C2FS.A.E0	Hab~	Hib~iyh	OK		
+VERB.C2P.A.E0	Hab~	Hib~uwh	OK		
+VERB.C2MS.A	>axoTa>	AixoTa>	OK		
+VERB.C2FS.A	>axoTa>	AixoTa}iy	OK		
+VERB.C2P.A	>axoTa>	AixoTa&uwA	OK		
+VERB.C2MS.A.E0	>axoTa>		OK		
+VERB.C2FS.A.E0	>axoTa>		OK		
+VERB.C2P.A.E0	>axoTa>		OK		
+VERB.C2MS.A	Aitosab~	Aitosab~	OK		
+VERB.C2FS.A	Aitosab~	Aitosab~iy	OK		
+VERB.C2P.A	Aitosab~	Aitosab~uwA	OK		
+VERB.C2MS.A.E0	Aitosab~		OK		
+VERB.C2FS.A.E0	Aitosab~		OK		
+VERB.C2P.A.E0	Aitosab~		OK		
+VERB.C2MS.A	bada>	Aibda>	OK		
+VERB.C2FS.A	bada>	Aibda}iy	OK		
+VERB.C2P.A	bada>	Aibda&uwA	OK		
+VERB.C2FS.A.E0	bada>	Aibda}iyh	OK		
+VERB.C2P.A.E0	bada>	Aibda&uwh	OK		
+VERB.C2MS.A	>asA'	siy'	OK	Hamza	
+VERB.C2FS.A	>asA'	siy}iy	OK	>asiy}iy	
+VERB.C2P.A	>asA'	siy}uwA	OK		
+VERB.C2MS.A.E0	>asA'		OK		
+VERB.C2FS.A.E0	>asA'		OK		
+VERB.C2P.A.E0	>asA'		OK		
+VERB.C2MS.A	>aDA'	Diy'	OK	Hamza	
+VERB.C2FS.A	>aDA'	Diy}iy	OK	>aDiy}iy	
+VERB.C2P.A	>aDA'	Diy}uwA	OK		
+VERB.C2MS.A.E0	>aDA'	Diy}uh	OK	no cv	
+VERB.C2FS.A.E0	>aDA'	Diy}iyh	OK	no cv	
+VERB.C2P.A.E0	>aDA'	Diy}uwh	OK	no cv	
+VERB.C2MS.A	Aitoman~aY	Aitoman~aY	OK	no cv	
+VERB.C2FS.A	Aitoman~aY	Aitoman~iy	OK		
+VERB.C2P.A	Aitoman~aY	Aitoman~uwA	OK		
+VERB.C2MS.A.E0	Aitoman~aY		OK		
+VERB.C2FS.A.E0	Aitoman~aY		OK		
+VERB.C2P.A.E0	Aitoman~aY		OK		
+VERB.C2MS.A	hidiy	AihdA	OK	no cv	
+VERB.C2FS.A	hidiy	Aihdiy	OK		
+VERB.C2P.A	hidiy	AihduwA	OK		
+VERB.C2MS.A.E0	hidiy		OK		
+VERB.C2FS.A.E0	hidiy		OK		
+VERB.C2P.A.E0	hidiy		OK		
+VERB.C2MS.A	nisiy	AinsaY	OK	no cv	
+VERB.C2FS.A	nisiy	Ainsiy	OK		
+VERB.C2P.A	nisiy	AinsuwA	OK		
+VERB.C2MS.A.E0	nisiy	AinsAh	OK	no cv	
+VERB.C2FS.A.E0	nisiy	Ainsiyh	OK	no cv	
+VERB.C2P.A.E0	nisiy	Ainsuwh	OK	no cv	
+VERB.C2MS.A	qarA	AiqrA	OK	no cv	
+VERB.C2FS.A	qarA	Aiqriy	OK		
+VERB.C2P.A	qarA	AiqruwA	OK		
+VERB.C2MS.A.E0	qarA	AiqrAh	OK	no cv	
+VERB.C2FS.A.E0	qarA	Aiqriyh	OK	no cv	
+VERB.C2P.A.E0	qarA	Aiqruwh	OK	no cv	
+VERB.C2MS.A.E0	jih		OK		
+VERB.C2FS.A.E0	jih		OK		
+VERB.C2P.A.E0	jih		OK		
+VERB.C2MS.A	rajA	Aurjuw	OK	no cv	
+VERB.C2FS.A	rajA	Aurjiy	OK	no cv	
+VERB.C2P.A	rajA	AurjuwA	OK	no cv	
+VERB.C2MS.A.E0	rajA	Aurjuwh	OK	no cv	
+VERB.C2FS.A.E0	rajA	Aurjiyh	OK	no cv	
+VERB.C2P.A.E0	rajA	Aurjuwh	OK	no cv	
+VERB.C2MS.AI.E0	bada>	Aibda>uh	OK		

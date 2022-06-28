@@ -9,12 +9,11 @@ import sys
 import gspread
 import pandas as pd
 
+from utils.utils import add_check_mark_online, consonants_bw
 try:
-    from camel_morph.utils.utils import add_check_mark_online, consonants_bw
-    from camel_morph.debugging.download_sheets import download_sheets
+    from ..debugging.download_sheets import download_sheets
 except:
-    from camel_morph.camel_morph.utils.utils import add_check_mark_online, consonants_bw
-    from camel_morph.camel_morph.debugging.download_sheets import download_sheets
+    from camel_morph.debugging.download_sheets import download_sheets
 
 header = ['PATTERN_ABSTRACT', 'PATTERN_DEF', 'ROOT', 'ROOT_SUB', 'DEFINE', 'CLASS', 'PATTERN',
           'LEMMA', 'LEMMA_SUB', 'FORM', 'FORM_SUB', 'BW', 'BW_SUB', 'GLOSS', 'FEAT', 'COND-T', 'COND-F', 'COND-S',
@@ -313,7 +312,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-config_file", default='',
                         type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
-    parser.add_argument("-config_name", default='',
+    parser.add_argument("-config_name", default='default_config',
                         type=str, help="Name of the configuration to load from the config file.")
     parser.add_argument("-data_dir", default='',
                         type=str, help="Path of the directory where the sheets are.")

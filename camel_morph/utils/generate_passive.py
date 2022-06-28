@@ -6,10 +6,7 @@ import os
 import pandas as pd
 from numpy import nan
 
-try:
-    from camel_morph.utils.utils import assign_pattern
-except:
-    from camel_morph.camel_morph.utils.utils import assign_pattern
+from utils.utils import assign_pattern
 
 errors, missing = {}, {}
 

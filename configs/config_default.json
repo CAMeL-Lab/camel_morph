@@ -2,7 +2,7 @@
     "global": {
         "data_dir": "data",
         "specs": {
-            "spreadsheet": "header-morph-order-sheets",
+            "spreadsheet": "camel-morph-common",
             "sheets": [
                 "About",
                 "Header"
@@ -16,14 +16,14 @@
             "dialect": "msa",
             "pruning": true,
             "specs": {
-                "spreadsheet": "CamelMorph-MSA-Specs-v1.0",
+                "spreadsheet": "camel-morph-msa-verbs",
                 "sheets": {
                     "order": "MSA-Verb-ORDER",
                     "morph": "MSA-Verb-MORPH"
                 }
             },
             "lexicon": {
-                "spreadsheet": "CamelMorph-MSA-Specs-v1.0",
+                "spreadsheet": "camel-morph-msa-verbs",
                 "sheets": [
                     "MSA-Verb-LEX-PV",
                     "MSA-Verb-LEX-IV",

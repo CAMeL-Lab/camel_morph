@@ -11,11 +11,13 @@ from numpy import nan
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    parser.add_argument("-input_dir", default='tables_dir', choices=['banks_dir', 'paradigm_debugging_dir', 'tables_dir'],
+                        type=str, help="Directory in which local sheet is contained (in CSV format).")
     parser.add_argument("-dir", default='',
                         type=str, help="Directory in which local sheet is contained (in CSV format).")
-    parser.add_argument("-config_file", default='config_default.json',
+    parser.add_argument("-config_file", default='configs/config_default.json',
                         type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
-    parser.add_argument("-config_name", default='',
+    parser.add_argument("-config_name", default='default_config',
                         type=str, help="Name of the configuration to load from the config file.")
     parser.add_argument("-feats", default='',
                         type=str, help="Features to generate the conjugation tables for.")
@@ -25,8 +27,6 @@ if __name__ == "__main__":
                         type=str, help="Name of the spreadsheet to write the CSV file to (and to format).")
     parser.add_argument("-gsheet_name", default='',
                         type=str, help="Name of the gsheet to write the CSV file to (and to format).")
-    parser.add_argument("-formatting", default='', choices=['conj_tables', 'bank'],
-                        type=str, help="How to format the sheet.")
     parser.add_argument("-mode", default='prompt', choices=['backup', 'overwrite', 'prompt'],
                         type=str, help="Mode that decides what to do if sheet which is being uploaded already exists.")
     parser.add_argument("-service_account", default='',
@@ -39,15 +39,29 @@ if __name__ == "__main__":
         config_local = config['local'][args.config_name]
     config_global = config['global']
 
-    input_dir = args.dir if args.dir else config_global['tables_dir']
-    file_name = args.file_name if args.file_name else config_local['debugging']['feats'][args.feats]['conj_tables']
+    spreadsheet_name = args.spreadsheet_name if args.spreadsheet_name else config_local['debugging']['debugging_spreadsheet']
     gsheet_name = args.gsheet_name if args.gsheet_name else config_local['debugging']['feats'][args.feats]['debugging_sheet']
+    
+    if args.file_name:
+        file_name = args.file_name
+    elif args.input_dir == 'banks_dir':
+        file_name = config_local['debugging']['feats'][args.feats]['bank']
+        spreadsheet_name = args.spreadsheet_name if args.spreadsheet_name else config_global['banks_spreadsheet']
+        gsheet_name = args.gsheet_name if args.gsheet_name else config_local['debugging']['feats'][args.feats]['bank'].split('.')[0]
+    elif args.input_dir == 'paradigm_debugging_dir':
+        file_name = config_local['debugging']['feats'][args.feats]['paradigm_debugging']
+    elif args.input_dir == 'tables_dir':
+        file_name = config_local['debugging']['feats'][args.feats]['conj_tables']
+    
+    input_dir = args.dir if args.dir \
+        else os.path.join(config_global['debugging'], config_global[args.input_dir], f"camel-morph-{config_local['dialect']}")
     sheet_csv = pd.read_csv(os.path.join(input_dir, file_name), sep='\t')
     sheet_csv = sheet_csv.replace(nan, '', regex=True)
+    
     service_account = args.service_account if args.service_account else config_global['service_account']
     sa = gspread.service_account(service_account)
-    spreadsheet_name = args.spreadsheet_name if args.spreadsheet_name else config_local['debugging']['debugging_spreadsheet']
     sh = sa.open(spreadsheet_name)
+    
     try:
         worksheet = sh.add_worksheet(title=gsheet_name, rows="100", cols="20")
     except gspread.exceptions.APIError as e:
@@ -83,7 +97,7 @@ if __name__ == "__main__":
     worksheet.update(
         [sheet_csv.columns.values.tolist()] + sheet_csv.values.tolist())
 
-    if args.formatting == 'conj_tables':
+    if args.input_dir in ['tables_dir', 'paradigm_debugging_dir']:
         rule1 = gspread_formatting.ConditionalFormatRule(
             ranges=[gspread_formatting.GridRange.from_a1_range('A:S', worksheet)],
             booleanRule=gspread_formatting.BooleanRule(

@@ -1,9 +1,7 @@
 import os
 import argparse
 import json
-from re import L
 import time
-
 import gspread
 import pandas as pd
 
@@ -25,9 +23,7 @@ def download_sheets(lex=None, specs=None, save_dir=None, config=None, config_nam
         config_local = config['local'][config_name]
         config_global = config['global']
         specs_local = []
-        sheets_groups = config_local['specs']['sheets'].values() \
-                            if config_local['specs'].get('sheets') \
-                            else config_local['specs'].values()
+        sheets_groups = config_local['specs']['sheets'].values()
         for sheets in sheets_groups:
             if type(sheets) is str:
                 specs_local.append(sheets)
@@ -35,28 +31,22 @@ def download_sheets(lex=None, specs=None, save_dir=None, config=None, config_nam
                 for sheet in sheets.values():
                     specs_local.append(sheet)
         
-        spreadsheet_specs = config_local['specs']['spreadsheet'] \
-                                if config_local['specs'].get('spreadsheet') \
-                                else config_global['specs']['spreadsheet']
         specs = {
-            'spreadsheets': [spreadsheet_specs],
-            'sheets': [
-                config['global']['specs']['sheets'] + specs_local]
+            'spreadsheets': [config['specs']['spreadsheet'] for config in [config_local, config_global]],
+            'sheets': [config['specs']['sheets'].values() if type(config['specs']['sheets']) is dict else config['specs']['sheets']
+                        for config in [config_local, config_global]]
         }
         lex = {
             'spreadsheets': [config_local['lexicon']['spreadsheet']],
             'sheets': [config_local['lexicon']['sheets']]
         }
-
-    print('LEX SHEETS BEING DOWNLOADED:', lex)
-    print('SPECS SHEETS BEING DOWNLOADED:', specs)
+        print(specs, lex)
 
     for spreadsheets in [lex, specs]:
         for i, spreadsheet_name in enumerate(spreadsheets['spreadsheets']):
             spreadsheet = sa.open(spreadsheet_name)
             for sheet_name in spreadsheets['sheets'][i]:
-                if 'PASS' in sheet_name:
-                    continue
+                print(f'Downloading {spreadsheet_name} -> {sheet_name} ...')
                 not_downloaded = True
                 while not_downloaded:
                     try:
@@ -64,8 +54,8 @@ def download_sheets(lex=None, specs=None, save_dir=None, config=None, config_nam
                         not_downloaded = False
                     except gspread.exceptions.APIError as e:
                         if 'Quota exceeded' in e.args[0]['message']:
-                            print('Quota exceeded, waiting for 15 seconds and then retrying...')
-                            time.sleep(15)
+                            print('Quota exceeded, waiting for 30 seconds and then retrying...')
+                            time.sleep(30)
                         else:
                             raise NotImplementedError
                 sheet = pd.DataFrame(sheet.get_all_records())
@@ -85,7 +75,7 @@ if __name__ == "__main__":
                         type=str, help="Path of the directory to save the csv files to.")
     parser.add_argument("-config_file", default='config_default.json',
                         type=str, help="Config file specifying which sheets to use.")
-    parser.add_argument("-config_name", default='',
+    parser.add_argument("-config_name", default='default_config',
                         type=str, help="Name of the configuration to load from the config file.")
     parser.add_argument("-service_account", default='',
                         type=str, help="Path of the JSON file containing the information about the service account used for the Google API.")

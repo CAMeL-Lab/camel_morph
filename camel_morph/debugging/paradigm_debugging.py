@@ -247,11 +247,9 @@ if __name__ == "__main__":
                         type=str, help="Name of the manually annotated paradigms gsheet, the annotations of which will go in the bank.")
     parser.add_argument("-spreadsheet", default='',
                         type=str, help="Name of the spreadsheet in which that sheet is.")
-    parser.add_argument("-use_local",  default='',
-                        type=str, help="Use local sheet instead of downloading. Add the name of the conjugation table path to use.")
     parser.add_argument("-new_conj",  default='',
                         type=str, help="Path of the conjugation tables file generated after fixes were made to the specification sheets. This file will be automatically annotated using the information in the bank.")
-    parser.add_argument("-bank_dir",  default='conjugation_local/banks',
+    parser.add_argument("-bank_dir",  default='',
                         type=str, help="Directory in which the annotation banks are.")
     parser.add_argument("-bank_name",  default='',
                         type=str, help="Name of the annotation bank to use.")
@@ -282,7 +280,9 @@ if __name__ == "__main__":
         
     from camel_tools.morphology.utils import strip_lex
     
-    bank_dir = args.bank_dir if args.bank_dir else config_global['banks_dir']
+    bank_dir = args.bank_dir if args.bank_dir else os.path.join(
+        config_global['debugging'], config_global['banks_dir'], f"camel-morph-{config_local['dialect']}")
+    os.makedirs(bank_dir, exist_ok=True)
     bank_name = args.bank_name if args.bank_name else config_local['debugging']['feats'][args.feats]['bank']
     bank_path = os.path.join(bank_dir, bank_name)
 
@@ -294,42 +294,28 @@ if __name__ == "__main__":
         bank_cleanup_checker(bank_path, gsheet_info)
         sys.exit()
 
-    def create_dir_if_does_not_exist(directory):
-        outer_dir = directory.split('/')[0]
-        if not os.path.exists(outer_dir):
-            os.mkdir(outer_dir)
-            os.mkdir(directory)
-        elif not os.path.exists(directory):
-            os.mkdir(directory)
-
-    output_dir = args.output_dir if args.output_dir else config_global['paradigm_debugging_dir']
+    output_dir = args.output_dir if args.output_dir else os.path.join(
+        config_global['debugging'], config_global['paradigm_debugging_dir'], f"camel-morph-{config_local['dialect']}")
+    os.makedirs(output_dir, exist_ok=True)
     output_name = args.output_name if args.output_name else config_local['debugging']['feats'][args.feats]['paradigm_debugging']
     output_path = os.path.join(output_dir, output_name)
-    if args.use_local:
-        create_dir_if_does_not_exist(args.use_local)
-    create_dir_if_does_not_exist(bank_dir)
-    create_dir_if_does_not_exist(output_dir)
 
     service_account = args.service_account if args.service_account else config_global['service_account']
     sa = gspread.service_account(service_account)
     spreadsheet = args.spreadsheet if args.spreadsheet else config_local['debugging']['debugging_spreadsheet']
     sh = sa.open(spreadsheet)
 
-    if args.use_local:
-        print('Using local sheet...')
-        annotated_paradigms = pd.read_csv(args.use_local, delimiter='\t')
-        annotated_paradigms = annotated_paradigms.replace(nan, '', regex=True)
-    else:
-        gsheet = args.gsheet if args.gsheet else config_local['debugging']['feats'][args.feats]['debugging_sheet']
-        worksheet = sh.worksheet(title=gsheet)
-        annotated_paradigms = pd.DataFrame(worksheet.get_all_records())
-        annotated_paradigms.to_csv(output_path)
+    gsheet = args.gsheet if args.gsheet else config_local['debugging']['feats'][args.feats]['debugging_sheet']
+    worksheet = sh.worksheet(title=gsheet)
+    annotated_paradigms = pd.DataFrame(worksheet.get_all_records())
+    annotated_paradigms.to_csv(output_path)
 
     if args.new_conj:
         new_conj_path = args.new_conj
     else:
-        new_conj = config_local['debugging']['feats'][args.feats]['conj_tables']
-        new_conj_path = os.path.join(config_global['tables_dir'], new_conj)
+        new_conj_path = os.path.join(config_global['debugging'], config_global['tables_dir'],
+                                     f"camel-morph-{config_local['dialect']}")
+        new_conj_path = os.path.join(new_conj_path, config_local['debugging']['feats'][args.feats]['conj_tables'])
     
     new_conj_tables = pd.read_csv(new_conj_path, delimiter='\t')
     new_conj_tables = new_conj_tables.replace(nan, '', regex=True)

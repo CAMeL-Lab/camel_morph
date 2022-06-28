@@ -219,15 +219,12 @@ if __name__ == "__main__":
     bw2ar = CharMapper.builtin_mapper('bw2ar')
 
     output_dir = args.output_dir if args.output_dir else config_global['repr_lemmas_dir']
-    conj_dir = output_dir.split('/')[0] 
-    if not os.path.exists(conj_dir):
-        os.mkdir(conj_dir)
-        os.mkdir(output_dir)
-    elif not os.path.exists(output_dir):
-        os.mkdir(output_dir)
+    output_dir = os.path.join(output_dir, f"camel-morph-{config_local['dialect']}")
+    os.makedirs(output_dir, exist_ok=True)
 
     SHEETS, _ = db_maker_utils.read_morph_specs(config, config_name)
     lexicon = SHEETS['lexicon']
+    lexicon = lexicon.replace('ditrans', 'trans')
     
     pos_type = args.pos_type if args.pos_type else config_local['pos_type']
     if pos_type == 'verbal':
@@ -244,7 +241,8 @@ if __name__ == "__main__":
     if extended_lemma_keys == None:
         extended_lemma_keys = ['lemma']
 
-    banks_dir = args.banks_dir if args.banks_dir else config_global['banks_dir']
+    banks_dir = args.banks_dir if args.banks_dir else os.path.join(
+        config_global['debugging'], config_global['banks_dir'], f"camel-morph-{config_local['dialect']}")
     bank = args.bank if args.bank else config_local['debugging']['feats'][args.feats]['bank']
     bank = AnnotationBank(bank_path=os.path.join(banks_dir, bank))
 
@@ -282,11 +280,11 @@ if __name__ == "__main__":
     excluded_classes = set()
     if len(args.config_name) > 1:
         for config_name in args.config_name[1:]:
-            with open(os.path.join(output_dir, config['local'][config_name]['repr_lemmas']), 'rb') as f:
+            with open(os.path.join(output_dir, f'repr_lemmas_{args.config_name}.pkl'), 'rb') as f:
                 excluded_classes.update(pickle.load(f).keys())
     uniq_lemma_classes = {k: v for k, v in uniq_lemma_classes.items() if k not in excluded_classes}
 
-    output_name = args.output_name if args.output_name else config_local['repr_lemmas']
+    output_name = args.output_name if args.output_name else f'repr_lemmas_{args.config_name}.pkl'
     output_path = os.path.join(output_dir, output_name)
     with open(output_path, 'wb') as f:
         pickle.dump(uniq_lemma_classes, f)

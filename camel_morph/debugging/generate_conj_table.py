@@ -387,16 +387,14 @@ if __name__ == "__main__":
     bw2ar = CharMapper.builtin_mapper('bw2ar')
     ar2bw = CharMapper.builtin_mapper('ar2bw')
 
-    output_dir = args.output_dir if args.output_dir else config_global['tables_dir']
-    conj_dir = output_dir.split('/')[0]
-    if not os.path.exists(conj_dir):
-        os.mkdir(conj_dir)
-        os.mkdir(output_dir)
-    elif not os.path.exists(output_dir):
-        os.mkdir(output_dir)
+    output_dir = args.output_dir if args.output_dir \
+                    else os.path.join(config_global['debugging'], config_global['tables_dir'])
+    output_dir = os.path.join(output_dir, f"camel-morph-{config_local['dialect']}")
+    os.makedirs(output_dir, exist_ok=True)
 
     db_name = args.db if args.db else config_local['db']
     db_dir = args.db_dir if args.db_dir else config_global['db_dir']
+    db_dir = os.path.join(db_dir, f"camel-morph-{config_local['dialect']}")
     db = MorphologyDB(os.path.join(db_dir, db_name), flags='g')
     generator = Generator(db)
     
@@ -419,8 +417,9 @@ if __name__ == "__main__":
                        gen=feats['gen'],
                        num=feats['num'])]
     else:
-        lemmas_dir = args.lemmas_dir if args.lemmas_dir else config_global['repr_lemmas_dir']
-        repr_lemmas = args.repr_lemmas if args.repr_lemmas else config_local['repr_lemmas']
+        lemmas_dir = args.lemmas_dir if args.lemmas_dir else os.path.join(
+            config_global['debugging'], config_global['repr_lemmas_dir'], f"camel-morph-{config_local['dialect']}")
+        repr_lemmas = args.repr_lemmas if args.repr_lemmas else f'repr_lemmas_{args.config_name}.pkl'
         lemmas_path = os.path.join(lemmas_dir, repr_lemmas)
         with open(lemmas_path, 'rb') as f:
             lemmas = pickle.load(f)

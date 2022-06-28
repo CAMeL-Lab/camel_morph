@@ -1,12 +1,20 @@
 import re
 import os
+import sys
 from typing import Dict, List, Optional, Union, Set, Tuple
 
 import pandas as pd
 from numpy import nan
 
-from camel_morph.utils.generate_passive import generate_passive
-from camel_morph.utils.generate_abstract_lexicon import generate_abstract_lexicon
+from utils.generate_passive import generate_passive
+try:
+    from utils.generate_abstract_lexicon import generate_abstract_lexicon
+except:
+    file_path = os.path.abspath(__file__).split('/')
+    package_path = '/'.join(file_path[:len(file_path) -
+                                      1 - file_path[::-1].index('camel_morph')])
+    sys.path.insert(0, package_path)
+    from utils.generate_abstract_lexicon import generate_abstract_lexicon
 
 def read_morph_specs(config:Dict, config_name:str) -> Tuple[Dict[str, pd.DataFrame], Dict[str, Tuple[str, int]]]:
     """
@@ -44,11 +52,9 @@ def read_morph_specs(config:Dict, config_name:str) -> Tuple[Dict[str, pd.DataFra
     # configuration to get the sheets from. If a `spreadsheet` key is present in the local `specs`
     # in the local configuration, then ORDER/MORPH are present in a dict under the key `sheets`,
     # otherwise, they are just sitting in the `specs` dict.
-    order_filename = f"{local_specs['specs']['sheets']['order']}.csv" if local_specs['specs'].get('sheets') \
-        else f"{local_specs['specs']['order']}.csv"
+    order_filename = f"{local_specs['specs']['sheets']['order']}.csv"
     ORDER = pd.read_csv(os.path.join(data_dir, order_filename))
-    morph_filename = f"{local_specs['specs']['sheets']['morph']}.csv" if local_specs['specs'].get('sheets') \
-        else f"{local_specs['specs']['morph']}.csv"
+    morph_filename = f"{local_specs['specs']['sheets']['morph']}.csv"
     MORPH = pd.read_csv(os.path.join(data_dir, morph_filename))
     
     lexicon_sheets: List[str] = local_specs['lexicon']['sheets']
@@ -107,8 +113,7 @@ def read_morph_specs(config:Dict, config_name:str) -> Tuple[Dict[str, pd.DataFra
     # Compiles the regex match expression from the sheet into a regex match expression that is
     # suitable for storing into the DB in Arabic script. Expects Safe BW transliteration in the sheet.
     POSTREGEX = None
-    postregex_path: Optional[str] = local_specs['specs']['sheets'].get('postregex') \
-                                        if 'sheets' in local_specs['specs'] else local_specs['specs'].get('postregex')
+    postregex_path: Optional[str] = local_specs['specs']['sheets'].get('postregex')
     if postregex_path:
         POSTREGEX = pd.read_csv(os.path.join(data_dir, 'PostRegex.csv'))
         POSTREGEX = POSTREGEX[(POSTREGEX.DEFINE == 'POSTREGEX') & (POSTREGEX.VARIANT == local_specs['dialect'].upper())]

@@ -322,7 +322,7 @@ if __name__ == "__main__":
                         type=str, help="Paths of the verb lexicon(s) that need(s) to be checked (against each other) for well-formedness.")
     parser.add_argument("-config_file", default='config_default.json',
                         type=str, help="Config file specifying which sheets to use.")
-    parser.add_argument("-config_name", default='',
+    parser.add_argument("-config_name", default='default_config',
                         type=str, help="Name of the configuration to load from the config file.")
     parser.add_argument("-data_dir", default="data",
                         type=str, help="Path of the directory where the sheets are.")
