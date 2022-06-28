@@ -64,8 +64,8 @@ def make_db(config:Dict, config_name:str, output_dir:str):
     SHEETS, cond2class = db_maker_utils.read_morph_specs(config, config_name)
     
     print("\nValidating combinations... [2/3]")
-    db = construct_almor_db(
-        SHEETS, config['local'][config_name]['pruning'], cond2class)
+    cat2id = config_local.get('cat2id', False)
+    db = construct_almor_db(SHEETS, config_local['pruning'], cond2class, cat2id)
     
     print("\nGenerating DB file... [3/3]")
     output_dir = os.path.join(output_dir, f"camel-morph-{config_local['dialect']}")
@@ -76,7 +76,10 @@ def make_db(config:Dict, config_name:str, output_dir:str):
     print(f"\nTotal time required: {strftime('%M:%S', gmtime(c1 - c0))}")
 
 
-def construct_almor_db(SHEETS:Dict[str, pd.DataFrame], pruning:bool, cond2class:Dict) -> Dict:
+def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
+                       pruning:bool,
+                       cond2class:Dict,
+                       cat2id:bool=False) -> Dict:
     """
     Function which takes care of the condition validation process, i.e., deciding which
     (complex) morphemes are compatible, and print them and their computed categories in
@@ -111,6 +114,7 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame], pruning:bool, cond2class:
         ]
     
     defaults = _process_defaults(db['OUT:###HEADER###'])
+    cat2id = {} if cat2id else None
     
     def construct_process(lexicon: pd.DataFrame,
                           order: pd.DataFrame,
@@ -140,7 +144,7 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame], pruning:bool, cond2class:
         
         # Complex morphemes validation or word generation (across the prefix/stem/suffix boundary)
         db_ = cross_cmplx_morph_validation(
-            cmplx_morph_classes, order['CLASS'].lower(), short_cat_maps, defaults, stems_section_title)
+            cmplx_morph_classes, order['CLASS'].lower(), short_cat_maps, defaults, stems_section_title, cat2id)
         for section, contents in db_.items():
             # if 'BACKOFF' in stems_section_title and section != stems_section_title:
             #     assert set(contents) <= set(db[section])
@@ -178,7 +182,8 @@ def cross_cmplx_morph_validation(cmplx_morph_classes: Dict,
                                  pos_type: str,
                                  short_cat_maps: Optional[Dict]=None,
                                  defaults: Dict=None,
-                                 stems_section_title: str='OUT:###STEMS###') -> Dict:
+                                 stems_section_title: str='OUT:###STEMS###',
+                                 cat2id:Optional[Dict]=None) -> Dict:
     """Method which takes in classes of complex morphemes, and validates them against each other
     in a three-loop fashion, one for each of prefix, stem, and suffix. Instead of going over all
     individual combinations, we loop over "classes" of them (since all combinations belonging to
@@ -258,7 +263,7 @@ def cross_cmplx_morph_validation(cmplx_morph_classes: Dict,
                                               db_section='OUT:###SUFFIXES###')
                     
                     for update_info in [update_info_stem, update_info_prefix, update_info_suffix]:
-                        update_db(db, update_info, cat_memoize, short_cat_maps, defaults)
+                        update_db(db, update_info, cat_memoize, short_cat_maps, defaults, cat2id)
                     # If morph class cat has already been computed previously, then cat is still `None`
                     # (because we will not go again in the morph for loop) and we need to retrieve the
                     # computed value. 
@@ -280,7 +285,8 @@ def update_db(db: Dict,
               update_info: Dict,
               cat_memoize: Dict,
               short_cat_maps: Optional[Dict]=None,
-              defaults: Optional[Dict]=None):
+              defaults: Optional[Dict]=None,
+              cat2id:Optional[Dict]=None):
     """If a combination of complex prefix/suffix/stem is valid, then each of the complex morphemes
     in that combination will be added as an entry in the DB by this method. Default feature values
     are taken from the Header sheet and are assigned to features which are set to appear in the
@@ -341,7 +347,8 @@ def update_db(db: Dict,
                                     cmplx_morph,
                                     cond_s, cond_t, cond_f,
                                     short_cat_map,
-                                    defaults_)
+                                    defaults_,
+                                    cat2id)
             db[db_section].setdefault('\t'.join(morph_entry.values()), 0)
             db[db_section]['\t'.join(morph_entry.values())] += 1
         cat_memoize[cmplx_morph_type][cmplx_morph_cls] = morph_entry['cat']
@@ -349,7 +356,8 @@ def update_db(db: Dict,
 
 def _create_cat(cmplx_morph_type: str, cmplx_morph_class: str,
                 cmplx_morph_cond_s: str, cmplx_morph_cond_t: str, cmplx_morph_cond_f: str,
-                short_cat_map: Optional[Dict]=None):
+                short_cat_map: Optional[Dict]=None,
+                cat2id:Optional[Dict]=None):
     """This function creates the category for matching using classes and conditions"""
     if short_cat_map:
         cmplx_morph_class = short_cat_map[cmplx_morph_class]
@@ -363,6 +371,14 @@ def _create_cat(cmplx_morph_type: str, cmplx_morph_class: str,
         [cond for cond in sorted(cmplx_morph_cond_f.split()) if cond != '_'])
     cmplx_morph_cond_f = cmplx_morph_cond_f if cmplx_morph_cond_f else '-'
     cat = f"{cmplx_morph_type}:{cmplx_morph_class}_[CS:{cmplx_morph_cond_s}]_[CT:{cmplx_morph_cond_t}]_[CF:{cmplx_morph_cond_f}]"
+    if cat2id is not None:
+        cat2id_morph_type = cat2id.setdefault(cmplx_morph_type, {})
+        if cat in cat2id_morph_type:
+            cat = cat2id_morph_type[cat]
+        else:
+            cat_ = f'{cmplx_morph_type}{str(len(cat2id_morph_type) + 1).zfill(5)}'
+            cat2id[cmplx_morph_type][cat] = cat_
+            cat = cat_
     return cat
 
 def _convert_bw_tag(bw_tag:str):
@@ -387,7 +403,8 @@ def _generate_affix(affix_type: str,
                     affix: List[Dict],
                     affix_cond_s: str, affix_cond_t: str, affix_cond_f: str,
                     short_cat_map: Optional[Dict]=None,
-                    defaults: Dict=None) -> Dict[str, str]:
+                    defaults: Dict=None,
+                    cat2id:Optional[Dict]=None) -> Dict[str, str]:
     """From the CamelMorph specifications, loads the affix information
     of multiple morphemes appearing in the prefix/suffix portion of the order line
     and which are deemed to be compatible with each other to form a complex affix, and
@@ -413,9 +430,9 @@ def _generate_affix(affix_type: str,
         Dict[str, str]: dict containing the 3 fields needed to store the complex affix as an entry in the DB.
     """
     affix_match, affix_diac, affix_gloss, affix_feat, affix_bw = _read_affix(affix)
-    affix_type = "P" if affix_type == 'prefix' else 'S'
+    affix_type = 'P' if affix_type == 'prefix' else 'S'
     acat = _create_cat(
-        affix_type, cmplx_morph_seq, affix_cond_s, affix_cond_t, affix_cond_f, short_cat_map)
+        affix_type, cmplx_morph_seq, affix_cond_s, affix_cond_t, affix_cond_f, short_cat_map, cat2id)
     ar_pbw = _convert_bw_tag(affix_bw)
     affix_feat = ' '.join([f"{feat}:{val}" for feat, val in affix_feat.items()])
     affix = {
@@ -431,7 +448,8 @@ def _generate_stem(cmplx_morph_seq: str,
                    stem: List[Dict],
                    stem_cond_s: str, stem_cond_t: str, stem_cond_f: str,
                    short_cat_map: Optional[Dict]=None,
-                   defaults: Dict=None) -> Dict[str, str]:
+                   defaults: Dict=None,
+                   cat2id:Optional[Dict]=None) -> Dict[str, str]:
     """Same as `_generate_affix()` but slightly different.
 
     Args:
@@ -453,7 +471,7 @@ def _generate_stem(cmplx_morph_seq: str,
     """
     stem_match, stem_diac, stem_lex, stem_gloss, stem_feat, stem_bw, root, backoff = _read_stem(stem)
     xcat = _create_cat(
-        "X", cmplx_morph_seq, stem_cond_s, stem_cond_t, stem_cond_f, short_cat_map)
+        'X', cmplx_morph_seq, stem_cond_s, stem_cond_t, stem_cond_f, short_cat_map, cat2id)
     ar_xbw = _convert_bw_tag(stem_bw)
     if defaults:
         stem_feat = [f"{feat}:{stem_feat[feat]}"
@@ -534,9 +552,9 @@ def _read_stem(stem: List[Dict]) -> Tuple[str, Dict]:
 
     return stem_match, stem_diac, stem_lex, stem_gloss, stem_feat, stem_bw, root, backoff
 
-def print_almor_db(output_filename, db):
+def print_almor_db(output_path, db):
     """Create output file in ALMOR DB format"""
-    with open(output_filename, "w") as f:
+    with open(output_path, "w") as f:
         for x in db['OUT:###HEADER###']:
             print(x, file=f)
 
