@@ -38,7 +38,6 @@ In order to use the generated DB for analysis or generation, follow the same ins
   - [Disambiguation](https://camel-tools.readthedocs.io/en/latest/api/disambig/mle.html) (in-context analysis)
 - [Generation](https://camel-tools.readthedocs.io/en/latest/api/morphology/generator.html)
 
-
 ## Data
 
 The data throughout this project is being maintained through the Google Sheets interface which can be used to add, delete, or edit morphological specification entries. The following are links to the data and morphological specifications used for this project.
@@ -76,10 +75,13 @@ To generate databases, paradigm-specific inflection (conjugation/declension) tab
 To start working with the Camel Morph environment:
 
 1. Clone (download) this repository and unzip in a directory of your choice.
-2. Clone (download) a [fork](https://github.com/christios/camel_tools) of the Camel Tools repository. The Camel Morph databases will currently only function using the latter instance of Camel Tools. The changes in this fork will eventually be integrated to the main Camel Tools library. Unzip in a directory of your choice.
-3. Make sure that the following are installed using `pip install`: **Python 3.3** or newer, **NumPy 1.20** or newer, and **Pandas 1.4** or newer.
-4. Set the `CAMEL_TOOLS_PATH` value to the path of the Camel Tools fork repository in the configuration file that you will be using (default configuration file `./configs/config_default.json` provided; see [Configuration File Structure](#configuration-file-structure) section).
-5. Run all commands/scripts from the outer `camel_morph` directory.
+2. Make sure that the following are installed using `pip install`: **Python 3.3** or newer, **NumPy 1.20** or newer, and **Pandas 1.4** or newer.
+3. Run all commands/scripts from the outer `camel_morph` directory.
+
+**For development purposes only:**
+
+1. Clone (download) a [fork](https://github.com/christios/camel_tools) of the Camel Tools repository. The Camel Morph databases will currently only function using the latter instance of Camel Tools. The changes in this fork will eventually be integrated to the main Camel Tools library. Unzip in a directory of your choice.
+2. Set the `CAMEL_TOOLS_PATH` value to the path of the Camel Tools fork repository in the configuration file that you will be using (default configuration file `./configs/config_default.json` provided; see [Configuration File Structure](#configuration-file-structure) section).
 
 For instructions on how to run the different scripts, see the below sections.
 
@@ -150,7 +152,7 @@ In its most basic format, the configuration file should look like the example be
 
 where:
 
-- `DATA_DIR_PATH`: path of the outermost data directory where all sheets are kept referenced from the outermost `camel_morph` directory (e.g., `data`)
+- `DATA_DIR_PATH`: path of the outermost data directory where all sheets are kept (e.g., `data`; referenced from the main repository directory). Sheets for this configuration should be kept inside a folder which has the name of the configuration (`CONFIG_NAME`) which is itself contained in a directory called `camel-morph-DIALECT` (where `DIALECT` is specified below). So for example, if `DATA_DIR_PATH=data`, `DIALECT=msa`, and `CONFIG_NAME=pv_msa`, then sheets for this configuration should be in a directory with the path `./data/camel-morph-msa/pv_msa`.
 - `ABOUT_SHEET`: name of the sheet containing the *About* section which will go in the DB (e.g., `About`). Downloaded as specified in the [Google Sheets](#google-sheets) section.
 - `HEADER_SHEET`: same as `ABOUT_SHEET` (e.g., `Header`)
 - `DB_OUTPUT_DIR`: name of the directory to which the compiled DBs will be output.
