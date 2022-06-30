@@ -30,9 +30,13 @@ To generate the EGY verbs database, the results of which were described in the p
     >> cd sigmorphon2022_release
     >> python db_maker.py -config_file config.json -config_name egy_cam_ready_sigmorphon2022
 
+### Dummy Example
+
+The example described in Figure 2 of the paper [^2] was recreated for initiation purposes under the configuration name `msa_example_sigmorphon2022`. The DB for it can be generated in a similar fashion as for the DBs above.
+
 ### Analysis and Generation
 
-In order to use the generated DB for analysis or generation, follow the same instructions provided in the examples at the following links. Note that there is no need to install Camel Tools as all the needed modules are already contained in the `sigmorphon2022_release` directory. As long as all code is ran from inside the latter directory, then all behavior should be similar to actually using the official library:
+In order to use the generated DB for analysis or generation, follow the same instructions provided in the examples at the following links. Note that the Camel Tools modules included in the `sigmorphon2022_release` directory are required to be used instead of the official release. As long as all code is ran from inside the latter directory, then all behavior should be similar to actually using the official library:
 
 - [Analysis](https://camel-tools.readthedocs.io/en/latest/api/morphology/analyzer.html)
   - [Disambiguation](https://camel-tools.readthedocs.io/en/latest/api/disambig/mle.html) (in-context analysis)
