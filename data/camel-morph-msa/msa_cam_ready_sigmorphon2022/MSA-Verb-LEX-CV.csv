@@ -10485,3 +10485,4 @@
 10483,10484,1a2~a3,z.y.t,LEXICON,[STEM-CV],zay~at,zay~it,CV,lubricate;oil,pos:verb asp:c vox:a,,trans,,
 10484,10485,ta1a2~3,z.y.y,LEXICON,[STEM-CV],tazay~aY,tazay~,CV,be_dressed;be_clothed,pos:verb asp:c vox:a,,#-aY defective trans,,
 10485,10486,1a2~a3,z.y.y,LEXICON,[STEM-CV],zay~aY,zay~,CV,dress;clothe,pos:verb asp:c vox:a,,#-iy defective trans,,
+10486,10487,,,BACKOFF,[STEM-CV],NOAN,NOAN,IV,NO_ANALYSIS,pos:verb asp:c vox:a,,,,

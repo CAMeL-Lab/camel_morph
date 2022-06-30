@@ -20971,3 +20971,5 @@
 20969,20970,1a2~a3,z.y.y,LEXICON,[STEM-IV],zay~aY,zay~,IV,dress;clothe,pos:verb asp:i vox:a,,u-# #-iy defective trans,,
 20970,20971,ta1a2~3,z.y.y,LEXICON,[STEM-IV],tazay~aY,tazay~,IV_PASS,be_dressed;be_clothed,pos:verb asp:i vox:p,,u-# #-aY defective intrans,,
 20971,20972,1a2~a3,z.y.y,LEXICON,[STEM-IV],zay~aY,zay~,IV_PASS,dress;clothe,pos:verb asp:i vox:p,,u-# #-aY defective intrans,,
+20972,20973,,,BACKOFF,[STEM-IV],NOAN,NOAN,IV,NO_ANALYSIS,pos:verb asp:i vox:a,,,,
+20973,20974,,,BACKOFF,[STEM-IV],NOAN,NOAN,IV_PASS,NO_ANALYSIS,pos:verb asp:i vox:p,,,,

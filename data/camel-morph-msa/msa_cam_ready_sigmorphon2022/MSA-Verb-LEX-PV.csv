@@ -21022,3 +21022,5 @@
 21020,21021,1a2~a3,z.y.y,LEXICON,[STEM-PV],zay~aY,zay~,PV,dress;clothe,pos:verb asp:p vox:a mod:i,,#-ay defective trans,,
 21021,21022,ta1a2~3,z.y.y,LEXICON,[STEM-PV],tazay~aY,tuzuy~,PV_PASS,be_dressed;be_clothed,pos:verb asp:p vox:p mod:i,,#-iy defective intrans,,
 21022,21023,1a2~a3,z.y.y,LEXICON,[STEM-PV],zay~aY,zuy~,PV_PASS,dress;clothe,pos:verb asp:p vox:p mod:i,,#-iy defective intrans,,
+21023,21024,NO_ANALYSIS,NO_ANALYSIS,BACKOFF,[STEM-PV],NOAN,NOAN,PV,NO_ANALYSIS,pos:verb asp:p vox:a mod:i,,,,
+21024,21025,NO_ANALYSIS,NO_ANALYSIS,BACKOFF,[STEM-PV],NOAN,NOAN,PV_PASS,NO_ANALYSIS,pos:verb asp:p vox:p mod:i,,,,
