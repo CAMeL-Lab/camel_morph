@@ -73,14 +73,17 @@ def read_morph_specs(config:Dict, config_name:str) -> Tuple[Dict[str, pd.DataFra
     # Process LEXICON sheet
     # Loop over the specified lexicon (and backoff lexicon if present) sheets to concatenate those into
     # a unified dataframe.
-    LEXICON, BACKOFF = None, None
+    LEXICON, SMART_BACKOFF, BACKOFF = None, None, None
     for lexicon_sheet_name in lexicon_sheets:
         LEXICON_ = pd.read_csv(os.path.join(data_dir, f"{lexicon_sheet_name}.csv"))
         # Only use entries in which the `DEFINE` has 'LEXICON' specified.
+        BACKOFF_ = LEXICON_[LEXICON_.DEFINE == 'BACKOFF']
+        BACKOFF_ = BACKOFF_.replace(nan, '', regex=True)
         LEXICON_ = LEXICON_[LEXICON_.DEFINE == 'LEXICON']
         LEXICON_ = LEXICON_.replace(nan, '', regex=True)
         if 'COND-F' not in LEXICON_.columns:
             LEXICON_['COND-F'] = ''
+            BACKOFF_['COND-F'] = ''
 
         if passive_patterns_sheets:
             # Generate passive verb lexicon on the fly from the generation patterns.
@@ -94,18 +97,23 @@ def read_morph_specs(config:Dict, config_name:str) -> Tuple[Dict[str, pd.DataFra
             if backoff_sheets == 'auto':
                 # Generate backoff lexicon from the language-agnostic method relying on the
                 # root class, lemma pattern, and form pattern.
-                BACKOFF_ = generate_abstract_lexicon(LEXICON_)
+                SMART_BACKOFF_ = generate_abstract_lexicon(LEXICON_)
             elif backoff_sheets.get(lexicon_sheet_name):
                 # Allow the specification of an already generated backoff lexicon and load it.
                 backoff_filename = f"{backoff_sheets[lexicon_sheet_name]}.csv"
-                BACKOFF_ = pd.read_csv(os.path.join(data_dir, backoff_filename))
-                BACKOFF_ = BACKOFF_.replace(nan, '', regex=True)
-            BACKOFF = pd.concat([BACKOFF, BACKOFF_])
+                SMART_BACKOFF_ = pd.read_csv(os.path.join(data_dir, backoff_filename))
+                SMART_BACKOFF_ = SMART_BACKOFF_.replace(nan, '', regex=True)
+            SMART_BACKOFF = pd.concat([SMART_BACKOFF, SMART_BACKOFF_])
 
         LEXICON_['BW'] = LEXICON_['FORM'] + '/' + LEXICON_['BW']
         LEXICON_['LEMMA'] = 'lex:' + LEXICON_['LEMMA']
-
         LEXICON = pd.concat([LEXICON, LEXICON_]) if LEXICON is not None else LEXICON_
+        
+        BACKOFF_['BW'] = BACKOFF_['FORM'] + '/' + BACKOFF_['BW']
+        BACKOFF = pd.concat([BACKOFF, BACKOFF_]) if BACKOFF is not None else BACKOFF_
+
+    BACKOFF = BACKOFF if len(BACKOFF.index) != 0 else None
+
 
     # Process POSTREGEX sheet
     #TODO: make sure that symbols being compiled into regex are not mistaken for special characters.
@@ -127,7 +135,7 @@ def read_morph_specs(config:Dict, config_name:str) -> Tuple[Dict[str, pd.DataFra
     # This splits rows with or-ed COND-T expressions into 
     #FIXME: does not handle cases when there is a conjunction with or-ed in COND-T
     if local_specs.get('split_or') == True:
-        assert BACKOFF is None
+        assert SMART_BACKOFF is None
         LEXICON_ = []
         for _, row in LEXICON.iterrows():
             if '||' in row['COND-T'] and ' ' not in row['COND-T']:
@@ -198,7 +206,8 @@ def read_morph_specs(config:Dict, config_name:str) -> Tuple[Dict[str, pd.DataFra
     LEXICON['COND-S'] = LEXICON['COND-S'].replace(' $', '', regex=True)
 
     SHEETS = dict(about=ABOUT, header=HEADER, order=ORDER, morph=MORPH,
-                  lexicon=LEXICON, backoff=BACKOFF, postregex=POSTREGEX)
+                  lexicon=LEXICON, smart_backoff=SMART_BACKOFF, postregex=POSTREGEX,
+                  backoff=BACKOFF)
     
     return SHEETS, cond2class
 

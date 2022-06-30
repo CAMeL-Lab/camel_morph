@@ -99,7 +99,7 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
     """
     ORDER, MORPH, LEXICON = SHEETS['order'], SHEETS['morph'], SHEETS['lexicon']
     ABOUT, HEADER, POSTREGEX = SHEETS['about'], SHEETS['header'], SHEETS['postregex']
-    BACKOFF = SHEETS['backoff']
+    BACKOFF, SMART_BACKOFF = SHEETS['backoff'], SHEETS['smart_backoff']
 
     short_cat_maps = _get_short_cat_name_maps(ORDER)
 
@@ -166,13 +166,29 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
         construct_process(LEXICON, order, cmplx_stem_memoize, stems_section_title='OUT:###STEMS###')
         pbar.update(1)
     pbar.close()
-    
+    #FIXME: Currently these backoff entries do not interact with the other morphemes.
+    # They are just inserted here for backward compatibility with the Analyzer engine.
     if BACKOFF is not None:
-        print('Backoff lexicon')
+        ORDER_ = set([re.search(r'\[STEM(?:-[^\]]+)?\]', cmplx_morph_seq).group()
+                        for cmplx_morph_seq in ORDER['STEM'].values.tolist()])
+        for morph_class in ORDER_:
+            stems = BACKOFF[BACKOFF.CLASS == morph_class]
+            for _, row in stems.iterrows():
+                morph_entry = {}
+                row.to_dict()
+                morph_entry['match'] = 'NOAN'
+                morph_entry['cat'] = 'X00000'
+                morph_entry['analysis'] = (f"diac:{row['FORM']} bw:{row['BW']} lex:{row['LEMMA']} "
+                                           f"root:{row['ROOT']} gloss:{row['GLOSS']} {row['FEAT']} ")
+                db['OUT:###STEMS###'].setdefault('\t'.join(morph_entry.values()), 0)
+                db['OUT:###STEMS###']['\t'.join(morph_entry.values())] += 1
+    
+    if SMART_BACKOFF is not None:
+        print('Smart Backoff lexicon')
         pbar = tqdm(total=len(list(ORDER.iterrows())))
         for _, order in ORDER.iterrows():
             pbar.set_description(order['SUFFIX-SHORT'])
-            construct_process(BACKOFF, order, stems_section_title='OUT:###SMARTBACKOFF###')
+            construct_process(SMART_BACKOFF, order, {}, stems_section_title='OUT:###SMARTBACKOFF###')
             pbar.update(1)
         pbar.close()
 
@@ -453,7 +469,7 @@ def _generate_stem(cmplx_morph_seq: str,
     """Same as `_generate_affix()` but slightly different.
 
     Args:
-        cmplx_morph_seq (str): space-separated sequence of classes that predefine the
+        cmplx_morph_seq (str): space-separated sequence of classes that predefines the
         order of the morphemes to be assembled for the cartesian product.
         required_feats (List[str]): features that should be included in the analysis.
         stem (List[Dict]): individual analyses (dict) of the morphemes in the complex stem.
@@ -532,7 +548,7 @@ def _read_stem(stem: List[Dict]) -> Tuple[str, Dict]:
     root = [s['ROOT'] for s in stem if s.get('ROOT')][0]
     
     backoff = False
-    if not any([s['DEFINE'] == 'BACKOFF' for s in stem]):
+    if not any([s['DEFINE'] == 'SMARTBACKOFF' for s in stem]):
         stem_diac = ''.join([s['FORM']for s in stem if s['FORM'] != '_'])
         #NOTE: for nominals, postregex symbol is @ while for verbs it is #
         stem_match = normalize_alef_bw(normalize_alef_maksura_bw(
@@ -543,7 +559,7 @@ def _read_stem(stem: List[Dict]) -> Tuple[str, Dict]:
         stem_match = []
         for s in stem:
             if s['FORM'] != '_':
-                if s['DEFINE'] == 'BACKOFF':
+                if s['DEFINE'] == 'SMARTBACKOFF':
                     stem_match.append(re.sub(r'^\^|\$$|[#@]', '', s['MATCH']))
                 else:
                     stem_match.append(normalize_alef_bw(normalize_alef_maksura_bw(

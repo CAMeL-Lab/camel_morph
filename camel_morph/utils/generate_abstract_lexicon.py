@@ -129,7 +129,7 @@ def generate_abstract_stem(row,
     """
     messages = []
     columns = {}
-    columns['DEFINE'] = 'BACKOFF'
+    columns['DEFINE'] = 'SMARTBACKOFF'
     columns['CLASS'] = row['CLASS']
     columns['COND-T'] = cond_t if cond_t else row['COND-T-BACKOFF']
     columns['COND-S'] = cond_s if cond_s else row['COND-S-BACKOFF']

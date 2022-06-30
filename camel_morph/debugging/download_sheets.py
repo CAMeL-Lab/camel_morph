@@ -40,7 +40,6 @@ def download_sheets(lex=None, specs=None, save_dir=None, config=None, config_nam
             'spreadsheets': [config_local['lexicon']['spreadsheet']],
             'sheets': [config_local['lexicon']['sheets']]
         }
-        print(specs, lex)
 
     for spreadsheets in [lex, specs]:
         for i, spreadsheet_name in enumerate(spreadsheets['spreadsheets']):
