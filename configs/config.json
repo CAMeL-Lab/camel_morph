@@ -1143,6 +1143,29 @@
                 "lemma",
                 "gloss"
             ]
+        },
+        "msa_example_sigmorphon2022": {
+            "dialect": "msa",
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-msa-verbs-example",
+                "sheets": {
+                    "order": "MSA-Verb-ORDER",
+                    "morph": "MSA-Verb-MORPH"
+                }
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-msa-verbs-example",
+                "sheets": [
+                    "MSA-Verb-LEX-PV"
+                ]
+            },
+            "db": "msa_example_v1.0.db",
+            "pos_type": "verbal",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
         }
     }
 }

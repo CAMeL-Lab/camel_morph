@@ -1,6 +1,6 @@
 # Camel Morph
 
-The work presented in this repository is part of a large effort on Arabic morphology under the name of the Camel Morph Project [^2]. Camel Morph’s goal is to build large open-source morphological models for Arabic and its dialects across many genres and domains. This repository contains code meant to build an ALMOR-style database (DB) from a set of morphological specification and lexicon spreadsheets, which can then be used by [Camel Tools](https://github.com/CAMeL-Lab/camel_tools)’s for morphological analysis, generation, and reinflection.
+The work presented in this repository is part of a large effort on Arabic morphology under the name of the Camel Morph Project [^2]. Camel Morph’s goal is to build large open-source morphological models for Arabic and its dialects across many genres and domains. This repository contains code meant to build an ALMOR-style database (DB) from a set of morphological specification and lexicon spreadsheets, which can then be used by [Camel Tools](https://github.com/CAMeL-Lab/camel_tools) for morphological analysis, generation, and reinflection.
 
 <p align="center"> <img width="70%" height="70%" src="camel-morph-system.jpg"> </p>
 
@@ -8,7 +8,7 @@ The following sections provide useful usage information about the repository. Fo
 
 ## Camel Morph SIGMORPHON 2022
 
-This section guides you through the process of inspecting, making use of, and replicating the results obtained for the SIGMORPHON 2022 Camel Morph paper[^2]. Firstly, all the data can be obtained or viewed as described in the [Data](#data) section. However, all the data and code (including relevant Camel Tools modules) required to replicate the paper results are already contained in the standalone `./sigmorphon2022_release` directory. The main goal of the Camel Morph DB Maker is to generate a database which can be parsed by the Camel Tools DB reader that can in turn be used by its Analyzer and Generator engines[^3]. To replicate the paper results, follow the below instructions. For a fuller picture of all configurations, see the [Instructions](#instructions) section.
+This section guides you through the process of inspecting, making use of, and replicating the results obtained for the SIGMORPHON 2022 Camel Morph paper[^2]. Firstly, all the data can be obtained or viewed as described in the [Data](#data) section. However, all the data and code (including relevant Camel Tools modules) required to replicate the paper results are already contained in the standalone `./sigmorphon2022_release` directory. Furthermore, the generated DBs can only be read by the Camel Tools modules included in the latter directory, and not using the official Camel Tools release, as the main goal of the Camel Morph DB Maker is to generate a database which can be parsed by the Camel Tools DB reader that can in turn be used by its Analyzer and Generator engines[^3]. To replicate the paper results, follow the below instructions. For a fuller picture of all configurations, see the [Instructions](#instructions) section.
 
 ### Installation
 
@@ -40,7 +40,7 @@ In order to use the generated DB for analysis or generation, follow the same ins
 
 ## Data
 
-The data throughout this project is being maintained through the Google Sheets interface which can be used to add, delete, or edit morphological specification entries. The following are links to the data and morphological specifications used for this project.
+The data throughout this project is being maintained through the Google Sheets interface which can be used to add, delete, or edit morphological specification entries. The following are links to the data and morphological specifications used for this project, and are **only accessible upon demand**.
 
 ### Continuously Updated Data
 
@@ -53,6 +53,8 @@ The data throughout this project is being maintained through the Google Sheets i
 - [EGY Verbs Specifications (Camera Ready)](https://docs.google.com/spreadsheets/d/1OCqHIdeZpm9BNa-BiC7Xy6bAT_wkLnhuvKdo7X3-RtE/edit#gid=424095452)
 
 ## Folder Hierarchy
+
+Below, you will find a table describing the function of each directory contained in the repository.
 
 | Directory | Description |
 | ----------- | ----------- |

@@ -101,7 +101,7 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
     ABOUT, HEADER, POSTREGEX = SHEETS['about'], SHEETS['header'], SHEETS['postregex']
     BACKOFF, SMART_BACKOFF = SHEETS['backoff'], SHEETS['smart_backoff']
 
-    short_cat_maps = _get_short_cat_name_maps(ORDER)
+    short_cat_maps = _get_short_cat_name_maps(ORDER) if 'PREFIX-SHORT' in ORDER.columns else None
 
     # One-time filling of the About, Header, and PostRegex sections of the DB
     db = {}
@@ -344,10 +344,11 @@ def update_db(db: Dict,
         defaults_ = defaults['defaults']
     
     if cmplx_morph_type == 'stem':
-        short_cat_map = short_cat_maps['stem']
+        short_cat_map = short_cat_maps['stem'] if short_cat_maps is not None else None
         _generate = _generate_stem
     elif cmplx_morph_type in ['prefix', 'suffix']:
-        short_cat_map = short_cat_maps['prefix' if cmplx_morph_type == 'prefix' else 'suffix']
+        short_cat_map = short_cat_maps['prefix' if cmplx_morph_type == 'prefix' else 'suffix'] \
+                            if short_cat_maps is not None else None
         _generate = partial(_generate_affix, cmplx_morph_type)
     else:
         raise NotImplementedError

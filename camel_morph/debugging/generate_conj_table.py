@@ -395,7 +395,7 @@ if __name__ == "__main__":
     db_name = args.db if args.db else config_local['db']
     db_dir = args.db_dir if args.db_dir else config_global['db_dir']
     db_dir = os.path.join(db_dir, f"camel-morph-{config_local['dialect']}")
-    db = MorphologyDB(os.path.join(db_dir, db_name), flags='g')
+    db = MorphologyDB(os.path.join(db_dir, db_name), flags='gd')
     generator = Generator(db)
     
     paradigms = args.paradigms if args.paradigms else config_global['paradigms_config']
