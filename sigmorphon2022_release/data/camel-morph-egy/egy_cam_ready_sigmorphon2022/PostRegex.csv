@@ -1,0 +1,7 @@
+,DEFINE,FIELD,VARIANT,MATCH,REPLACE,Linguistic Rule,Example,
+0,POSTREGEX,diac,EGY,([aiu]#)([^aiAM]o?)[aiu]#([^aiu]o?[aiuAM]),$1$2$3,(1) v# => 0 / v# C _ C V,sAmi#H+i#nA >> sAmi#H+nA,deletion
+1,POSTREGEX,diac,EGY,([aiu]|uw|aw|iy|ay|A|M)([^aiAM]o?)[aiu]#([^aiu]o?[aiuAM]),$1$2$3,(2) v# => 0 / V C _ C V,"katab+a#hA >> katab+hA, $ATi#rap >> $ATrap",deletion
+2,POSTREGEX,diac,EGY,((uw|aw|iy|ay|A|M))[aiu]#,$1,(3) v# => 0 / V: + _,ram+uw+a#hA >> ram+uw+hA,deletion
+3,POSTREGEX,diac,EGY,#,,(5) remove all #,sAmi#H+nA >>  sAmiH+nA,default remaining.
+4,POSTREGEX,diac,EGY,^([^aiuywAM])([^aiuywAM]),$1i$2,(4) 0 => i / ^ C _ C,katabta#hA >> katabtahA; btiktib >> bitiktib,epenthetic
+5,POSTREGEX,diac,EGY,([^aiuywAM]o?)([^aiuywAM]o?)([^aiuywAM]o?)$,$1$2i$3,(4) 0 => i / C C _ C,katabta#hA >> katabtahA; btiktib >> bitiktib,epenthetic
