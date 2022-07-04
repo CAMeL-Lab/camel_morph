@@ -1,6 +1,12 @@
 # Camel Morph
 
-The work presented in this repository is part of a large effort on Arabic morphology under the name of the Camel Morph Project [^2]. Camel Morph’s goal is to build large open-source morphological models for Arabic and its dialects across many genres and domains. This repository contains code meant to build an ALMOR-style database (DB) from a set of morphological specification and lexicon spreadsheets, which can then be used by [Camel Tools](https://github.com/CAMeL-Lab/camel_tools) for morphological analysis, generation, and reinflection.
+[![License](https://img.shields.io/github/license/CAMeL-Lab/camel_morph)](https://opensource.org/licenses/MIT)
+
+The work presented in this repository is part of a large effort on Arabic morphology under the name of the Camel Morph Project [^1] developed by the [CAMeL Lab](http://camel-lab.com/) at [New York University Abu Dhabi](http://nyuad.nyu.edu/).
+
+> **Please use** [GitHub Issues](https://github.com/CAMeL-Lab/camel_morph/issues) **to report a bug or if you need help using Camel Morph.**
+
+Camel Morph’s goal is to build large open-source morphological models for Arabic and its dialects across many genres and domains. This repository contains code meant to build an ALMOR-style database (DB) from a set of morphological specification and lexicon spreadsheets, which can then be used by [Camel Tools](https://github.com/CAMeL-Lab/camel_tools) for morphological analysis, generation, and reinflection.
 
 <p align="center"> <img width="70%" height="70%" src="camel-morph-system.jpg"> </p>
 
@@ -8,7 +14,7 @@ The following sections provide useful usage information about the repository. Fo
 
 ## Camel Morph SIGMORPHON 2022
 
-This section guides you through the process of inspecting, making use of, and replicating the results obtained for the SIGMORPHON 2022 Camel Morph paper[^2]. Firstly, all the data can be obtained or viewed as described in the [Data](#data) section. However, all the data and code (including relevant Camel Tools modules) required to replicate the paper results are already contained in the standalone `./sigmorphon2022_release` directory. Furthermore, the generated DBs can only be read by the Camel Tools modules included in the latter directory, and not using the official Camel Tools release, as the main goal of the Camel Morph DB Maker is to generate a database which can be parsed by the Camel Tools DB reader that can in turn be used by its Analyzer and Generator engines[^3]. To replicate the paper results, follow the below instructions. For a fuller picture of all configurations, see the [Instructions](#instructions) section.
+This section guides you through the process of inspecting, making use of, and replicating the results obtained for the SIGMORPHON 2022 Camel Morph paper[^1]. Firstly, all the data can be obtained or viewed as described in the [Data](#data) section. However, all the data and code (including relevant Camel Tools modules) required to replicate the paper results are already contained in the standalone `./sigmorphon2022_release` directory. Furthermore, the generated DBs can only be read by the Camel Tools modules included in the latter directory, and not using the official Camel Tools release, as the main goal of the Camel Morph DB Maker is to generate a database which can be parsed by the Camel Tools DB reader that can in turn be used by its Analyzer and Generator engines[^2]. To replicate the paper results, follow the below instructions. For a fuller picture of all configurations, see the [Instructions](#instructions) section.
 
 ### Installation
 
@@ -18,21 +24,21 @@ This section guides you through the process of inspecting, making use of, and re
 
 ### Modern Standard Arabic (MSA) Results
 
-To generate the MSA verbs database, the results of which were described in the paper[^2], run the following two commands from the main repository directory to output the resulting DB (`msa_cam_ready_sigmorphon2022_v1.0.db`) into the `sigmorphon2022_release/databases/camel-morph-msa` directory:
+To generate the MSA verbs database, the results of which were described in the paper[^1], run the following two commands from the main repository directory to output the resulting DB (`msa_cam_ready_sigmorphon2022_v1.0.db`) into the `sigmorphon2022_release/databases/camel-morph-msa` directory:
 
     >> cd sigmorphon2022_release
     >> python db_maker.py -config_file config.json -config_name msa_cam_ready_sigmorphon2022 
 
 ### Egyptian Arabic (EGY) Results
 
-To generate the EGY verbs database, the results of which were described in the paper[^2], run the following two commands from the main repository directory to output the resulting DB (`egy_cam_ready_sigmorphon2022_v1.0.db`) into the `sigmorphon2022_release/databases/camel-morph-egy` directory:
+To generate the EGY verbs database, the results of which were described in the paper[^1], run the following two commands from the main repository directory to output the resulting DB (`egy_cam_ready_sigmorphon2022_v1.0.db`) into the `sigmorphon2022_release/databases/camel-morph-egy` directory:
 
     >> cd sigmorphon2022_release
     >> python db_maker.py -config_file config.json -config_name egy_cam_ready_sigmorphon2022
 
 ### Dummy Example
 
-The example described in Figure 2 of the paper [^2] was recreated for initiation purposes under the configuration name `msa_example_sigmorphon2022`. The DB for it can be generated in a similar fashion as for the DBs above.
+The example described in Figure 2 of the paper [^1] was recreated for initiation purposes under the configuration name `msa_example_sigmorphon2022`. The DB for it can be generated in a similar fashion as for the DBs above.
 
 ### Analysis and Generation
 
@@ -44,7 +50,13 @@ In order to use the generated DB for analysis or generation, follow the same ins
 
 ## Data
 
+[![License](https://mirrors.creativecommons.org/presskit/buttons/80x15/svg/by.svg)](https://creativecommons.org/licenses/by/4.0/)
+
 The data throughout this project is being maintained through the Google Sheets interface which can be used to add, delete, or edit morphological specification entries. The following are links to the data and morphological specifications used for this project, and are **only accessible upon demand**.
+
+### Data License
+
+The data files accessed through the below links are licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/). For code license, see [License](#license).
 
 ### Continuously Updated Data
 
@@ -70,7 +82,7 @@ Below, you will find a table describing the function of each directory contained
 | `./eval_files` | Contains files necessary to carry out evalutation of generated DBs and analyzable evaluation output files (generally analyzed on Google Sheets).
 | `./misc_files` | Contains miscellaneous files used by scripts inside `./camel_morph`.
 | `./sandbox` | Contains various standalone files that are not used in `./camel_morph`.
-| `./sigmorphon2022_release` | Standalone environment allowing users to run the DB Maker and Camel Tools engine without installing Camel Tools, in the same version used for the SIGMORPHON 2022 paper. Also contains the data that was used to get the results described in the paper[^2].
+| `./sigmorphon2022_release` | Standalone environment allowing users to run the DB Maker and Camel Tools engine without installing Camel Tools, in the same version used for the SIGMORPHON 2022 paper. Also contains the data that was used to get the results described in the paper[^1].
 
 ## Instructions
 
@@ -173,5 +185,16 @@ where:
 - `DB_NAME`: name of the output DB.
 - `POS_TYPE`: type of the POS for which we are building the DB. Can either be `verbal` or `nominal`.
 
-[^2]: Habash, Nizar et al. "Morphotactic Modeling in an Open-source Multi-dialectal Arabic Morphological Analyzer and Generator", SIGMORPHON. 2022
-[^3]: Note that for the release directory, only the morphological components from Camel Tools were sourced from the actual library and were added to be imported locally.
+## Code License
+
+All the code contained in this repository is available under the MIT license. See the [LICENSE](./LICENSE) file for more info.
+
+## Contributors
+
+- [Christian Khairallah (Cayralat)](https://github.com/christios)
+- [Salam Khalifa](https://github.com/slkh)
+- [Nizar Habash](https://github.com/nizarhabash1)
+- 
+
+[^1]: Habash, Nizar et al. "Morphotactic Modeling in an Open-source Multi-dialectal Arabic Morphological Analyzer and Generator", SIGMORPHON. 2022
+[^2]: Note that for the release directory, only the morphological components from Camel Tools were sourced from the actual library and were added to be imported locally.
