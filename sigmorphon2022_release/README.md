@@ -1,12 +1,13 @@
 # Camel Morph SIGMORPHON 2022
 
-This section guides you through the process of inspecting, making use of, and replicating the results obtained for the SIGMORPHON 2022 Camel Morph paper[^1]. Firstly, all the data can be obtained or viewed as described in the [Data](#data) section. However, all the data and code (including relevant Camel Tools modules) required to replicate the paper results are already contained in the standalone `./sigmorphon2022_release` directory. Furthermore, the generated DBs can only be read by the Camel Tools modules included in the latter directory, and not using the official Camel Tools release, as the main goal of the Camel Morph DB Maker is to generate a database which can be parsed by the Camel Tools DB reader that can in turn be used by its Analyzer and Generator engines[^2]. To replicate the paper results, follow the below instructions. For a fuller picture of all configurations, see the [Instructions](#instructions) section.
+This section guides you through the process of inspecting, making use of, and replicating the results obtained for the SIGMORPHON 2022 Camel Morph paper[^1]. Firstly, all the data can be obtained or viewed as described in the [Data](#data) section. However, all the data and code (including relevant Camel Tools modules) required to replicate the paper results are already contained in the standalone `./sigmorphon2022_release` directory. Furthermore, the generated DBs can only be read by the Camel Tools modules included in the latter directory, and not using the official Camel Tools release. To replicate the paper results, follow the below instructions. For a fuller picture of all configurations, see the [Instructions](#instructions) section.
 
 ## Installation
 
 1. Clone (download) this repository and unzip in a directory of your choice.
-2. Make sure that the following are installed using `pip install`: **Python 3.3** or newer, **NumPy 1.20** or newer, and **Pandas 1.4** or newer.
-3. Run all commands/scripts from the `sigmorphon2022_release` directory.
+2. Make sure that you are running a version of Python higher than **Python 3.3** and lower than **Python 3.10**.
+3. Run the following command to install all needed libraries: `pip install -r requirements.txt`.
+4. Run all commands/scripts from the `sigmorphon2022_release` directory.
 
 ## Modern Standard Arabic (MSA) Results
 

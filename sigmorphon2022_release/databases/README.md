@@ -8,4 +8,4 @@ The databases in this repository are organized into projects (e.g., `msa` or `eg
 
 ## Data License
 
-The data files contained in this directory is licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/).
+The data files contained in this directory are licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/).

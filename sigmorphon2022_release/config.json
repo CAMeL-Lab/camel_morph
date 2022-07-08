@@ -13,7 +13,6 @@
     "local": {
         "msa_cam_ready_sigmorphon2022": {
             "dialect": "msa",
-            "cat2id": true,
             "pruning": true,
             "specs": {
                 "spreadsheet": "camel-morph-msa-verbs-cam-ready",

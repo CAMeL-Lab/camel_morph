@@ -202,22 +202,10 @@ def read_morph_specs(config:Dict, config_name:str) -> Tuple[Dict[str, pd.DataFra
     # cont'd: Process LEXICON sheet
     LEXICON['GLOSS'] = LEXICON['GLOSS'].replace('\s+', '#', regex=True)
     
-    # Get rid of unused conditions, i.e., use only the conditions which are in the intersection
-    # of the collective (concatenated across morph and lexicon sheets) COND-T and COND-S columns
-    # Replace space in gloss field by #, and get rid of excess spaces in the condition field.
-    cond_t = set([term for ct in MORPH['COND-T'].values.tolist() + LEXICON['COND-T'].values.tolist()
-                for cond in ct.split() for term in cond.split('||')])
-    cond_s = set([term for cs in MORPH['COND-S'].values.tolist() + LEXICON['COND-S'].values.tolist()
-                for cond in cs.split() for term in cond.split('||')])
-    used_conditions = set([cond for cond in cond_t & cond_s if cond != '_'])
-    for f in ['COND-T', 'COND-S']:
-        conditions = set([term for ct in LEXICON[f].values.tolist()
-                    for cond in ct.split() for term in cond.split('||')])
-        conditions_unused = '|'.join(conditions - used_conditions)
-        assert all(not bool(re.search(r'[\$\|\^\*\+><}{][)(\?\!\\]', cond))
-                    for cond in conditions_unused)
-        LEXICON[f] = LEXICON.apply(
-            lambda row: re.sub(conditions_unused, '', row[f]), axis=1)
+    # Get rid of unused conditions
+    LEXICON['COND-S'] = LEXICON.apply(
+        lambda row: re.sub(r'hamzated|hollow|defective', '', row['COND-S']), axis=1)
+
     LEXICON['COND-T'] = LEXICON['COND-T'].replace(' +', ' ', regex=True)
     LEXICON['COND-T'] = LEXICON['COND-T'].replace(' $', '', regex=True)
     LEXICON['COND-S'] = LEXICON['COND-S'].replace(' +', ' ', regex=True)
