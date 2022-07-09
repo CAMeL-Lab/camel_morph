@@ -105,8 +105,9 @@ class MorphologyDB:
             elif flag == 'g':
                 self._withGeneration = True
             # Generation debugging
-            elif flag == 'gd':
+            elif flag == 'g':
                 self._withGeneration = True
+            elif flag == 'd':
                 self._debug = True
             elif flag == 'r':
                 self._withReinflection = True
