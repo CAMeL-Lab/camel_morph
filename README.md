@@ -14,7 +14,7 @@ The following sections provide useful usage information about the repository. Fo
 
 ## Camel Morph SIGMORPHON 2022
 
-For instructions related to inspecting, making use of, and replicating the results obtained for the SIGMORPHON 2022 Camel Morph paper[^1], see [README](./sigmorphon2022_release/README.md) in the `./sigmorphon2022_release` folder.
+For instructions related to inspecting, making use of, and replicating the results obtained for the SIGMORPHON 2022 Camel Morph paper[^1], see the [Camel Morph SIGMORPHON 2022](https://github.com/CAMeL-Lab/camel_morph/tree/main/sigmorphon2022_release) section in the `./sigmorphon2022_release` folder.
 
 ## Data
 
