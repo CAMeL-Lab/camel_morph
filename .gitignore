@@ -351,3 +351,5 @@ MigrationBackup/
 
 .vscode
 .DS_Store
+!requirements.txt
+!sigmorphon2022_release/requirements.txt
