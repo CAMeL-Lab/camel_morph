@@ -5,7 +5,7 @@ This section guides you through the process of inspecting, making use of, and re
 ## Installation
 
 1. Clone (download) this repository and unzip in a directory of your choice.
-2. Make sure that you are running a version of Python higher than **Python 3.3** and lower than **Python 3.10**.
+2. Make sure that you are running **Python 3.8** or **Python 3.9**.
 3. Run the following command to install all needed libraries: `pip install -r requirements.txt`.
 4. Run all commands/scripts from the `sigmorphon2022_release` directory.
 
