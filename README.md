@@ -165,5 +165,5 @@ All the code contained in this repository is available under the MIT license. Se
 - [Salam Khalifa](https://github.com/slkh)
 - [Nizar Habash](https://github.com/nizarhabash1)
 
-[^1]: Habash, Nizar et al. "Morphotactic Modeling in an Open-source Multi-dialectal Arabic Morphological Analyzer and Generator", SIGMORPHON. 2022
+[^1]: Nizar Habash, Reham Marzouk, Christian Khairallah, and Salam Khalifa. 2022. [Morphotactic Modeling in an Open-source Multi-dialectal Arabic Morphological Analyzer and Generator](https://aclanthology.org/2022.sigmorphon-1.10/). In Proceedings of the 19th SIGMORPHON Workshop on Computational Research in Phonetics, Phonology, and Morphology, pages 92–102, Seattle, Washington. Association for Computational Linguistics.
 [^2]: Note that for the release directory, only the morphological components from Camel Tools were sourced from the actual library and were added to be imported locally.
