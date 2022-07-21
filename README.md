@@ -14,7 +14,7 @@ The following sections provide useful usage information about the repository. Fo
 
 ## Camel Morph SIGMORPHON 2022
 
-For instructions related to inspecting, making use of, and replicating the results obtained for the SIGMORPHON 2022 Camel Morph paper[^1], see the [Camel Morph SIGMORPHON 2022](https://github.com/CAMeL-Lab/camel_morph/tree/main/sigmorphon2022_release) section in the `./sigmorphon2022_release` folder.
+For instructions related to inspecting, making use of, replicating the results obtained for the SIGMORPHON 2022 Camel Morph paper[^1], and the data, see the [Camel Morph SIGMORPHON 2022](https://github.com/CAMeL-Lab/camel_morph/tree/main/sigmorphon2022_release) section in the `./sigmorphon2022_release` folder.
 
 ## Data
 
@@ -32,6 +32,8 @@ The data files accessed through the below links are licensed under a [Creative C
 - [EGY Verbs Specifications](https://docs.google.com/spreadsheets/d/1NBK_UPl2799GRBkOrd9Eub_yLn2U2ccbJqYETKdCcbw/edit?usp=sharing)
 
 ### SIGMORPHON 2022 Data (frozen)
+
+The following data is not accessile publicly from the Google Sheets interface but is available in `csv` format (the way it was at submission time) in the following [folder](https://github.com/CAMeL-Lab/camel_morph/tree/main/sigmorphon2022_release/data).
 
 - [MSA Verbs Specifications (Camera Ready)](https://docs.google.com/spreadsheets/d/1v9idxctnr6IsqG4c7bHs7lGx7GzbnTa2s4ghQCmLoPY/edit#gid=524706154)
 - [EGY Verbs Specifications (Camera Ready)](https://docs.google.com/spreadsheets/d/1OCqHIdeZpm9BNa-BiC7Xy6bAT_wkLnhuvKdo7X3-RtE/edit#gid=424095452)
@@ -61,7 +63,7 @@ To generate databases, paradigm-specific inflection (conjugation/declension) tab
 To start working with the Camel Morph environment:
 
 1. Clone (download) this repository and unzip in a directory of your choice.
-2. Make sure that you are running a version of Python higher than **Python 3.8** or **Python 3.9**.
+2. Make sure that you are running **Python 3.8** or **Python 3.9**.
 3. Run the following command to install all needed libraries: `pip install -r requirements.txt`.
 4. Run all commands/scripts from the outer `camel_morph` directory.
 

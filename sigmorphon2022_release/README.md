@@ -9,6 +9,16 @@ This section guides you through the process of inspecting, making use of, and re
 3. Run the following command to install all needed libraries: `pip install -r requirements.txt`.
 4. Run all commands/scripts from the `sigmorphon2022_release` directory.
 
+## Data
+
+[![License](https://mirrors.creativecommons.org/presskit/buttons/80x15/svg/by.svg)](https://creativecommons.org/licenses/by/4.0/)
+
+The data used to compile a database is available in `csv` format (the way it was at submission time) in the following [folder](https://github.com/CAMeL-Lab/camel_morph/tree/main/sigmorphon2022_release/data).
+
+### Data License
+
+The data files accessed through the below links are licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/). For code license, see [License](#license).
+
 ## Modern Standard Arabic (MSA) Results
 
 To generate the MSA verbs database, the results of which were described in the paper[^1], run the following two commands from the main repository directory to output the resulting DB (`msa_cam_ready_sigmorphon2022_v1.0.db`) into the `sigmorphon2022_release/databases/camel-morph-msa` directory:
