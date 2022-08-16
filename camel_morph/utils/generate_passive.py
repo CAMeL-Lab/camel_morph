@@ -29,7 +29,7 @@ import os
 import pandas as pd
 from numpy import nan
 
-from utils.utils import assign_pattern
+from camel_morph.utils.utils import assign_pattern
 
 errors, missing = {}, {}
 

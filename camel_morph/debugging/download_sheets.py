@@ -81,7 +81,10 @@ def download_sheets(lex=None, specs=None, save_dir=None, config=None, config_nam
                         else:
                             raise NotImplementedError
                 sheet = pd.DataFrame(sheet.get_all_records())
-                output_dir = os.path.join(save_dir, f"camel-morph-{config_local['dialect']}", config_name)
+                if config is not None:
+                    output_dir = os.path.join(save_dir, f"camel-morph-{config_local['dialect']}", config_name)
+                else:
+                    output_dir = save_dir
                 os.makedirs(output_dir, exist_ok=True)
                 output_path = os.path.join(output_dir, f'{sheet_name}.csv')
                 sheet.to_csv(output_path)
@@ -104,16 +107,15 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     save_dir = args.save_dir
+    service_account = args.service_account
     config = None
-
-    if args.config_name:
+    if not args.lex and not args.specs:
         with open(args.config_file) as f:
             config = json.load(f)
         config_local = config['local'][args.config_name]
         config_global = config['global']
-    
-    service_account = args.service_account if args.service_account else config_global['service_account']
-    save_dir = config_global['data_dir']
+        save_dir = config_global['data_dir']
+        service_account = config_global['service_account']
 
     download_sheets(args.lex, args.specs, save_dir,
                     config, args.config_name, service_account)

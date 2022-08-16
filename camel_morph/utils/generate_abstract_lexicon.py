@@ -32,7 +32,7 @@ import sys
 import gspread
 import pandas as pd
 
-from utils.utils import add_check_mark_online, consonants_bw
+from camel_morph.utils.utils import add_check_mark_online, consonants_bw
 try:
     from ..debugging.download_sheets import download_sheets
 except:
