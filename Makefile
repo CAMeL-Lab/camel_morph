@@ -32,8 +32,12 @@ make_db_all_aspects_egy:
 make_db_cr_egy:	
 	python camel_morph/db_maker.py -config_file configs/config.json -config_name egy_cam_ready_sigmorphon2022
 
-make_db_nom_msa:	
-	python camel_morph/db_maker.py -config_file configs/config.json -config_name nom_msa_red 
+make_db_adj_msa:	
+	python camel_morph/db_maker.py -config_file configs/config.json -config_name adj_msa_split_red
+make_db_noun_msa:	
+	python camel_morph/db_maker.py -config_file configs/config.json -config_name noun_msa_split_red
+make_db_noun_prop_msa:	
+	python camel_morph/db_maker.py -config_file configs/config.json -config_name noun_prop_msa_split_red
 
 repr_lemmas_pv_msa:
 	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name pv_msa -display_format expanded -feats "asp:p mod:i" -db eval_files/calima-msa-s31_0.4.2.utf8.db
@@ -53,12 +57,12 @@ repr_lemmas_iv_egy:
 	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name iv_egy -display_format expanded -feats "asp:i mod:i"
 repr_lemmas_cv_egy:	
 	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name cv_egy -display_format expanded -feats "asp:c mod:i"
-repr_lemmas_nom_msa:	
-	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name nom_msa_split -display_format expanded -db eval_files/calima-msa-s31_0.4.2.utf8.db
 repr_lemmas_adj_msa:
 	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name adj_msa_split_red -display_format expanded -db eval_files/calima-msa-s31_0.4.2.utf8.db
 repr_lemmas_noun_msa:
 	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name noun_msa_split_red adj_msa_split_red -display_format expanded -db eval_files/calima-msa-s31_0.4.2.utf8.db
+repr_lemmas_noun_prop_msa:
+	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name noun_prop_msa_split_red -display_format expanded -db eval_files/calima-msa-s31_0.4.2.utf8.db
 
 conj_pv_msa:
 	python camel_morph/debugging/generate_conj_table.py -feats "asp:p mod:i" -config_file configs/config.json -config_name pv_msa
@@ -106,6 +110,8 @@ conj_adj_msa:
 	python camel_morph/debugging/generate_conj_table.py -config_file configs/config.json -config_name adj_msa_split_red
 conj_noun_msa:	
 	python camel_morph/debugging/generate_conj_table.py -config_file configs/config.json -config_name noun_msa_split_red
+conj_noun_prop_msa:	
+	python camel_morph/debugging/generate_conj_table.py -config_file configs/config.json -config_name noun_prop_msa_split_red
 
 conj_pv_glf:
 	python camel_morph/debugging/generate_conj_table.py -feats "asp:p mod:i" -config_file configs/config.json -config_name pv_glf_red
@@ -161,8 +167,12 @@ download_egy_all:
 download_cr_egy:	
 	python camel_morph/debugging/download_sheets.py -config_file configs/config.json -config_name egy_cam_ready_sigmorphon2022
 
-download_msa_nom:	
-	python camel_morph/debugging/download_sheets.py -config_file configs/config.json -config_name nom_msa_red
+download_msa_adj:	
+	python camel_morph/debugging/download_sheets.py -config_file configs/config.json -config_name adj_msa_split_red
+download_msa_noun:	
+	python camel_morph/debugging/download_sheets.py -config_file configs/config.json -config_name noun_msa_split_red
+download_msa_noun_prop:	
+	python camel_morph/debugging/download_sheets.py -config_file configs/config.json -config_name noun_prop_msa_split_red
 
 download_egy_nom:	
 	python camel_morph/debugging/download_sheets.py -config_file configs/config.json -config_name nom_egy_red
@@ -192,6 +202,8 @@ upload_adj_msa:
 	python camel_morph/debugging/upload_sheets.py -input_dir tables_dir -config_file configs/config.json -config_name adj_msa_split_red -mode backup
 upload_noun_msa:
 	python camel_morph/debugging/upload_sheets.py -input_dir tables_dir -config_file configs/config.json -config_name noun_msa_split_red -mode backup
+upload_noun_prop_msa:
+	python camel_morph/debugging/upload_sheets.py -input_dir tables_dir -config_file configs/config.json -config_name noun_prop_msa_split_red -mode backup
 
 upload_pv_glf:
 	python camel_morph/debugging/upload_sheets.py -input_dir tables_dir -config_file configs/config.json -config_name pv_glf_red -feats "asp:p mod:i" -mode backup
@@ -216,8 +228,9 @@ msa_cv_i_process: download_msa_cv repr_lemmas_cv_msa make_db_cv_msa conj_cv_i_ms
 msa_cv_e_process: download_msa_cv repr_lemmas_cv_msa make_db_cv_msa conj_cv_e_msa upload_cv_e_msa
 msa_cv_x_process: download_msa_cv repr_lemmas_cv_msa make_db_cv_msa conj_cv_x_msa upload_cv_x_msa
 
-msa_adj_process: download_msa_nom repr_lemmas_adj_msa make_db_nom_msa conj_adj_msa upload_adj_msa
-msa_noun_process: download_msa_nom repr_lemmas_noun_msa make_db_nom_msa conj_noun_msa upload_noun_msa
+msa_adj_process: download_msa_adj repr_lemmas_adj_msa make_db_adj_msa conj_adj_msa upload_adj_msa
+msa_noun_process: download_msa_noun repr_lemmas_noun_msa make_db_noun_msa conj_noun_msa upload_noun_msa
+msa_noun_prop_process: download_msa_noun_prop repr_lemmas_noun_prop_msa make_db_noun_prop_msa conj_noun_prop_msa upload_noun_prop_msa
 
 glf_pv_process: download_glf_pv repr_lemmas_pv_glf make_db_pv_glf conj_pv_glf upload_pv_glf
 glf_iv_process: download_glf_iv repr_lemmas_iv_glf make_db_iv_glf conj_iv_glf upload_iv_glf
@@ -320,12 +333,22 @@ msa_cv_x_debug_db_full_no_build: conj_cv_x_msa_db_full msa_cv_x_bank_annotation 
 msa_adj_bank_annotation:
 	python camel_morph/debugging/paradigm_debugging.py -config_file configs/config.json -config_name adj_msa_split_red
 msa_adj_bank_upload:
-	python camel_morph/debugging/upload_sheets.py -config_file configs/config.json -config_name adj_msa_split_red-input_dir banks_dir -mode backup
+	python camel_morph/debugging/upload_sheets.py -config_file configs/config.json -config_name adj_msa_split_red -input_dir banks_dir -mode backup
 msa_adj_auto_qc_upload:
-	python camel_morph/debugging/upload_sheets.py -config_file configs/config.json -config_name adj_msa_split_red-input_dir paradigm_debugging_dir -mode backup
-msa_adj_debug: download_msa_nom repr_lemmas_adj_msa make_db_nom_msa conj_adj_msa msa_adj_bank_annotation msa_adj_bank_upload msa_adj_auto_qc_upload
-msa_adj_debug_db_full: download_msa_nom repr_lemmas_adj_msa make_db_nom_msa conj_adj_msa_db_full msa_adj_bank_annotation msa_adj_bank_upload msa_adj_auto_qc_upload
+	python camel_morph/debugging/upload_sheets.py -config_file configs/config.json -config_name adj_msa_split_red -input_dir paradigm_debugging_dir -mode backup
+msa_adj_debug: download_msa_adj repr_lemmas_adj_msa make_db_adj_msa conj_adj_msa msa_adj_bank_annotation msa_adj_bank_upload msa_adj_auto_qc_upload
+msa_adj_debug_db_full: download_msa_adj repr_lemmas_adj_msa make_db_adj_msa conj_adj_msa_db_full msa_adj_bank_annotation msa_adj_bank_upload msa_adj_auto_qc_upload
 msa_adj_debug_db_full_no_build: conj_adj_msa_db_full msa_adj_bank_annotation msa_adj_bank_upload msa_adj_auto_qc_upload
+
+msa_noun_bank_annotation:
+	python camel_morph/debugging/paradigm_debugging.py -config_file configs/config.json -config_name noun_msa_split_red
+msa_noun_bank_upload:
+	python camel_morph/debugging/upload_sheets.py -config_file configs/config.json -config_name noun_msa_split_red -input_dir banks_dir -mode backup
+msa_noun_auto_qc_upload:
+	python camel_morph/debugging/upload_sheets.py -config_file configs/config.json -config_name noun_msa_split_red -input_dir paradigm_debugging_dir -mode backup
+msa_noun_debug: download_msa_noun repr_lemmas_noun_msa make_db_noun_msa conj_noun_msa msa_noun_bank_annotation msa_noun_bank_upload msa_noun_auto_qc_upload
+msa_noun_debug_db_full: download_msa_noun repr_lemmas_noun_msa make_db_noun_msa conj_noun_msa_db_full msa_noun_bank_annotation msa_noun_bank_upload msa_noun_auto_qc_upload
+msa_noun_debug_db_full_no_build: conj_noun_msa_db_full msa_noun_bank_annotation msa_noun_bank_upload msa_noun_auto_qc_upload
 
 egy_pv_bank_annotation:
 	python camel_morph/debugging/paradigm_debugging.py -config_file configs/config.json -config_name pv_egy -feats "asp:p mod:i"

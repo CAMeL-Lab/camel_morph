@@ -308,6 +308,48 @@
                     "NOM.FQ.CG.E0",
                     "NOM.FQ.CA.E0"
                 ]
+            },
+            "gen:u num:s": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "NOM.S.DN.P0",
+                    "NOM.S.DG.P0",
+                    "NOM.S.DA.P0",
+                    "NOM.S.IN",
+                    "NOM.S.IG",
+                    "NOM.S.IA",
+                    "NOM.S.CN",
+                    "NOM.S.CG",
+                    "NOM.S.CA",
+                    "NOM.S.DN.P0.E0",
+                    "NOM.S.DG.P0.E0",
+                    "NOM.S.DA.P0.E0",
+                    "NOM.S.CN.E0",
+                    "NOM.S.CG.E0",
+                    "NOM.S.CA.E0"
+                ]
+            },
+            "gen:u num:p": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "NOM.Q.DN.P0",
+                    "NOM.Q.DG.P0",
+                    "NOM.Q.DA.P0",
+                    "NOM.Q.IN",
+                    "NOM.Q.IG",
+                    "NOM.Q.IA",
+                    "NOM.Q.CN",
+                    "NOM.Q.CG",
+                    "NOM.Q.CA",
+                    "NOM.Q.DN.P0.E0",
+                    "NOM.Q.DG.P0.E0",
+                    "NOM.Q.DA.P0.E0",
+                    "NOM.Q.CN.E0",
+                    "NOM.Q.CG.E0",
+                    "NOM.Q.CA.E0"
+                ]
             }
         }
     },

@@ -208,7 +208,8 @@ def create_conjugation_tables(lemmas,
             gen = process_nom_gen_num_(
                 gen, form_gen, form, cond_t, cond_s, gloss, lemma, pattern, pos, info.get('freq'))
             if type(num) is dict or type(gen) is dict:
-                outputs['NOM.MS.DN'] = num if type(num) is dict else gen 
+                outputs = {}
+                outputs['N/A'] = num if type(num) is dict else gen 
                 lemmas_conj.append(outputs)
                 continue
             
@@ -279,7 +280,7 @@ def process_outputs(lemmas_conj, pos_type):
             output = {}
             form = _strip_brackets(info['form'])
             pos = _strip_brackets(info['pos'].upper())
-            features = parse_signature(signature, info['pos'])
+            features = parse_signature(signature, info['pos']) if signature != 'N/A' else {}
             signature = re.sub('Q', 'P', signature)
             output['signature'] = signature
             output['stem'] = info['form']

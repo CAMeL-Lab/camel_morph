@@ -791,54 +791,6 @@
                 "gloss"
             ]
         },
-        "nom_msa_red": {
-            "dialect": "msa",
-            "pruning": true,
-            "specs": {
-                "spreadsheet": "camel-morph-msa-nom-other",
-                "sheets": {
-                    "order": "MSA-Nom-ORDER",
-                    "morph": "MSA-Nom-MORPH"
-                },
-                "exclude": [
-                    "RED"
-                ]
-            },
-            "lexicon": {
-                "spreadsheet": "camel-morph-msa-nom-other",
-                "sheets": [
-                    "MSA-Nom-LEX"
-                ]
-            },
-            "db": "XYZ_msa_nom_v1.0_red.db",
-            "debugging": {
-                "debugging_spreadsheet": "Paradigm-Debugging-Nominals",
-                "feats": {
-                    "": {
-                        "debugging_sheet": "MSA-Nom",
-                        "conj_tables": "conj_nom_msa_v1.0.tsv",
-                        "paradigm_debugging": "paradigm_debug_nom_msa_v1.0.tsv",
-                        "bank": "MSA-Nom-Bank.tsv"
-                    }
-                }
-            },
-            "pos_type": "nominal",
-            "class_keys": [
-                "cond_t",
-                "cond_s",
-                "gen",
-                "num",
-                "cas"
-            ],
-            "extended_lemma_keys": [
-                "lemma",
-                "form",
-                "pos",
-                "rat",
-                "cond_t",
-                "index"
-            ]
-        },
         "noun_msa_split_red": {
             "split_or": true,
             "pruning": true,
@@ -873,6 +825,56 @@
             },
             "pos_type": "nominal",
             "pos": "noun",
+            "class_keys": [
+                "cond_t",
+                "cond_s",
+                "gen",
+                "num",
+                "cas"
+            ],
+            "extended_lemma_keys": [
+                "lemma",
+                "form",
+                "pos",
+                "rat",
+                "cond_t",
+                "index"
+            ]
+        },
+        "noun_prop_msa_split_red": {
+            "split_or": true,
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": {
+                    "order": "MSA-Nom-ORDER",
+                    "morph": "MSA-Nom-MORPH"
+                },
+                "exclude": [
+                    "RED"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": [
+                    "MSA-Nom-Prop-LEX"
+                ]
+            },
+            "dialect": "msa",
+            "db": "XYZ_msa_nom_v1.0_red.db",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Nominals",
+                "feats": {
+                    "": {
+                        "debugging_sheet": "MSA-Noun-Prop",
+                        "conj_tables": "conj_noun_prop_msa_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_noun_prop_msa_v1.0.tsv",
+                        "bank": "MSA-Noun-Prop-Bank.tsv"
+                    }
+                }
+            },
+            "pos_type": "nominal",
+            "pos": "noun_prop",
             "class_keys": [
                 "cond_t",
                 "cond_s",
@@ -937,87 +939,6 @@
                 "rat",
                 "cond_t",
                 "index"
-            ]
-        },
-        "nom_msa_split": {
-            "dialect": "msa",
-            "pruning": true,
-            "split_or": true,
-            "specs": {
-                "spreadsheet": "camel-morph-msa-nom-other",
-                "sheets": {
-                    "order": "MSA-Nom-ORDER",
-                    "morph": "MSA-Nom-MORPH"
-                }
-            },
-            "lexicon": {
-                "spreadsheet": "camel-morph-msa-nom-other",
-                "sheets": [
-                    "MSA-Nom-LEX"
-                ]
-            },
-            "db": "XYZ_msa_nom_v1.0_red.db",
-            "pos_type": "nominal",
-            "debugging_spreadsheet": "Paradigm-Debugging-Nominals",
-            "class_keys": [
-                "cond_t",
-                "cond_s",
-                "gen",
-                "num",
-                "cas"
-            ],
-            "extended_lemma_keys": [
-                "lemma",
-                "form",
-                "pos",
-                "rat",
-                "cond_t",
-                "index"
-            ]
-        },
-        "adj_repr_lemmas_test": {
-            "split_or": false,
-            "pruning": true,
-            "specs": {
-                "spreadsheet": "camel-morph-msa-nom-other",
-                "sheets": {
-                    "order": "MSA-Nom-ORDER",
-                    "morph": "MSA-Nom-MORPH"
-                },
-                "exclude": [
-                    "RED"
-                ]
-            },
-            "lexicon": {
-                "spreadsheet": "camel-morph-msa-nom-other",
-                "sheets": [
-                    "MSA-Nom-LEX"
-                ]
-            },
-            "dialect": "msa",
-            "db": "XYZ_msa_nom_v1.0_red.db",
-            "debugging": {
-                "debugging_spreadsheet": "Paradigm-Debugging-Nominals",
-                "feats": {
-                    "": {
-                        "debugging_sheet": "MSA-Adj",
-                        "conj_tables": "conj_adj_msa_v1.0.tsv",
-                        "paradigm_debugging": "paradigm_debug_adj_msa_v1.0.tsv",
-                        "bank": "MSA-Adj-Bank.tsv"
-                    }
-                }
-            },
-            "pos_type": "nominal",
-            "pos": "adj",
-            "class_keys": [
-                "cond_t",
-                "cond_s",
-                "gen",
-                "num",
-                "cas"
-            ],
-            "extended_lemma_keys": [
-                "lemma"
             ]
         },
         "nom_egy_red": {

@@ -241,11 +241,11 @@ if __name__ == "__main__":
     ar2bw = CharMapper.builtin_mapper('ar2bw')
     bw2ar = CharMapper.builtin_mapper('bw2ar')
 
-    output_dir = args.output_dir if args.output_dir else config_global['repr_lemmas_dir']
+    output_dir = args.output_dir if args.output_dir else os.path.join(config_global['debugging'], config_global['repr_lemmas_dir'])
     output_dir = os.path.join(output_dir, f"camel-morph-{config_local['dialect']}")
     os.makedirs(output_dir, exist_ok=True)
 
-    SHEETS, _ = db_maker_utils.read_morph_specs(config, config_name)
+    SHEETS, _ = db_maker_utils.read_morph_specs(config, config_name, process_morph=False)
     lexicon = SHEETS['lexicon']
     lexicon = lexicon.replace('ditrans', 'trans')
     
@@ -302,12 +302,12 @@ if __name__ == "__main__":
                                                  db=db)
     excluded_classes = set()
     if len(args.config_name) > 1:
-        for config_name in args.config_name[1:]:
-            with open(os.path.join(output_dir, f'repr_lemmas_{args.config_name}.pkl'), 'rb') as f:
+        for config_name_ in args.config_name[1:]:
+            with open(os.path.join(output_dir, f'repr_lemmas_{config_name_}.pkl'), 'rb') as f:
                 excluded_classes.update(pickle.load(f).keys())
     uniq_lemma_classes = {k: v for k, v in uniq_lemma_classes.items() if k not in excluded_classes}
 
-    output_name = args.output_name if args.output_name else f'repr_lemmas_{args.config_name}.pkl'
+    output_name = args.output_name if args.output_name else f'repr_lemmas_{config_name}.pkl'
     output_path = os.path.join(output_dir, output_name)
     with open(output_path, 'wb') as f:
         pickle.dump(uniq_lemma_classes, f)

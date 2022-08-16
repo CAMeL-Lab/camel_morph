@@ -24,21 +24,25 @@ import re
 import os
 import sys
 from typing import Dict, List, Optional, Union, Set, Tuple
+from itertools import product
 
 import pandas as pd
 from numpy import nan
 
-from utils.generate_passive import generate_passive
 try:
-    from utils.generate_abstract_lexicon import generate_abstract_lexicon
+    from camel_morph.utils.generate_passive import generate_passive
+    from camel_morph.utils.generate_abstract_lexicon import generate_abstract_lexicon
 except:
     file_path = os.path.abspath(__file__).split('/')
     package_path = '/'.join(file_path[:len(file_path) -
                                       1 - file_path[::-1].index('camel_morph')])
     sys.path.insert(0, package_path)
+    from utils.generate_passive import generate_passive
     from utils.generate_abstract_lexicon import generate_abstract_lexicon
 
-def read_morph_specs(config:Dict, config_name:str) -> Tuple[Dict[str, pd.DataFrame], Dict[str, Tuple[str, int]]]:
+def read_morph_specs(config:Dict,
+                     config_name:str,
+                     process_morph:bool=True) -> Tuple[Dict[str, pd.DataFrame], Dict[str, Tuple[str, int]]]:
     """
     Method which loads and processes the `csv` sheets that are specified in the
     specific configuration of the config file. Outputs a dictionary which contains
@@ -49,6 +53,7 @@ def read_morph_specs(config:Dict, config_name:str) -> Tuple[Dict[str, pd.DataFra
         the `db` file.
         config_name (str): key of the specific ("local") configuration to get information 
         from in the config file.
+        process_morph (bool): whether or not to process MORPH specs. Defaults to True.
 
     Returns:
         Tuple[Dict[str, pd.DataFrame], Dict[str, Tuple[str, int]]]: dictionary which contains
@@ -136,7 +141,6 @@ def read_morph_specs(config:Dict, config_name:str) -> Tuple[Dict[str, pd.DataFra
 
     BACKOFF = BACKOFF if len(BACKOFF.index) != 0 else None
 
-
     # Process POSTREGEX sheet
     #TODO: make sure that symbols being compiled into regex are not mistaken for special characters.
     # This was already done but does not cover unlikely cases.
@@ -155,15 +159,19 @@ def read_morph_specs(config:Dict, config_name:str) -> Tuple[Dict[str, pd.DataFra
     
     # Useful for debugging of nominals, since many entries are inconsistent in terms of their COND-T
     # This splits rows with or-ed COND-T expressions into 
-    #FIXME: does not handle cases when there is a conjunction with or-ed in COND-T
     if local_specs.get('split_or') == True:
         assert SMART_BACKOFF is None
         LEXICON_ = []
         for _, row in LEXICON.iterrows():
-            if '||' in row['COND-T'] and ' ' not in row['COND-T']:
-                for term in row['COND-T'].split('||'):
+            terms = {'disj': [], 'other': []}
+            for term in row['COND-T'].split():
+                terms['disj' if '||' in term else 'other'].append(term)
+            
+            if terms['disj']:
+                terms_other = ' '.join(terms['other'])
+                for disj_terms in product(*[t.split('||') for t in terms['disj']]):
                     row_ = row.to_dict()
-                    row_['COND-T'] = term
+                    row_['COND-T'] = f"{' '.join(disj_terms)} {terms_other}".strip()
                     LEXICON_.append(row_)
             else:
                 LEXICON_.append(row.to_dict())
@@ -201,7 +209,23 @@ def read_morph_specs(config:Dict, config_name:str) -> Tuple[Dict[str, pd.DataFra
             for i, cond in enumerate(cond_s)}
     
     # Process MORPH sheet
-    MORPH = process_morph_specs(MORPH, exclusions)
+    MORPH = MORPH[MORPH.DEFINE == 'MORPH']
+    MORPH = MORPH.replace(nan, '', regex=True)
+    MORPH = MORPH.replace('^\s+', '', regex=True)
+    MORPH = MORPH.replace('\s+$', '', regex=True)
+    MORPH = MORPH.replace('\s+', ' ', regex=True)
+
+    MORPH['COND-S'] = MORPH['COND-S'].replace('[\[\]]', '', regex=True)
+    MORPH.loc[MORPH['COND-S'] == '', 'COND-S'] = '_'
+    MORPH.loc[MORPH['COND-T'] == '', 'COND-T'] = '_'
+    # Replace spaces in BW and GLOSS with '#'
+    MORPH['BW'] = MORPH['BW'].replace('\s+', '#', regex=True)
+    MORPH.loc[MORPH['BW'] == '', 'BW'] = '_'
+    MORPH.loc[MORPH['FORM'] == '', 'FORM'] = '_'
+    MORPH['GLOSS'] = MORPH['GLOSS'].replace('\s+', '#', regex=True)
+    if 'COND-F' not in MORPH.columns:
+        MORPH['COND-F'] = ''
+    MORPH = process_morph_specs(MORPH, exclusions) if process_morph else MORPH
 
     # cont'd: Process LEXICON sheet
     LEXICON['GLOSS'] = LEXICON['GLOSS'].replace('\s+', '#', regex=True)
@@ -281,23 +305,6 @@ def process_morph_specs(MORPH:pd.DataFrame, exclusions: List[str]) -> pd.DataFra
     Returns:
         pd.DataFrame: processed morph dataframe.
     """
-    # Skip commented rows
-    MORPH = MORPH[MORPH.DEFINE == 'MORPH']
-    MORPH = MORPH.replace(nan, '', regex=True)
-    MORPH = MORPH.replace('^\s+', '', regex=True)
-    MORPH = MORPH.replace('\s+$', '', regex=True)
-    MORPH = MORPH.replace('\s+', ' ', regex=True)
-
-    MORPH['COND-S'] = MORPH['COND-S'].replace('[\[\]]', '', regex=True)
-    MORPH.loc[MORPH['COND-S'] == '', 'COND-S'] = '_'
-    MORPH.loc[MORPH['COND-T'] == '', 'COND-T'] = '_'
-    # Replace spaces in BW and GLOSS with '#'
-    MORPH['BW'] = MORPH['BW'].replace('\s+', '#', regex=True)
-    MORPH.loc[MORPH['BW'] == '', 'BW'] = '_'
-    MORPH.loc[MORPH['FORM'] == '', 'FORM'] = '_'
-    MORPH['GLOSS'] = MORPH['GLOSS'].replace('\s+', '#', regex=True)
-    if 'COND-F' not in MORPH.columns:
-        MORPH['COND-F'] = ''
     MORPH_CLASSES = MORPH.CLASS.unique()
     MORPH_CLASSES = MORPH_CLASSES[MORPH_CLASSES != '_']
     MORPH_MORPHEMES = MORPH.FUNC.unique()
