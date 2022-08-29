@@ -132,13 +132,17 @@ def read_morph_specs(config:Dict,
                 SMART_BACKOFF_ = SMART_BACKOFF_.replace(nan, '', regex=True)
             SMART_BACKOFF = pd.concat([SMART_BACKOFF, SMART_BACKOFF_])
 
-        LEXICON_['BW'] = LEXICON_['FORM'] + '/' + LEXICON_['BW']
-        LEXICON_['LEMMA'] = 'lex:' + LEXICON_['LEMMA']
         LEXICON = pd.concat([LEXICON, LEXICON_]) if LEXICON is not None else LEXICON_
-        
-        BACKOFF_['BW'] = BACKOFF_['FORM'] + '/' + BACKOFF_['BW']
         BACKOFF = pd.concat([BACKOFF, BACKOFF_]) if BACKOFF is not None else BACKOFF_
 
+    LEXICON = LEXICON.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
+    LEXICON['BW'] = LEXICON['BW'].replace('\s+', '#', regex=True)
+    LEXICON.loc[LEXICON['BW'] == '', 'BW'] = '_'
+    LEXICON.loc[LEXICON['BW'].str.contains('/'), 'BW'] = LEXICON['BW']
+    LEXICON.loc[~LEXICON['BW'].str.contains('/'), 'BW'] = LEXICON['FORM'] + '/' + LEXICON['BW']
+    LEXICON['LEMMA'] = 'lex:' + LEXICON['LEMMA']
+
+    BACKOFF['BW'] = BACKOFF['FORM'] + '/' + BACKOFF['BW']
     BACKOFF = BACKOFF if len(BACKOFF.index) != 0 else None
 
     # Process POSTREGEX sheet
@@ -211,8 +215,7 @@ def read_morph_specs(config:Dict,
     # Process MORPH sheet
     MORPH = MORPH[MORPH.DEFINE == 'MORPH']
     MORPH = MORPH.replace(nan, '', regex=True)
-    MORPH = MORPH.replace('^\s+', '', regex=True)
-    MORPH = MORPH.replace('\s+$', '', regex=True)
+    MORPH = MORPH.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
     MORPH = MORPH.replace('\s+', ' ', regex=True)
 
     MORPH['COND-S'] = MORPH['COND-S'].replace('[\[\]]', '', regex=True)
@@ -228,28 +231,50 @@ def read_morph_specs(config:Dict,
     MORPH = process_morph_specs(MORPH, exclusions) if process_morph else MORPH
 
     # cont'd: Process LEXICON sheet
+    LEXICON = LEXICON.replace('\s+', ' ', regex=True)
     LEXICON['GLOSS'] = LEXICON['GLOSS'].replace('\s+', '#', regex=True)
+    # Generate Lexicon COND-F if necessary
+    if any('!' in cond_t for cond_t in LEXICON['COND-T'].values.tolist()):
+        print('Lexicon sheet COND-F populated')
+        for i, row in LEXICON.iterrows():
+            cond_t = row['COND-T'].split()
+            cond_t_, cond_f_ = [], []
+            for ct in cond_t:
+                if ct.startswith('!'):
+                    cond_f_.append(ct[1:])
+                else:
+                    cond_t_.append(ct)
+            LEXICON.at[i, 'COND-T'] = ' '.join(cond_t_)
+            LEXICON.at[i, 'COND-F'] = ' '.join(cond_f_)
     
     # Get rid of unused conditions, i.e., use only the conditions which are in the intersection
     # of the collective (concatenated across morph and lexicon sheets) COND-T and COND-S columns
     # Replace space in gloss field by #, and get rid of excess spaces in the condition field.
-    cond_t = set([term for ct in MORPH['COND-T'].values.tolist() + LEXICON['COND-T'].values.tolist()
-                for cond in ct.split() for term in cond.split('||')])
-    cond_s = set([term for cs in MORPH['COND-S'].values.tolist() + LEXICON['COND-S'].values.tolist()
-                for cond in cs.split() for term in cond.split('||')])
-    used_conditions = set([cond for cond in cond_t & cond_s if cond != '_'])
-    for f in ['COND-T', 'COND-S']:
-        conditions = set([term for ct in LEXICON[f].values.tolist()
-                    for cond in ct.split() for term in cond.split('||')])
-        conditions_unused = '|'.join(conditions - used_conditions)
-        assert all(not bool(re.search(r'[\$\|\^\*\+><}{][)(\?\!\\]', cond))
-                    for cond in conditions_unused)
-        LEXICON[f] = LEXICON.apply(
-            lambda row: re.sub(conditions_unused, '', row[f]), axis=1)
-    LEXICON['COND-T'] = LEXICON['COND-T'].replace(' +', ' ', regex=True)
-    LEXICON['COND-T'] = LEXICON['COND-T'].replace(' $', '', regex=True)
-    LEXICON['COND-S'] = LEXICON['COND-S'].replace(' +', ' ', regex=True)
-    LEXICON['COND-S'] = LEXICON['COND-S'].replace(' $', '', regex=True)
+    clean_conditions: Optional[str] = local_specs.get('clean_conditions')
+    if clean_conditions:
+        conditions = {}
+        for f in ['COND-T', 'COND-S', 'COND-F']:
+            conditions[f] = set(
+                [term for ct in MORPH[f].values.tolist() + LEXICON[f].values.tolist()
+                        for cond in ct.split() for term in cond.split('||')])
+        conditions_aggr = conditions['COND-S'] & (conditions['COND-T'] | conditions['COND-F'])
+        conditions_used = set([cond for cond in conditions_aggr if cond != '_'])
+        #TODO: process MORPH file here too.
+        for df in [LEXICON]:
+            for f in ['COND-T', 'COND-S', 'COND-F']:
+                conditions = set([term for ct in df[f].values.tolist()
+                            for cond in ct.split() for term in cond.split('||')])
+                conditions_unused = '|'.join(conditions - conditions_used)
+                assert all(not bool(re.search(r'[\$\|\^\*\+><}{][)(\?\!\\]', cond))
+                            for cond in conditions_unused)
+                if conditions_unused:
+                    print(f'Deleting unused conditions: {conditions_unused}')
+                    conditions_unused = '^(' + conditions_unused + ')$'
+                    df[f] = df.apply(
+                        lambda row: ' '.join(re.sub(conditions_unused, '', cond) for cond in row[f].split()), axis=1)
+
+                df[f] = df[f].replace(' +', ' ', regex=True)
+                df[f] = df[f].replace(' $', '', regex=True)
 
     SHEETS = dict(about=ABOUT, header=HEADER, order=ORDER, morph=MORPH,
                   lexicon=LEXICON, smart_backoff=SMART_BACKOFF, postregex=POSTREGEX,
@@ -314,7 +339,7 @@ def process_morph_specs(MORPH:pd.DataFrame, exclusions: List[str]) -> pd.DataFra
     for CLASS in MORPH_CLASSES:
         for MORPHEME in MORPH_MORPHEMES: 
             # Get the unique list of the true conditions in all the allomorphs.
-            # We basically want to convert the 'COND-T' column in to n columns
+            # We basically want to convert the 'COND-T' column into n columns
             # where n = maximum number of conditions for a single allomorph
             cond_t = MORPH[(MORPH.FUNC == MORPHEME) & 
                                 (MORPH.CLASS == CLASS)]['COND-T'].str.split(pat=' ', expand=True)
