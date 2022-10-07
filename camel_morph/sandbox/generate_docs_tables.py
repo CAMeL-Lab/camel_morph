@@ -25,16 +25,17 @@ def generate_table(lexicon, pos, dialect, pos2lemma2prob, db_lexprob):
         gen = feats.get('gen', '')
         num = feats.get('num', '')
         pos_ = re.search(r'pos:(\S+)', row['FEAT']).group(1)
-        row_ = {'LEMMA': row['LEMMA'], 'FORM': row['FORM']}
-        cond_s2cond_t2feats2rows.setdefault(cond_s, {}).setdefault(cond_t, {}).setdefault((gen, num, pos_), []).append(row_)
+        row_cond_s = {'LEMMA': row['LEMMA'], 'FORM': row['FORM']}
+        cond_s2cond_t2feats2rows.setdefault(cond_s, {}).setdefault(cond_t, {}).setdefault((gen, num, pos_), []).append(row_cond_s)
     
     pos2lemma2prob_ = _get_pos2lemma2prob(db_lexprob, pos, cond_s2cond_t2feats2rows, pos2lemma2prob)
     
-    table = [['CLASS', 'VAR', 'Entry', 'Freq', 'Lemma', 'Stem', 'POS', 'MS', 'MD', 'MP', 'FS', 'FD', 'FP']]
+    errors = []
+    table = [['CLASS', 'VAR', 'Entry', 'Freq', 'Lemma', 'Stem', 'POS', 'MS', 'MD', 'MP', 'FS', 'FD', 'FP', 'Other lemmas']]
     for cond_s, cond_t2feats2rows in cond_s2cond_t2feats2rows.items():
-        table.append([cond_s if cond_s else '-', dialect, 'Definition', '', '', '', '', '', '', '', '', '', ''])
-        table.append([cond_s if cond_s else '-', dialect, 'Paradigm', '', '**', 'X', '', '', '', '', '', '', ''])
-        rows_ = {}
+        table.append([cond_s if cond_s else '-', dialect, 'Definition', '', '', '', '', '', '', '', '', '', '', ''])
+        paradigm_ = {}
+        rows_cond_s = {}
         for cond_t, feats2rows in cond_t2feats2rows.items():
             for feats, rows in feats2rows.items():
                 gen, num, pos_ = feats
@@ -42,29 +43,86 @@ def generate_table(lexicon, pos, dialect, pos2lemma2prob, db_lexprob):
                     best_index = (-np.array([pos2lemma2prob_[pos_][re.sub(r'[aiuo]', '', info['LEMMA'])]
                                         for info in rows])).argsort()[:len(rows)][0]
                     row = rows[best_index]
+                    other_lemmas = [row['LEMMA'] for row in rows[:best_index] + rows[best_index + 1:]][:20]
                     lemma, stem = bw2ar(strip_lex(row['LEMMA'])), bw2ar(row['FORM'])
                     feats_, feats_enc_ = _process_and_generate_feats(gen, num, pos_, cond_t_)
                     analyses, _ = generator.generate(lemma, feats_, debug=True)
                     analyses_enc, _ = generator.generate(lemma, feats_enc_, debug=True)
-                    
-                    assert len(analyses) == len(analyses_enc) or len(analyses) == len(analyses_enc) + 1
+                    analyses = [a for a in analyses if a[0]['stem'] == stem]
+                    analyses_enc = [a for a in analyses_enc if a[0]['stem'] == stem]
 
-                    row_ = rows_.setdefault(lemma, [cond_s, dialect, 'Example', str(len(rows)), lemma, stem, '', '', '', '', '', '', ''])
-                    if analyses:
-                        col, col_pos = table[0].index(cond_t_), table[0].index('POS')
-                        row_[col] = '//'.join(f"{a[0]['diac']}" for a in analyses if a[0]['stem'] == stem) if analyses else 'CHECK'
-                        row_[col] += (' / ' if row_[col] else '') + \
-                            ('//'.join(f"{a[0]['diac']} ({a[0]['gen']}{a[0]['num']})"
-                                for a in analyses_enc if a[0]['stem'] == stem) if analyses_enc else 'CHECK')
-                        row_[col_pos] = ' / '.join(a[0]['pos'].upper() for a in analyses_enc if a[0]['stem'] == stem)
-                        suff = ' / '.join(ar2bw(suff['diac']) for a in analyses for suff in db.suffix_cat_hash[a[3]] if a[0]['stem'] == stem)
-                        suff_enc = ' / '.join(ar2bw(suff['diac']) for a in analyses_enc
-                            for suff in db.suffix_cat_hash[a[3]] if suff['enc0'] == '3ms_poss' and a[0]['stem'] == stem)
-                        table[-1][col] = ' / '.join(['X' + ('+' if suff_ else '') + suff_ for suff_ in [suff, suff_enc]])
-                    else:
-                        row_[table[0].index(cond_t_)] = ''
+                    if len(analyses) > len(analyses_enc):
+                        analyses_enc_ = []
+                        for _ in range(len(analyses) - len(analyses_enc)):
+                            analyses_enc_.append((None, None, None, None))
+                        analyses_enc = analyses_enc_
+                    elif len(analyses) < len(analyses_enc):
+                        analyses_ = []
+                        for _ in range(len(analyses_enc) - len(analyses)):
+                            analyses_.append((None, None, None, None))
+                        analyses = analyses_
+                        
+                    analyses = sorted(analyses, key=lambda a: a[0]['cas'] if a[0] is not None else 'z')
+                    analyses_enc = sorted(analyses_enc, key=lambda a: a[0]['cas'] if a[0] is not None else 'z')
+
+                    col, col_pos = table[0].index(cond_t_), table[0].index('POS')
+                    cases = set([a[0]['cas'] for a in analyses + analyses_enc if a[0] is not None])
+                    cases = cases if cases else set(['-'])
+                    suffixes = {}
+                    for case in cases:
+                        row_cond_s = rows_cond_s.setdefault(lemma, {}).setdefault(
+                            case, [cond_s, dialect, f'Example (cas:{case})' if case in 'ang' else 'Example', 
+                            str(len(rows)), lemma, stem, '', '', '', '', '', '', '', ' '.join(other_lemmas)])
+                        multiple_gen, a_pos_ = [], []
+                        for (a, _, _, suff_cat), (a_enc, _, _, suff_cat_enc) in zip(analyses, analyses_enc):
+                            if (a is None or a['cas'] == case) and (a_enc is None or a_enc['cas'] == case):
+                                a_diac = a['diac'] if a is not None else 'CHECK'
+                                a_enc_diac = a_enc['diac'] if a_enc is not None else 'CHECK'
+                                a_gen = a_enc['gen'] if a_enc is not None else a['gen']
+                                a_num = a_enc['num'] if a_enc is not None else a['num']
+                                multiple_gen.append(f'{a_diac} / {a_enc_diac} ({a_gen}{a_num})')
+                                a_pos_.append(a['pos'].upper() if a is not None else a_enc['pos'].upper())
+
+                                suffixes = {}
+                                if suff_cat is not None:
+                                    for suff in db.suffix_cat_hash[suff_cat]:
+                                        suffixes.setdefault('', []).append(ar2bw(suff['diac']))
+                                else:
+                                    suffixes.setdefault('', []).append('CHECK')
+                                if suff_cat_enc is not None:
+                                    for suff in db.suffix_cat_hash[suff_cat_enc]:
+                                        if suff['enc0'] == '3ms_poss':
+                                            suffixes.setdefault('enc', []).append(ar2bw(suff['diac']))
+                                else:
+                                    suffixes.setdefault('enc', []).append('CHECK')
+                                
+                        row_cond_s[col] = ' // '.join(multiple_gen)
+                        row_cond_s[col_pos] = ' / '.join(a_pos_)
+                        for k, v in suffixes.items():
+                            paradigm_.setdefault(case, {}).setdefault(cond_t_, {}).setdefault(k, set()).add('/'.join(v))
         
-        table += [[c if c else '-' for c in row] for row in sorted(rows_.values(), key=lambda x: int(x[3]), reverse=True)]
+        for case, cond_t2suffixes in paradigm_.items():
+            table.append([cond_s if cond_s else '-', dialect, f'Paradigm (cas:{case})' if case in 'ang' else 'Paradigm', '', '**', 'X', '', '', '', '', '', '', '', ''])
+            for cond_t_, suffixes in cond_t2suffixes.items():
+                col = table[0].index(cond_t_)
+                cell = []
+                for k in ['', 'enc']:
+                    if len(suffixes[k]) > 1:
+                        cell.append('X' + '+{' + ', '.join(v if v else 'Ø' for v in suffixes[k]) + '}')
+                    elif len(suffixes[k]) == 1:
+                        cell_ = list(suffixes[k])[0]
+                        cell.append('X+' + (cell_ if cell_ else 'Ø'))
+                    else:
+                        cell.append('CHECK')
+                
+                table[-1][col] = ' / '.join(cell)
+        
+        if not paradigm_:
+            table.append([cond_s if cond_s else '-', dialect, f'Paradigm (cas:{case})' if case in 'ang' else 'Paradigm', '', '**', 'X', '', '', '', '', '', '', '', ''])
+
+        table += [[c if c else '-' for c in row]
+                    for row in sorted([row_case for row_ in rows_cond_s.values() for row_case in row_.values()],
+                                      key=lambda x: int(x[3]), reverse=True)]
     
     return table
 
@@ -94,7 +152,7 @@ def _get_pos2lemma2prob(db_lexprob, pos, cond_s2cond_t2feats2rows, pos2lemma2pro
     pos2lemma2prob_ = {}
     for pos_ in pos:
         pos2lemma2prob_[pos_] = get_lemma2prob(
-            pos, db_lexprob, unique_lemma_classes,
+            pos_, db_lexprob, {k: v for k, v in unique_lemma_classes.items() if k[2][2] == pos_},
             pos2lemma2prob[pos_] if pos2lemma2prob else None,
             strip_lex, bw2ar, DEFAULT_NORMALIZE_MAP)
     
