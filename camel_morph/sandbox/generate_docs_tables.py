@@ -16,8 +16,73 @@ except:
     from camel_morph import db_maker_utils
     from camel_morph.debugging.create_repr_lemmas_list import get_lemma2prob
 
+COND_T_CLASSES = ['MS', 'MD', 'MP', 'FS', 'FD', 'FP']
 
 def generate_table(lexicon, pos, dialect, pos2lemma2prob, db_lexprob):
+    cond_s2cond_t2feats2rows = _get_structured_lexicon_classes(lexicon)
+    
+    pos2lemma2prob_ = None
+    if pos2lemma2prob is not None or db_lexprob is not None:
+        pos2lemma2prob_ = _get_pos2lemma2prob(db_lexprob, pos, cond_s2cond_t2feats2rows, pos2lemma2prob)
+    
+    table = [['CLASS', 'VAR', 'Entry', 'Freq', 'Lemma', 'Stem', 'POS', 'MS', 'MD', 'MP', 'FS', 'FD', 'FP', 'Other lemmas']]
+    col_pos, col_MS = table[0].index('POS'), table[0].index('MS')
+    for cond_s, cond_t2feats2rows in cond_s2cond_t2feats2rows.items():
+        form_feats2rows_cond_s = {}
+        for cond_t, feats2rows in cond_t2feats2rows.items():
+            for feats, rows in feats2rows.items():
+                gen, num, pos_ = feats
+                if pos2lemma2prob_ is not None:
+                    best_index = (-np.array([pos2lemma2prob_[pos_][re.sub(r'[aiuo]', '', info['LEMMA'])]
+                                                for info in rows])).argsort()[:len(rows)][0]
+                else:
+                    best_index = 0
+
+                row = rows[best_index]
+                other_lemmas = [row['LEMMA'] for row in rows[:best_index] + rows[best_index + 1:]][:20]
+                lemma, stem = bw2ar(strip_lex(row['LEMMA'])), bw2ar(row['FORM'])
+
+                form_feat2case2info, cases = get_suffixes_across_form_feats(lemma, stem, gen, num, pos_, cond_t)
+                for case in cases:
+                    form_feats_ = []
+                    for case2info in form_feat2case2info:
+                        form_feats_.append(case2info[case]['suffixes'] if case2info[case] else '')
+                    
+                    row_form_feats = form_feats2rows_cond_s.setdefault(tuple(form_feats_), {}).setdefault(case, {}).setdefault(feats, 
+                        [cond_s, dialect, f'Example (cas:{case})' if case in 'nag' else 'Example', 
+                            str(len(rows)), lemma, stem, '', '', '', '', '', '', '', ' '.join(other_lemmas)])
+                    
+                    for col_form_feat, case2info in enumerate(form_feat2case2info):
+                        if case2info[case]:
+                            row_form_feats[col_MS + col_form_feat] = case2info[case]['content']
+                            row_form_feats[col_pos] = case2info[case]['pos']
+        
+        form_feats_cluster_map = get_form_feats_cluster_map(set(form_feats2rows_cond_s))
+        
+        form_feats2rows_cond_s_refactored = {}
+        for form_feats, case2rows in form_feats2rows_cond_s.items():
+            key = form_feats_cluster_map[form_feats] if form_feats in form_feats_cluster_map else form_feats
+            form_feats2rows_cond_s_refactored.setdefault(key, []).append(case2rows)
+
+        table_ = []
+        for form_feats, rows in form_feats2rows_cond_s_refactored.items():
+            table_.append([cond_s if cond_s else '-', dialect, 'Definition', '', '', '', '', '', '', '', '', '', '', ''])
+            table_.append([cond_s if cond_s else '-', dialect, 'Suffixes', '', '**', 'X', '', *form_feats, ''])
+            row2case = {}
+            for case2feats2row in rows:
+                for case, feats2row in case2feats2row.items():
+                    for feats, row in feats2row.items():
+                        row2case[tuple(row)] = case
+
+            for row, case in sorted(row2case.items(), key=lambda x: int(x[0][3]), reverse=True):
+                table_.append([c if c else '-' for c in row])
+
+        table += table_
+    
+    return table
+
+
+def _get_structured_lexicon_classes(lexicon):
     cond_s2cond_t2feats2rows = {}
     for _, row in lexicon.iterrows():
         cond_t, cond_s = '||'.join(sorted(row['COND-T'].split('||'))), row['COND-S']
@@ -28,103 +93,112 @@ def generate_table(lexicon, pos, dialect, pos2lemma2prob, db_lexprob):
         row_cond_s = {'LEMMA': row['LEMMA'], 'FORM': row['FORM']}
         cond_s2cond_t2feats2rows.setdefault(cond_s, {}).setdefault(cond_t, {}).setdefault((gen, num, pos_), []).append(row_cond_s)
     
-    pos2lemma2prob_ = _get_pos2lemma2prob(db_lexprob, pos, cond_s2cond_t2feats2rows, pos2lemma2prob)
-    
-    errors = []
-    table = [['CLASS', 'VAR', 'Entry', 'Freq', 'Lemma', 'Stem', 'POS', 'MS', 'MD', 'MP', 'FS', 'FD', 'FP', 'Other lemmas']]
-    for cond_s, cond_t2feats2rows in cond_s2cond_t2feats2rows.items():
-        table.append([cond_s if cond_s else '-', dialect, 'Definition', '', '', '', '', '', '', '', '', '', '', ''])
-        paradigm_ = {}
-        rows_cond_s = {}
-        for cond_t, feats2rows in cond_t2feats2rows.items():
-            for feats, rows in feats2rows.items():
-                gen, num, pos_ = feats
-                for cond_t_ in cond_t.split('||'):
-                    best_index = (-np.array([pos2lemma2prob_[pos_][re.sub(r'[aiuo]', '', info['LEMMA'])]
-                                        for info in rows])).argsort()[:len(rows)][0]
-                    row = rows[best_index]
-                    other_lemmas = [row['LEMMA'] for row in rows[:best_index] + rows[best_index + 1:]][:20]
-                    lemma, stem = bw2ar(strip_lex(row['LEMMA'])), bw2ar(row['FORM'])
-                    feats_, feats_enc_ = _process_and_generate_feats(gen, num, pos_, cond_t_)
-                    analyses, _ = generator.generate(lemma, feats_, debug=True)
-                    analyses_enc, _ = generator.generate(lemma, feats_enc_, debug=True)
-                    analyses = [a for a in analyses if a[0]['stem'] == stem]
-                    analyses_enc = [a for a in analyses_enc if a[0]['stem'] == stem]
+    return cond_s2cond_t2feats2rows
 
-                    if len(analyses) > len(analyses_enc):
-                        analyses_enc_ = []
-                        for _ in range(len(analyses) - len(analyses_enc)):
-                            analyses_enc_.append((None, None, None, None))
-                        analyses_enc = analyses_enc_
-                    elif len(analyses) < len(analyses_enc):
-                        analyses_ = []
-                        for _ in range(len(analyses_enc) - len(analyses)):
-                            analyses_.append((None, None, None, None))
-                        analyses = analyses_
-                        
-                    analyses = sorted(analyses, key=lambda a: a[0]['cas'] if a[0] is not None else 'z')
-                    analyses_enc = sorted(analyses_enc, key=lambda a: a[0]['cas'] if a[0] is not None else 'z')
+def get_suffixes_across_form_feats(lemma, stem, gen, num, pos_, cond_t):
+    form_feat2case2info = [{'n': '', 'a': '', 'g': '', 'u': ''} for _ in range(6)]
+    cases_seen = set()
+    for cond_t_ in cond_t.split('||'):
+        analyses, analyses_enc = _generate_analyses(lemma, stem, gen, num, pos_, cond_t_)
+        cases = set([a[0]['cas'] for a in analyses + analyses_enc if a[0] is not None])
+        cases_seen.update(cases)
+        cases = cases if cases else set(['-'])
 
-                    col, col_pos = table[0].index(cond_t_), table[0].index('POS')
-                    cases = set([a[0]['cas'] for a in analyses + analyses_enc if a[0] is not None])
-                    cases = cases if cases else set(['-'])
-                    suffixes = {}
-                    for case in cases:
-                        row_cond_s = rows_cond_s.setdefault(lemma, {}).setdefault(
-                            case, [cond_s, dialect, f'Example (cas:{case})' if case in 'ang' else 'Example', 
-                            str(len(rows)), lemma, stem, '', '', '', '', '', '', '', ' '.join(other_lemmas)])
-                        multiple_gen, a_pos_ = [], []
-                        for (a, _, _, suff_cat), (a_enc, _, _, suff_cat_enc) in zip(analyses, analyses_enc):
-                            if (a is None or a['cas'] == case) and (a_enc is None or a_enc['cas'] == case):
-                                a_diac = a['diac'] if a is not None else 'CHECK'
-                                a_enc_diac = a_enc['diac'] if a_enc is not None else 'CHECK'
-                                a_gen = a_enc['gen'] if a_enc is not None else a['gen']
-                                a_num = a_enc['num'] if a_enc is not None else a['num']
-                                multiple_gen.append(f'{a_diac} / {a_enc_diac} ({a_gen}{a_num})')
-                                a_pos_.append(a['pos'].upper() if a is not None else a_enc['pos'].upper())
-
-                                suffixes = {}
-                                if suff_cat is not None:
-                                    for suff in db.suffix_cat_hash[suff_cat]:
-                                        suffixes.setdefault('', []).append(ar2bw(suff['diac']))
-                                else:
-                                    suffixes.setdefault('', []).append('CHECK')
-                                if suff_cat_enc is not None:
-                                    for suff in db.suffix_cat_hash[suff_cat_enc]:
-                                        if suff['enc0'] == '3ms_poss':
-                                            suffixes.setdefault('enc', []).append(ar2bw(suff['diac']))
-                                else:
-                                    suffixes.setdefault('enc', []).append('CHECK')
-                                
-                        row_cond_s[col] = ' // '.join(multiple_gen)
-                        row_cond_s[col_pos] = ' / '.join(a_pos_)
-                        for k, v in suffixes.items():
-                            paradigm_.setdefault(case, {}).setdefault(cond_t_, {}).setdefault(k, set()).add('/'.join(v))
-        
-        for case, cond_t2suffixes in paradigm_.items():
-            table.append([cond_s if cond_s else '-', dialect, f'Paradigm (cas:{case})' if case in 'ang' else 'Paradigm', '', '**', 'X', '', '', '', '', '', '', '', ''])
-            for cond_t_, suffixes in cond_t2suffixes.items():
-                col = table[0].index(cond_t_)
-                cell = []
-                for k in ['', 'enc']:
-                    if len(suffixes[k]) > 1:
-                        cell.append('X' + '+{' + ', '.join(v if v else 'Ø' for v in suffixes[k]) + '}')
-                    elif len(suffixes[k]) == 1:
-                        cell_ = list(suffixes[k])[0]
-                        cell.append('X+' + (cell_ if cell_ else 'Ø'))
-                    else:
-                        cell.append('CHECK')
+        col_form_feat = COND_T_CLASSES.index(cond_t_)
+        suffix, suffix_enc = {'diac': 'CHECK-ZERO'}, {'diac': 'CHECK-ZERO'}
+        for case in cases:
+            multiple_gen, a_pos_ = [], []
+            for (a, _, _, suff_cat), (a_enc, _, _, suff_cat_enc) in zip(analyses, analyses_enc):
+                if a is not None and a_enc is not None:
+                    assert a['cas'] == a_enc['cas'] and a['gen'] == a_enc['gen'] and \
+                        a['num'] == a_enc['num'] and a['pos'] == a_enc['pos']
                 
-                table[-1][col] = ' / '.join(cell)
-        
-        if not paradigm_:
-            table.append([cond_s if cond_s else '-', dialect, f'Paradigm (cas:{case})' if case in 'ang' else 'Paradigm', '', '**', 'X', '', '', '', '', '', '', '', ''])
+                if not ((a is None or a['cas'] == case) and (a_enc is None or a_enc['cas'] == case)):
+                    continue
+                a_diac = a['diac'] if a is not None else 'CHECK'
+                a_enc_diac = a_enc['diac'] if a_enc is not None else 'CHECK'
+                a_gen = a_enc['gen'] if a_enc is not None else a['gen']
+                a_num = a_enc['num'] if a_enc is not None else a['num']
+                multiple_gen.append(f'{a_diac} / {a_enc_diac} ({a_gen}{a_num})')
+                a_pos_.append(a['pos'].upper() if a is not None else a_enc['pos'].upper())
 
-        table += [[c if c else '-' for c in row]
-                    for row in sorted([row_case for row_ in rows_cond_s.values() for row_case in row_.values()],
-                                      key=lambda x: int(x[3]), reverse=True)]
+                if suff_cat is not None:
+                    suffixes = db.suffix_cat_hash[suff_cat]
+                    if len(suffixes) == 1:
+                        suffix = suffixes[0]
+                    else:
+                        suffix = {'diac': 'CHECK-GT-1'}
+                else:
+                    suffix = {'diac': 'CHECK-ZERO'}
+                
+                if suff_cat_enc is not None:
+                    suffixes_enc = [suff for suff in db.suffix_cat_hash[suff_cat_enc]
+                                    if suff['enc0'] == '3ms_poss']
+                    if len(suffixes_enc) == 1:
+                        suffix_enc = suffixes_enc[0]
+                    else:
+                        suffix_enc = {'diac': 'CHECK-GT-1'}
+                else:
+                    suffix_enc = {'diac': 'CHECK-ZERO'}
+
+                break
+            
+            form_feat2case2info[col_form_feat][case] = {
+                'suffixes': ' / '.join(f"X+{ar2bw(suff) if suff else 'Ø'}" for suff in (suffix['diac'], suffix_enc['diac'])),
+                'content':' // '.join(multiple_gen),
+                'pos': ' / '.join(a_pos_)
+            }
     
-    return table
+    return form_feat2case2info, cases_seen
+
+def _generate_analyses(lemma, stem, gen, num, pos_, cond_t_):
+    feats_, feats_enc_ = _process_and_generate_feats(gen, num, pos_, cond_t_)
+    analyses, _ = generator.generate(lemma, feats_, debug=True)
+    analyses_enc, _ = generator.generate(lemma, feats_enc_, debug=True)
+    analyses = [a for a in analyses if a[0]['stem'] == stem]
+    analyses_enc = [a for a in analyses_enc if a[0]['stem'] == stem]
+
+    if len(analyses) > len(analyses_enc):
+        analyses_enc_ = []
+        for _ in range(len(analyses) - len(analyses_enc)):
+            analyses_enc_.append((None, None, None, None))
+        analyses_enc = analyses_enc_
+    elif len(analyses) < len(analyses_enc):
+        analyses_ = []
+        for _ in range(len(analyses_enc) - len(analyses)):
+            analyses_.append((None, None, None, None))
+        analyses = analyses_
+        
+    analyses = sorted(analyses, key=lambda a: a[0]['cas'] if a[0] is not None else 'z')
+    analyses_enc = sorted(analyses_enc, key=lambda a: a[0]['cas'] if a[0] is not None else 'z')
+
+    return analyses, analyses_enc
+
+def get_form_feats_cluster_map(form_feats_set):
+    slots2form_feats = {}
+    for form_feats in form_feats_set:
+        slots2form_feats.setdefault(sum(1 for suff in form_feats if suff), []).append(form_feats)
+    
+    clusters = {}
+    already_clustered = set()
+    for i in reversed(range(6)):
+        i += 1
+        if not slots2form_feats.get(i):
+            continue
+        for form_feats_len_i in slots2form_feats[i]:
+            already_clustered.add(form_feats_len_i)
+            remaining_form_feats = form_feats_set - already_clustered
+            for remaining_form_feats_ in remaining_form_feats:
+                if all(suff == form_feats_len_i[j] for j, suff in enumerate(remaining_form_feats_) if suff):
+                    clusters.setdefault(form_feats_len_i, []).append(remaining_form_feats_)
+                    already_clustered.add(remaining_form_feats_)
+    
+    cluster_map = {}
+    for form_feats, form_feats_mapped in clusters.items():
+        for form_feats_ in form_feats_mapped:
+            cluster_map[form_feats_] = form_feats
+    
+    return cluster_map
 
 def _process_and_generate_feats(gen, num, pos, cond_t):
     feats_ = {'pos': pos, 'stt': 'i'}
@@ -179,6 +253,8 @@ if __name__ == "__main__":
                         type=str, help="Custom lexical probabilities file which contains two columns (lemma, frequency).")
     parser.add_argument("-pos", default='',
                         type=str, help="POS of the lemmas.")
+    parser.add_argument("-most_prob_lemma", default=False, action='store_true',
+                        help="Whether or not to use the most probable lemma.")
     parser.add_argument("-pos_type", default='', choices=['verbal', 'nominal', ''],
                         type=str, help="POS type of the lemmas.")
     parser.add_argument("-camel_tools", default='local', choices=['local', 'official'],
@@ -230,29 +306,30 @@ if __name__ == "__main__":
         pos = list(set([x[0].split(':')[1] for x in lexicon['FEAT'].str.extract(r'(pos:\S+)').values.tolist()]))
 
     pos2lemma2prob, db_lexprob = None, None
-    if config_local.get('lexprob'):
-        with open(config_local['lexprob']) as f:
-            freq_list_raw = f.readlines()
-            if len(freq_list_raw[0].split('\t')) == 2:
-                pos2lemma2prob = dict(map(lambda x: (x[0], int(x[1])),
-                                    [line.strip().split('\t') for line in freq_list_raw]))
-                pos2lemma2prob = {'verb': pos2lemma2prob}
-            elif len(freq_list_raw[0].split('\t')) == 3:
-                pos2lemma2prob = {}
-                for line in freq_list_raw:
-                    line = line.strip().split('\t')
-                    lemmas = pos2lemma2prob.setdefault(line[1], {})
-                    lemmas[line[0]] = int(line[2])
-            else:
-                raise NotImplementedError
-        
-        for pos_ in pos:
-            total = sum(pos2lemma2prob[pos_].values())
-            pos2lemma2prob[pos_] = {lemma: freq / total for lemma, freq in pos2lemma2prob[pos_].items()}
-    elif args.db:
-        db_lexprob = MorphologyDB(args.db)
-    else:
-        db_lexprob = MorphologyDB.builtin_db()
+    if args.most_prob_lemma:
+        if config_local.get('lexprob'):
+            with open(config_local['lexprob']) as f:
+                freq_list_raw = f.readlines()
+                if len(freq_list_raw[0].split('\t')) == 2:
+                    pos2lemma2prob = dict(map(lambda x: (x[0], int(x[1])),
+                                        [line.strip().split('\t') for line in freq_list_raw]))
+                    pos2lemma2prob = {'verb': pos2lemma2prob}
+                elif len(freq_list_raw[0].split('\t')) == 3:
+                    pos2lemma2prob = {}
+                    for line in freq_list_raw:
+                        line = line.strip().split('\t')
+                        lemmas = pos2lemma2prob.setdefault(line[1], {})
+                        lemmas[line[0]] = int(line[2])
+                else:
+                    raise NotImplementedError
+            
+            for pos_ in pos:
+                total = sum(pos2lemma2prob[pos_].values())
+                pos2lemma2prob[pos_] = {lemma: freq / total for lemma, freq in pos2lemma2prob[pos_].items()}
+        elif args.db:
+            db_lexprob = MorphologyDB(args.db)
+        else:
+            db_lexprob = MorphologyDB.builtin_db()
 
     table = generate_table(lexicon, pos, config_local['dialect'].upper(), pos2lemma2prob, db_lexprob)
 
