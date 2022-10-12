@@ -29,7 +29,6 @@ import numpy as np
 import re
 import sys
 
-from paradigm_debugging import AnnotationBank
 try:
     from .. import db_maker_utils
 except:
@@ -37,6 +36,7 @@ except:
     package_path = '/'.join(file_path[:len(file_path) - 1 - file_path[::-1].index('camel_morph')])
     sys.path.insert(0, package_path)
     from camel_morph import db_maker_utils
+    from camel_morph.debugging.paradigm_debugging import AnnotationBank
 
 nominals = ["ABBREV", "ADJ", "ADJ_COMP", "ADJ_NUM", "ADV",
             "ADV_INTERROG", "ADV_REL",
@@ -118,20 +118,20 @@ def get_extended_lemmas(lexicon, extended_lemma_keys):
     lexicon.apply(get_info, axis=1)
     
     return lemmas_uniq, lemmas_stripped_uniq
-    
 
-def get_highest_prob_lemmas(pos, uniq_lemma_classes, lemmas_stripped_uniq, bank, lemma2prob=None, db=None):
+
+def get_lemma2prob(pos, db, uniq_lemma_classes, lemma2prob, strip_lex, bw2ar, normalize_map):
     if lemma2prob is None:
         lemma2prob = {}
         for lemmas_cond_sig, lemmas_info in uniq_lemma_classes.items():
             for info in lemmas_info['lemmas']:
                 lemma_stripped = re.sub(r'[aiuo]', '', strip_lex(info['lemma']))
                 lemma_ar = bw2ar(lemma_stripped)
-                normalized_lemma_ar = DEFAULT_NORMALIZE_MAP(lemma_ar)
+                normalized_lemma_ar = normalize_map(lemma_ar)
                 matches = db.stem_hash.get(normalized_lemma_ar, [])
                 db_entries = [db_entry[1] for db_entry in matches]
                 entries_filtered = [e  for e in db_entries
-                    if strip_lex(e['lex']) == lemma_ar and e['pos'] == pos]
+                    if strip_lex(re.sub(r'[َُِْ]', '', e['lex'])) == lemma_ar and e['pos'] == pos]
                 if len(entries_filtered) >= 1:
                     lemma2prob[lemma_stripped] = max([float(a['pos_lex_logprob']) for a in db_entries])
                 else:
@@ -151,7 +151,17 @@ def get_highest_prob_lemmas(pos, uniq_lemma_classes, lemmas_stripped_uniq, bank,
                 lemma_stripped = re.sub(r'[aiuo]', '', strip_lex(info['lemma']))
                 if lemma_stripped not in lemma2prob:
                     lemma2prob[lemma_stripped] = 0
+    
+    return lemma2prob
 
+def get_highest_prob_lemmas(pos,
+                            uniq_lemma_classes,
+                            lemmas_stripped_uniq=None,
+                            bank=None,
+                            lemma2prob=None,
+                            db=None):
+    lemma2prob = get_lemma2prob(pos, db, uniq_lemma_classes, lemma2prob, strip_lex, bw2ar, DEFAULT_NORMALIZE_MAP)
+    
     if bank is not None:
         old_lemmas = set([strip_lex(entry[1]) for entry in bank._bank])
 
@@ -175,7 +185,8 @@ def get_highest_prob_lemmas(pos, uniq_lemma_classes, lemmas_stripped_uniq, bank,
             lemma_stripped = strip_lex(lemma)
             if not ('-' in lemma and
                     len(lemmas_stripped_uniq[lemma_stripped]) > 2 and
-                    all([stem['cond_t'] == '' for stem in lemmas_stripped_uniq[lemma_stripped]])):
+                    all([stem['cond_t'] == '' for stem in lemmas_stripped_uniq[lemma_stripped]])) or \
+                lemmas_stripped_uniq is None:
                 break
         
         if not done:
@@ -254,6 +265,8 @@ if __name__ == "__main__":
         pos = 'verb'
     elif pos_type == 'nominal':
         pos = args.pos if args.pos else config_local.get('pos')
+    elif pos_type == 'other':
+        pos = args.pos
     if pos:
         lexicon = lexicon[lexicon['FEAT'].str.contains(f'pos:{pos}\\b', regex=True)]
 
@@ -285,6 +298,7 @@ if __name__ == "__main__":
                     lemmas[line[0]] = int(line[2])
             else:
                 raise NotImplementedError
+            pos2lemma2prob[''] = {'': 1}
             total = sum(pos2lemma2prob[pos].values())
             lemma2prob = {lemma: freq / total for lemma, freq in pos2lemma2prob[pos].items()}
     elif args.db:

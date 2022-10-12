@@ -280,6 +280,11 @@ if __name__ == "__main__":
     ar2bw = CharMapper.builtin_mapper('ar2bw')
     bw2ar = CharMapper.builtin_mapper('bw2ar')
 
+    output_dir = args.output_dir if args.output_dir \
+                    else os.path.join(config_global['debugging'], config_global['docs_tables_dir'])
+    output_dir = os.path.join(output_dir, f"camel-morph-{config_local['dialect']}")
+    os.makedirs(output_dir, exist_ok=True)
+
     db_name = config_local['db']
     db_dir = config_global['db_dir']
     db_dir = os.path.join(db_dir, f"camel-morph-{config_local['dialect']}")
@@ -331,9 +336,11 @@ if __name__ == "__main__":
         else:
             db_lexprob = MorphologyDB.builtin_db()
 
-    table = generate_table(lexicon, pos, config_local['dialect'].upper(), pos2lemma2prob, db_lexprob)
+    outputs = generate_table(lexicon, pos, config_local['dialect'].upper(), pos2lemma2prob, db_lexprob)
 
-    with open('/Users/chriscay/Library/Mobile Documents/com~apple~CloudDocs/NYUAD/camel_morph/sandbox_files/docs_table.tsv', 'w') as f:
-        for row in table:
-            print(*row, sep='\t', file=f)
+    output_name = args.output_name if args.output_name else config_local['docs_debugging']['docs_tables']
+    output_path = os.path.join(output_dir, output_name)
+    with open(output_path, 'w') as f:
+        for output in outputs:
+            print(*output, sep='\t', file=f)
 

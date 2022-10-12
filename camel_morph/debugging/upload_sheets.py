@@ -34,7 +34,7 @@ from numpy import nan
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-input_dir", default='tables_dir', choices=['banks_dir', 'paradigm_debugging_dir', 'tables_dir'],
+    parser.add_argument("-input_dir", default='tables_dir', choices=['banks_dir', 'paradigm_debugging_dir', 'tables_dir', 'docs_banks_dir', 'docs_debugging_dir', 'docs_tables_dir'],
                         type=str, help="Directory in which local sheet is contained (in CSV format).")
     parser.add_argument("-dir", default='',
                         type=str, help="Directory in which local sheet is contained (in CSV format).")
@@ -62,19 +62,31 @@ if __name__ == "__main__":
         config_local = config['local'][args.config_name]
     config_global = config['global']
 
-    spreadsheet_name = args.spreadsheet_name if args.spreadsheet_name else config_local['debugging']['debugging_spreadsheet']
-    gsheet_name = args.gsheet_name if args.gsheet_name else config_local['debugging']['feats'][args.feats]['debugging_sheet']
-    
+    if 'debugging' in config_local:
+        spreadsheet_name = args.spreadsheet_name if args.spreadsheet_name else config_local['debugging']['debugging_spreadsheet']
+        gsheet_name = args.gsheet_name if args.gsheet_name else config_local['debugging']['feats'][args.feats]['debugging_sheet']
+    elif 'docs_debugging' in config_local:
+        spreadsheet_name = args.spreadsheet_name if args.spreadsheet_name else config_local['docs_debugging']['debugging_spreadsheet']
+        gsheet_name = args.gsheet_name if args.gsheet_name else config_local['docs_debugging']['debugging_sheet']
+
     if args.file_name:
         file_name = args.file_name
     elif args.input_dir == 'banks_dir':
         file_name = config_local['debugging']['feats'][args.feats]['bank']
-        spreadsheet_name = args.spreadsheet_name if args.spreadsheet_name else config_global['banks_spreadsheet']
         gsheet_name = args.gsheet_name if args.gsheet_name else config_local['debugging']['feats'][args.feats]['bank'].split('.')[0]
+        spreadsheet_name = args.spreadsheet_name if args.spreadsheet_name else config_global['banks_spreadsheet']
+    elif args.input_dir == 'docs_banks_dir':
+        file_name = config_local['docs_debugging']['bank']
+        gsheet_name = args.gsheet_name if args.gsheet_name else config_local['docs_debugging']['bank'].split('.')[0]
+        spreadsheet_name = args.spreadsheet_name if args.spreadsheet_name else config_global['banks_spreadsheet']
     elif args.input_dir == 'paradigm_debugging_dir':
         file_name = config_local['debugging']['feats'][args.feats]['paradigm_debugging']
+    elif args.input_dir == 'docs_debugging_dir':
+        file_name = config_local['docs_debugging']['output_name']
     elif args.input_dir == 'tables_dir':
         file_name = config_local['debugging']['feats'][args.feats]['conj_tables']
+    elif args.input_dir == 'docs_tables_dir':
+        file_name = config_local['docs_debugging']['docs_tables']
     
     input_dir = args.dir if args.dir \
         else os.path.join(config_global['debugging'], config_global[args.input_dir], f"camel-morph-{config_local['dialect']}")
@@ -143,7 +155,7 @@ if __name__ == "__main__":
         rules.append(rule2)
         rules.save()
 
-        worksheet.freeze(rows=1, cols=10)
+        worksheet.freeze(rows=1, cols=11)
 
     else:
         worksheet.freeze(rows=1)

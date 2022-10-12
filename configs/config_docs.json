@@ -1,0 +1,85 @@
+{
+    "global": {
+        "data_dir": "data",
+        "specs": {
+            "spreadsheet": "camel-morph-common",
+            "sheets": [
+                "About",
+                "Header"
+            ]
+        },
+        "db_dir": "databases",
+        "camel_tools": "/Users/chriscay/Library/Mobile Documents/com~apple~CloudDocs/NYUAD/camel_tools",
+        "service_account": "/Users/chriscay/.config/gspread/service_account.json",
+        "debugging": "debugging_output",
+        "docs_debugging_dir": "docs_debugging",
+        "docs_banks_dir": "banks_docs",
+        "docs_tables_dir": "tables_docs",
+        "banks_spreadsheet": "Paradigm-Banks"
+    },
+    "local": {
+        "nominals_egy_docs": {
+            "split_or": false,
+            "dialect": "egy",
+            "clean_conditions": false,
+            "pruning": false,
+            "specs": {
+                "spreadsheet": "camel-morph-egy-nom-other",
+                "sheets": {
+                    "order": "EGY-Nom-ORDER",
+                    "morph": "EGY-Nom-MORPH",
+                    "postregex": "PostRegex"
+                },
+                "exclude": [
+                    "RED"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-egy-nom-other",
+                "sheets": [
+                    "EGY-Nom-LEX"
+                ]
+            },
+            "docs_debugging": {
+                "bank": "EGY-Docs-Bank.tsv",
+                "output_name": "docs_debug_egy_v1.0.tsv",
+                "debugging_spreadsheet": "camel-morph-common",
+                "debugging_sheet": "EGY-Documentation-Nom-Auto",
+                "docs_tables": "docs_tables_egy_v1.0.tsv"
+            },
+            "db": "XYZ_egy_nom_docs_red.db",
+            "lexprob": "misc_files/egy_lexprob.tsv",
+            "pos_type": "nominal"
+        },
+        "nominals_msa_docs": {
+            "split_or": false,
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": {
+                    "order": "MSA-Nom-ORDER",
+                    "morph": "MSA-Nom-MORPH"
+                },
+                "exclude": [
+                    "RED"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": [
+                    "MSA-Nom-LEX"
+                ]
+            },
+            "docs_debugging": {
+                "bank": "",
+                "output_name": "",
+                "debugging_spreadsheet": "",
+                "debugging_sheet": "",
+                "docs_tables": ""
+            },
+            "dialect": "msa",
+            "db": "XYZ_msa_nom_docs_red.db",
+            "pos_type": "nominal"
+        }
+    }
+}
