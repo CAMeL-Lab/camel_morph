@@ -18,6 +18,13 @@ except:
 
 COND_T_CLASSES = ['MS', 'MD', 'MP', 'FS', 'FD', 'FP']
 
+def generate_row(cond_s='', variant='', entry_type='', freq='', lemma='',
+                 lemma_bw='', stem='', pos='', ms='', md='', mp='', fs='',
+                 fd='', fp='', other_lemmas='', index=''):
+    return [index, cond_s, variant, entry_type, freq, lemma, lemma_bw, stem,
+            pos, ms, md, mp, fs, fd, fp, other_lemmas]
+
+
 def generate_table(lexicon, pos, dialect, pos2lemma2prob, db_lexprob):
     cond_s2cond_t2feats2rows = _get_structured_lexicon_classes(lexicon)
     
@@ -25,7 +32,9 @@ def generate_table(lexicon, pos, dialect, pos2lemma2prob, db_lexprob):
     if pos2lemma2prob is not None or db_lexprob is not None:
         pos2lemma2prob_ = _get_pos2lemma2prob(db_lexprob, pos, cond_s2cond_t2feats2rows, pos2lemma2prob)
     
-    table = [['CLASS', 'VAR', 'Entry', 'Freq', 'Lemma', 'Stem', 'POS', 'MS', 'MD', 'MP', 'FS', 'FD', 'FP', 'Other lemmas']]
+    table = [generate_row(cond_s='CLASS', variant='VAR', entry_type='Entry', freq='Freq', lemma='Lemma',
+                          lemma_bw='Lemma_bw', stem='Stem', pos='POS', ms='MS', md='MD', mp='MP', fs='FS',
+                          fd='FD', fp='FP', other_lemmas='Other lemmas', index='Index')]
     col_pos, col_MS = table[0].index('POS'), table[0].index('MS')
     for cond_s, cond_t2feats2rows in cond_s2cond_t2feats2rows.items():
         form_feats2rows_cond_s = {}
@@ -48,9 +57,14 @@ def generate_table(lexicon, pos, dialect, pos2lemma2prob, db_lexprob):
                     for case2info in form_feat2case2info:
                         form_feats_.append(case2info[case]['suffixes'] if case2info[case] else '')
                     
-                    row_form_feats = form_feats2rows_cond_s.setdefault(tuple(form_feats_), {}).setdefault(case, {}).setdefault(feats, 
-                        [cond_s, dialect, f'Example (cas:{case})' if case in 'nag' else 'Example', 
-                            str(len(rows)), lemma, stem, '', '', '', '', '', '', '', ' '.join(other_lemmas)])
+                    row_form_feats = form_feats2rows_cond_s.setdefault(
+                        tuple(form_feats_), {}).setdefault(
+                            case, {}).setdefault(
+                                feats, generate_row(
+                                    cond_s=cond_s, variant=dialect,
+                                    entry_type=f'Example (cas:{case})' if case in 'nag' else 'Example', 
+                                    freq=str(len(rows)), lemma=lemma, lemma_bw=ar2bw(lemma), stem=stem,
+                                    other_lemmas=' '.join(other_lemmas)))
                     
                     for col_form_feat, case2info in enumerate(form_feat2case2info):
                         if case2info[case]:
@@ -66,8 +80,10 @@ def generate_table(lexicon, pos, dialect, pos2lemma2prob, db_lexprob):
 
         table_ = []
         for form_feats, rows in form_feats2rows_cond_s_refactored.items():
-            table_.append([cond_s if cond_s else '-', dialect, 'Definition', '', '', '', '', '', '', '', '', '', '', ''])
-            table_.append([cond_s if cond_s else '-', dialect, 'Suffixes', '', '**', 'X', '', *form_feats, ''])
+            table_.append(generate_row(cond_s=cond_s if cond_s else '-', variant=dialect, entry_type='Definition'))
+            table_.append(generate_row(cond_s=cond_s if cond_s else '-', variant=dialect, entry_type='Suffixes',
+                                       lemma='**', lemma_bw='**', stem='X', ms=form_feats[0], md=form_feats[1],
+                                       mp=form_feats[2], fs=form_feats[3], fd=form_feats[4], fp=form_feats[5]))
             row2case = {}
             for case2feats2row in rows:
                 for case, feats2row in case2feats2row.items():
@@ -78,6 +94,10 @@ def generate_table(lexicon, pos, dialect, pos2lemma2prob, db_lexprob):
                 table_.append([c if c else '-' for c in row])
 
         table += table_
+    
+    index_col = table[0].index('Index')
+    for i, row in enumerate(table):
+        row[index_col] = str(i)
     
     return table
 
