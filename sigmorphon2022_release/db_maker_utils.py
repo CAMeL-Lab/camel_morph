@@ -232,30 +232,46 @@ def process_morph_specs(MORPH:pd.DataFrame, exclusions: List[str]) -> pd.DataFra
     the behavior only matches the intended one provided conditions across the rows of a
     morpheme are written in a way which is consistent to and aware of all the below definitions:
     Example (x1, x2, ... are conditions):
-        COND-T                  COND-F
-        A       B       C
-    1   x1      x2      x3      _
-    2   x1      x2      else    x3
-    3   x4      else    else    _
-    4   else    x5      else    x1 x4
-    5   else    else    else    x1 x4 x5
+        CLASS   FUNC    COND-T                  COND-F
+        X       Y       A       B       C
+    1   CLS1    F1      x1      x2      x3      (x4; from default else of x1)
+    2   CLS1    F1      x1      x2      else    x3 (x4; from default else of x1)
+    3   CLS1    F1      x4      else    else    (x1; from default else of x4)
+    4   CLS1    F1      else    x5      else    x1 x4
+    5   CLS1    F1      else    else    else    x1 x4 x5
     
-    The above table represents the scope of a dummy morpheme in the MORPH sheet. The rows are actual
-    rows in the sheet, while the columns are not actual sheet columns but the conditions are written
-    in such a way as to emulate this table structure. To understand how the `else` markers
-    populates the COND-F column, we define the Selector Range (SR). It is the horizontal range
-    which comes to the left of any cell, e.g., the SR of B2 is A2:2, and the SR of C4 is A4:B4.
-    Formally, the SR of Gn is An:Fn where A is the first col, and F is the col right before G.
+    The above table represents the scope of a dummy morpheme in the MORPH sheet. Rows 1 to 5 belong to
+    the same morpheme because they have the same CLASS and FUNC values. The rows are actual
+    rows in the sheet. Columns X and Y are actual columns in the sheet, whereas A, B, and C are not
+    actual sheet columns; the conditions in the COND-T column are written in such a way as to emulate
+    a table structure. To understand how the `else` markers populates the COND-F column, we define the
+    Selector Range (SR). It is the horizontal range which comes to the left of any cell, e.g., the SR
+    of B2 is X2:A2 (i.e., CLS1 F1 x1), and the SR of C4 is X4:B4. Formally, the SR of Dn is Xn:Cn where
+    X is the first col to the left, and going right, C is the col just before D.
     Also, we define the Range of Action (RoA) of an `else` marker as a certain subset of the same column
-    it lies in. The cells (conditions) in that subset will appear in the COND-F of the allomorph whose COND-T
+    it lies in. The cells (conditions) in that subset will appear in the COND-F of the allomorph (row) whose COND-T
     contains that `else`. The subset is chosen by picking all the conditions which have the same SR as the `else`
     (which means that they are also in the same column as the `else`). For example, the RoA of the `else` in C2
-    is C1:2, because the only cell that has the same SR as the C2 is C1. The `else`s in A4 and A5 are not
-    restricted by any range since they are in the left-most column, so their RoA is the whole col A. The `else` in B3
-    has no effect (RoA is null) since no other cell has the same SR (similarly for C3, C4, and C5).
-    Formally, the RoA of an `else` in Gn is all cells which have SR An:Fn.
+    is C1:2, because the only cell that has the same SR as the C2 is C1. All cells in columns have the same SR
+    to their left so their RoA is the whole col A. The `else` in B3 has no effect (RoA is null) since no other
+    cell has the same SR (similarly for C3, C4, and C5). Formally, the RoA of an `else` in Dn is all cells
+    which have SR equal to Xn:Cn.
     Therefore, all conditions (excluding `else`) that lie in the RoA of an `else` will go to COND-F of the
     row the `else` is in.
+
+    Additionally, each condition carries an inherent "default `else`", meaning that all conditions (excluding
+    `else` and itself) that lie in the RoA of that condition will go to COND-F of the row that that condition
+    is in. For example, see rows 1 to 3 in which the COND-F holds x4 or x1, which are the direct result of
+    this "default else".
+    
+    Note columns A, B, ... within COND-T represent a conjunction of the terms in it. For example, row 1 in COND-T
+    is interpreted as x1 AND x2 AND x3. Also note that conditions (x1, x2, ...) can be be one of three things:
+        1. a single condition (x1).
+        2. a disjunction of conditions, e.g., x1||x11||..., with || standing for OR.
+        3. a negation of either 1. or 2., e.g., !x1 or !x1||x11||..., represented in the aforementioned way.
+           Any negation is taken by default to COND-F, e.g., if we have !x1 in COND-T, it becomes x1 in COND-F.
+           Note that a negation of a disjunction is equivalent to a conjunction of the negations by De Morgan's law.
+           So within COND-T !x1||x11||... can be interpreted as !x1 !x11 ...
 
     Args:
         MORPH (pd.DataFrame): morph sheet dataframe
