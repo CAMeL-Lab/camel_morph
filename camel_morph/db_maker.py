@@ -142,7 +142,8 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
     def construct_process(lexicon: pd.DataFrame,
                           order: pd.DataFrame,
                           cmplx_stem_memoize: Dict[str, str],
-                          stems_section_title: str):
+                          stems_section_title: str,
+                          backoff:bool=False):
         """ Process which is ran for each ORDER line, in which plausible complex morphemes
         are generated and then tested (validated) against each other across the prefix/stem/suffix
         boundary. Complex prefixes/stems/suffixes which are compatible with each other are added as
@@ -167,7 +168,7 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
         
         # Complex morphemes validation or word generation (across the prefix/stem/suffix boundary)
         db_ = cross_cmplx_morph_validation(
-            cmplx_morph_classes, order['CLASS'].lower(), short_cat_maps, defaults, stems_section_title, cat2id)
+            cmplx_morph_classes, order['CLASS'].lower(), short_cat_maps, defaults, stems_section_title, cat2id, backoff)
         for section, contents in db_.items():
             # if 'BACKOFF' in stems_section_title and section != stems_section_title:
             #     assert set(contents) <= set(db[section])
@@ -177,41 +178,45 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
     # to each other in the ORDER file, and since the stem part of the order usually stays
     # the same at the aspect level, then it makes sense to avoid recomputing all the combinations
     # each time and same them in the memo. dict.
-    print('Concrete lexicon')
-    pbar = tqdm(total=len(list(ORDER.iterrows())))
-    cmplx_stem_memoize = {}
-    order_stem_prev = ''
-    for _, order in ORDER.iterrows():
-        pbar.set_description(order['SUFFIX-SHORT'])
-        if order['STEM'] != order_stem_prev:
-            cmplx_stem_memoize = {}
-            order_stem_prev = order['STEM']
-        construct_process(LEXICON, order, cmplx_stem_memoize, stems_section_title='OUT:###STEMS###')
-        pbar.update(1)
-    pbar.close()
+    if LEXICON is not None:
+        print('Concrete lexicon')
+        pbar = tqdm(total=len(list(ORDER.iterrows())))
+        cmplx_stem_memoize = {}
+        order_stem_prev = ''
+        for _, order in ORDER.iterrows():
+            pbar.set_description(order['SUFFIX-SHORT'])
+            if order['STEM'] != order_stem_prev:
+                cmplx_stem_memoize = {}
+                order_stem_prev = order['STEM']
+            construct_process(LEXICON, order, cmplx_stem_memoize,
+                            stems_section_title='OUT:###STEMS###')
+            pbar.update(1)
+        pbar.close()
     #FIXME: Currently these backoff entries do not interact with the other morphemes.
     # They are just inserted here for backward compatibility with the Analyzer engine.
     if BACKOFF is not None:
-        ORDER_ = set([re.search(r'\[STEM(?:-[^\]]+)?\]', cmplx_morph_seq).group()
-                        for cmplx_morph_seq in ORDER['STEM'].values.tolist()])
-        for morph_class in ORDER_:
-            stems = BACKOFF[BACKOFF.CLASS == morph_class]
-            for _, row in stems.iterrows():
-                morph_entry = {}
-                row.to_dict()
-                morph_entry['match'] = 'NOAN'
-                morph_entry['cat'] = 'X00000'
-                morph_entry['analysis'] = (f"diac:{row['FORM']} bw:{row['BW']} lex:{row['LEMMA']} "
-                                           f"root:{row['ROOT']} gloss:{row['GLOSS']} {row['FEAT']} ")
-                db['OUT:###STEMS###'].setdefault('\t'.join(morph_entry.values()), 0)
-                db['OUT:###STEMS###']['\t'.join(morph_entry.values())] += 1
+        print('Backoff lexicon')
+        pbar = tqdm(total=len(list(ORDER.iterrows())))
+        cmplx_stem_memoize = {}
+        order_stem_prev = ''
+        for _, order in ORDER.iterrows():
+            pbar.set_description(order['SUFFIX-SHORT'])
+            if order['STEM'] != order_stem_prev:
+                cmplx_stem_memoize = {}
+                order_stem_prev = order['STEM']
+            construct_process(BACKOFF, order, cmplx_stem_memoize,
+                            stems_section_title='OUT:###STEMS###', backoff=True)
+            pbar.update(1)
+        pbar.close()
+        
     
     if SMART_BACKOFF is not None:
         print('Smart Backoff lexicon')
         pbar = tqdm(total=len(list(ORDER.iterrows())))
         for _, order in ORDER.iterrows():
             pbar.set_description(order['SUFFIX-SHORT'])
-            construct_process(SMART_BACKOFF, order, {}, stems_section_title='OUT:###SMARTBACKOFF###')
+            construct_process(SMART_BACKOFF, order, {},
+                              stems_section_title='OUT:###SMARTBACKOFF###')
             pbar.update(1)
         pbar.close()
 
@@ -222,7 +227,8 @@ def cross_cmplx_morph_validation(cmplx_morph_classes: Dict,
                                  short_cat_maps: Optional[Dict]=None,
                                  defaults: Dict=None,
                                  stems_section_title: str='OUT:###STEMS###',
-                                 cat2id:Optional[Dict]=None) -> Dict:
+                                 cat2id:Optional[Dict]=None,
+                                 backoff:bool=False) -> Dict:
     """Method which takes in classes of complex morphemes, and validates them against each other
     in a three-loop fashion, one for each of prefix, stem, and suffix. Instead of going over all
     individual combinations, we loop over "classes" of them (since all combinations belonging to
@@ -239,6 +245,8 @@ def cross_cmplx_morph_validation(cmplx_morph_classes: Dict,
         SUFFIX-SHORT). Defaults to None.
         defaults (Dict, optional): default values of features for DB (from Header). Defaults to None.
         stems_section_title (_type_, optional): title of the section that will appear in the DB. Defaults to 'OUT:###STEMS###'.
+        backoff (bool): whether or not to add the correct category or just the same category
+        to all stem entries. Defaults to False.
 
     Returns:
         Dict: Database in progress
@@ -302,7 +310,7 @@ def cross_cmplx_morph_validation(cmplx_morph_classes: Dict,
                                               db_section='OUT:###SUFFIXES###')
                     
                     for update_info in [update_info_stem, update_info_prefix, update_info_suffix]:
-                        update_db(db, update_info, cat_memoize, short_cat_maps, defaults, cat2id)
+                        update_db(db, update_info, cat_memoize, short_cat_maps, defaults, cat2id, backoff)
                     # If morph class cat has already been computed previously, then cat is still `None`
                     # (because we will not go again in the morph for loop) and we need to retrieve the
                     # computed value. 
@@ -325,7 +333,8 @@ def update_db(db: Dict,
               cat_memoize: Dict,
               short_cat_maps: Optional[Dict]=None,
               defaults: Optional[Dict]=None,
-              cat2id:Optional[Dict]=None):
+              cat2id:Optional[Dict]=None,
+              backoff:bool=False):
     """If a combination of complex prefix/suffix/stem is valid, then each of the complex morphemes
     in that combination will be added as an entry in the DB by this method. Default feature values
     are taken from the Header sheet and are assigned to features which are set to appear in the
@@ -355,6 +364,8 @@ def update_db(db: Dict,
         defaults (Optional[Dict], optional): default values of features parsed from the Header sheet (same ones
         which usually appear in the beginning of any DB file). They are used to specify feature values for DB entries
         for features whose value was not specified in the sheets. Defaults to None.
+        backoff (bool): whether or not to add the correct category or just the same category
+        to all stem entries. Defaults to False.
     """
     cmplx_morph_seq = update_info['cmplx_morph_seq']
     cmplx_morph_cls = update_info['cmplx_morph_cls']
@@ -388,7 +399,8 @@ def update_db(db: Dict,
                                     cond_s, cond_t, cond_f,
                                     short_cat_map,
                                     defaults_,
-                                    cat2id)
+                                    cat2id,
+                                    backoff)
             db[db_section].setdefault('\t'.join(morph_entry.values()), 0)
             db[db_section]['\t'.join(morph_entry.values())] += 1
         cat_memoize[cmplx_morph_type][cmplx_morph_cls] = morph_entry['cat']
@@ -421,7 +433,7 @@ def _create_cat(cmplx_morph_type: str, cmplx_morph_class: str,
             cat = cat_
     return cat
 
-def _convert_bw_tag(bw_tag:str):
+def _convert_bw_tag(bw_tag:str, backoff:bool=False):
     """Create complex BW tag"""
     if bw_tag == '':
         return bw_tag
@@ -432,7 +444,7 @@ def _convert_bw_tag(bw_tag:str):
         if 'null' in parts[0]:
             bw_lex = parts[0]
         else:
-            bw_lex = bw2ar(parts[0])
+            bw_lex = parts[0] if backoff else bw2ar(parts[0])
         bw_pos = parts[1]
         utf8_bw_tag.append('/'.join([bw_lex, bw_pos]))
     return '+'.join(utf8_bw_tag)
@@ -444,7 +456,8 @@ def _generate_affix(affix_type: str,
                     affix_cond_s: str, affix_cond_t: str, affix_cond_f: str,
                     short_cat_map: Optional[Dict]=None,
                     defaults: Dict=None,
-                    cat2id:Optional[Dict]=None) -> Dict[str, str]:
+                    cat2id:Optional[Dict]=None,
+                    backoff:bool=False) -> Dict[str, str]:
     """From the CamelMorph specifications, loads the affix information
     of multiple morphemes appearing in the prefix/suffix portion of the order line
     and which are deemed to be compatible with each other to form a complex affix, and
@@ -465,6 +478,8 @@ def _generate_affix(affix_type: str,
         SUFFIX-SHORT). Defaults to None.
         defaults (Dict, optional): default values of features parsed from the Header sheet. 
         Not used here. Defaults to None.
+        backoff (bool): whether or not to add the correct category or just the same category
+        to all stem entries. Defaults to False.
 
     Returns:
         Dict[str, str]: dict containing the 3 fields needed to store the complex affix as an entry in the DB.
@@ -489,7 +504,8 @@ def _generate_stem(cmplx_morph_seq: str,
                    stem_cond_s: str, stem_cond_t: str, stem_cond_f: str,
                    short_cat_map: Optional[Dict]=None,
                    defaults: Dict=None,
-                   cat2id:Optional[Dict]=None) -> Dict[str, str]:
+                   cat2id:Optional[Dict]=None,
+                   backoff:bool=False) -> Dict[str, str]:
     """Same as `_generate_affix()` but slightly different.
 
     Args:
@@ -505,14 +521,16 @@ def _generate_stem(cmplx_morph_seq: str,
         STEM, or SUFFIX column or ORDER) to its short name (PREFIX-SHORT, STEM-SHORT, and
         SUFFIX-SHORT). Defaults to None.
         defaults (Dict, optional): default values of features parsed from the Header sheet. Defaults to None.
+        backoff (bool): whether or not to add the correct category or just the same category
+        to all stem entries. Defaults to False.
 
     Returns:
         Dict[str, str]: _description_
     """
-    stem_match, stem_diac, stem_lex, stem_gloss, stem_feat, stem_bw, root, backoff = _read_stem(stem)
+    stem_match, stem_diac, stem_lex, stem_gloss, stem_feat, stem_bw, root, smart_backoff = _read_stem(stem)
     xcat = _create_cat(
         'X', cmplx_morph_seq, stem_cond_s, stem_cond_t, stem_cond_f, short_cat_map, cat2id)
-    ar_xbw = _convert_bw_tag(stem_bw)
+    ar_xbw = _convert_bw_tag(stem_bw, backoff)
     if defaults:
         stem_feat = [f"{feat}:{stem_feat[feat]}"
                         if feat in stem_feat and stem_feat[feat] != '_'
@@ -521,11 +539,21 @@ def _generate_stem(cmplx_morph_seq: str,
     else:
         stem_feat = [f"{feat}:{val}" for feat, val in stem_feat.items()]
     stem_feat = ' '.join(stem_feat)
+    
+    if smart_backoff:
+        match = db_maker_utils._bw2ar_regex(stem_match, bw2ar)
+        stem_diac, stem_lex, root = bw2ar(stem_diac), bw2ar(stem_lex), bw2ar(root)
+    elif backoff:
+        match = 'NOAN'
+    else:
+        match = bw2ar(stem_match)
+        stem_diac, stem_lex, root = bw2ar(stem_diac), bw2ar(stem_lex), bw2ar(root)
+
     stem = {
-        'match': db_maker_utils._bw2ar_regex(stem_match, bw2ar) if backoff else bw2ar(stem_match),
+        'match': match,
         'cat': xcat,
-        'analysis': (f"diac:{bw2ar(stem_diac)} bw:{ar_xbw} lex:{bw2ar(stem_lex)} "
-                  f"root:{bw2ar(root)} gloss:{stem_gloss.strip()} {stem_feat} ")
+        'analysis': (f"diac:{stem_diac} bw:{ar_xbw} lex:{stem_lex} "
+                  f"root:{root} gloss:{stem_gloss.strip()} {stem_feat} ")
     }
     return stem
 
@@ -571,14 +599,14 @@ def _read_stem(stem: List[Dict]) -> Tuple[str, Dict]:
                 for s in stem for feat in s['FEAT'].split()}
     root = [s['ROOT'] for s in stem if s.get('ROOT')][0]
     
-    backoff = False
+    smart_backoff = False
     if not any([s['DEFINE'] == 'SMARTBACKOFF' for s in stem]):
         stem_diac = ''.join([s['FORM']for s in stem if s['FORM'] != '_'])
         #NOTE: for nominals, postregex symbol is @ while for verbs it is #
         stem_match = normalize_alef_bw(normalize_alef_maksura_bw(
             normalize_teh_marbuta_bw(dediac_bw(re.sub(r'[#@]', '', stem_diac)))))
     else:
-        backoff = True
+        smart_backoff = True
         stem_diac = ''.join([s['FORM'] for s in stem if s['FORM'] != '_'])
         stem_match = []
         for s in stem:
@@ -590,7 +618,7 @@ def _read_stem(stem: List[Dict]) -> Tuple[str, Dict]:
                                       normalize_teh_marbuta_bw(dediac_bw(re.sub(r'[#@]', '', s['FORM']))))))
         stem_match = f"^{''.join(stem_match)}$"
 
-    return stem_match, stem_diac, stem_lex, stem_gloss, stem_feat, stem_bw, root, backoff
+    return stem_match, stem_diac, stem_lex, stem_gloss, stem_feat, stem_bw, root, smart_backoff
 
 def print_almor_db(output_path, db):
     """Create output file in ALMOR DB format"""
@@ -619,8 +647,8 @@ def print_almor_db(output_path, db):
             print(x, file=f)
 
         print("###SMARTBACKOFF###", file=f)
-        backoff = db.get('OUT:###SMARTBACKOFF###')
-        if backoff:
+        smart_backoff = db.get('OUT:###SMARTBACKOFF###')
+        if smart_backoff:
             for x in db['OUT:###SMARTBACKOFF###']:
                 print(x, file=f)
             
@@ -853,6 +881,8 @@ def _choose_required_feats(pos_type):
         required_feats = _required_verb_stem_feats
     elif pos_type == 'nominal':
         required_feats = _required_nom_stem_feats
+    elif pos_type == 'other':
+        required_feats = list(set(_required_nom_stem_feats + _required_verb_stem_feats))
     else:
         raise NotImplementedError
     return required_feats

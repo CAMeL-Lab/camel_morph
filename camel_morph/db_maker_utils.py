@@ -42,7 +42,8 @@ except:
 
 def read_morph_specs(config:Dict,
                      config_name:str,
-                     process_morph:bool=True) -> Tuple[Dict[str, pd.DataFrame], Dict[str, Tuple[str, int]]]:
+                     process_morph:bool=True,
+                     lexicon_cond_f:bool=True) -> Tuple[Dict[str, pd.DataFrame], Dict[str, Tuple[str, int]]]:
     """
     Method which loads and processes the `csv` sheets that are specified in the
     specific configuration of the config file. Outputs a dictionary which contains
@@ -54,6 +55,7 @@ def read_morph_specs(config:Dict,
         config_name (str): key of the specific ("local") configuration to get information 
         from in the config file.
         process_morph (bool): whether or not to process MORPH specs. Defaults to True.
+        lexicon_cond_f (bool): whether or not to convert COND-T conditions to COND-F when necessary. Defaults to True.
 
     Returns:
         Tuple[Dict[str, pd.DataFrame], Dict[str, Tuple[str, int]]]: dictionary which contains
@@ -100,7 +102,7 @@ def read_morph_specs(config:Dict,
     # Process LEXICON sheet
     # Loop over the specified lexicon (and backoff lexicon if present) sheets to concatenate those into
     # a unified dataframe.
-    LEXICON, SMART_BACKOFF, BACKOFF = None, None, None
+    LEXICON = {'concrete': None, 'backoff': None, 'smart_backoff': None}
     for lexicon_sheet_name in lexicon_sheets:
         LEXICON_ = pd.read_csv(os.path.join(data_dir, f"{lexicon_sheet_name}.csv"))
         # Only use entries in which the `DEFINE` has 'LEXICON' specified.
@@ -130,20 +132,23 @@ def read_morph_specs(config:Dict,
                 backoff_filename = f"{backoff_sheets[lexicon_sheet_name]}.csv"
                 SMART_BACKOFF_ = pd.read_csv(os.path.join(data_dir, backoff_filename))
                 SMART_BACKOFF_ = SMART_BACKOFF_.replace(nan, '', regex=True)
-            SMART_BACKOFF = pd.concat([SMART_BACKOFF, SMART_BACKOFF_])
+            LEXICON['smart_backoff'] = pd.concat([LEXICON['smart_backoff'], SMART_BACKOFF_]) if LEXICON['smart_backoff'] is not None else SMART_BACKOFF_
 
-        LEXICON = pd.concat([LEXICON, LEXICON_]) if LEXICON is not None else LEXICON_
-        BACKOFF = pd.concat([BACKOFF, BACKOFF_]) if BACKOFF is not None else BACKOFF_
+        if len(LEXICON_.index):
+            LEXICON['concrete'] = pd.concat([LEXICON['concrete'], LEXICON_]) if LEXICON['concrete'] is not None else LEXICON_
+        if len(BACKOFF_.index):
+            LEXICON['backoff'] = pd.concat([LEXICON['backoff'], BACKOFF_]) if LEXICON['backoff'] is not None else BACKOFF_
 
-    LEXICON = LEXICON.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
-    LEXICON['BW'] = LEXICON['BW'].replace('\s+', '#', regex=True)
-    LEXICON.loc[LEXICON['BW'] == '', 'BW'] = '_'
-    LEXICON.loc[LEXICON['BW'].str.contains('/'), 'BW'] = LEXICON['BW']
-    LEXICON.loc[~LEXICON['BW'].str.contains('/'), 'BW'] = LEXICON['FORM'] + '/' + LEXICON['BW']
-    LEXICON['LEMMA'] = 'lex:' + LEXICON['LEMMA']
-
-    BACKOFF['BW'] = BACKOFF['FORM'] + '/' + BACKOFF['BW']
-    BACKOFF = BACKOFF if len(BACKOFF.index) != 0 else None
+    for lex_type in ['concrete', 'backoff']:
+        if LEXICON[lex_type] is None:
+            continue
+        LEXICON[lex_type] = LEXICON[lex_type].apply(lambda x: x.str.strip() if x.dtype == "object" else x)
+        LEXICON[lex_type]['BW'] = LEXICON[lex_type]['BW'].replace('\s+', '#', regex=True)
+        LEXICON[lex_type].loc[LEXICON[lex_type]['BW'] == '', 'BW'] = '_'
+        LEXICON[lex_type].loc[LEXICON[lex_type]['BW'].str.contains('/'), 'BW'] = LEXICON[lex_type]['BW']
+        LEXICON[lex_type].loc[~LEXICON[lex_type]['BW'].str.contains('/'), 'BW'] = LEXICON[lex_type]['FORM'] + '/' + LEXICON[lex_type]['BW']
+        LEXICON[lex_type]['LEMMA'] = 'lex:' + LEXICON[lex_type]['LEMMA']
+        LEXICON[lex_type] = LEXICON[lex_type] if len(LEXICON[lex_type].index) != 0 else None
 
     # Process POSTREGEX sheet
     #TODO: make sure that symbols being compiled into regex are not mistaken for special characters.
@@ -153,7 +158,7 @@ def read_morph_specs(config:Dict,
     POSTREGEX = None
     postregex_path: Optional[str] = local_specs['specs']['sheets'].get('postregex')
     if postregex_path:
-        POSTREGEX = pd.read_csv(os.path.join(data_dir, 'PostRegex.csv'))
+        POSTREGEX = pd.read_csv(os.path.join(data_dir, f'{postregex_path}.csv'))
         POSTREGEX = POSTREGEX[(POSTREGEX.DEFINE == 'POSTREGEX') & (POSTREGEX.VARIANT == local_specs['dialect'].upper())]
         POSTREGEX = POSTREGEX.replace(nan, '', regex=True)
         for i, row in POSTREGEX.iterrows():
@@ -164,22 +169,25 @@ def read_morph_specs(config:Dict,
     # Useful for debugging of nominals, since many entries are inconsistent in terms of their COND-T
     # This splits rows with or-ed COND-T expressions into 
     if local_specs.get('split_or') == True:
-        assert SMART_BACKOFF is None
-        LEXICON_ = []
-        for _, row in LEXICON.iterrows():
-            terms = {'disj': [], 'other': []}
-            for term in row['COND-T'].split():
-                terms['disj' if '||' in term else 'other'].append(term)
-            
-            if terms['disj']:
-                terms_other = ' '.join(terms['other'])
-                for disj_terms in product(*[t.split('||') for t in terms['disj']]):
-                    row_ = row.to_dict()
-                    row_['COND-T'] = f"{' '.join(disj_terms)} {terms_other}".strip()
-                    LEXICON_.append(row_)
-            else:
-                LEXICON_.append(row.to_dict())
-        LEXICON = pd.DataFrame(LEXICON_)
+        assert LEXICON['smart_backoff'] is None
+        for lex_type in ['concrete', 'backoff']:
+            if LEXICON[lex_type] is None:
+                continue
+            LEXICON_ = []
+            for _, row in LEXICON[lex_type].iterrows():
+                terms = {'disj': [], 'other': []}
+                for term in row['COND-T'].split():
+                    terms['disj' if '||' in term else 'other'].append(term)
+                
+                if terms['disj']:
+                    terms_other = ' '.join(terms['other'])
+                    for disj_terms in product(*[t.split('||') for t in terms['disj']]):
+                        row_ = row.to_dict()
+                        row_['COND-T'] = f"{' '.join(disj_terms)} {terms_other}".strip()
+                        LEXICON_.append(row_)
+                else:
+                    LEXICON_.append(row.to_dict())
+            LEXICON[lex_type] = pd.DataFrame(LEXICON_)
 
     exclusions: List[str] = local_specs['specs'].get('exclude', [])
     
@@ -231,36 +239,40 @@ def read_morph_specs(config:Dict,
     MORPH = process_morph_specs(MORPH, exclusions) if process_morph else MORPH
 
     # cont'd: Process LEXICON sheet
-    LEXICON = LEXICON.replace('\s+', ' ', regex=True)
-    LEXICON['GLOSS'] = LEXICON['GLOSS'].replace('\s+', '#', regex=True)
-    # Generate Lexicon COND-F if necessary
-    if any('!' in cond_t for cond_t in LEXICON['COND-T'].values.tolist()):
-        print('Lexicon sheet COND-F populated')
-        for i, row in LEXICON.iterrows():
-            cond_t = row['COND-T'].split()
-            cond_t_, cond_f_ = [], []
-            for ct in cond_t:
-                if ct.startswith('!'):
-                    cond_f_.append(ct[1:])
-                else:
-                    cond_t_.append(ct)
-            LEXICON.at[i, 'COND-T'] = ' '.join(cond_t_)
-            LEXICON.at[i, 'COND-F'] = ' '.join(cond_f_)
+    for lex_type in ['concrete', 'backoff']:
+        if LEXICON[lex_type] is None:
+            continue
+        LEXICON[lex_type] = LEXICON[lex_type].replace('\s+', ' ', regex=True)
+        LEXICON[lex_type]['GLOSS'] = LEXICON[lex_type]['GLOSS'].replace('\s+', '#', regex=True)
+        # Generate Lexicon COND-F if necessary
+        if lexicon_cond_f and any('!' in cond_t for cond_t in LEXICON[lex_type]['COND-T'].values.tolist()):
+            print('Lexicon sheet COND-F populated')
+            for i, row in LEXICON[lex_type].iterrows():
+                cond_t = row['COND-T'].split()
+                cond_t_, cond_f_ = [], []
+                for ct in cond_t:
+                    if ct.startswith('!'):
+                        cond_f_.append(ct[1:])
+                    else:
+                        cond_t_.append(ct)
+                LEXICON[lex_type].at[i, 'COND-T'] = ' '.join(cond_t_)
+                LEXICON[lex_type].at[i, 'COND-F'] = ' '.join(cond_f_)
     
     # Get rid of unused conditions, i.e., use only the conditions which are in the intersection
     # of the collective (concatenated across morph and lexicon sheets) COND-T and COND-S columns
     # Replace space in gloss field by #, and get rid of excess spaces in the condition field.
+    #TODO: apply this to backoff too
     clean_conditions: Optional[str] = local_specs.get('clean_conditions')
     if clean_conditions:
         conditions = {}
         for f in ['COND-T', 'COND-S', 'COND-F']:
             conditions[f] = set(
-                [term for ct in MORPH[f].values.tolist() + LEXICON[f].values.tolist()
+                [term for ct in MORPH[f].values.tolist() + LEXICON['concrete'][f].values.tolist()
                         for cond in ct.split() for term in cond.split('||')])
         conditions_aggr = conditions['COND-S'] & (conditions['COND-T'] | conditions['COND-F'])
         conditions_used = set([cond for cond in conditions_aggr if cond != '_'])
         #TODO: process MORPH file here too.
-        for df in [LEXICON]:
+        for df in [LEXICON['concrete']]:
             for f in ['COND-T', 'COND-S', 'COND-F']:
                 conditions = set([term for ct in df[f].values.tolist()
                             for cond in ct.split() for term in cond.split('||')])
@@ -277,8 +289,9 @@ def read_morph_specs(config:Dict,
                 df[f] = df[f].replace(' $', '', regex=True)
 
     SHEETS = dict(about=ABOUT, header=HEADER, order=ORDER, morph=MORPH,
-                  lexicon=LEXICON, smart_backoff=SMART_BACKOFF, postregex=POSTREGEX,
-                  backoff=BACKOFF)
+                  lexicon=LEXICON['concrete'], smart_backoff=LEXICON['smart_backoff'],
+                  postregex=POSTREGEX, backoff=LEXICON['backoff'])
+    
     
     return SHEETS, cond2class
 
@@ -297,30 +310,46 @@ def process_morph_specs(MORPH:pd.DataFrame, exclusions: List[str]) -> pd.DataFra
     the behavior only matches the intended one provided conditions across the rows of a
     morpheme are written in a way which is consistent to and aware of all the below definitions:
     Example (x1, x2, ... are conditions):
-        COND-T                  COND-F
-        A       B       C
-    1   x1      x2      x3      _
-    2   x1      x2      else    x3
-    3   x4      else    else    _
-    4   else    x5      else    x1 x4
-    5   else    else    else    x1 x4 x5
+        CLASS   FUNC    COND-T                  COND-F
+        X       Y       A       B       C
+    1   CLS1    F1      x1      x2      x3      (x4; from default else of x1)
+    2   CLS1    F1      x1      x2      else    x3 (x4; from default else of x1)
+    3   CLS1    F1      x4      else    else    (x1; from default else of x4)
+    4   CLS1    F1      else    x5      else    x1 x4
+    5   CLS1    F1      else    else    else    x1 x4 x5
     
-    The above table represents the scope of a dummy morpheme in the MORPH sheet. The rows are actual
-    rows in the sheet, while the columns are not actual sheet columns but the conditions are written
-    in such a way as to emulate this table structure. To understand how the `else` markers
-    populates the COND-F column, we define the Selector Range (SR). It is the horizontal range
-    which comes to the left of any cell, e.g., the SR of B2 is A2:2, and the SR of C4 is A4:B4.
-    Formally, the SR of Gn is An:Fn where A is the first col, and F is the col right before G.
+    The above table represents the scope of a dummy morpheme in the MORPH sheet. Rows 1 to 5 belong to
+    the same morpheme because they have the same CLASS and FUNC values. The rows are actual
+    rows in the sheet. Columns X and Y are actual columns in the sheet, whereas A, B, and C are not
+    actual sheet columns; the conditions in the COND-T column are written in such a way as to emulate
+    a table structure. To understand how the `else` markers populates the COND-F column, we define the
+    Selector Range (SR). It is the horizontal range which comes to the left of any cell, e.g., the SR
+    of B2 is X2:A2 (i.e., CLS1 F1 x1), and the SR of C4 is X4:B4. Formally, the SR of Dn is Xn:Cn where
+    X is the first col to the left, and going right, C is the col just before D.
     Also, we define the Range of Action (RoA) of an `else` marker as a certain subset of the same column
-    it lies in. The cells (conditions) in that subset will appear in the COND-F of the allomorph whose COND-T
+    it lies in. The cells (conditions) in that subset will appear in the COND-F of the allomorph (row) whose COND-T
     contains that `else`. The subset is chosen by picking all the conditions which have the same SR as the `else`
     (which means that they are also in the same column as the `else`). For example, the RoA of the `else` in C2
-    is C1:2, because the only cell that has the same SR as the C2 is C1. The `else`s in A4 and A5 are not
-    restricted by any range since they are in the left-most column, so their RoA is the whole col A. The `else` in B3
-    has no effect (RoA is null) since no other cell has the same SR (similarly for C3, C4, and C5).
-    Formally, the RoA of an `else` in Gn is all cells which have SR An:Fn.
+    is C1:2, because the only cell that has the same SR as the C2 is C1. All cells in columns have the same SR
+    to their left so their RoA is the whole col A. The `else` in B3 has no effect (RoA is null) since no other
+    cell has the same SR (similarly for C3, C4, and C5). Formally, the RoA of an `else` in Dn is all cells
+    which have SR equal to Xn:Cn.
     Therefore, all conditions (excluding `else`) that lie in the RoA of an `else` will go to COND-F of the
     row the `else` is in.
+
+    Additionally, each condition carries an inherent "default `else`", meaning that all conditions (excluding
+    `else` and itself) that lie in the RoA of that condition will go to COND-F of the row that that condition
+    is in. For example, see rows 1 to 3 in which the COND-F holds x4 or x1, which are the direct result of
+    this "default else".
+    
+    Note columns A, B, ... within COND-T represent a conjunction of the terms in it. For example, row 1 in COND-T
+    is interpreted as x1 AND x2 AND x3. Also note that conditions (x1, x2, ...) can be be one of three things:
+        1. a single condition (x1).
+        2. a disjunction of conditions, e.g., x1||x11||..., with || standing for OR.
+        3. a negation of either 1. or 2., e.g., !x1 or !x1||x11||..., represented in the aforementioned way.
+           Any negation is taken by default to COND-F, e.g., if we have !x1 in COND-T, it becomes x1 in COND-F.
+           Note that a negation of a disjunction is equivalent to a conjunction of the negations by De Morgan's law.
+           So within COND-T !x1||x11||... can be interpreted as !x1 !x11 ...
 
     Args:
         MORPH (pd.DataFrame): morph sheet dataframe
