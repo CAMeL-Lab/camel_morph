@@ -29,6 +29,7 @@ import argparse
 import os
 import pickle
 import sys
+from itertools import product
 
 try:
     from ..utils.utils import _strip_brackets
@@ -73,10 +74,12 @@ sig2feat = {
             'NOM': []
         },
         'prc1': {
-            'NOM': []
+            'NOM': [],
+            'OTHER': ['bi_prep', 'li_prep']
         },
         'prc2': {
-            'NOM': []
+            'NOM': [],
+            'OTHER': ['wa_conj']
         },
         'prc3': {
             'NOM': []
@@ -85,7 +88,8 @@ sig2feat = {
     'feats4': {
         'enc0': {
             'VERB':['3ms_dobj'],
-            'NOM': ['3ms_poss']
+            'NOM': ['3ms_poss'],
+            'OTHER': ['3ms_pron']
         },
         'enc1': {
             'VERB':['3ms_dobj'],
@@ -103,7 +107,7 @@ def parse_signature(signature, pos):
     feats0, feats1, feats2, feats3, feats4 = match.groups()
     feats = {'feats1': feats1, 'feats2': feats2, 'feats3': feats3, 'feats4': feats4}
     pos_type = feats0
-    feats_ = {'pos': pos}
+    features_ = {'pos': [pos]}
     for sig_component, comp_content in feats.items():
         if comp_content:
             for feat, possible_values in sig2feat[sig_component].items():
@@ -111,22 +115,40 @@ def parse_signature(signature, pos):
                     (pos_type == 'NOM' and feat in ['per', 'asp', 'mod', 'vox']):
                     continue
                 if sig_component in ['feats3', 'feats4']:
-                    # FIXME: this currently works for only one choice of enc0, 
-                    # need to make it generic
-                    clitic_type = 'prc' if sig_component[-1] == '3' else 'enc'
                     for comp_part in comp_content:
-                        comp_part = f'{clitic_type}{comp_part}'
-                        for possible_value in possible_values[pos_type]:
-                            feats_[comp_part] = possible_value
+                        if comp_part == feat[3:]:
+                            for possible_value in possible_values.get(pos_type, []):
+                                features_.setdefault(feat, []).append(possible_value)
                 else:
                     for possible_value in possible_values:
                         feat_present = comp_content.count(possible_value)
                         if feat_present:
-                            feats_[feat] = ('P' if feat == 'num' and possible_value == 'Q' else possible_value).lower()
+                            features_.setdefault(feat, []).append(
+                                'p' if feat == 'num' and possible_value == 'Q' else possible_value.lower())
+                            features_[feat] = [v for v in features_[feat] if v != 'u']
                             break
                         else:
-                            feats_[feat] = 'u'
-    return feats_
+                            features_.setdefault(feat, []).append('u')
+
+    features_multiple, features_single = {}, {}
+    for feat, values in features_.items():
+        values_ = set(values)
+        if len(values_) == 1:
+            features_single.update({feat: values[0]})
+        else:
+            for v in values_:
+                features_multiple.setdefault(feat, []).append((feat, v))
+    
+    features = []
+    if features_multiple:
+        for split_combs in product(*features_multiple.values()):
+            features_temp = {comb[0]: comb[1] for comb in split_combs}
+            features_temp.update(features_single)
+            features.append(features_temp)
+    else:
+        features.append(features_single)
+    
+    return features
 
 def expand_paradigm(paradigms, pos_type, paradigm_key):
     paradigm = paradigms[pos_type][paradigm_key]
@@ -190,7 +212,7 @@ def create_conjugation_tables(lemmas,
     lemmas_conj = []
     for info in tqdm(lemmas):
         lemma, form, gloss = info['lemma'], info['form'], info.get('gloss', '_')
-        pos, gen, num = info['pos'], info.get('gen', '_'), info.get('num', '_')
+        pos, gen, num = info['pos'], info.get('gen', '-'), info.get('num', '-')
         cond_s, cond_t = info['cond_s'], info['cond_t']
         lemma_raw = lemma[:]
         lemma = strip_lex(lemma)
@@ -221,28 +243,31 @@ def create_conjugation_tables(lemmas,
         outputs = {}
         for signature in paradigm:
             features = parse_signature(signature, _strip_brackets(pos))
-            # Using altered local copy of generator.py in camel_tools
-            analyses, debug_message = generator.generate(lemma_raw, features, debug=True)
-            prefix_cats = [a[1] for a in analyses]
-            stem_cats = [a[2] for a in analyses]
-            suffix_cats = [a[3] for a in analyses]
-            analyses = [a[0] for a in analyses]
-            debug_info = dict(analyses=analyses,
-                              gloss=gloss,
-                              form=form,
-                              gen=gen,
-                              num=num,
-                              cond_s=cond_s,
-                              cond_t=cond_t,
-                              prefix_cats=prefix_cats,
-                              stem_cats=stem_cats,
-                              suffix_cats=suffix_cats,
-                              lemma=info['lemma'],
-                              pattern=pattern,
-                              pos=pos,
-                              freq=info.get('freq'),
-                              debug_message=debug_message)
-            outputs[signature] = debug_info
+            for i, features_ in enumerate(features):
+                # Using altered local copy of generator.py in camel_tools
+                analyses, debug_message = generator.generate(lemma_raw, features_, debug=True)
+                prefix_cats = [a[1] for a in analyses]
+                stem_cats = [a[2] for a in analyses]
+                suffix_cats = [a[3] for a in analyses]
+                analyses = [a[0] for a in analyses]
+                debug_info = dict(analyses=analyses,
+                                  gloss=gloss,
+                                  form=form,
+                                  gen=gen,
+                                  num=num,
+                                  cond_s=cond_s,
+                                  cond_t=cond_t,
+                                  prefix_cats=prefix_cats,
+                                  stem_cats=stem_cats,
+                                  suffix_cats=suffix_cats,
+                                  lemma=info['lemma'],
+                                  pattern=pattern,
+                                  pos=pos,
+                                  freq=info.get('freq'),
+                                  features=features_,
+                                  debug_message=debug_message)
+                outputs[f"{signature}{f'_{i}' if len(features) > 1 else ''}"] = debug_info
+
         lemmas_conj.append(outputs)
     
     return lemmas_conj
@@ -267,6 +292,7 @@ def process_nom_gen_num_(feat, form_feat,
                               pattern=pattern,
                               pos=pos,
                               freq=freq,
+                              features={},
                               debug_message='')
             return debug_info
     return feat_
@@ -280,7 +306,7 @@ def process_outputs(lemmas_conj, pos_type):
             output = {}
             form = _strip_brackets(info['form'])
             pos = _strip_brackets(info['pos'].upper())
-            features = parse_signature(signature, info['pos']) if signature != 'N/A' else {}
+            features = info['features']
             signature = re.sub('Q', 'P', signature)
             output['signature'] = signature
             output['stem'] = info['form']
@@ -292,6 +318,7 @@ def process_outputs(lemmas_conj, pos_type):
             output['freq'] = info['freq']
             output['debug'] = ' '.join([m[1] for m in info['debug_message']])
             output['qc'] = ''
+            valid_analyses = False
             if info['analyses']:
                 outputs = OrderedDict()
                 for i, analysis in enumerate(info['analyses']):
@@ -302,6 +329,10 @@ def process_outputs(lemmas_conj, pos_type):
                     elif pos_type == 'verbal':
                         if info['lemma'] != ar2bw(analysis['lex']) or _strip_brackets(info['gloss']) != analysis['stemgloss']:
                             continue
+                    elif pos_type == 'other':
+                        if analysis['stem'] not in bw2ar(form) or _strip_brackets(info['gloss']) != analysis['stemgloss']:
+                            continue
+                    valid_analyses = True
                     output_ = output.copy()
                     output_['diac'] = ar2bw(analysis['diac'])
                     output_['diac_ar'] = analysis['diac']
@@ -326,7 +357,8 @@ def process_outputs(lemmas_conj, pos_type):
                         output_[h.upper()] = output.get(h, '')
                     outputs_filtered[i] = output_
                 conjugations += outputs_filtered
-            else:
+            
+            if not valid_analyses:
                 output_ = output.copy()
                 output_['count'] = 0
                 zero_check = re.findall(r'intrans|trans', info['cond_s'])
@@ -344,6 +376,14 @@ def process_outputs(lemmas_conj, pos_type):
                     output_['status'] = 'CHECK-ZERO-PASS'
                 elif 'E0' in signature and features.get('stt') == 'd':
                     output_['status'] = 'OK-ZERO-E0-DEFINITE'
+                elif pos.lower() == 'adj' and 'E0' in signature and features.get('stt') == 'c':
+                    output_['status'] = 'OK-ZERO-E0-ADJ-CONSTRUCT'
+                elif 'E0' in signature and '!PRON' in _strip_brackets(info['cond_t']).split():
+                    output_['status'] = 'OK-ZERO-OTHER-PRON'
+                elif 'P1' in signature and '!PREP' in _strip_brackets(info['cond_t']).split():
+                    output_['status'] = 'OK-ZERO-OTHER-PREP'
+                elif 'P2' in signature and '!CONJ' in _strip_brackets(info['cond_t']).split():
+                    output_['status'] = 'OK-ZERO-OTHER-CONJ'
                 else:
                     output_['status'] = 'CHECK-ZERO'
                 output_['line'] = line
@@ -453,6 +493,8 @@ if __name__ == "__main__":
         pos = 'verb'
     elif pos_type == 'nominal':
         pos = args.pos if args.pos else config_local.get('pos')
+    elif pos_type == 'other':
+        pos = args.pos
 
     if pos:
         lemmas = [info for info in lemmas if _strip_brackets(info['pos']) == pos]

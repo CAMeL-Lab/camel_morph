@@ -256,7 +256,7 @@ if __name__ == "__main__":
     output_dir = os.path.join(output_dir, f"camel-morph-{config_local['dialect']}")
     os.makedirs(output_dir, exist_ok=True)
 
-    SHEETS, _ = db_maker_utils.read_morph_specs(config, config_name, process_morph=False)
+    SHEETS, _ = db_maker_utils.read_morph_specs(config, config_name, process_morph=False, lexicon_cond_f=False)
     lexicon = SHEETS['lexicon']
     lexicon = lexicon.replace('ditrans', 'trans')
     

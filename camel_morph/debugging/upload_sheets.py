@@ -52,6 +52,8 @@ if __name__ == "__main__":
                         type=str, help="Name of the gsheet to write the CSV file to (and to format).")
     parser.add_argument("-mode", default='prompt', choices=['backup', 'overwrite', 'prompt'],
                         type=str, help="Mode that decides what to do if sheet which is being uploaded already exists.")
+    parser.add_argument("-insert_index", default=False, action='store_true',
+                        help="Insert an index column.")
     parser.add_argument("-service_account", default='',
                         type=str, help="Path of the JSON file containing the information about the service account used for the Google API.")
     args = parser.parse_args()
@@ -92,6 +94,8 @@ if __name__ == "__main__":
         else os.path.join(config_global['debugging'], config_global[args.input_dir], f"camel-morph-{config_local['dialect']}")
     sheet_csv = pd.read_csv(os.path.join(input_dir, file_name), sep='\t')
     sheet_csv = sheet_csv.replace(nan, '', regex=True)
+    if args.insert_index:
+        sheet_csv.insert(0, 'Index', range(len(sheet_csv)))
     
     service_account = args.service_account if args.service_account else config_global['service_account']
     sa = gspread.service_account(service_account)

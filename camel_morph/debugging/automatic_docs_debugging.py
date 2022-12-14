@@ -40,6 +40,7 @@ ROW_TYPE_SUFF = 'Suffixes'
 ROW_TYPE_EX = 'Example'
 FREQ = 'Freq'
 LEMMA = 'Lemma'
+LEMMA_BW = 'Lemma_bw'
 STEM = 'Stem'
 POS = 'POS'
 MS, MD, MP, FS, FD, FP = 'MS', 'MD', 'MP', 'FS', 'FD', 'FP'
@@ -47,7 +48,7 @@ OTHER_LEMMAS = 'Other lemmas'
 QC = 'QC'
 COMMENTS = 'COMMENTS'
 
-header = [COND_S, VARIANT, ROW_TYPE, FREQ, LEMMA, STEM, POS, MS,
+header = [COND_S, VARIANT, ROW_TYPE, FREQ, LEMMA, LEMMA_BW, STEM, POS, MS,
           MD, MP, FS, FD, FP, OTHER_LEMMAS, QC, COMMENTS]
 
 class AnnotationBank:
@@ -169,7 +170,7 @@ def automatic_bank_annotation(bank_path, annotated_paradigms, new_docs_tables):
     bank = AnnotationBank(bank_path, annotated_paradigms)
 
     outputs = []
-    suffixes = ()
+    suffixes, suffixes_row = (), {}
     examples_, definitions_ = [], set()
     for i, row in new_docs_tables.iterrows():
         if row[ROW_TYPE] == ROW_TYPE_DEF:
@@ -177,7 +178,7 @@ def automatic_bank_annotation(bank_path, annotated_paradigms, new_docs_tables):
         elif row[ROW_TYPE] == ROW_TYPE_SUFF:
             suffixes = tuple(row[[MS, MD, MP, FS, FD, FP]].values.tolist())
             assert new_docs_tables.iloc[i + 1][ROW_TYPE] == ROW_TYPE_EX
-            outputs.append({h: row.get(h, '') for h in header})
+            suffixes_row = {h: row.get(h, '') for h in header}
         elif row[ROW_TYPE] == ROW_TYPE_EX:
             key_new = tuple([row[h] for h in AnnotationBank.HEADER_KEY if h != ROW_TYPE_SUFF] + [suffixes])
             row = row.to_dict()
@@ -188,7 +189,8 @@ def automatic_bank_annotation(bank_path, annotated_paradigms, new_docs_tables):
                 # Equal but the signature suffixes of the groups not exactly equal but a superset of current signature
                 break_true = False
                 for key_bank, info in bank._bank.items():
-                    if key_new[:10] == key_bank[:10] and all(k_new == k_bank for k_new, k_bank in zip(key_new[10], key_bank[10]) if k_new):
+                    if key_new[:10] == key_bank[:10] and all(k_new == k_bank for k_new, k_bank in zip(key_new[10], key_bank[10])
+                                                             if k_new not in ' -' and k_bank not in ' -'):
                         row[QC] = info[QC]
                         break_true = True
                         break
@@ -226,7 +228,7 @@ def automatic_bank_annotation(bank_path, annotated_paradigms, new_docs_tables):
                 else:
                     raise NotImplementedError
                 
-                outputs += [definition_row] + examples_
+                outputs += [definition_row, suffixes_row] + examples_
                 examples_, definitions_ = [], set()
         else:
             raise NotImplementedError

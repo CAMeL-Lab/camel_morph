@@ -17,11 +17,14 @@ except:
     from camel_morph.debugging.create_repr_lemmas_list import get_lemma2prob
 
 COND_T_CLASSES = ['MS', 'MD', 'MP', 'FS', 'FD', 'FP']
+FUNC_GEN_FROM_FORM_RE = re.compile(r'([MF])[SDP](?=$|\|| )')
+FUNC_NUM_FROM_FORM_RE = re.compile(r'[MF]([SDP])(?=$|\|| )')
+FORM_FEATS_RE = re.compile(r'[MF][SDP](?=$|\|\|| )')
 
 def generate_row(cond_s='', variant='', entry_type='', freq='', lemma='',
                  lemma_bw='', stem='', pos='', ms='', md='', mp='', fs='',
-                 fd='', fp='', other_lemmas='', index=''):
-    return [index, cond_s, variant, entry_type, freq, lemma, lemma_bw, stem,
+                 fd='', fp='', other_lemmas=''):
+    return [cond_s, variant, entry_type, freq, lemma, lemma_bw, stem,
             pos, ms, md, mp, fs, fd, fp, other_lemmas]
 
 
@@ -34,8 +37,8 @@ def generate_table(lexicon, pos, dialect, pos2lemma2prob, db_lexprob):
     
     table = [generate_row(cond_s='CLASS', variant='VAR', entry_type='Entry', freq='Freq', lemma='Lemma',
                           lemma_bw='Lemma_bw', stem='Stem', pos='POS', ms='MS', md='MD', mp='MP', fs='FS',
-                          fd='FD', fp='FP', other_lemmas='Other lemmas', index='Index')]
-    col_pos, col_MS = table[0].index('POS'), table[0].index('MS')
+                          fd='FD', fp='FP', other_lemmas='Other lemmas')]
+    col_pos, col_MS, col_freq = table[0].index('POS'), table[0].index('MS'), table[0].index('Freq')
     for cond_s, cond_t2feats2rows in cond_s2cond_t2feats2rows.items():
         form_feats2rows_cond_s = {}
         for cond_t, feats2rows in cond_t2feats2rows.items():
@@ -51,7 +54,8 @@ def generate_table(lexicon, pos, dialect, pos2lemma2prob, db_lexprob):
                 other_lemmas = [row['LEMMA'] for row in rows[:best_index] + rows[best_index + 1:]][:20]
                 lemma, stem = bw2ar(strip_lex(row['LEMMA'])), bw2ar(row['FORM'])
 
-                form_feat2case2info, cases = get_suffixes_across_form_feats(lemma, stem, gen, num, pos_, cond_t)
+                form_feat2case2info, cases = get_suffixes_across_form_feats(lemma, stem, gen, num, pos_, cond_t,
+                                                                            actpart=True if 'ACTPART' in cond_s else False)
                 for case in cases:
                     form_feats_ = []
                     for case2info in form_feat2case2info:
@@ -90,14 +94,10 @@ def generate_table(lexicon, pos, dialect, pos2lemma2prob, db_lexprob):
                     for feats, row in feats2row.items():
                         row2case[tuple(row)] = case
 
-            for row, case in sorted(row2case.items(), key=lambda x: int(x[0][3]), reverse=True):
+            for row, case in sorted(row2case.items(), key=lambda x: int(x[0][col_freq]), reverse=True):
                 table_.append([c if c else '-' for c in row])
 
         table += table_
-    
-    index_col = table[0].index('Index')
-    for i, row in enumerate(table):
-        row[index_col] = str(i)
     
     return table
 
@@ -105,21 +105,44 @@ def generate_table(lexicon, pos, dialect, pos2lemma2prob, db_lexprob):
 def _get_structured_lexicon_classes(lexicon):
     cond_s2cond_t2feats2rows = {}
     for _, row in lexicon.iterrows():
-        cond_t, cond_s = '||'.join(sorted(row['COND-T'].split('||'))), row['COND-S']
+        
+        cond_t, cond_s = row['COND-T'], row['COND-S']
+        cond_t_dict = {'form': [], 'other': []}
+        for conds_ in cond_t.split():
+            cond_t_dict['form' if FORM_FEATS_RE.search(conds_) else 'other'].append(conds_)
+        
+        cond_t_form = cond_t_dict['form']
+        assert len(cond_t_form) == 1
+        cond_t_form = '||'.join(cond for cond in sorted(cond_t_form[0].split('||')) if cond)
+        cond_s_pp = cond_s
+        if cond_t_dict['other']:
+            cond_s_pp += (' ' if cond_s_pp else '') + f"COND-T:{' '.join(sorted(cond_t_dict['other']))}"
+
         feats = {feat.split(':')[0]: feat.split(':')[1] for feat in row['FEAT'].split()}
+        
         gen = feats.get('gen', '')
+        if not gen:
+            genders = FUNC_GEN_FROM_FORM_RE.findall(cond_t_form)
+            if len(set(genders)) == 1:
+                gen = genders[0].lower()
+
         num = feats.get('num', '')
+        if not num:
+            numbers = FUNC_NUM_FROM_FORM_RE.findall(cond_t_form)
+            if len(set(numbers)) == 1:
+                num = numbers[0].lower()
+        
         pos_ = re.search(r'pos:(\S+)', row['FEAT']).group(1)
         row_cond_s = {'LEMMA': row['LEMMA'], 'FORM': row['FORM']}
-        cond_s2cond_t2feats2rows.setdefault(cond_s, {}).setdefault(cond_t, {}).setdefault((gen, num, pos_), []).append(row_cond_s)
+        cond_s2cond_t2feats2rows.setdefault(cond_s_pp, {}).setdefault(cond_t_form, {}).setdefault((gen, num, pos_), []).append(row_cond_s)
     
     return cond_s2cond_t2feats2rows
 
-def get_suffixes_across_form_feats(lemma, stem, gen, num, pos_, cond_t):
+def get_suffixes_across_form_feats(lemma, stem, gen, num, pos_, cond_t, actpart):
     form_feat2case2info = [{'n': '', 'a': '', 'g': '', 'u': ''} for _ in range(6)]
     cases_seen = set()
     for cond_t_ in cond_t.split('||'):
-        analyses, analyses_enc = _generate_analyses(lemma, stem, gen, num, pos_, cond_t_)
+        analyses, analyses_enc = _generate_analyses(lemma, stem, gen, num, pos_, cond_t_, actpart)
         cases = set([a[0]['cas'] for a in analyses + analyses_enc if a[0] is not None])
         cases_seen.update(cases)
         cases = cases if cases else set(['-'])
@@ -171,23 +194,19 @@ def get_suffixes_across_form_feats(lemma, stem, gen, num, pos_, cond_t):
     
     return form_feat2case2info, cases_seen
 
-def _generate_analyses(lemma, stem, gen, num, pos_, cond_t_):
-    feats_, feats_enc_ = _process_and_generate_feats(gen, num, pos_, cond_t_)
+def _generate_analyses(lemma, stem, gen, num, pos_, cond_t_, actpart):
+    feats_, feats_enc_ = _process_and_generate_feats(gen, num, pos_, cond_t_, actpart)
     analyses, _ = generator.generate(lemma, feats_, debug=True)
     analyses_enc, _ = generator.generate(lemma, feats_enc_, debug=True)
     analyses = [a for a in analyses if a[0]['stem'] == stem]
     analyses_enc = [a for a in analyses_enc if a[0]['stem'] == stem]
 
     if len(analyses) > len(analyses_enc):
-        analyses_enc_ = []
         for _ in range(len(analyses) - len(analyses_enc)):
-            analyses_enc_.append((None, None, None, None))
-        analyses_enc = analyses_enc_
+            analyses_enc.append((None, None, None, None))
     elif len(analyses) < len(analyses_enc):
-        analyses_ = []
         for _ in range(len(analyses_enc) - len(analyses)):
-            analyses_.append((None, None, None, None))
-        analyses = analyses_
+            analyses.append((None, None, None, None))
         
     analyses = sorted(analyses, key=lambda a: a[0]['cas'] if a[0] is not None else 'z')
     analyses_enc = sorted(analyses_enc, key=lambda a: a[0]['cas'] if a[0] is not None else 'z')
@@ -220,7 +239,7 @@ def get_form_feats_cluster_map(form_feats_set):
     
     return cluster_map
 
-def _process_and_generate_feats(gen, num, pos, cond_t):
+def _process_and_generate_feats(gen, num, pos, cond_t, actpart):
     feats_ = {'pos': pos, 'stt': 'i'}
     if gen not in ['', '-']:
         feats_.update({'gen': gen})
@@ -232,7 +251,7 @@ def _process_and_generate_feats(gen, num, pos, cond_t):
         feats_.update({'num': cond_t[1].lower()})
     
     feats_ = {k: '' if v == '-' else v for k, v in feats_.items()}
-    feats_enc_ = {**feats_, **{'enc0': '3ms_poss'}}
+    feats_enc_ = {**feats_, **{'enc0': '3ms_poss' if not actpart else '3ms_dobj'}}
     feats_enc_['stt'] = 'c'
 
     return feats_, feats_enc_
@@ -294,6 +313,7 @@ if __name__ == "__main__":
     from camel_tools.morphology.analyzer import DEFAULT_NORMALIZE_MAP
     from camel_tools.morphology.database import MorphologyDB
     from camel_tools.morphology.generator import Generator
+    from camel_tools.morphology.analyzer import Analyzer
     from camel_tools.utils.charmap import CharMapper
     from camel_tools.morphology.utils import strip_lex
 
@@ -311,10 +331,10 @@ if __name__ == "__main__":
     db = MorphologyDB(os.path.join(db_dir, db_name), flags='gd')
     generator = Generator(db)
 
-    SHEETS, _ = db_maker_utils.read_morph_specs(config, config_name, process_morph=False)
+    SHEETS, _ = db_maker_utils.read_morph_specs(config, config_name, process_morph=False, lexicon_cond_f=False)
     lexicon = SHEETS['lexicon']
     lexicon['LEMMA'] = lexicon.apply(lambda row: re.sub('lex:', '', row['LEMMA']), axis=1)
-    lexicon = lexicon[lexicon['COND-T'].str.contains(r'^((MS|MD|MP|FS|FD|FP)(\|\|)?)+$', regex=True)]
+    assert lexicon['COND-T'].str.contains(r'((MS|MD|MP|FS|FD|FP)(\|\|)?)+', regex=True).values.tolist()
 
     pos_type = args.pos_type if args.pos_type else config_local['pos_type']
     if pos_type == 'verbal':
@@ -323,11 +343,12 @@ if __name__ == "__main__":
         pos = args.pos if args.pos else config_local.get('pos')
     elif pos_type == 'other':
         pos = args.pos
+    
+    assert all(lexicon['FEAT'].str.contains(r'pos:\S+', regex=True))
     if pos:
         lexicon = lexicon[lexicon['FEAT'].str.contains(f'pos:{pos}\\b', regex=True)]
         pos = [pos]
     else:
-        lexicon = lexicon[lexicon['FEAT'].str.contains(r'pos:\S+', regex=True)]
         pos = list(set([x[0].split(':')[1] for x in lexicon['FEAT'].str.extract(r'(pos:\S+)').values.tolist()]))
 
     pos2lemma2prob, db_lexprob = None, None

@@ -34,8 +34,8 @@ import pandas as pd
 from numpy import nan
 
 header = ["line", "status", "count", "signature", "lemma", "diac_ar", "diac", "freq",
-          "qc", "comments", "pattern", "stem", "bw", "gloss", "cond-s", "cond-t", "pref-cat",
-          "stem-cat", "suff-cat", "feats", "debug", "color"]
+          "qc", "warnings", "comments", "pattern", "stem", "bw", "gloss", "cond-s",
+          "cond-t", "pref-cat", "stem-cat", "suff-cat", "feats", "debug", "color"]
 
 class AnnotationBank:
     UNKOWN = 'UNK'
@@ -57,8 +57,6 @@ class AnnotationBank:
             if os.path.exists(bank_path):
                 self._read_bank_from_tsv()
         else:
-            sa = gspread.service_account(
-                "/Users/chriscay/.config/gspread/service_account.json")
             sh = sa.open(self._spreadsheet)
             worksheet = sh.worksheet(title=self._gsheet_name)
             bank = pd.DataFrame(worksheet.get_all_records())
@@ -90,19 +88,9 @@ class AnnotationBank:
             f"Get rid of all tags not belonging to {AnnotationBank.TAGS}"
         assert set(AnnotationBank.HEADER).issubset(annotated_paradigms.columns)
         
-        keys_to_del = []
         for _, row in annotated_paradigms.iterrows():
             key_annot = tuple([row[h] for h in AnnotationBank.HEADER_KEY])
             if row['QC'] != AnnotationBank.UNKOWN:
-                if key_annot not in self._bank:
-                    for key_bank in self._bank:
-                        if key_annot[:-1] == key_bank[:-1]:
-                            # Correction case (give precedence to newer annotations)
-                            if row['QC'] == self._bank[key_bank]['QC'] == AnnotationBank.GOOD:
-                                keys_to_del.append(key_bank)
-                    for key_bank in keys_to_del:
-                        if key_bank in self._bank:
-                            del self._bank[key_bank]
                 self._bank[key_annot] = {h: row.get(h, '') for h in [h for h in AnnotationBank.HEADER_INFO if h != 'STATUS']}
                 self._bank[key_annot]['STATUS'] = ''
             else:
@@ -165,6 +153,9 @@ def automatic_bank_annotation(bank_path, annotated_paradigms, new_conj_tables, p
     bank = AnnotationBank(bank_path, annotated_paradigms)
     lemmas = [entry[1] for entry in bank._bank]
     strip = True if not any(['-' in lemma for lemma in lemmas]) else False
+    partial_keys = {}
+    for k, info in bank._bank.items():
+        partial_keys.setdefault(k[:-1], []).append({**info, **{'DIAC': k[-1]}})
 
     outputs = []
     for _, row in new_conj_tables.iterrows():
@@ -176,6 +167,14 @@ def automatic_bank_annotation(bank_path, annotated_paradigms, new_conj_tables, p
         info = bank.get(key)
         if info is not None:
             row['QC'] = info['QC']
+            if info['QC'] == AnnotationBank.PROBLEM:
+                pass
+            key_ = key[:-1]
+            if len(partial_keys[key_]) > 1:
+                warnings = [f"{AnnotationBank.GOOD}-MULT:{info['DIAC']}" for info in partial_keys[key_]
+                                if info['QC'] == AnnotationBank.GOOD and key[-1] != info['DIAC']]
+                if warnings:
+                    row['WARNINGS'] = ' '.join(warnings)
         else:
             for k, info in bank._bank.items():
                 if key[:-1] == k[:-1]:
