@@ -40,7 +40,7 @@ aA_regex = re.compile(r'(?<!^[wf])aA')
 verb_bw_regex = re.compile(r'[PIC]V')
 
 essential_keys = ['source', 'diac', 'lex', 'pos', 'asp', 'mod', 'vox', 'per', 'num', 'gen',
-                  'prc0', 'prc1', 'prc1.5', 'prc2', 'prc3', 'enc0', 'enc1', 'enc2']
+                  'prc0', 'prc1', 'prc1.5', 'prc2', 'prc3', 'enc0', 'enc1', 'enc2', 'stem_seg']
 
 
 def _preprocess_magold_data(gold_data):
@@ -98,7 +98,7 @@ def _preprocess_ldc_dediac(ldc_diac):
     return analyzer_input
 
 
-def _preprocess_analysis(analysis, optional_keys=[]):
+def _preprocess_analysis(analysis, optional_keys=[], ar2bw=None):
     if analysis['prc0'] in ['mA_neg', 'lA_neg']:
         analysis['prc1.5'] = analysis['prc0']
         analysis['prc0'] = '0'
@@ -116,9 +116,11 @@ def _preprocess_analysis(analysis, optional_keys=[]):
         elif k == 'gen':
             pred.append('m' if analysis[k] == 'u' else analysis[k])
         elif k == 'prc2':
-            pred.append(re.sub(r'^w[ai]', 'w', analysis[k]))
+            pred.append(re.sub(r'^([wf])[ai]', r'\1', analysis[k]))
         elif k == 'prc1':
-            pred.append(re.sub(r'^[hH]', 'h', analysis[k]))
+            x = re.sub(r'^[hH]', 'h', analysis[k])
+            x = re.sub(r'^([bl])[ai]', r'\1', x)
+            pred.append(x)
         elif re.match(r'prc\d|enc\d', k):
             pred.append(analysis.get(k, '0'))
         else:
@@ -126,7 +128,7 @@ def _preprocess_analysis(analysis, optional_keys=[]):
     return tuple(pred)
 
 
-def recall_print(errors, correct_cases, drop_cases, results_path):
+def recall_print(errors, correct_cases, drop_cases, results_path, bw2ar, best_analysis=True):
     errors_ = []
     i = 1
     source_index = essential_keys.index('source')
@@ -153,7 +155,13 @@ def recall_print(errors, correct_cases, drop_cases, results_path):
                 sorted_indexes = sorted(
                     index2similarity.items(), key=lambda x: x[1], reverse=True)
                 analyses_pred = [analyses_pred[analysis_index]
-                                 for analysis_index, _ in sorted_indexes][0:1]
+                                 for analysis_index, _ in sorted_indexes]
+                if best_analysis:
+                    analyses_pred = analyses_pred[0:1]
+                else:
+                    analyses_pred = [analysis for analysis in analyses_pred
+                                     if all(analysis[i] == e_gold[i] for i, k in enumerate(essential_keys)
+                                            if k not in ['source', 'lex', 'diac', 'stem_seg'])]
 
                 pred = pd.DataFrame(analyses_pred)
 
@@ -174,18 +182,21 @@ def recall_print(errors, correct_cases, drop_cases, results_path):
     errors.to_csv(results_path, index=False, sep='\t')
 
 
-def evaluate_verbs_recall(data, eval_mode):
+def evaluate_recall(data, n, eval_mode, output_path, pos_type,
+                    analyzer_camel, msa_camel_analyzer, ar2bw, bw2ar, best_analysis=True):
     source_index = essential_keys.index('source')
     lex_index = essential_keys.index('lex')
     diac_index = essential_keys.index('diac')
+    stem_seg_index = essential_keys.index('stem_seg')
     essential_keys_ = [k for k in essential_keys if k != 'source']
     excluded_indexes = [source_index]
     if 'no_lex' in eval_mode:
         print('Excluding lexical features from evaluation.')
         essential_keys_ = [
-            k for k in essential_keys_ if k not in ['lex', 'diac']]
+            k for k in essential_keys_ if k not in ['lex', 'diac', 'stem_seg']]
         excluded_indexes.append(lex_index)
         excluded_indexes.append(diac_index)
+        excluded_indexes.append(stem_seg_index)
     mod_index = essential_keys_.index('mod')
     gen_index = essential_keys_.index('gen')
 
@@ -197,7 +208,7 @@ def evaluate_verbs_recall(data, eval_mode):
         print('Analyzer input: CALIMA DEDIAC')
 
     data_, counts = {}, {}
-    for word_info in data['verbal']:
+    for word_info in data[pos_type]:
         key = (word_info['info']['word'], tuple(
             word_info['info']['magold'][0].split(' # ')[1:4]))
         counts.setdefault(key, 0)
@@ -206,11 +217,11 @@ def evaluate_verbs_recall(data, eval_mode):
 
     correct, total = 0, 0
     errors, correct_cases, drop_cases = [], [], []
-    data_ = list(data_.items())[:args.n]
+    data_ = list(data_.items())[:n]
     pbar = tqdm(total=len(data_))
     for (word, ldc_bw), word_info in data_:
         total += 1
-        analysis_gold = _preprocess_analysis(word_info['analysis'])
+        analysis_gold = _preprocess_analysis(word_info['analysis'], ar2bw=ar2bw)
 
         if 'raw' in eval_mode:
             analyzer_input = word
@@ -221,11 +232,11 @@ def evaluate_verbs_recall(data, eval_mode):
 
         analyzer_input = bw2ar(analyzer_input)
 
-        analyses_pred = analyzer_camel.analyze(analyzer_input)
-        for analysis in analyses_pred:
+        analyses_pred_ = analyzer_camel.analyze(analyzer_input)
+        for analysis in analyses_pred_:
             analysis['source'] = 'main'
-        analyses_pred = set([_preprocess_analysis(analysis)
-                             for analysis in analyses_pred])
+        analyses_pred = set([_preprocess_analysis(analysis, ar2bw=ar2bw)
+                             for analysis in analyses_pred_])
 
         match = re.search(r'ADAM|CALIMA|SAMA', word_info['analysis']['gloss'])
         if match:
@@ -237,7 +248,7 @@ def evaluate_verbs_recall(data, eval_mode):
             for analysis in analyses_msa_pred:
                 analysis['source'] = 'msa'
             analyses_msa_pred = set([_preprocess_analysis(
-                analysis) for analysis in analyses_msa_pred])
+                analysis, ar2bw=ar2bw) for analysis in analyses_msa_pred])
             analyses_pred = analyses_pred | analyses_msa_pred
 
         analyses_pred_no_source = set(
@@ -290,7 +301,8 @@ def evaluate_verbs_recall(data, eval_mode):
     print(
         f"Type space recall: {sum(case['count'] for case in correct_cases)/(sum(case['count'] for case in correct_cases) + sum(case['count'] for case in errors))}")
 
-    recall_print(errors, correct_cases, drop_cases, os.path.join(args.output_dir, f'{eval_mode}.tsv'))
+    # recall_print(errors, correct_cases, drop_cases, output_path, bw2ar, best_analysis)
+    return correct_cases
 
 
 def compare_print(words, analyses_words, status, results_path, bw=False):
@@ -558,6 +570,8 @@ if __name__ == "__main__":
                         type=str, help="Path of the MSA baseline DB file we will be comparing against.")
     parser.add_argument("-egy_baseline_db", default='eval_files/calima-egy-c044_0.2.0.utf8.db',
                         type=str, help="Path of the EGY baseline DB file we will be comparing against.")
+    parser.add_argument("-pos_type", default='verbal',
+                        type=str, help="POS type to evaluate")
     parser.add_argument("-eval_mode", required=True,
                         choices=['recall_msa_magold_raw', 'recall_msa_magold_ldc_dediac',
                                  'recall_egy_magold_raw', 'recall_egy_magold_ldc_dediac',
@@ -653,12 +667,13 @@ if __name__ == "__main__":
                 args.db_dir, config_msa['db']))
             msa_camel_analyzer = Analyzer(msa_camel_db)
 
-        evaluate_verbs_recall(data, args.eval_mode)
+        output_path = os.path.join(args.output_dir, f'{args.eval_mode}.tsv')
+        evaluate_recall(data, args.n, args.eval_mode, output_path, args.pos_type, ar2bw, bw2ar)
 
     elif 'compare' in args.eval_mode:
         print('Eval mode:', 'COMPARE')
         if 'magold' in args.eval_mode:
-            data = [example['info']['word'] for example in data['verbal']]
+            data = [example['info']['word'] for example in data[args.pos_type]]
         elif 'camel_tb' in args.eval_mode:
             print('Eval mode:', 'COMPARE')
             data = [word for word in list(data) if word]

@@ -2,12 +2,25 @@
     "global": {
         "data_dir": "data",
         "specs": {
-            "spreadsheet": "header-morph-order-sheets",
+            "spreadsheet": "camel-morph-common",
             "sheets": [
                 "About",
                 "Header"
             ]
-        }
+        },
+        "db_dir": "databases",
+        "debugging": "debugging_output",
+        "repr_lemmas_dir": "repr_lemmas",
+        "tables_dir": "tables",
+        "paradigm_debugging_dir": "paradigm_debugging",
+        "banks_dir": "banks",
+        "docs_debugging_dir": "docs_debugging",
+        "docs_banks_dir": "banks_docs",
+        "docs_tables_dir": "tables_docs",
+        "camel_tools": "/Users/chriscay/Library/Mobile Documents/com~apple~CloudDocs/NYUAD/camel_tools",
+        "service_account": "/Users/chriscay/.config/gspread/service_account.json",
+        "paradigms_config": "configs/config_paradigms.json",
+        "banks_spreadsheet": "Paradigm-Banks"
     },
     "local": {
         "msa_pv_capstones": {
@@ -23,6 +36,91 @@
                 ]
             },
             "db": "XYZ_msa_pv_v1.0_red.db"
+        },
+        "nom_glf_split_red": {
+            "split_or": false,
+            "cat2id": true,
+            "dialect": "glf",
+            "clean_conditions": false,
+            "pruning": false,
+            "specs": {
+                "spreadsheet": "camel-morph-glf-nom-other-pilot",
+                "sheets": {
+                    "order": "GLF-Nom-ORDER",
+                    "morph": "GLF-Nom-MORPH",
+                    "postregex": "GLF-PostRegex"
+                },
+                "exclude": [
+                    "RED"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-glf-nom-other-pilot",
+                "sheets": [
+                    "GLF-Nom-LEX"
+                ]
+            },
+            "db": "XYZ_glf_nom_v1.0_red.db",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Nominals-Dialects",
+                "feats": {
+                    "": {
+                        "debugging_sheet": "GLF-Nom",
+                        "conj_tables": "conj_nom_glf_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_nom_glf_v1.0.tsv",
+                        "bank": "GLF-Nom-Bank.tsv"
+                    }
+                }
+            },
+            "lexprob": "misc_files/egy_lexprob.tsv",
+            "pos_type": "nominal",
+            "class_keys": [
+                "cond_t",
+                "cond_s",
+                "gen",
+                "num",
+                "cas"
+            ],
+            "extended_lemma_keys": [
+                "lemma",
+                "form",
+                "pos",
+                "cond_t",
+                "index"
+            ]
+        },
+        "nominals_glf_docs": {
+            "split_or": false,
+            "dialect": "glf",
+            "clean_conditions": false,
+            "pruning": false,
+            "specs": {
+                "spreadsheet": "camel-morph-glf-nom-other-pilot",
+                "sheets": {
+                    "order": "GLF-Nom-ORDER",
+                    "morph": "GLF-Nom-MORPH",
+                    "postregex": "GLF-PostRegex"
+                },
+                "exclude": [
+                    "RED"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-glf-nom-other-pilot",
+                "sheets": [
+                    "EGY-Nom-LEX"
+                ]
+            },
+            "docs_debugging": {
+                "bank": "GLF-Docs-Bank.tsv",
+                "output_name": "docs_debug_glf_v1.0.tsv",
+                "debugging_spreadsheet": "camel-morph-glf-nom-other-pilot",
+                "debugging_sheet": "GLF-Documentation-Nom-Auto",
+                "docs_tables": "docs_tables_glf_v1.0.tsv"
+            },
+            "db": "XYZ_glf_nom_docs_red.db",
+            "lexprob": "misc_files/glf_lexprob.tsv",
+            "pos_type": "nominal"
         }
     }
 }
