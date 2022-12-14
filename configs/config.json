@@ -941,14 +941,62 @@
                 "index"
             ]
         },
-        "nom_egy_red": {
+        "other_msa_split_red": {
+            "split_or": true,
+            "pruning": false,
+            "clean_conditions": false,
+            "specs": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": {
+                    "order": "MSA-Other-ORDER",
+                    "morph": "MSA-Other-MORPH"
+                },
+                "exclude": [
+                    "RED"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": [
+                    "MSA-Other-LEX"
+                ]
+            },
+            "dialect": "msa",
+            "db": "XYZ_msa_other_v1.0_red.db",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Nominals",
+                "feats": {
+                    "": {
+                        "debugging_sheet": "MSA-Other",
+                        "conj_tables": "conj_other_msa_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_other_msa_v1.0.tsv",
+                        "bank": "MSA-Other-Bank.tsv"
+                    }
+                }
+            },
+            "pos_type": "other",
+            "class_keys": [
+                "cond_t",
+                "cond_s",
+                "pos"
+            ],
+            "extended_lemma_keys": [
+                "lemma",
+                "form",
+                "index"
+            ]
+        },
+        "adj_egy_split_red": {
+            "split_or": true,
             "dialect": "egy",
-            "pruning": true,
+            "clean_conditions": false,
+            "pruning": false,
             "specs": {
                 "spreadsheet": "camel-morph-egy-nom-other",
                 "sheets": {
                     "order": "EGY-Nom-ORDER",
-                    "morph": "EGY-Nom-MORPH"
+                    "morph": "EGY-Nom-MORPH",
+                    "postregex": "PostRegex"
                 },
                 "exclude": [
                     "RED"
@@ -965,14 +1013,16 @@
                 "debugging_spreadsheet": "Paradigm-Debugging-Nominals-Dialects",
                 "feats": {
                     "": {
-                        "debugging_sheet": "EGY-Nom",
-                        "conj_tables": "conj_nom_egy_v1.0.tsv",
-                        "paradigm_debugging": "paradigm_debug_nom_egy_v1.0.tsv",
-                        "bank": "EGY-Nom-Bank.tsv"
+                        "debugging_sheet": "EGY-Adj",
+                        "conj_tables": "conj_adj_egy_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_adj_egy_v1.0.tsv",
+                        "bank": "EGY-Adj-Bank.tsv"
                     }
                 }
             },
+            "lexprob": "misc_files/egy_lexprob.tsv",
             "pos_type": "nominal",
+            "pos": "adj",
             "class_keys": [
                 "cond_t",
                 "cond_s",
@@ -984,8 +1034,158 @@
                 "lemma",
                 "form",
                 "pos",
-                "rat",
                 "cond_t",
+                "index"
+            ]
+        },
+        "noun_egy_split_red": {
+            "split_or": true,
+            "dialect": "egy",
+            "clean_conditions": false,
+            "pruning": false,
+            "specs": {
+                "spreadsheet": "camel-morph-egy-nom-other",
+                "sheets": {
+                    "order": "EGY-Nom-ORDER",
+                    "morph": "EGY-Nom-MORPH",
+                    "postregex": "PostRegex"
+                },
+                "exclude": [
+                    "RED"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-egy-nom-other",
+                "sheets": [
+                    "EGY-Nom-LEX"
+                ]
+            },
+            "db": "XYZ_egy_nom_v1.0_red.db",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Nominals-Dialects",
+                "feats": {
+                    "": {
+                        "debugging_sheet": "EGY-Noun",
+                        "conj_tables": "conj_noun_egy_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_noun_egy_v1.0.tsv",
+                        "bank": "EGY-Noun-Bank.tsv"
+                    }
+                }
+            },
+            "lexprob": "misc_files/egy_lexprob.tsv",
+            "pos_type": "nominal",
+            "pos": "noun",
+            "class_keys": [
+                "cond_t",
+                "cond_s",
+                "gen",
+                "num",
+                "cas"
+            ],
+            "extended_lemma_keys": [
+                "lemma",
+                "form",
+                "pos",
+                "cond_t",
+                "index"
+            ]
+        },
+        "noun_prop_egy_split_red": {
+            "split_or": true,
+            "dialect": "egy",
+            "clean_conditions": false,
+            "pruning": false,
+            "specs": {
+                "spreadsheet": "camel-morph-egy-nom-other",
+                "sheets": {
+                    "order": "EGY-Nom-ORDER",
+                    "morph": "EGY-Nom-MORPH",
+                    "postregex": "PostRegex"
+                },
+                "exclude": [
+                    "RED"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-egy-nom-other",
+                "sheets": [
+                    "EGY-Nom-Prop-LEX"
+                ]
+            },
+            "db": "XYZ_egy_nom_v1.0_red.db",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Nominals-Dialects",
+                "feats": {
+                    "": {
+                        "debugging_sheet": "EGY-Noun-Prop",
+                        "conj_tables": "conj_noun_prop_egy_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_noun_prop_egy_v1.0.tsv",
+                        "bank": "EGY-Noun-Prop-Bank.tsv"
+                    }
+                }
+            },
+            "lexprob": "misc_files/egy_lexprob.tsv",
+            "pos_type": "nominal",
+            "pos": "noun_prop",
+            "class_keys": [
+                "cond_t",
+                "cond_s",
+                "gen",
+                "num",
+                "cas"
+            ],
+            "extended_lemma_keys": [
+                "lemma",
+                "form",
+                "pos",
+                "cond_t",
+                "index"
+            ]
+        },
+        "other_egy_split_red": {
+            "split_or": true,
+            "dialect": "egy",
+            "clean_conditions": false,
+            "pruning": false,
+            "specs": {
+                "spreadsheet": "camel-morph-egy-nom-other",
+                "sheets": {
+                    "order": "EGY-Nom-ORDER",
+                    "morph": "EGY-Nom-MORPH",
+                    "postregex": "PostRegex"
+                },
+                "exclude": [
+                    "RED"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-egy-nom-other",
+                "sheets": [
+                    "EGY-Other-LEX"
+                ]
+            },
+            "db": "XYZ_egy_other_v1.0_red.db",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Nominals-Dialects",
+                "feats": {
+                    "": {
+                        "debugging_sheet": "EGY-Other",
+                        "conj_tables": "conj_other_egy_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_other_egy_v1.0.tsv",
+                        "bank": "EGY-Other-Bank.tsv"
+                    }
+                }
+            },
+            "lexprob": "misc_files/egy_lexprob.tsv",
+            "pos_type": "other",
+            "class_keys": [
+                "cond_t",
+                "cond_s",
+                "pos"
+            ],
+            "extended_lemma_keys": [
+                "lemma",
+                "form",
                 "index"
             ]
         },

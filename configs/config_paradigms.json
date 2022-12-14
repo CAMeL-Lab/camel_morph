@@ -351,6 +351,22 @@
                     "NOM.Q.CA.E0"
                 ]
             }
+        },
+        "other": {
+            "": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "OTHER....",
+                    "OTHER...P1",
+                    "OTHER...P2",
+                    "OTHER...P12",
+                    "OTHER...E0",
+                    "OTHER...P1.E0",
+                    "OTHER...P2.E0",
+                    "OTHER...P12.E0"
+                ]
+            }
         }
     },
     "glf": {
@@ -443,6 +459,111 @@
                 ]
             }
         },
-        "nominal": {}
+        "nominal": {
+            "gen:m num:s": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "NOM.MS.D.P0",
+                    "NOM.MS.I",
+                    "NOM.MS.C",
+                    "NOM.MS.D.P0.E0",
+                    "NOM.MS.C.E0"
+                ]
+            },
+            "gen:f num:s": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "NOM.FS.D.P0",
+                    "NOM.FS.I",
+                    "NOM.FS.C",
+                    "NOM.FS.D.P0.E0",
+                    "NOM.FS.C.E0"
+                ]
+            },
+            "gen:m num:d": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "NOM.MD.D.P0",
+                    "NOM.MD.I",
+                    "NOM.MD.C",
+                    "NOM.MD.D.P0.E0",
+                    "NOM.MD.C.E0"
+                ]
+            },
+            "gen:f num:d": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "NOM.FD.D.P0",
+                    "NOM.FD.I",
+                    "NOM.FD.C",
+                    "NOM.FD.D.P0.E0",
+                    "NOM.FD.C.E0"
+                ]
+            },
+            "gen:m num:p": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "NOM.MQ.D.P0",
+                    "NOM.MQ.I",
+                    "NOM.MQ.C",
+                    "NOM.MQ.D.P0.E0",
+                    "NOM.MQ.C.E0"
+                ]
+            },
+            "gen:f num:p": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "NOM.FQ.D.P0",
+                    "NOM.FQ.I",
+                    "NOM.FQ.C",
+                    "NOM.FQ.D.P0.E0",
+                    "NOM.FQ.C.E0"
+                ]
+            },
+            "gen:u num:s": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "NOM.S.D.P0",
+                    "NOM.S.I",
+                    "NOM.S.C",
+                    "NOM.S.D.P0.E0",
+                    "NOM.S.C.E0"
+                ]
+            },
+            "gen:u num:p": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "NOM.Q.D.P0",
+                    "NOM.Q.I",
+                    "NOM.Q.C",
+                    "NOM.Q.D.P0.E0",
+                    "NOM.Q.C.E0"
+                ]
+            }
+        },
+        "other": {
+            "": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "OTHER....",
+                    "OTHER...P1",
+                    "OTHER...P2",
+                    "OTHER...P12",
+                    "OTHER...E0",
+                    "OTHER...P1.E0",
+                    "OTHER...P2.E0",
+                    "OTHER...P12.E0"
+                ]
+            }
+        }
     }
 }

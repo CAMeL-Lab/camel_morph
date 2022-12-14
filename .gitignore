@@ -353,3 +353,11 @@ MigrationBackup/
 .DS_Store
 !requirements.txt
 !sigmorphon2022_release/requirements.txt
+
+data/
+databases/
+debugging_output/
+sandbox_files/
+camel_morph/db_maker.py
+*.zip
+*.code-workspace
