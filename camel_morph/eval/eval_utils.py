@@ -4,6 +4,7 @@ from tqdm import tqdm
 import itertools
 import pickle
 import re
+import numpy as np
 
 from types import ModuleType, FunctionType
 from gc import get_referents
@@ -212,20 +213,20 @@ def get_closest_key(analysis_key_compare, analysis_keys):
     return best_key
 
 
-def get_index2lemmas_pos(report_dir):
+def load_index2lemmas_pos(report_dir):
     with open(os.path.join(report_dir, 'lemmas_pos.pkl'), 'rb') as f:
         lemmas_pos = pickle.load(f)
     lemmas_pos = {index: lemma_pos for index, lemma_pos in lemmas_pos}
     return lemmas_pos
 
 
-def get_results_debug_eval(report_dir):
+def load_results_debug_eval(report_dir):
     with open(os.path.join(report_dir, 'results_debug_eval.pkl'), 'rb') as f:
         results_debug_eval = pickle.load(f)
     return results_debug_eval
 
 
-def get_full_report(report_dir):
+def load_full_report(report_dir):
     report = {}
     for report_name in sorted(os.listdir(report_dir)):
         if not bool(re.match(r'\d+\.pkl', report_name)):
@@ -254,3 +255,32 @@ def join_reports(main_report, report_to_add):
                     else:
                         main_report[comparison_type][feats][metric][0] += value_[0]
                         main_report[comparison_type][feats][metric][1] += value_[1]
+
+
+def construct_feats(analysis_key, pos):
+    return {**{k: analysis_key[i] for i, k in enumerate(essential_keys_no_lex_pos)},
+            **{'pos': pos}}
+
+
+def load_accuracy_matrices(report_dir):
+    accuracy_matrix_baseline_path = os.path.join(report_dir, 'accuracy_matrix_baseline.npy')
+    if os.path.exists(accuracy_matrix_baseline_path):
+        accuracy_matrix_baseline = np.load(accuracy_matrix_baseline_path)
+        accuracy_matrix_camel = np.load(os.path.join(report_dir, 'accuracy_matrix_camel.npy'))
+        with open(os.path.join(report_dir, 'index2analysis.pkl'), 'rb') as f:
+            index2analysis = pickle.load(f)
+        analysis2index = {analysis: i for i, analysis in enumerate(index2analysis)}
+    else:
+        accuracy_matrix_baseline, accuracy_matrix_camel, index2analysis = None, None, None
+    
+    output = dict(
+        accuracy_matrix_baseline=accuracy_matrix_baseline,
+        accuracy_matrix_camel=accuracy_matrix_camel,
+        index2analysis=index2analysis,
+        analysis2index=analysis2index
+    )
+    return output
+
+
+def get_union_of_analyses(report):
+    return list(set.union(*[set(analyses) for analyses in report.values()]))

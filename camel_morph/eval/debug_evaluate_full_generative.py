@@ -9,6 +9,7 @@ import multiprocessing
 import cProfile, pstats
 import itertools
 from types import ModuleType, FunctionType
+import numpy as np
 
 import eval_utils
 
@@ -36,6 +37,8 @@ parser.add_argument("-test_mode", default=False, action='store_true',
                     help="Only test mode.")
 parser.add_argument("-profiling", default=False, action='store_true',
                     help="Run profiling.")
+parser.add_argument("-sample", default=False, action='store_true',
+                    help="Take sample of lemmas for validating and not all.")
 parser.add_argument("-feats_debug", default=[], action="extend", nargs="+",
                     type=str, help="Features to debug.")
 parser.add_argument("-feat_combs", default=1,
@@ -77,15 +80,17 @@ def _generate_test_keys(analysis_key):
             if len(feats) > 1 and len(set([feat.split(':')[0] for feat in feats])) != len(feats):
                 continue
             # Fully specified, e.g., gen:m>u (both source and target are specified)
-            fully_spec = [feat for feat in feats if '>' in feat]
             # Partially specified, e.g., prc0:0 (only target value is specified)
-            partially_spec = [
-                feat for feat in feats if ':' in feat and '>' not in feat]
             # Unspecified, e.g., vox (neither source not target are specified, all values allowed)
-            unspec = [f'{feat}:{v}' for feat in [feat for feat in feats if ':' not in feat]
-                      for v in DEFINES[feat]]
-            values_combinations = list(itertools.product(
-                *[spec for spec in [fully_spec, partially_spec, unspec] if spec]))
+            specification = {}
+            for feat in feats:
+                if ':' in feat:
+                    specification.setdefault(feat.split(':')[0], []).append(feat)
+                else:
+                    for v in DEFINES[feat]:
+                        specification.setdefault(feat, []).append(f'{feat}:{v}')
+            
+            values_combinations = list(itertools.product(*specification.values()))
             for values_comb in values_combinations:
                 test_key_ = list(analysis_key)
                 test_key_.insert(0, [])
@@ -118,25 +123,42 @@ def _validate_analysis(analysis_key, index):
         key_feats_ = '+'.join(key_feats[1:])
         if key_feats_ not in eval_with_clitics['both']:
             if key_feats_ in eval_with_clitics['baseline']:
-                explanation.add('baseline')
+                if accuracy_matrix_baseline[index][analysis2index[key_feats_]]:
+                    explanation.add(('baseline', key_feats[0]))
             elif key_feats_ in eval_with_clitics['camel']:
-                return 'camel', key_feats[0]
+                if accuracy_matrix_camel[index][analysis2index[key_feats_]]:
+                    return 'camel', key_feats[0]
             else:
-                explanation.add('invalid')
+                explanation.add(('invalid', key_feats[0]))
         else:
-            if all(index not in eval_with_clitics[x][key_feats_]
-                   if key_feats_ in eval_with_clitics[x] else True
-                   for x in ['camel', 'baseline']):
-                return 'matching', key_feats[0]
-    message = '+'.join(sorted(list(explanation)))
-    return '', message
+            if accuracy_matrix_baseline is not None:
+                analyses_exist_for_lemma = bool(
+                    accuracy_matrix_baseline[index][analysis2index[key_feats_]] and
+                    accuracy_matrix_camel[index][analysis2index[key_feats_]])
+            else:
+                analyses_exist_for_lemma = True
+            
+            if analyses_exist_for_lemma:
+                if all(index not in eval_with_clitics[x][key_feats_]
+                       if key_feats_ in eval_with_clitics[x] else True
+                       for x in ['camel', 'baseline']):
+                    return 'matching', key_feats[0]
+    
+    for e in explanation:
+        if e[0] == 'baseline':
+            return 'baseline', e[1]
+    
+    return '', 'invalid'
 
 def debug_eval(analysis_key_indexes):
     analysis_key, indexes = analysis_key_indexes
     analysis_key_split = analysis_key.split('+')
-    indexes_sample = random.sample(indexes, min(10, len(indexes)))
+    if args.sample:
+        indexes_ = random.sample(indexes, min(10, len(indexes)))
+    else:
+        indexes_ = indexes
     results = []
-    for index in indexes_sample:
+    for index in indexes_:
         diff = _validate_analysis(analysis_key_split, index)
         results.append((diff, analysis_key, index))
     return results
@@ -153,8 +175,13 @@ generator_camel = Generator(db_camel_gen)
 DEFINES = {k: v if v is None else [vv for vv in v if vv != 'na']
            for k, v in generator_baseline._db.defines.items()}
 
-eval_utils.get_index2lemmas_pos(args.report_dir)
-eval_with_clitics = eval_utils.get_full_report(args.report_dir)
+index2lemmas_pos = eval_utils.load_index2lemmas_pos(args.report_dir)
+eval_with_clitics = eval_utils.load_full_report(args.report_dir)
+
+info = eval_utils.load_accuracy_matrices(args.report_dir)
+accuracy_matrix_baseline = info['accuracy_matrix_baseline']
+accuracy_matrix_camel = info['accuracy_matrix_camel']
+index2analysis, analysis2index = info['index2analysis'], info['analysis2index']
 
 if args.profiling:
     profiler = cProfile.Profile()
