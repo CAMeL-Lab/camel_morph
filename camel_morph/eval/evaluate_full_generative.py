@@ -77,14 +77,6 @@ sukun_regex = re.compile(sukun_ar)
 aA_regex = re.compile(f'(?<!^[وف]){fatHa_ar}ا')
 
 
-def get_all_lemmas_from_db(db):
-    lemma_pos = set()
-    for match, analyses in db.stem_hash.items():
-        for cat, analysis in analyses:
-            lemma_pos.add((analysis['lex'], analysis['pos']))
-    return lemma_pos
-
-
 def _preprocess_lex_features(analysis):
     for k in ['lex', 'diac']:
         analysis[k] = sukun_regex.sub('', analysis[k])
@@ -97,8 +89,8 @@ def generate_all_possible_words_from_lemma(id_lemma_pos, oblig_spec=False):
         global accuracy_matrix_camel, accuracy_matrix_baseline
     else:
         eval_with_clitics, failed,  = {}, {}
-        accuracy_matrix_camel = np.zeros((1, len(index2analysis)), dtype='bool')
-        accuracy_matrix_baseline = np.zeros((1, len(index2analysis)), dtype='bool')
+        accuracy_matrix_camel = np.zeros((1, len(index2analysis)), dtype='uint8')
+        accuracy_matrix_baseline = np.zeros((1, len(index2analysis)), dtype='uint8')
     
     lemma_id, (lemma_ar, pos) = id_lemma_pos
     generations_baseline, generations_camel = [], []
@@ -151,28 +143,28 @@ def generate_all_possible_words_from_lemma(id_lemma_pos, oblig_spec=False):
         k_ = '+'.join(k)
         eval_with_clitics.setdefault('camel', {}).setdefault(k_, []).append(lemma_id)
         if not args.multiprocessing:
-            accuracy_matrix_camel[lemma_id][analysis2index[k_]] = True
+            accuracy_matrix_camel[lemma_id][analysis2index[k_]] += 1
         else:
-            accuracy_matrix_camel[0][analysis2index[k_]] = True
+            accuracy_matrix_camel[0][analysis2index[k_]] += 1
     for k in baseline_minus_camel:
         k_ = '+'.join(k)
         eval_with_clitics.setdefault('baseline', {}).setdefault(k_, []).append(lemma_id)
         if not args.multiprocessing:
-            accuracy_matrix_baseline[lemma_id][analysis2index[k_]] = True
+            accuracy_matrix_baseline[lemma_id][analysis2index[k_]] += 1
         else:
-            accuracy_matrix_baseline[0][analysis2index[k_]] = True
+            accuracy_matrix_baseline[0][analysis2index[k_]] += 1
     for k in intersection:
         k_ = '+'.join(k)
-        if not args.multiprocessing:
-            accuracy_matrix_camel[lemma_id][analysis2index[k_]] = True
-            accuracy_matrix_baseline[lemma_id][analysis2index[k_]] = True
-        else:
-            accuracy_matrix_camel[0][analysis2index[k_]] = True
-            accuracy_matrix_baseline[0][analysis2index[k_]] = True
         info = eval_with_clitics.setdefault('both', {}).setdefault(
             k_, {'matching': 0, 'total': 0, 'intersect_baseline': [0, []], 'intersect_camel': [0, []], 'no_intersect': [0, []]})
         lemma_diac_pos_baseline_set = set(generations_baseline_[k])
         lemma_diac_pos_camel_set = set(generations_camel_[k])
+        if not args.multiprocessing:
+            accuracy_matrix_camel[lemma_id][analysis2index[k_]] += len(lemma_diac_pos_camel_set)
+            accuracy_matrix_baseline[lemma_id][analysis2index[k_]] += len(lemma_diac_pos_baseline_set)
+        else:
+            accuracy_matrix_camel[0][analysis2index[k_]] += len(lemma_diac_pos_camel_set)
+            accuracy_matrix_baseline[0][analysis2index[k_]] += len(lemma_diac_pos_baseline_set)
         info['matching'] += len(lemma_diac_pos_camel_set & lemma_diac_pos_baseline_set)
         info['total'] += len(lemma_diac_pos_baseline_set)
         
@@ -211,19 +203,22 @@ DEFINES = {k: v if v is None else [vv for vv in v if vv != 'na']
 pos2cliticfeats = eval_utils.get_pos2clitic_combs(db_baseline)
 pos2obligfeats = eval_utils._get_pos2obligfeats(db_baseline)
 
-lemmas_pos = list(get_all_lemmas_from_db(db_baseline))
-lemmas_pos = [lemma_pos for lemma_pos in lemmas_pos
-              if lemma_pos[-1] == 'verb' and lemma_pos[0] == 'هَنّ'][:args.n]
-lemmas_pos = [(i, lemma_pos) for i, lemma_pos in enumerate(lemmas_pos)]
-
 previous_report = eval_utils.load_full_report(args.prev_report_dir)
 if previous_report:
     index2analysis = eval_utils.get_union_of_analyses(previous_report)
+    lemmas_pos = eval_utils.load_index2lemmas_pos(previous_report)
+    lemmas_pos = sorted([(i, lemma_pos) for i, lemma_pos in lemmas_pos.items()],
+                        key=lambda x: x[0])
 else:
+    lemmas_pos = list(eval_utils.get_all_lemmas_from_db(db_baseline))
+    lemmas_pos = [lemma_pos for lemma_pos in lemmas_pos
+                if lemma_pos[-1] == 'verb'][:args.n]
+    lemmas_pos = [(i, lemma_pos) for i, lemma_pos in enumerate(lemmas_pos)]
     raise NotImplementedError
+
 analysis2index = {analysis: i for i, analysis in enumerate(index2analysis)}
-accuracy_matrix_baseline = np.zeros((len(lemmas_pos), len(index2analysis)), dtype='bool')
-accuracy_matrix_camel = np.zeros((len(lemmas_pos), len(index2analysis)), dtype='bool')
+accuracy_matrix_baseline = np.zeros((len(lemmas_pos), len(index2analysis)), dtype='uint8')
+accuracy_matrix_camel = np.zeros((len(lemmas_pos), len(index2analysis)), dtype='uint8')
 
 eval_with_clitics = {}
 failed = {}
@@ -275,3 +270,5 @@ if __name__ == "__main__":
     np.save(os.path.join(args.report_dir, 'accuracy_matrix_camel'), accuracy_matrix_camel)
     with open(os.path.join(args.report_dir, 'index2analysis.pkl'), 'wb') as f:
         pickle.dump(index2analysis, f)
+    
+    print('Done.')

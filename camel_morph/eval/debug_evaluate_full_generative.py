@@ -191,33 +191,29 @@ if __name__ == "__main__":
     iterable = eval_with_clitics['baseline'].items()
     if args.multiprocessing:
         with multiprocessing.Pool(args.n_cpu) as p:
-            results = list(
+            results_debug_eval = list(
                 tqdm(p.imap(debug_eval, iterable), total=len(iterable), smoothing=0.2))
     else:
-        results = []
+        results_debug_eval = []
         for analysis_key_indexes in tqdm(iterable, smoothing=0.2):
-            results.append(debug_eval(analysis_key_indexes))
+            results_debug_eval.append(debug_eval(analysis_key_indexes))
 
     if args.profiling:
         profiler.disable()
         stats = pstats.Stats(profiler).sort_stats('cumtime')
         stats.print_stats()
-    else:
-        with open(os.path.join(args.report_dir, 'results_debug_eval.pkl'), 'wb') as f:
-            pickle.dump(results, f)
     
-    with open(os.path.join(args.report_dir, 'results_debug_eval.pkl'), 'rb') as f:
-        results_debug_eval = pickle.load(f)
-        eval_with_clitics_ = {}
-        for results_ in results_debug_eval:
-            for diff, analysis_key, index in results_:
-                if diff[0]:
-                    eval_with_clitics_.setdefault('baseline', {}).setdefault(
-                        diff[0], {}).setdefault(diff[1], {}).setdefault(analysis_key, []).append(index)
-                else:
-                    eval_with_clitics_.setdefault('baseline', {}).setdefault(
-                        'not_validated', {}).setdefault(diff[1], {}).setdefault(analysis_key, []).append(index)
+    eval_with_clitics_ = {}
+    for results_ in results_debug_eval:
+        for diff, analysis_key, index in results_:
+            if diff[0]:
+                eval_with_clitics_.setdefault('baseline', {}).setdefault(
+                    diff[0], {}).setdefault(diff[1], {}).setdefault(analysis_key, []).append(index)
+            else:
+                eval_with_clitics_.setdefault('baseline', {}).setdefault(
+                    'not_validated', {}).setdefault(diff[1], {}).setdefault(analysis_key, []).append(index)
 
     with open(os.path.join(args.report_dir, 'results_debug_eval.pkl'), 'wb') as f:
         pickle.dump(eval_with_clitics_, f)
-    pass
+    
+    print('Done.')

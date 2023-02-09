@@ -20,6 +20,40 @@ feats_oblig = ['asp', 'mod', 'vox', 'per', 'num', 'gen', 'cas', 'stt']
 essential_keys_no_lex_pos = [k for k in essential_keys if k not in ['diac', 'lex', 'pos']]
 feat2index = {k: i for i, k in enumerate(essential_keys_no_lex_pos)}
 
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+    colors = {
+        'header': HEADER,
+        'blue': OKBLUE,
+        'cyan': OKCYAN,
+        'green': OKGREEN,
+        'warning': WARNING,
+        'fail': FAIL}
+
+def color(text, color_):
+    text = bcolors.colors[color_] + text
+    text += bcolors.ENDC if not text.endswith(bcolors.ENDC) else ''
+    return text
+
+def bold(text):
+    text = bcolors.BOLD + text
+    text += bcolors.ENDC if not text.endswith(bcolors.ENDC) else ''
+    return text
+
+def underline(text):
+    text = bcolors.UNDERLINE + text
+    text += bcolors.ENDC if not text.endswith(bcolors.ENDC) else ''
+    return text
+
+
 def getsize(obj):
     """sum size of object & members."""
     if isinstance(obj, BLACKLIST):
@@ -38,6 +72,14 @@ def getsize(obj):
     
     size = str(size / (1000*1000)) + 'MB'
     return size
+
+
+def get_all_lemmas_from_db(db):
+    lemmas_pos = set()
+    for match, analyses in db.stem_hash.items():
+        for cat, analysis in analyses:
+            lemmas_pos.add((analysis['lex'], analysis['pos']))
+    return lemmas_pos
 
 
 def _reverse_compat_table(XY):
