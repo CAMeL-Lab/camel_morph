@@ -20,6 +20,10 @@ feats_oblig = ['asp', 'mod', 'vox', 'per', 'num', 'gen', 'cas', 'stt']
 essential_keys_no_lex_pos = [k for k in essential_keys if k not in ['diac', 'lex', 'pos']]
 feat2index = {k: i for i, k in enumerate(essential_keys_no_lex_pos)}
 
+sukun_ar, fatHa_ar = 'ْ', 'َ'
+sukun_regex = re.compile(sukun_ar)
+aA_regex = re.compile(f'(?<!^[وف]){fatHa_ar}ا')
+
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -255,6 +259,14 @@ def get_closest_key(analysis_key_compare, analysis_keys):
     return best_key
 
 
+def _preprocess_lex_features(analysis, return_analysis=False):
+    for k in ['lex', 'diac']:
+        analysis[k] = sukun_regex.sub('', analysis[k])
+        analysis[k] = aA_regex.sub('A', analysis[k])
+    if return_analysis:
+        return analysis
+
+
 def load_index2lemmas_pos(report_dir):
     with open(os.path.join(report_dir, 'lemmas_pos.pkl'), 'rb') as f:
         lemmas_pos = pickle.load(f)
@@ -268,61 +280,33 @@ def load_results_debug_eval(report_dir):
     return results_debug_eval
 
 
-def load_full_report(report_dir):
-    report = {}
-    for report_name in sorted(os.listdir(report_dir)):
-        if not bool(re.match(r'\d+\.pkl', report_name)):
-            continue
-        with open(os.path.join(report_dir, report_name), 'rb') as f:
-            report_ = pickle.load(f)
-            join_reports(main_report=report, report_to_add=report_)
-    return report
-
-
-def join_reports(main_report, report_to_add):
-    for comparison_type, comparison in report_to_add.items():
-        if comparison_type in ['camel', 'baseline']:
-            for feats, lemmas_ in comparison.items():
-                lemmas = main_report.setdefault(
-                    comparison_type, {}).setdefault(feats, [])
-                lemmas += lemmas_
-        else:
-            for feats, info_ in comparison.items():
-                info = main_report.setdefault(
-                    comparison_type, {}).setdefault(feats, {})
-                for metric, value_ in info_.items():
-                    info.setdefault(metric, 0 if type(value_) is int else [0, []])
-                    if type(value_) is int:
-                        main_report[comparison_type][feats][metric] += value_
-                    else:
-                        main_report[comparison_type][feats][metric][0] += value_[0]
-                        main_report[comparison_type][feats][metric][1] += value_[1]
-
-
 def construct_feats(analysis_key, pos):
     return {**{k: analysis_key[i] for i, k in enumerate(essential_keys_no_lex_pos)},
             **{'pos': pos}}
 
 
-def load_accuracy_matrices(report_dir):
-    accuracy_matrix_baseline_path = os.path.join(report_dir, 'accuracy_matrix_baseline.npy')
-    if os.path.exists(accuracy_matrix_baseline_path):
-        accuracy_matrix_baseline = np.load(accuracy_matrix_baseline_path)
-        accuracy_matrix_camel = np.load(os.path.join(report_dir, 'accuracy_matrix_camel.npy'))
+def load_matrices(report_dir):
+    recall_mat_baseline_path = os.path.join(report_dir, 'recall_mat_baseline.npy')
+    if os.path.exists(recall_mat_baseline_path):
+        recall_mat_baseline = np.load(recall_mat_baseline_path)
+        recall_mat_camel = np.load(os.path.join(report_dir, 'recall_mat_camel.npy'))
+        camel_minus_baseline_mat = np.load(os.path.join(report_dir, 'camel_minus_baseline_mat.npy'))
+        baseline_minus_camel_mat = np.load(os.path.join(report_dir, 'baseline_minus_camel_mat.npy'))
+        no_intersect_mat = np.load(os.path.join(report_dir, 'no_intersect_mat.npy'))
         with open(os.path.join(report_dir, 'index2analysis.pkl'), 'rb') as f:
             index2analysis = pickle.load(f)
         analysis2index = {analysis: i for i, analysis in enumerate(index2analysis)}
     else:
-        accuracy_matrix_baseline, accuracy_matrix_camel, index2analysis = None, None, None
+        recall_mat_baseline, recall_mat_camel, index2analysis = None, None, None
+        camel_minus_baseline_mat, baseline_minus_camel_mat, no_intersect_mat = None, None, None
     
     output = dict(
-        accuracy_matrix_baseline=accuracy_matrix_baseline,
-        accuracy_matrix_camel=accuracy_matrix_camel,
+        recall_mat_baseline=recall_mat_baseline,
+        recall_mat_camel=recall_mat_camel,
+        camel_minus_baseline_mat=camel_minus_baseline_mat,
+        baseline_minus_camel_mat=baseline_minus_camel_mat,
+        no_intersect_mat=no_intersect_mat,
         index2analysis=index2analysis,
         analysis2index=analysis2index
     )
     return output
-
-
-def get_union_of_analyses(report):
-    return list(set.union(*[set(analyses) for analyses in report.values()]))
