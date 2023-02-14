@@ -197,7 +197,7 @@ def get_pos2clitic_combs(db_baseline):
     return pos2feats
 
 
-def _get_pos2obligfeats(db_baseline):
+def get_pos2obligfeats(db_baseline):
     pos2obligfeats = {}
     for pos, analysis_default in db_baseline.defaults.items():
         feats_oblig_pos = {
@@ -281,7 +281,8 @@ def load_results_debug_eval(report_dir):
 
 
 def construct_feats(analysis_key, pos):
-    return {**{k: analysis_key[i] for i, k in enumerate(essential_keys_no_lex_pos)},
+    return {**{k: analysis_key[i] for i, k in enumerate(essential_keys_no_lex_pos)
+               if analysis_key[i] != 'na'},
             **{'pos': pos}}
 
 
