@@ -222,12 +222,18 @@ DEFINES = {k: v if v is None else [vv for vv in v if vv != 'na']
 pos2cliticfeats = eval_utils.get_pos2clitic_combs(db_baseline)
 pos2obligfeats = eval_utils.get_pos2obligfeats(db_baseline)
 lemmas_pos_baseline = eval_utils.get_all_lemmas_from_db(db_baseline)
+if args.pos == 'other':
+    POS = sorted(pos for pos in pos2obligfeats
+                 if pos not in ['verb', 'noun', 'noun_quant', 'noun_num', 'noun_prop'
+                                'adj', 'adj_num', 'adj_comp', None])
+else:
+    POS = [args.pos]
 del db_baseline
 lemmas_pos_baseline = set([lemma_pos for lemma_pos in lemmas_pos_baseline
-                           if lemma_pos[1] == args.pos])
+                           if lemma_pos[1] in POS])
 lemmas_pos_camel = eval_utils.get_all_lemmas_from_db(MorphologyDB(path_db_camel))
 lemmas_pos_camel = set([lemma_pos for lemma_pos in lemmas_pos_camel
-                        if lemma_pos[1] == args.pos])
+                        if lemma_pos[1] in POS])
 lemmas_intersect = lemmas_pos_camel & lemmas_pos_baseline
 
 lemmas_pos = list(lemmas_intersect)[:args.n]

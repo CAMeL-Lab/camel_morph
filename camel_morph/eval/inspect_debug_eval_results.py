@@ -71,11 +71,11 @@ with open(os.path.join(args.report_dir, 'failed.pkl'), 'rb') as f:
 def extract_examples(match_comb_mask):
     match_comb_indexes = np.where(match_comb_mask)
     example_coord = (match_comb_indexes[0][0], match_comb_indexes[1][0])
-    lemma = index2lemmas_pos[example_coord[0]][0]
+    lemma, pos = index2lemmas_pos[example_coord[0]]
     feats = index2analysis[example_coord[1]]
     try:
         example_forms_camel = generator_camel.generate(
-            lemma, eval_utils.construct_feats(feats, args.pos))
+            lemma, eval_utils.construct_feats(feats, pos))
         example_forms_camel = ','.join(
             set(eval_utils._preprocess_lex_features(form, True)['diac']
                 for form in example_forms_camel))
@@ -83,7 +83,7 @@ def extract_examples(match_comb_mask):
         example_forms_camel = ''
     try:
         example_forms_baseline = generator_baseline.generate(
-            lemma, eval_utils.construct_feats(feats, args.pos), legacy=True)
+            lemma, eval_utils.construct_feats(feats, pos), legacy=True)
         example_forms_baseline = ','.join(
             set(eval_utils._preprocess_lex_features(form, True)['diac']
                 for form in example_forms_baseline))
@@ -216,7 +216,15 @@ def generate_row_for_combination(combination, match_total):
             (('\n' + bold(color(recall_slot_str, 'blue')) if recall_diac != recall_slot else ''))]
 
 
-report_title = f'Evaluation Report - Camel Morph - {args.pos.upper()}'
+db_baseline = MorphologyDB(args.db_baseline)
+if args.pos == 'other':
+    POS = sorted(pos for pos in db_baseline.defaults
+                 if pos not in ['verb', 'noun', 'noun_quant', 'noun_num', 'noun_prop',
+                                'adj', 'adj_num', 'adj_comp', None])
+else:
+    POS = [args.pos]
+
+report_title = f"Evaluation Report - Camel Morph - {' '.join(pos.upper() for pos in POS)}"
 try:
     terminal_size_col = os.get_terminal_size().columns
 except:
@@ -234,10 +242,11 @@ print('Camel: ' + color(bold(args.db_system), 'cyan'))
 print()
 print(bold(underline('Verb Lemmas overlap between CALIMA and Camel')))
 print()
-lemmas_pos_baseline = eval_utils.get_all_lemmas_from_db(MorphologyDB(args.db_baseline))
-lemmas_baseline = set([lemma_pos[0] for lemma_pos in lemmas_pos_baseline if lemma_pos[1] == args.pos])
+lemmas_pos_baseline = eval_utils.get_all_lemmas_from_db(db_baseline)
+del db_baseline
+lemmas_baseline = set([lemma_pos[0] for lemma_pos in lemmas_pos_baseline if lemma_pos[1] in POS])
 lemmas_pos_camel = eval_utils.get_all_lemmas_from_db(MorphologyDB(args.db_system))
-lemmas_camel = set([lemma_pos[0] for lemma_pos in lemmas_pos_camel if lemma_pos[1] == args.pos])
+lemmas_camel = set([lemma_pos[0] for lemma_pos in lemmas_pos_camel if lemma_pos[1] in POS])
 rows = []
 header = ['A . B', 'Result', '# lemmas', '(%)', 'Lemmas']
 lemmas_baseline_minus_camel = lemmas_baseline - lemmas_camel
