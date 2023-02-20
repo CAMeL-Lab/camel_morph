@@ -5,6 +5,7 @@ import itertools
 import pickle
 import re
 import numpy as np
+from collections import Counter
 
 from types import ModuleType, FunctionType
 from gc import get_referents
@@ -14,11 +15,19 @@ from gc import get_referents
 # Exclude modules as well.
 BLACKLIST = type, ModuleType, FunctionType
 
-essential_keys = ['diac', 'lex', 'pos', 'asp', 'mod', 'vox', 'per', 'num', 'gen',
-                  'cas', 'stt', 'prc0', 'prc1', 'prc2', 'prc3', 'enc0']
+lex_pos_keys = ['diac', 'lex', 'pos']
+proclitic_keys = ['prc0', 'prc1', 'prc2', 'prc3']
+enclitic_keys = ['enc0']
+clitic_keys = [*proclitic_keys, *enclitic_keys]
 feats_oblig = ['asp', 'mod', 'vox', 'per', 'num', 'gen', 'cas', 'stt']
-essential_keys_no_lex_pos = [k for k in essential_keys if k not in ['diac', 'lex', 'pos']]
+form_keys = ['form_num', 'form_gen']
+essential_keys = [*lex_pos_keys, *feats_oblig, *clitic_keys]
+essential_keys_no_lex_pos = [k for k in essential_keys if k not in lex_pos_keys]
+essential_keys_form_no_lex_pos = essential_keys_no_lex_pos + form_keys
 feat2index = {k: i for i, k in enumerate(essential_keys_no_lex_pos)}
+
+mat_names = ['diac_mat_baseline', 'diac_mat_system', 'system_only_mat',
+             'baseline_only_mat', 'no_intersect_mat']
 
 sukun_ar, fatHa_ar = 'ْ', 'َ'
 sukun_regex = re.compile(sukun_ar)
@@ -34,13 +43,15 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+    ORANGE = '\033[35m'
     colors = {
         'header': HEADER,
         'blue': OKBLUE,
         'cyan': OKCYAN,
         'green': OKGREEN,
         'warning': WARNING,
-        'fail': FAIL}
+        'fail': FAIL,
+        'orange':ORANGE}
 
 def color(text, color_):
     text = bcolors.colors[color_] + text
@@ -131,54 +142,63 @@ def _get_cat2pos(X):
     return cat2pos
 
 
-def _get_clitic2value2pos(X, Y, XY, clitics):
-    clitic2value2cat = {}
+def _get_feat2value2pos(X, Y, XY, feats):
+    feat2value2cat = {}
     for match, analyses in X.items():
         for cat, analysis in analyses:
-            for clitic in clitics:
-                if clitic in analysis:
-                    clitic2value2cat.setdefault(clitic, {}).setdefault(
-                        analysis[clitic], set()).add(cat)
+            for feat in feats:
+                if feat in analysis:
+                    feat2value2cat.setdefault(feat, {}).setdefault(
+                        analysis[feat], set()).add(cat)
 
     cat2pos_Y = _get_cat2pos(Y)
-    clitic2value2pos = {}
-    for clitic, value2cat in clitic2value2cat.items():
+    feat2value2pos = {}
+    for feat, value2cat in feat2value2cat.items():
         for value, X_cats in value2cat.items():
             for X_cat in X_cats:
-                for Y_cat in XY.get(X_cat):
-                    clitic2value2pos.setdefault(clitic, {}).setdefault(
+                for Y_cat in XY.get(X_cat, []):
+                    feat2value2pos.setdefault(feat, {}).setdefault(
                         value, set()).update(cat2pos_Y.get(Y_cat, set()))
     
-    return clitic2value2pos
+    return feat2value2pos
 
 
-def _get_clitic2value2pos_joined(db_baseline):
-    prc2value2pos = _get_clitic2value2pos(X=db_baseline.prefix_hash,
-                                         Y=db_baseline.stem_hash,
-                                         XY=db_baseline.prefix_stem_compat,
-                                         clitics=['prc0', 'prc1', 'prc2', 'prc3'])
-    suffix_stem_compat = _reverse_compat_table(db_baseline.stem_suffix_compat)
-    enc2value2pos = _get_clitic2value2pos(X=db_baseline.suffix_hash,
-                                         Y=db_baseline.stem_hash,
+def get_clitic2value2pos_joined(db):
+    """Get a mapping of possible (DB-compatible according to compatibility tables)
+    clitic-value pairs according to POS.
+    """
+    proclitics = [f for f in db.defines if 'prc' in f]
+    prc2value2pos = _get_feat2value2pos(X=db.prefix_hash,
+                                         Y=db.stem_hash,
+                                         XY=db.prefix_stem_compat,
+                                         feats=proclitics)
+    suffix_stem_compat = _reverse_compat_table(db.stem_suffix_compat)
+    enclitics = [f for f in db.defines if 'enc' in f]
+    enc2value2pos = _get_feat2value2pos(X=db.suffix_hash,
+                                         Y=db.stem_hash,
                                          XY=suffix_stem_compat,
-                                         clitics=['enc0'])
+                                         feats=enclitics)
     clitic2value2pos = {**prc2value2pos, **enc2value2pos}
     return clitic2value2pos
 
 
-def get_pos2clitic_combs(db_baseline):
-    clitic2value2pos = _get_clitic2value2pos_joined(db_baseline)
+def get_pos2clitic_combs(db, clitic2value2pos=None, clitic_value_pos=None):
+    if clitic2value2pos is None:
+        clitic2value2pos = get_clitic2value2pos_joined(db)
 
     pos2clitic2value = {}
     for clitic, value2pos in clitic2value2pos.items():
         for value, X_pos in value2pos.items():
             for X_pos_ in X_pos:
+                if clitic_value_pos is not None and \
+                    (clitic, value, X_pos_) not in clitic_value_pos:
+                    continue
                 pos2clitic2value.setdefault(X_pos_, {}).setdefault(
                     clitic, set()).add(value)
-    
+        
     for pos, clitic2value in pos2clitic2value.items():
         for clitic in clitic2value:
-            pos2clitic2value[pos][clitic].add(db_baseline.defaults[pos][clitic])
+            pos2clitic2value[pos][clitic].add(db.defaults[pos][clitic])
 
     pos2feats = {}
     for pos, clitic2value in pos2clitic2value.items():
@@ -197,9 +217,9 @@ def get_pos2clitic_combs(db_baseline):
     return pos2feats
 
 
-def get_pos2obligfeats(db_baseline):
+def get_pos2obligfeats(db):
     pos2obligfeats = {}
-    for pos, analysis_default in db_baseline.defaults.items():
+    for pos, analysis_default in db.defaults.items():
         feats_oblig_pos = {
             feat for feat in feats_oblig
             if analysis_default[feat] not in [None, 'na']}
@@ -212,7 +232,7 @@ def get_pos2obligfeats(db_baseline):
 
         combinations = []
         for feat in feats_oblig_pos:
-            values = [value for value in db_baseline.defines[feat]
+            values = [value for value in db.defines[feat]
                     if value != 'na']
             combinations.append(values)
         
@@ -259,19 +279,12 @@ def get_closest_key(analysis_key_compare, analysis_keys):
     return best_key
 
 
-def _preprocess_lex_features(analysis, return_analysis=False):
+def preprocess_lex_features(analysis, return_analysis=False):
     for k in ['lex', 'diac']:
         analysis[k] = sukun_regex.sub('', analysis[k])
         analysis[k] = aA_regex.sub('A', analysis[k])
     if return_analysis:
         return analysis
-
-
-def load_index2lemmas_pos(report_dir):
-    with open(os.path.join(report_dir, 'lemmas_pos.pkl'), 'rb') as f:
-        lemmas_pos = pickle.load(f)
-    lemmas_pos = {index: lemma_pos for index, lemma_pos in lemmas_pos}
-    return lemmas_pos
 
 
 def load_results_debug_eval(report_dir):
@@ -287,27 +300,196 @@ def construct_feats(analysis_key, pos):
 
 
 def load_matrices(report_dir):
-    recall_mat_baseline_path = os.path.join(report_dir, 'recall_mat_baseline.npy')
-    if os.path.exists(recall_mat_baseline_path):
-        recall_mat_baseline = np.load(recall_mat_baseline_path)
-        recall_mat_camel = np.load(os.path.join(report_dir, 'recall_mat_camel.npy'))
-        camel_minus_baseline_mat = np.load(os.path.join(report_dir, 'camel_minus_baseline_mat.npy'))
-        baseline_minus_camel_mat = np.load(os.path.join(report_dir, 'baseline_minus_camel_mat.npy'))
-        no_intersect_mat = np.load(os.path.join(report_dir, 'no_intersect_mat.npy'))
-        with open(os.path.join(report_dir, 'index2analysis.pkl'), 'rb') as f:
-            index2analysis = pickle.load(f)
-        analysis2index = {analysis: i for i, analysis in enumerate(index2analysis)}
-    else:
-        recall_mat_baseline, recall_mat_camel, index2analysis = None, None, None
-        camel_minus_baseline_mat, baseline_minus_camel_mat, no_intersect_mat = None, None, None
+    with open(os.path.join(report_dir, 'matrices.pkl'), 'rb') as f:
+        MATRICES = pickle.load(f)
+
+    return MATRICES
+
+
+def _get_cat2feat_combs(X):
+    cat2feat_combs = {}
+    for analyses in X.values():
+        for cat, analysis in analyses:
+            feats = tuple([analysis.get(feat, 'N/A')
+                            for feat in essential_keys_form_no_lex_pos])
+            cat2feat_combs.setdefault(cat, Counter()).update([feats])
+    return cat2feat_combs
+
+def _get_pos2cat2feat_combs(X):
+    pos2cat2feat_combs = {}
+    for analyses in X.values():
+        for cat, analysis in analyses:
+            feats = tuple([analysis.get(feat, 'N/A')
+                            for feat in essential_keys_form_no_lex_pos])
+            pos2cat2feat_combs.setdefault(
+                analysis['pos'], {}).setdefault(cat, Counter()).update([feats])
+    return pos2cat2feat_combs
+
+def get_possible_feat_combs(db, POS, merge_features_fn):
+    cat2feat_combs_A = _get_cat2feat_combs(db.prefix_hash)
+    pos2cat2feat_combs_B = _get_pos2cat2feat_combs(db.stem_hash)
+    cat2feat_combs_C = _get_cat2feat_combs(db.suffix_hash)
+
+    def _get_feats_dict(feats, morpheme_type):
+        if morpheme_type in memoize and feats in memoize[morpheme_type]:
+            feats_ = memoize[morpheme_type][feats]
+        else:
+            feats_ = {feat: feats[i]
+                    for i, feat in enumerate(essential_keys_form_no_lex_pos)
+                    if feats[i] != 'N/A'}
+            memoize_ = memoize.setdefault(morpheme_type, {})
+            memoize_[feats] = feats_
+        return feats_
+
+    memoize = {}
+    possible_feat_combs = {}
+    for cat_A, feat_combs_A_count in tqdm(cat2feat_combs_A.items()):
+        for pos_B, cat2feat_combs_B_count in pos2cat2feat_combs_B.items():
+            if pos_B not in POS:
+                continue
+            for cat_B, feat_combs_B_count in cat2feat_combs_B_count.items():
+                for cat_C, feat_combs_C_count in cat2feat_combs_C.items():
+                    if (cat_B in db.prefix_stem_compat.get(cat_A, []) and
+                        cat_C in db.prefix_suffix_compat.get(cat_A, []) and
+                        cat_C in db.stem_suffix_compat.get(cat_B, [])):
+                        feat_combs_A = feat_combs_A_count.keys()
+                        feat_combs_B = feat_combs_B_count.keys()
+                        feat_combs_C = feat_combs_C_count.keys()
+                        product = itertools.product(feat_combs_A, feat_combs_B, feat_combs_C)
+                        for feats_A, feats_B, feats_C in product:
+                            feats_A_ = _get_feats_dict(feats_A, 'A')
+                            feats_B_ = _get_feats_dict(feats_B, 'B')
+                            feats_C_ = _get_feats_dict(feats_C, 'C')
+                            merged = merge_features_fn(db, feats_A_, feats_B_, feats_C_)
+                            feat_comb = tuple([merged.get(feat, db.defaults[pos_B][feat])
+                                               for feat in essential_keys_no_lex_pos])
+                            possible_feat_combs.setdefault(feat_comb, 0)
+                            possible_feat_combs[feat_comb] += feat_combs_A_count[feats_A] * \
+                                                              feat_combs_B_count[feats_B] * \
+                                                              feat_combs_C_count[feats_C]
+    return possible_feat_combs
+
+
+def _get_clitic_value_pos(clitic2value2pos, POS):
+    clitic_value_pos = set(
+    (clitic, value, pos)
+    for clitic, value2pos_baseline in clitic2value2pos.items()
+    for value, poses in value2pos_baseline.items()
+    for pos in poses if pos in POS)
+    return clitic_value_pos
+
+
+def get_pos2cliticfeats(db_system, db_baseline, POS):
+    clitic2value2pos_baseline = get_clitic2value2pos_joined(db_baseline)
+    clitic2value2pos_system = get_clitic2value2pos_joined(db_system)
+
+    pos2cliticfeats_baseline = get_pos2clitic_combs(
+        db_baseline, clitic2value2pos_baseline)
+    pos2cliticfeats_system = get_pos2clitic_combs(
+        db_system, clitic2value2pos_system)
     
-    output = dict(
-        recall_mat_baseline=recall_mat_baseline,
-        recall_mat_camel=recall_mat_camel,
-        camel_minus_baseline_mat=camel_minus_baseline_mat,
-        baseline_minus_camel_mat=baseline_minus_camel_mat,
-        no_intersect_mat=no_intersect_mat,
-        index2analysis=index2analysis,
-        analysis2index=analysis2index
-    )
-    return output
+    def _sanity_check():
+        clitic_value_pos_baseline = _get_clitic_value_pos(clitic2value2pos_baseline, POS)
+        clitic_value_pos_system = _get_clitic_value_pos(clitic2value2pos_system, POS)
+        clitic_value_pos_intersect = clitic_value_pos_baseline & clitic_value_pos_system
+        pos2cliticfeats_baseline_intersect = get_pos2clitic_combs(
+            db_baseline, clitic2value2pos_baseline, clitic_value_pos_intersect)
+        pos2cliticfeats_system_intersect = get_pos2clitic_combs(
+            db_system, clitic2value2pos_system, clitic_value_pos_intersect)
+
+        pos2cliticfeats_baseline_intersect_set = set(
+            [tuple(sorted((f, v) for f, v in feats.items()))
+            for pos in POS for feats in pos2cliticfeats_baseline_intersect[pos]])
+        pos2cliticfeats_system_intersect_set = set(
+            [tuple(sorted((f, v) for f, v in feats.items()))
+            for pos in POS for feats in pos2cliticfeats_system_intersect[pos]])
+        assert pos2cliticfeats_system_intersect_set >= pos2cliticfeats_baseline_intersect_set
+    
+    _sanity_check()
+
+    pos2cliticfeats_baseline = {
+        pos: {tuple(feats_dict.get(feat, '0') for feat in clitic_keys): feats_dict
+        for feats_dict in pos2cliticfeats_baseline[pos]}
+        for pos in POS}
+    pos2cliticfeats_system = {
+        pos: {tuple(feats_dict.get(feat, '0') for feat in clitic_keys): feats_dict
+        for feats_dict in pos2cliticfeats_system[pos]}
+        for pos in POS}
+
+    POS2CLITICFEATS = {}
+    for pos in POS:
+        for feats_key in set(pos2cliticfeats_baseline[pos]) | set(pos2cliticfeats_system[pos]):
+            feats_dict_baseline = pos2cliticfeats_baseline[pos].get(feats_key)
+            feats_dict_system = pos2cliticfeats_system[pos].get(feats_key)
+            if feats_dict_baseline != None and feats_dict_system != None:
+                # NOTE: should probably deal with the fact that the dict of system is
+                # being passed in the intersection case. Maybe this will be a source
+                # of problems.
+                POS2CLITICFEATS.setdefault(pos, {}).setdefault(
+                    'intersection', []).append(feats_dict_system)
+            elif feats_dict_baseline is None:
+                POS2CLITICFEATS.setdefault(pos, {}).setdefault(
+                    'system_only', []).append(feats_dict_system)
+            else:
+                POS2CLITICFEATS.setdefault(pos, {}).setdefault(
+                    'baseline_only', []).append(feats_dict_baseline)
+    
+    return POS2CLITICFEATS
+
+
+def harmonize_defaults(db_baseline, db_system, POS, report=False):
+    for pos in POS:
+        defaults_baseline, defaults_system = db_baseline.defaults[pos], db_system.defaults[pos]
+        features_union = set(defaults_baseline) | set(defaults_system)
+        for feat in features_union:
+            if pos is None:
+                continue
+            if feat not in defaults_system:
+                defaults_system[feat] = defaults_baseline[feat]
+                if report:
+                    print(f'Added {feat}:{defaults_baseline[feat]} as default in SYSTEM')
+            if feat not in defaults_baseline:
+                defaults_baseline[feat] = defaults_system[feat]
+                if report:
+                    print(f'Added {feat}:{defaults_system[feat]} as default in BASELINE')
+            assert defaults_system[feat] == defaults_baseline[feat]
+        
+    features_union = set(db_baseline.defines) | set(db_system.defines)
+    for feat in features_union:
+        if feat not in db_baseline.defines:
+            db_baseline.defines[feat] = db_system.defines[feat]
+            if report:
+                print(f"Added values {' '.join(db_system.defines[feat])} for {feat} in BASELINE")
+            continue
+        if feat not in db_system.defines:
+            db_system.defines[feat] = db_baseline.defines[feat]
+            if report:
+                print(f"Added values {' '.join(db_baseline.defines[feat])} for {feat} in SYSTEM")
+            continue
+
+        baseline_values, system_values = db_baseline.defines[feat], db_system.defines[feat]
+        if baseline_values is None and system_values is None:
+            continue
+        baseline_values_set = set(baseline_values if baseline_values is not None else [])
+        system_values_set = set(system_values if system_values is not None else [])
+        baseline_only = baseline_values_set - system_values_set
+        system_only = system_values_set - baseline_values_set
+        if baseline_only:
+            db_system.defines[feat] += list(baseline_only)
+            if report:
+                print(f"Added values {' '.join(baseline_only)} for {feat} in SYSTEM")
+        if system_only:
+            db_baseline.defines[feat] += list(system_only)
+            if report:
+                print(f"Added values {' '.join(system_only)} for {feat} in SYSTEM")
+
+
+def get_pos(pos, db_baseline, db_system):
+    if pos == 'other':
+        POS = sorted(pos for pos in set(db_baseline.defaults) & set(db_system.defaults)
+                    if pos not in ['verb', 'noun', 'noun_quant', 'noun_num', 'noun_prop'
+                                    'adj', 'adj_num', 'adj_comp', None])
+    else:
+        POS = [pos]
+    
+    return POS
