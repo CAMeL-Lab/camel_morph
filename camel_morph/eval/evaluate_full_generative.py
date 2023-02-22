@@ -157,25 +157,27 @@ def generate_all_possible_words_from_lemma(info):
     
     system_only = generations_system_set - generations_baseline_set
     for k in system_only:
+        lemma_diac_pos_system_set = set(generations_system_[k])
         if not args.multiprocessing:
-            result['diac_mat_system'][lemma_id][analysis2index[k]] += 1
+            result['diac_mat_system'][lemma_id][analysis2index[k]] += len(
+                    lemma_diac_pos_system_set)
         else:
             analysis_index = analysis2index.get(k)
-            if analysis_index is None and feats_set == 'system_only':
-                raise NotImplementedError
             if analysis_index is not None:
-                result['diac_mat_system'][0][analysis_index] += 1
+                result['diac_mat_system'][0][analysis_index] += len(
+                    lemma_diac_pos_system_set)
     
     baseline_only = generations_baseline_set - generations_system_set
     for k in baseline_only:
+        lemma_diac_pos_baseline_set = set(generations_baseline_[k])
         if not args.multiprocessing:
-            result['diac_mat_baseline'][lemma_id][analysis2index[k]] += 1
+            result['diac_mat_baseline'][lemma_id][analysis2index[k]] += len(
+                    lemma_diac_pos_baseline_set)
         else:
             analysis_index = analysis2index.get(k)
-            if analysis_index is None and feats_set == 'baseline_only':
-                raise NotImplementedError
             if analysis_index is not None:
-                result['diac_mat_baseline'][0][analysis_index] += 1
+                result['diac_mat_baseline'][0][analysis_index] += len(
+                    lemma_diac_pos_baseline_set)
     
     if feats_set == 'intersection':
         intersection = generations_system_set & generations_baseline_set
@@ -246,7 +248,7 @@ if __name__ == "__main__":
 
     if os.path.isdir(args.report_dir):
         for file_name in os.listdir(args.report_dir):
-            if 'possible_feat_combs' not in file_name:
+            if 'feat_combs' not in file_name:
                 os.remove(os.path.join(args.report_dir, file_name))
     else:
         os.makedirs(args.report_dir)
@@ -256,8 +258,7 @@ if __name__ == "__main__":
         pos2obligfeats_baseline = eval_utils.get_pos2obligfeats(db_baseline)
         pos2obligfeats_system = eval_utils.get_pos2obligfeats(db_system)
         pos2obligfeats = pos2obligfeats_system
-
-    POS2CLITICFEATS = eval_utils.get_pos2cliticfeats(db_system, db_baseline, POS)
+   
     #FIXME: currently broken
     POS2OBLIGFEATS = {pos: dict(intersection=None, baseline_only=None, system_only=None)
                       for pos in POS}
@@ -283,39 +284,57 @@ if __name__ == "__main__":
             possible_feat_combs = pickle.load(f)
     else:
         if not args.test_mode:
-            possible_feat_combs_baseline = set(
-                eval_utils.get_possible_feat_combs(db_baseline, POS, merge_features))
-            possible_feat_combs_system = set(
-                eval_utils.get_possible_feat_combs(db_system, POS, merge_features))
+            pos2possible_feat_combs_baseline = eval_utils.get_pos2possible_feat_combs(
+                db_baseline, POS, merge_features)
+            pos2possible_feat_combs_system = eval_utils.get_pos2possible_feat_combs(
+                db_system, POS, merge_features)
             with open(os.path.join(args.report_dir, 'possible_feat_combs_system.pkl'), 'wb') as f:
-                pickle.dump(possible_feat_combs_system, f)
+                pickle.dump(pos2possible_feat_combs_system, f)
             with open(os.path.join(args.report_dir, 'possible_feat_combs_baseline.pkl'), 'wb') as f:
-                pickle.dump(possible_feat_combs_baseline, f)
+                pickle.dump(pos2possible_feat_combs_baseline, f)
+            
         else:
             with open(os.path.join(args.report_dir, 'possible_feat_combs_system.pkl'), 'rb') as f:
-                possible_feat_combs_system = set(pickle.load(f))
+                pos2possible_feat_combs_system = pickle.load(f)
             with open(os.path.join(args.report_dir, 'possible_feat_combs_baseline.pkl'), 'rb') as f:
-                possible_feat_combs_baseline = set(pickle.load(f))
+                pos2possible_feat_combs_baseline = pickle.load(f)
+                
+        pos2possible_feat_combs_baseline_only = {}
+        pos2possible_feat_combs_system_only = {}
+        po2possible_feat_combs_intersection = {}
+        for pos in POS:
+            pos2possible_feat_combs_baseline_only[pos] = set(pos2possible_feat_combs_baseline[pos]) - \
+                                                         set(pos2possible_feat_combs_system[pos])
+            pos2possible_feat_combs_system_only[pos] = set(pos2possible_feat_combs_system[pos]) - \
+                                                       set(pos2possible_feat_combs_baseline[pos])
+            po2possible_feat_combs_intersection[pos] = set(pos2possible_feat_combs_system[pos]) & \
+                                                       set(pos2possible_feat_combs_baseline[pos])
+            
+        pos2feat_value_pairs_baseline = eval_utils.get_pos2feat_value_pairs(pos2possible_feat_combs_baseline)
+        pos2feat_value_pairs_system = eval_utils.get_pos2feat_value_pairs(pos2possible_feat_combs_system)
+        with open(os.path.join(args.report_dir, 'pos2feat_value_pairs_baseline.pkl'), 'wb') as f:
+            pickle.dump(pos2feat_value_pairs_baseline, f)
+        with open(os.path.join(args.report_dir, 'pos2feat_value_pairs_system.pkl'), 'wb') as f:
+            pickle.dump(pos2feat_value_pairs_system, f)
         
-        possible_feat_combs_baseline_only = possible_feat_combs_baseline - possible_feat_combs_system
-        possible_feat_combs_system_only = possible_feat_combs_system - possible_feat_combs_baseline
-        possible_feat_combs_intersection = possible_feat_combs_system & possible_feat_combs_baseline
         POSSIBLE_FEAT_COMBS = dict(
-            baseline_only=possible_feat_combs_baseline_only,
-            system_only=possible_feat_combs_system_only,
-            intersection=possible_feat_combs_intersection
+            baseline_only=pos2possible_feat_combs_baseline_only,
+            system_only=pos2possible_feat_combs_system_only,
+            intersection=po2possible_feat_combs_intersection
         )
     
     defaults = db_baseline.defaults
     del db_baseline, db_system
     
-    MATRICES = {}
-    for feats_set, possible_feat_combs in POSSIBLE_FEAT_COMBS.items():
+    MATRICES, POS2CLITICFEATS = {}, {}
+    for feats_set, pos2possible_feat_combs in POSSIBLE_FEAT_COMBS.items():
+        possible_feat_combs = set.union(*[pos2possible_feat_combs[pos] for pos in POS])
         if feats_set not in args.feats_sets:
             continue
         lemmas_pos = LEMMAS_POS[feats_set] | (LEMMAS_POS['intersection']
                                             if feats_set != 'intersection' else set()) 
         lemmas_pos = list(lemmas_pos)[:args.n]
+
         lemmas_pos = [(i, lemma_pos) for i, lemma_pos in enumerate(lemmas_pos)]
         index2analysis = list(possible_feat_combs)
         analysis2index = {analysis: i for i, analysis in enumerate(index2analysis)}
@@ -334,6 +353,7 @@ if __name__ == "__main__":
             baseline_only_mat=baseline_only_mat if feats_set == 'intersection' else None,
             no_intersect_mat=no_intersect_mat if feats_set == 'intersection' else None
         )
+        POS2CLITICFEATS[feats_set] = eval_utils.get_pos2cliticfeats(pos2possible_feat_combs, POS)
     
     for feats_set, info in MATRICES.items():
         print(f'Computing {feats_set}...')
@@ -343,7 +363,7 @@ if __name__ == "__main__":
                 lemma=lemma,
                 lemma_id=lemma_id,
                 analysis2index=info['analysis2index'],
-                clitic_feats=POS2CLITICFEATS[pos][feats_set],
+                clitic_feats=POS2CLITICFEATS[feats_set][pos],
                 oblig_feats=POS2OBLIGFEATS[pos][feats_set],
                 defaults=defaults[pos],
                 feats_set=feats_set

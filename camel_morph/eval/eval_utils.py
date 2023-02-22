@@ -15,14 +15,18 @@ from gc import get_referents
 # Exclude modules as well.
 BLACKLIST = type, ModuleType, FunctionType
 
-lex_pos_keys = ['diac', 'lex', 'pos']
+lex_keys = ['diac', 'lex']
+lex_pos_keys = [*lex_keys, 'pos']
 proclitic_keys = ['prc0', 'prc1', 'prc2', 'prc3']
-enclitic_keys = ['enc0']
+enclitic_keys = ['enc0', 'enc1']
 clitic_keys = [*proclitic_keys, *enclitic_keys]
 feats_oblig = ['asp', 'mod', 'vox', 'per', 'num', 'gen', 'cas', 'stt']
 form_keys = ['form_num', 'form_gen']
 essential_keys = [*lex_pos_keys, *feats_oblig, *clitic_keys]
+essential_keys_no_lex = [k for k in essential_keys if k not in lex_keys]
 essential_keys_no_lex_pos = [k for k in essential_keys if k not in lex_pos_keys]
+essential_keys_no_lex_pos_clitic_indexes = [
+    i for i, k in enumerate(essential_keys_no_lex_pos) if k in clitic_keys]
 essential_keys_form_no_lex_pos = essential_keys_no_lex_pos + form_keys
 feat2index = {k: i for i, k in enumerate(essential_keys_no_lex_pos)}
 
@@ -59,7 +63,7 @@ def color(text, color_):
     return text
 
 def bold(text):
-    text = bcolors.BOLD + text
+    text = bcolors.BOLD + str(text)
     text += bcolors.ENDC if not text.endswith(bcolors.ENDC) else ''
     return text
 
@@ -305,6 +309,17 @@ def load_matrices(report_dir):
 
     return MATRICES
 
+def load_pos2feat_value_pairs(report_dir):
+    with open(os.path.join(report_dir, 'pos2feat_value_pairs_baseline.pkl'), 'rb') as f:
+        pos2feat_value_pairs_baseline = pickle.load(f)
+    with open(os.path.join(report_dir, 'pos2feat_value_pairs_system.pkl'), 'rb') as f:
+        pos2feat_value_pairs_system = pickle.load(f)
+    POS2FEAT_VALUE_PAIRS = dict(
+        baseline=pos2feat_value_pairs_baseline,
+        system=pos2feat_value_pairs_system
+    )
+    return POS2FEAT_VALUE_PAIRS
+
 
 def _get_cat2feat_combs(X):
     cat2feat_combs = {}
@@ -322,10 +337,15 @@ def _get_pos2cat2feat_combs(X):
             feats = tuple([analysis.get(feat, 'N/A')
                             for feat in essential_keys_form_no_lex_pos])
             pos2cat2feat_combs.setdefault(
-                analysis['pos'], {}).setdefault(cat, Counter()).update([feats])
+                analysis['pos'], {}).setdefault(cat, {}).setdefault(feats, 0)
+            feats_plus_lex = feats + tuple([analysis['lex']])
+            count = [
+                tuple([a[1].get(feat, 'N/A') for feat in essential_keys_form_no_lex_pos + ['lex']])
+                for a in analyses].count(feats_plus_lex)
+            pos2cat2feat_combs[analysis['pos']][cat][feats] += count
     return pos2cat2feat_combs
 
-def get_possible_feat_combs(db, POS, merge_features_fn):
+def get_pos2possible_feat_combs(db, POS, merge_features_fn):
     cat2feat_combs_A = _get_cat2feat_combs(db.prefix_hash)
     pos2cat2feat_combs_B = _get_pos2cat2feat_combs(db.stem_hash)
     cat2feat_combs_C = _get_cat2feat_combs(db.suffix_hash)
@@ -342,7 +362,7 @@ def get_possible_feat_combs(db, POS, merge_features_fn):
         return feats_
 
     memoize = {}
-    possible_feat_combs = {}
+    pos2possible_feat_combs = {}
     for cat_A, feat_combs_A_count in tqdm(cat2feat_combs_A.items()):
         for pos_B, cat2feat_combs_B_count in pos2cat2feat_combs_B.items():
             if pos_B not in POS:
@@ -363,11 +383,11 @@ def get_possible_feat_combs(db, POS, merge_features_fn):
                             merged = merge_features_fn(db, feats_A_, feats_B_, feats_C_)
                             feat_comb = tuple([merged.get(feat, db.defaults[pos_B][feat])
                                                for feat in essential_keys_no_lex_pos])
-                            possible_feat_combs.setdefault(feat_comb, 0)
-                            possible_feat_combs[feat_comb] += feat_combs_A_count[feats_A] * \
-                                                              feat_combs_B_count[feats_B] * \
-                                                              feat_combs_C_count[feats_C]
-    return possible_feat_combs
+                            pos2possible_feat_combs.setdefault(pos_B, {}).setdefault(feat_comb, 0)
+                            pos2possible_feat_combs[pos_B][feat_comb] += feat_combs_A_count[feats_A] * \
+                                                                         feat_combs_B_count[feats_B] * \
+                                                                         feat_combs_C_count[feats_C]
+    return pos2possible_feat_combs
 
 
 def _get_clitic_value_pos(clitic2value2pos, POS):
@@ -379,19 +399,20 @@ def _get_clitic_value_pos(clitic2value2pos, POS):
     return clitic_value_pos
 
 
-def get_pos2cliticfeats(db_system, db_baseline, POS):
+def get_clitic_value_pos_old(db_system, db_baseline, POS):
     clitic2value2pos_baseline = get_clitic2value2pos_joined(db_baseline)
     clitic2value2pos_system = get_clitic2value2pos_joined(db_system)
-
-    pos2cliticfeats_baseline = get_pos2clitic_combs(
-        db_baseline, clitic2value2pos_baseline)
-    pos2cliticfeats_system = get_pos2clitic_combs(
-        db_system, clitic2value2pos_system)
     
+    clitic_value_pos_baseline = _get_clitic_value_pos(clitic2value2pos_baseline, POS)
+    clitic_value_pos_system = _get_clitic_value_pos(clitic2value2pos_system, POS)
+    clitic_value_pos_intersect = clitic_value_pos_baseline & clitic_value_pos_system
+    clitic_value_pos = dict(
+        clitic_value_pos_baseline=clitic_value_pos_baseline,
+        clitic_value_pos_system=clitic_value_pos_system,
+        clitic_value_pos_intersect=clitic_value_pos_intersect
+    )
+
     def _sanity_check():
-        clitic_value_pos_baseline = _get_clitic_value_pos(clitic2value2pos_baseline, POS)
-        clitic_value_pos_system = _get_clitic_value_pos(clitic2value2pos_system, POS)
-        clitic_value_pos_intersect = clitic_value_pos_baseline & clitic_value_pos_system
         pos2cliticfeats_baseline_intersect = get_pos2clitic_combs(
             db_baseline, clitic2value2pos_baseline, clitic_value_pos_intersect)
         pos2cliticfeats_system_intersect = get_pos2clitic_combs(
@@ -406,35 +427,35 @@ def get_pos2cliticfeats(db_system, db_baseline, POS):
         assert pos2cliticfeats_system_intersect_set >= pos2cliticfeats_baseline_intersect_set
     
     _sanity_check()
+    return clitic_value_pos
 
-    pos2cliticfeats_baseline = {
-        pos: {tuple(feats_dict.get(feat, '0') for feat in clitic_keys): feats_dict
-        for feats_dict in pos2cliticfeats_baseline[pos]}
-        for pos in POS}
-    pos2cliticfeats_system = {
-        pos: {tuple(feats_dict.get(feat, '0') for feat in clitic_keys): feats_dict
-        for feats_dict in pos2cliticfeats_system[pos]}
-        for pos in POS}
 
-    POS2CLITICFEATS = {}
-    for pos in POS:
-        for feats_key in set(pos2cliticfeats_baseline[pos]) | set(pos2cliticfeats_system[pos]):
-            feats_dict_baseline = pos2cliticfeats_baseline[pos].get(feats_key)
-            feats_dict_system = pos2cliticfeats_system[pos].get(feats_key)
-            if feats_dict_baseline != None and feats_dict_system != None:
-                # NOTE: should probably deal with the fact that the dict of system is
-                # being passed in the intersection case. Maybe this will be a source
-                # of problems.
-                POS2CLITICFEATS.setdefault(pos, {}).setdefault(
-                    'intersection', []).append(feats_dict_system)
-            elif feats_dict_baseline is None:
-                POS2CLITICFEATS.setdefault(pos, {}).setdefault(
-                    'system_only', []).append(feats_dict_system)
-            else:
-                POS2CLITICFEATS.setdefault(pos, {}).setdefault(
-                    'baseline_only', []).append(feats_dict_baseline)
+def get_pos2feat_value_pairs(pos2possible_feat_combs):
+    pos2feat_value_pairs = {}
+    for pos, possible_feat_combs in pos2possible_feat_combs.items():
+        for feat_comb in possible_feat_combs:
+            for i, value in enumerate(feat_comb):
+                feat = essential_keys_no_lex_pos[i]
+                pos2feat_value_pairs.setdefault(pos, Counter()).update([f'{feat}:{value}'])
+    return pos2feat_value_pairs
+
+
+
+def get_pos2cliticfeats(pos2possible_feat_combs, POS):
+    pos2cliticfeats = {}
+    for pos, possible_feat_combs in pos2possible_feat_combs.items():
+        if pos not in POS:
+            continue
+        clitic_feats = set()
+        for feat_comb in possible_feat_combs:
+            clitic_feats_ = tuple(f for i, f in enumerate(feat_comb) if i in essential_keys_no_lex_pos_clitic_indexes)
+            clitic_feats.add(clitic_feats_)
+        for clitic_feats_ in clitic_feats:
+            clitic_feats_dict = {f: clitic_feats_[i] for i, f in enumerate(clitic_keys)}
+            clitic_feats_dict = {**clitic_feats_dict, **{'pos': pos}}
+            pos2cliticfeats.setdefault(pos, []).append(clitic_feats_dict)
     
-    return POS2CLITICFEATS
+    return pos2cliticfeats
 
 
 def harmonize_defaults(db_baseline, db_system, POS, report=False):
