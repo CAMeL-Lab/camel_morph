@@ -270,9 +270,7 @@ def section_shared_combinations_high_level_stats():
                                 diac_mat_system=diac_mat_system_inter,
                                 system_only_mat=system_only_mat_inter,
                                 baseline_only_mat=baseline_only_mat_inter,
-                                no_intersect_mat=no_intersect_mat_inter,
-                                index2lemmas_pos=index2lemmas_pos_inter,
-                                index2analysis=index2analysis_inter)
+                                no_intersect_mat=no_intersect_mat_inter)
         if row.match_comb_mask_sum:
             row.example_str = generate_examples(
                 index2lemmas_pos_inter, index2analysis_inter, combination['match_comb_mask'])
@@ -349,28 +347,26 @@ def section_x_y_breakdown():
         ((f'{args.system_name} super', 7), ('recall_system_superset_str', 7)),
         (('Intersec', 8), ('recall_intersect_str', 8)),
         ((f'Recall {args.baseline_name} (micro)', 8), (f'recall_baseline_str', 8)),
-        ((f'Recall {args.system_name} (micro)', 8), (f'recall_system_str', 8)),
+        ((f'Recall {args.system_name} (micro)', 8), (f'recall_system_str', 8))
     ])
 
     match_x_y_total = int(np.sum(mask_not_equal_0_baseline & mask_not_equal_0_system))
 
     rows = []
-    for combination in tqdm(combinations, ncols=100):
+    for i, combination in enumerate(tqdm(combinations, ncols=100)):
         row = DiacCombinationRow(combination, match_x_y_total,
                                 num_valid_lemmas, num_valid_feats,
                                 diac_mat_baseline=diac_mat_baseline_inter,
                                 diac_mat_system=diac_mat_system_inter,
                                 system_only_mat=system_only_mat_inter,
                                 baseline_only_mat=baseline_only_mat_inter,
-                                no_intersect_mat=no_intersect_mat_inter,
-                                index2lemmas_pos=index2lemmas_pos_inter,
-                                index2analysis=index2analysis_inter)
+                                no_intersect_mat=no_intersect_mat_inter)
         if row.match_comb_mask_sum:
             row.example_str = generate_examples(
                 index2lemmas_pos_inter, index2analysis_inter, combination['match_comb_mask'])
-            row.val_and_perc_str('match_comb_mask', row.slots_color)
+            row.val_and_perc_str('match_comb_mask', row.slots_color if i == len(combinations) - 1 else None)
             for attr in ['num_lemmas_match', 'num_feats_match']:
-                row.val_and_perc_str(attr, row.lemmas_feats_color)
+                row.val_and_perc_str(attr, row.lemmas_feats_color if i == len(combinations) - 1 else None)
             rows.append(row)
 
     rows = sorted(rows, key=lambda row: row.match_comb_mask_sum
@@ -396,60 +392,27 @@ def section_unshared_combinations_high_level_stats():
     - The last column of the below table lists the ones of the first group. Second group is dealt with in the next section.
     """, 'warning')
     print(notes)
-    rows = []
-    header = [f'# diac ({args.baseline_name})', f'# diac ({args.system_name})',
-            'Slots', 'Lemmas', 'Feats', 'Example', 'Unshared feats']
     
-    pos2feat_value_pairs_baseline = POS2FEAT_VALUE_PAIRS['baseline']
-    feat_value_pairs_baseline = set([tuple(feat_value_pair.split(':')) + (pos,)
-                                    for pos, feat_value_pairs in pos2feat_value_pairs_baseline.items()
-                                    for feat_value_pair in feat_value_pairs])
-    pos2feat_value_pairs_system = POS2FEAT_VALUE_PAIRS['system']
-    feat_value_pairs_system = set([tuple(feat_value_pair.split(':')) + (pos,)
-                                for pos, feat_value_pairs in pos2feat_value_pairs_system.items()
-                                for feat_value_pair in feat_value_pairs])
+    feat_value_pairs = {}
+    for system_ in ['baseline', 'system']:
+        feat_value_pairs[system_] = set(
+            [tuple(feat_value_pair.split(':')) + (pos,)
+             for pos, feat_value_pairs in POS2FEAT_VALUE_PAIRS[system_].items()
+             for feat_value_pair in feat_value_pairs])
     # This is not intersection of the feat:value pairs of the intersction matrix feat_combs
     # but is the intersection of common feat:value pairs in both systems (whether they occur
     # in the above or not e.g., >a_ques does not occur in the 3828 combs intersection for verbs
     # but occurs in both systems individually, hence it will occur in the below variable).
     # Might need to change this if we want to enable an automatic discovery of mismatching feat:value
     # pairs.
-    feat_value_pairs_intersect = feat_value_pairs_baseline & feat_value_pairs_system
-    feat_value_pairs_baseline_only = feat_value_pairs_baseline - feat_value_pairs_intersect
-    feat_value_pairs_system_only = feat_value_pairs_system - feat_value_pairs_intersect
+    feat_value_pairs_intersect = feat_value_pairs['baseline'] & feat_value_pairs['system']
+    feat_value_pairs = dict(
+        intersect=feat_value_pairs['baseline'] & feat_value_pairs['system'],
+        baseline_only=feat_value_pairs['baseline'] - feat_value_pairs_intersect,
+        system_only=feat_value_pairs['system'] - feat_value_pairs_intersect
+    )
 
     feat2index = {feat: i for i, feat in enumerate(eval_utils.essential_keys_no_lex_pos)}
-
-    if args.baseline_specific_feat_combs:
-        with open(os.path.join(args.report_dir, args.baseline_specific_feat_combs)) as f:
-            specific_feat_combs_baseline = json.load(f)
-        group_2_categorization_bo = get_group2categorization(feat_value_pairs_baseline_only,
-                                                             feat2index,
-                                                             diac_mat_baseline_only,
-                                                             index2analysis_bo,
-                                                             specific_feat_combs_baseline)
-        feat_combs_indexes_bo = np.array([analysis2index_bo[feat_comb]
-                                            for feat_combs in group_2_categorization_bo.values()
-                                            for feat_comb in feat_combs])
-        group_2_mask_bo = diac_mat_baseline_only[:, feat_combs_indexes_bo] != 0
-        group_2_sum_bo = int(np.sum(group_2_mask_bo))
-    else:
-        specific_feat_combs_baseline = None
-    if args.system_specific_feat_combs:
-        with open(os.path.join(args.report_dir, args.system_specific_feat_combs)) as f:
-            specific_feat_combs_system = json.load(f)
-        group_2_categorization_so = get_group2categorization(feat_value_pairs_system_only,
-                                                             feat2index,
-                                                             diac_mat_system_only,
-                                                             index2analysis_so,
-                                                             specific_feat_combs_system)
-        feat_combs_indexes_so = np.array([analysis2index_so[feat_comb]
-                                            for feat_combs in group_2_categorization_so.values()
-                                            for feat_comb in feat_combs])
-        group_2_mask_so = diac_mat_system_only[:, feat_combs_indexes_so] != 0
-        group_2_sum_so = int(np.sum(group_2_mask_so))
-    else:
-        specific_feat_combs_system = None
 
     def get_feat_value_pairs_str(feat_value_pairs):
         pos2feat_value_pairs = {}
@@ -460,57 +423,79 @@ def section_unshared_combinations_high_level_stats():
                                     for pos, feat_value in pos2feat_value_pairs.items())
         return feat_value_pairs_str
 
-    feat_value_pairs_baseline_only_str = get_feat_value_pairs_str(feat_value_pairs_baseline_only)
-    feat_value_pairs_system_only_str = get_feat_value_pairs_str(feat_value_pairs_system_only)
+    SYSTEM_INFO = OrderedDict([
+        ('system', dict(specific_feat_combs_file_name=args.system_specific_feat_combs,
+                        combination=(0, '≥1'))),
+        ('baseline', dict(specific_feat_combs_file_name=args.baseline_specific_feat_combs,
+                          combination=('≥1', 0)))
+    ])
+    rows = []
+    for system_, system_info in SYSTEM_INFO.items():
+        if system_info['specific_feat_combs_file_name']:
+            with open(os.path.join(args.report_dir, system_info['specific_feat_combs_file_name'])) as f:
+                specific_feat_combs_ = json.load(f)
+            system_info['specific_feat_combs'] = specific_feat_combs_
+            system_info['diac_mat_'] = MATRICES[f'{system_}_only'][f'diac_mat_{system_}']
+            system_info['index2lemmas_pos'] = MATRICES[f'{system_}_only']['index2lemmas_pos']
+            system_info['index2analysis'] = MATRICES[f'{system_}_only']['index2analysis']
+            system_info['analysis2index'] = MATRICES[f'{system_}_only']['analysis2index']
+            system_info['group_2_categorization'] = get_group2categorization(
+                feat_value_pairs[f'{system_}_only'], feat2index, system_info['diac_mat_'],
+                system_info['index2analysis'], specific_feat_combs_)
+            system_info['feat_combs_indexes'] = np.array(
+                [system_info['analysis2index'][feat_comb]
+                 for feat_combs in system_info['group_2_categorization'].values()
+                 for feat_comb in feat_combs])
+            system_info['group_2_mask'] = system_info['diac_mat_'][:, system_info['feat_combs_indexes']] != 0
+            total_group_2_sum = int(np.sum(system_info['group_2_mask']))
+            system_info['total_group_2_sum'] = total_group_2_sum
+            system_info['feat_value_pairs'] = feat_value_pairs[f'{system_}_only']
+            system_info['feat_value_pairs_str'] = get_feat_value_pairs_str(system_info['feat_value_pairs'])
 
-    unshared_so_mask, unshared_bo_mask  = diac_mat_system_only != 0, diac_mat_baseline_only != 0
-    unshared_so_mask_zero, unshared_bo_mask_zero  = diac_mat_system_only == 0, diac_mat_baseline_only == 0
-    unshared_so_sum, unshared_bo_sum = np.sum(unshared_so_mask), np.sum(unshared_bo_mask)
-    num_lemmas_valid_so = np.sum(np.any(unshared_so_mask, axis=1))
-    num_lemmas_valid_bo = np.sum(np.any(unshared_bo_mask, axis=1))
-    num_feats_valid_so = np.sum(np.any(unshared_so_mask, axis=0))
-    num_feats_valid_bo = np.sum(np.any(unshared_bo_mask, axis=0))
-    examples_str_so = generate_examples(index2lemmas_pos_so, index2analysis_so, unshared_so_mask)
-    examples_str_bo = generate_examples(index2lemmas_pos_bo, index2analysis_bo, unshared_bo_mask)
-    examples_str_so_zero = generate_examples(index2lemmas_pos_so, index2analysis_so, unshared_so_mask_zero)
-    examples_str_bo_zero = generate_examples(index2lemmas_pos_bo, index2analysis_bo, unshared_bo_mask_zero)
-    unshared_so_total = diac_mat_system_only.shape[0] * diac_mat_system_only.shape[1]
-    unshared_bo_total = diac_mat_baseline_only.shape[0] * diac_mat_baseline_only.shape[1]
+            unshared_mask, unshared_mask_zero = system_info['diac_mat_'] != 0, system_info['diac_mat_'] == 0
+            unshared_sum = np.sum(unshared_mask)
+            system_info['unshared_sum'] = unshared_sum
+            num_lemmas_valid = np.sum(np.any(unshared_mask, axis=1))
+            num_feats_valid = np.sum(np.any(unshared_mask, axis=0))
+            for name, mask in [('example_str', unshared_mask), ('example_zero_str', unshared_mask_zero)]:
+                system_info[name] = generate_examples(
+                    system_info['index2lemmas_pos'],
+                    system_info['index2analysis'], mask)
+            total_lemmas, total_feats = system_info['diac_mat_'].shape[0], system_info['diac_mat_'].shape[1]
+            system_info['total_lemmas'], system_info['total_feats'] = total_lemmas, total_feats
+            unshared_total = total_lemmas * total_feats
+            system_info['unshared_total'] = unshared_total
+            group_1_sum = system_info['unshared_sum'] - system_info['total_group_2_sum']
+            system_info['group_1_sum'] = group_1_sum
 
-    if specific_feat_combs_system is not None:
-        rows.append([0, '≥1\n(group 1)',
-                f'{unshared_so_sum - group_2_sum_so:,}' + '\n' + f'({(unshared_so_sum - group_2_sum_so)/unshared_so_sum:.1%})',
-                '-', '-', '-', feat_value_pairs_system_only_str])
-        rows.append([0, '≥1\n(group 2)',
-                bold(color(f'{group_2_sum_so:,}', 'orange')) + '\n' + bold(f'({group_2_sum_so/unshared_so_sum:.1%})'),
-                '-', '-', '-', '(same as above)'])
-    rows.append([0, '≥1\n(all)',
-            f'{unshared_so_sum:,}' + '\n' + f'({unshared_so_sum/unshared_so_total:.1%})',
-            f'{num_lemmas_valid_so:,}' + '\n' + f'({num_lemmas_valid_so/diac_mat_system_only.shape[0]:.1%})',
-            f'{num_feats_valid_so:,}' + '\n' + f'({num_feats_valid_so/diac_mat_system_only.shape[1]:.1%})',
-            examples_str_so, '-'])
-    rows.append(['0\n(system)', '0\n(system)',
-            f'{unshared_so_total - unshared_so_sum:,}' + '\n' + f'({(unshared_so_total - unshared_so_sum)/unshared_so_total:.1%})',
-            '-', '-', examples_str_so_zero, '', ''])
-    if specific_feat_combs_baseline is not None:
-        rows.append(['≥1\n(group 1)', 0,
-                f'{unshared_bo_sum - group_2_sum_bo:,}' + '\n' + f'({(unshared_bo_sum - group_2_sum_bo)/unshared_bo_sum:.1%})',
-                '-', '-', '-', feat_value_pairs_baseline_only_str])
-        rows.append(['≥1\n(group 2)', 0,
-                bold(color(f'{group_2_sum_bo:,}', 'orange')) + '\n' + bold(f'({group_2_sum_bo/unshared_bo_sum:.1%})'),
-                '-', '-', '-', '(same as above)'])
-    rows.append(['≥1\n(all)', 0,
-            f'{unshared_bo_sum:,}' + '\n' + f'({unshared_bo_sum/unshared_bo_total:.1%})',
-            f'{num_lemmas_valid_bo:,}' + '\n' + f'({num_lemmas_valid_bo/diac_mat_baseline_only.shape[0]:.1%})',
-            f'{num_feats_valid_bo:,}' + '\n' + f'({num_feats_valid_bo/diac_mat_baseline_only.shape[1]:.1%})',
-            examples_str_bo, '-'])
-    rows.append(['0\n(baseline)', '0\n(baseline)',
-            f'{unshared_bo_total - unshared_bo_sum:,}' + '\n' + f'({(unshared_bo_total - unshared_bo_sum)/unshared_bo_total:.1%})',
-            '-', '-', examples_str_bo_zero, '', ''])
+            rows.append([system_info['combination'][0], str(system_info['combination'][1]) + '\n(group 1)',
+                         f'{group_1_sum:,}' + '\n' + f'({group_1_sum/unshared_sum:.1%})',
+                         '-', '-', '-', system_info['feat_value_pairs_str']])
+            rows.append([system_info['combination'][0], str(system_info['combination'][1]) + '\n(group 2)',
+                         bold(color(f'{total_group_2_sum:,}', 'orange')) + '\n' + bold(f'({total_group_2_sum/unshared_sum:.1%})'),
+                         '-', '-', '-', '(same as above)'])
+            rows.append([system_info['combination'][0], str(system_info['combination'][1]) + '\n(all)',
+                         f'{unshared_sum:,}' + '\n' + f'({unshared_sum/unshared_total:.1%})',
+                         f'{num_lemmas_valid:,}' + '\n' + f'({num_lemmas_valid/total_lemmas:.1%})',
+                         f'{num_feats_valid:,}' + '\n' + f'({num_feats_valid/total_feats:.1%})',
+                         system_info['example_str'], '-'])
+            rows.append([f'0\n({system_})', f'0\n({system_})',
+                         f'{unshared_total - unshared_sum:,}' + '\n' + f'({(unshared_total - unshared_sum)/unshared_total:.1%})',
+                         '-', '-', system_info['example_zero_str'], '', ''])
 
-    print(tabulate(rows, tablefmt='fancy_grid', headers=header,
-                maxheadercolwidths=[13, 13, None, None, None, None, 50],
-                maxcolwidths=[None, None, None, None, None, None, 50]))
+    header = OrderedDict([
+        ((f'# diac ({args.baseline_name})', 13), ('', None)),
+        ((f'# diac ({args.system_name})', 13), ('', None)),
+        (('Slots', None), ('', None)),
+        (('Lemmas', None), ('', None)),
+        (('Feats', None), ('', None)),
+        (('Example', 60), ('', 60)),
+        (('Unshared feats', 50), ('', 50))
+    ])
+    
+    print(tabulate(rows, tablefmt='fancy_grid', headers=[h[0] for h in header],
+                   maxcolwidths=[v[1] for v in header.values()],
+                   maxheadercolwidths=[h[1] for h in header]))
     print()
 
     def section_unshared_group1_stats():
@@ -526,53 +511,21 @@ def section_unshared_combinations_high_level_stats():
         print(notes)
         print()
         rows = []
-        header = [f'# diac ({args.baseline_name})', f'# diac ({args.system_name})',
-                'Features', 'Slots', 'Lemmas', 'Feats', 'Example']
-        for i, specific_feat_combs in enumerate([feat_value_pairs_system_only, feat_value_pairs_baseline_only]):
-            i = abs(i - 1)
+        for system_, system_info in SYSTEM_INFO.items():
             rows_ = []
-            total_sum = 0
-            index2lemmas_pos = index2lemmas_pos_so if i else index2lemmas_pos_bo
-            analysis2index = analysis2index_so if i else analysis2index_bo
-            index2analysis = index2analysis_so if i else index2analysis_bo
-            group_2_categorization = group_2_categorization_so if i else group_2_categorization_bo
-            diac_mat_ = diac_mat_system_only if i else diac_mat_baseline_only
-            num_lemmas = diac_mat_system_only.shape[0] if i else diac_mat_baseline_only.shape[0]
-            num_feats = diac_mat_system_only.shape[1] if i else diac_mat_baseline_only.shape[1]
-            total_feat_combs_group2 = sum(len(feats) for feats in group_2_categorization.values())
-            total_feat_combs = num_feats - total_feat_combs_group2
-
-            total = unshared_so_sum - group_2_sum_so if i else unshared_bo_sum - group_2_sum_bo
-            for feat, value, pos in specific_feat_combs:
-                feat_value = f'{pos.upper()}(' + f'{feat}:{value}' + ')'
-                feat_value_indexes_ = np.array([i for i, feat_comb in enumerate(index2analysis)
-                                                if value == feat_comb[feat2index[feat]]])
-                group_1_mask = diac_mat_[:, feat_value_indexes_] != 0
-            
-                match_comb_indexes = np.where(group_1_mask)
-                match_comb_indexes = ([match_comb_indexes[0][0]], [feat_value_indexes_[match_comb_indexes[1][0]]])
-                examples_str = generate_examples(index2lemmas_pos, index2analysis,
-                                                match_comb_indexes=match_comb_indexes)
-                
-                num_slots = int(np.sum(group_1_mask))
-                total_sum += num_slots
-                num_lemmas_valid = int(np.sum(np.any(group_1_mask, axis=1)))
-                num_feats_valid = len(feat_value_indexes_)
-                
-                row = [('0' if i else '≥1'), ('≥1' if i else '0'),
-                    feat_value,
-                    f'{num_slots:,}' + '\n' + f'({num_slots/total:.1%})',
-                    f'{num_lemmas_valid:,}' + '\n' + f'({num_lemmas_valid/num_lemmas:.1%})',
-                    f'{num_feats_valid:,}' + '\n' + f'({num_feats_valid/total_feat_combs:.1%})',
-                    examples_str]
+            for specific_feat_comb in system_info['feat_value_pairs']:
+                row = SpecificFeatStatsRow(specific_feat_comb, system_info, feat2index)
+                row.example_str = generate_examples(
+                    system_info['index2lemmas_pos'], system_info['index2analysis'],
+                    match_comb_indexes=row.match_comb_indexes)
                 rows_.append(row)
-            
-            rows += sorted(rows_, key=lambda row: int(row[3].split('\n')[0].replace(',', '')),
-                        reverse=True)
+                
+            rows += sorted(rows_, key=lambda row: row.num_slots_sum, reverse=True)
 
-        print(tabulate(rows, tablefmt='fancy_grid', headers=header,
-                    maxheadercolwidths=[8, 7, None, None, None, None, 50],
-                    maxcolwidths=[8, 7, None, None, None, None, 50]))
+        rows = [[getattr(row, v[0]) for v in header.values()] for row in rows]
+        print(tabulate(rows, tablefmt='fancy_grid', headers=[h[0] for h in header],
+                       maxcolwidths=[v[1] for v in header.values()],
+                       maxheadercolwidths=[h[1] for h in header]))
         print()
 
 
@@ -592,60 +545,46 @@ def section_unshared_combinations_high_level_stats():
         in group 2 (contrary to previous section).
         """, 'warning')
         print(notes)
+        header[('Explanation', 60)] = ('explanation', 60)
+
         rows = []
-        header = [f'# diac ({args.baseline_name})', f'# diac ({args.system_name})',
-                'Features', 'Slots', 'Lemmas', 'Feats', 'Example', 'Explanation']
-        for i, specific_feat_combs in enumerate([specific_feat_combs_system, specific_feat_combs_baseline]):
-            i = abs(i - 1)
+        for system_, system_info in SYSTEM_INFO.items():
+            num_slots_total = system_info['total_group_2_sum']
             rows_ = []
-            total_sum = 0
-            index2lemmas_pos = index2lemmas_pos_so if i else index2lemmas_pos_bo
-            analysis2index = analysis2index_so if i else analysis2index_bo
-            index2analysis = index2analysis_so if i else index2analysis_bo
-            group_2_categorization = group_2_categorization_so if i else group_2_categorization_bo
-            diac_mat_ = diac_mat_system_only if i else diac_mat_baseline_only
-            num_lemmas = diac_mat_system_only.shape[0] if i else diac_mat_baseline_only.shape[0]
-            num_feats = diac_mat_system_only.shape[1] if i else diac_mat_baseline_only.shape[1]
-            total_feat_combs = sum(len(feats) for feats in group_2_categorization.values())
-            feat_combs_indexes = feat_combs_indexes_so if i else feat_combs_indexes_bo
-            total = int(np.sum(diac_mat_[:, feat_combs_indexes] != 0))
-            for info in specific_feat_combs:
-                unshared_feat_subcombs = ' '.join(sorted(f'{f}:{v}' for f, v in info['feats_dict'].items()))
-                feat_combs_indexes_ = np.array([analysis2index[feats]
-                                            for feats in group_2_categorization[unshared_feat_subcombs]])
-                group_2_mask = diac_mat_[:, feat_combs_indexes_] != 0
-            
-                match_comb_indexes = np.where(group_2_mask)
-                match_comb_indexes = ([match_comb_indexes[0][0]], [feat_combs_indexes_[0]])
-                examples_str = generate_examples(index2lemmas_pos, index2analysis,
-                                                match_comb_indexes=match_comb_indexes)
-                num_slots = int(np.sum(group_2_mask))
-                total_sum += num_slots
-                num_lemmas_valid = int(np.sum(np.any(group_2_mask, axis=1)))
-                num_feats_valid = len(group_2_categorization[unshared_feat_subcombs])
-                
-                row = [('0' if i else '≥1'), ('≥1' if i else '0'),
-                    unshared_feat_subcombs,
-                    f'{num_slots:,}' + '\n' + f'({num_slots/total:.1%})',
-                    f'{num_lemmas_valid:,}' + '\n' + f'({num_lemmas_valid/num_lemmas:.1%})',
-                    f'{num_feats_valid:,}' + '\n' + f'({num_feats_valid/total_feat_combs:.1%})',
-                    examples_str, info['explanation']]
+            num_slots_total_ = 0
+            for specific_feat_comb in system_info['specific_feat_combs']:
+                row = SpecificFeatStatsRow(specific_feat_comb, system_info, feat2index)
+                row.example_str = generate_examples(
+                    system_info['index2lemmas_pos'], system_info['index2analysis'],
+                    match_comb_indexes=row.match_comb_indexes)
+                num_slots_total_ += row.num_slots_sum
                 rows_.append(row)
             
-            rows += sorted(rows_, key=lambda row: int(row[3].split('\n')[0].replace(',', '')),
-                        reverse=True)
-            assert total == total_sum
-            rows.append([('0' if i else '≥1'), ('≥1' if i else '0'),
-                        bold(color('Total', 'orange')),
-                        bold(color(f'{total_sum:,}', 'orange')) + '\n' + bold(f'({total_sum/total:.1%})'),
-                        '-', '-', '-', '-'])
+            assert num_slots_total_ == num_slots_total
+            rows_ = sorted(rows_, key=lambda row: row.num_slots_sum, reverse=True)
+            rows_ = [[getattr(row, v[0]) for v in header.values()] for row in rows_]
+            rows_.append([system_info['combination'][0], system_info['combination'][1],
+                          bold(color('Total', 'orange')),
+                          (bold(color(f'{num_slots_total:,}', 'orange')) + '\n' +
+                           bold(f'({num_slots_total/num_slots_total:.1%})')),
+                          '-', '-', '-', '-'])
+            rows += rows_
 
-        print(tabulate(rows, tablefmt='fancy_grid', headers=header,
-                    maxheadercolwidths=[8, 7, None, None, None, None, 50, 50],
-                    maxcolwidths=[8, 7, None, None, None, None, 50, 50]))
+        print(tabulate(rows, tablefmt='fancy_grid', headers=[h[0] for h in header],
+                       maxcolwidths=[v[1] for v in header.values()],
+                       maxheadercolwidths=[h[1] for h in header]))
         print()
 
-    if specific_feat_combs_system is not None and specific_feat_combs_baseline is not None:
+    if bool(args.system_specific_feat_combs) and bool(args.baseline_specific_feat_combs):
+        header = OrderedDict([
+            ((f'# diac ({args.baseline_name})', 8), ('num_diac_baseline', 8)),
+            ((f'# diac ({args.system_name})', 7), ('num_diac_system', 7)),
+            (('Features', None), ('feat_value', None)),
+            (('Slots', None), ('num_slots_str', None)),
+            (('Lemmas', None), ('num_lemmas_valid_str', None)),
+            (('Feats', None), ('num_feats_valid_str', None)),
+            (('Example', 60), ('example_str', 60))
+        ])
         section_unshared_group1_stats()
         section_unshared_group2_stats()
 
@@ -681,12 +620,14 @@ try:
     diac_mat_baseline_only = info_bo['diac_mat_baseline']
     index2analysis_bo, analysis2index_bo = info_bo['index2analysis'], info_bo['analysis2index']
     index2lemmas_pos_bo = {index: lemma_pos for index, lemma_pos in info_bo['lemmas_pos']}
+    MATRICES['baseline_only']['index2lemmas_pos'] = index2lemmas_pos_bo
     failed_bo = info_bo['failed'] if 'failed' in info_bo else None
 
     info_so = MATRICES['system_only']
     diac_mat_system_only = info_so['diac_mat_system']
     index2analysis_so, analysis2index_so = info_so['index2analysis'], info_so['analysis2index']
     index2lemmas_pos_so = {index: lemma_pos for index, lemma_pos in info_so['lemmas_pos']}
+    MATRICES['system_only']['index2lemmas_pos'] = index2lemmas_pos_so
     failed_so = info_so['failed'] if 'failed' in info_so else None
     POS2FEAT_VALUE_PAIRS = eval_utils.load_pos2feat_value_pairs(args.report_dir)
 except:

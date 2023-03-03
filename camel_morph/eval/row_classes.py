@@ -13,8 +13,7 @@ class DiacCombinationRow:
                  num_valid_lemmas, num_valid_feats,
                  diac_mat_baseline, diac_mat_system,
                  system_only_mat, baseline_only_mat,
-                 no_intersect_mat,
-                 index2lemmas_pos, index2analysis) -> None:
+                 no_intersect_mat) -> None:
         self.combination = combination
         self.diac_mat_baseline = diac_mat_baseline
         self.diac_mat_system = diac_mat_system
@@ -166,7 +165,7 @@ class DiacCombinationRow:
         return intersect_mask_sum_slots, intersect_mask_sum_diacs
     
 
-    def val_and_perc_str(self, attr, color_):
+    def val_and_perc_str(self, attr, color_=None):
         sum_, perc_ = getattr(self, f'{attr}_sum'), getattr(self, f'{attr}_perc')
         sum_, perc_= f'{sum_:,}', f'{perc_:.1%}'
         if color_ is not None:
@@ -206,3 +205,89 @@ class DiacCombinationRow:
                 recall_slots_system_str = ''
             recall_system_str = bold(color(recall_diacs_system_str, 'blue')) + recall_slots_system_str
             setattr(self, f'recall_{system_}_str', recall_system_str)
+
+
+class SpecificFeatStatsRow:
+    def __init__(self,
+                 row_info,
+                 system_info,
+                 feat2index) -> None:
+        self.num_diac_baseline = system_info['combination'][0]
+        self.num_diac_system = system_info['combination'][1]
+
+        self.diac_mat_ = system_info['diac_mat_']
+        self.index2analysis = system_info['index2analysis']
+        self.analysis2index = system_info['analysis2index']
+        self.index2lemmas_pos = system_info['index2lemmas_pos']
+        self.group_2_categorization = system_info['group_2_categorization']
+        self.total_lemmas = system_info['total_lemmas']
+        self.total_feats = system_info['total_feats']
+        self.unshared_sum = system_info['unshared_sum']
+        self.total_group_2_sum = system_info['total_group_2_sum']
+        self.feat2index = feat2index
+
+        self.total_feat_combs_group_2 = sum(len(feats) for feats in self.group_2_categorization.values())
+        self.total_feat_combs = self.total_feats - self.total_feat_combs_group_2
+        self.total_group_1_sum = self.unshared_sum - self.total_group_2_sum
+
+        if type(row_info) is tuple:
+            # Group 1
+            self.feat = row_info[0]
+            self.value = row_info[1]
+            self.pos = row_info[2]
+            self.feat_value = f'{self.pos.upper()}(' + f'{self.feat}:{self.value}' + ')'
+            self.compute_values_group_1()
+        else:
+            # Group 2
+            self.feat_combs_indexes = system_info['feat_combs_indexes']
+            self.feat_value = ' '.join(sorted(f'{f}:{v}' for f, v in row_info['feats_dict'].items()))
+            self.explanation = row_info['explanation']
+            self.compute_values_group_2()
+        
+        self.compute_values_str()
+
+
+    def compute_values_group_1(self):
+        feat_value_indexes_ = np.array([i for i, feat_comb in enumerate(self.index2analysis)
+                                        if self.value == feat_comb[self.feat2index[self.feat]]])
+        group_1_mask = self.diac_mat_[:, feat_value_indexes_] != 0
+    
+        match_comb_indexes = np.where(group_1_mask)
+        match_comb_indexes = ([match_comb_indexes[0][0]], [feat_value_indexes_[match_comb_indexes[1][0]]])
+        self.match_comb_indexes = match_comb_indexes
+        
+        self.num_slots_sum = int(np.sum(group_1_mask))
+        self.num_slots_perc = self.num_slots_sum / self.total_group_1_sum
+        self.num_lemmas_valid_sum = int(np.sum(np.any(group_1_mask, axis=1)))
+        self.num_lemmas_valid_perc = self.num_lemmas_valid_sum / self.total_lemmas
+        self.num_feats_valid_sum = len(feat_value_indexes_)
+        self.num_feats_valid_perc = self.num_feats_valid_sum / self.total_feats
+
+
+    def compute_values_group_2(self):
+        feat_combs_indexes_ = np.array([self.analysis2index[feats]
+                                        for feats in self.group_2_categorization[self.feat_value]])
+        group_2_mask = self.diac_mat_[:, feat_combs_indexes_] != 0
+    
+        match_comb_indexes = np.where(group_2_mask)
+        match_comb_indexes = ([match_comb_indexes[0][0]], [feat_combs_indexes_[0]])
+        self.match_comb_indexes = match_comb_indexes
+        
+        self.num_slots_sum = int(np.sum(group_2_mask))
+        self.num_slots_perc = self.num_slots_sum / self.total_group_2_sum
+        self.num_lemmas_valid_sum = int(np.sum(np.any(group_2_mask, axis=1)))
+        self.num_lemmas_valid_perc = self.num_lemmas_valid_sum / self.total_lemmas
+        self.num_feats_valid_sum = len(self.group_2_categorization[self.feat_value])
+        self.num_feats_valid_perc = self.num_feats_valid_sum / self.total_feat_combs_group_2
+
+
+    def compute_values_str(self):
+        num_slots_sum_str = f'{self.num_slots_sum:,}'
+        num_slots_perc_str = f'({self.num_slots_perc:.1%})'
+        self.num_slots_str = num_slots_sum_str + '\n' + num_slots_perc_str
+        num_lemmas_valid_sum_str = f'{self.num_lemmas_valid_sum:,}'
+        num_lemmas_valid_perc_str = f'{self.num_lemmas_valid_perc:.1%}'
+        self.num_lemmas_valid_str = num_lemmas_valid_sum_str + '\n' + num_lemmas_valid_perc_str
+        num_feats_valid_sum_str = f'{self.num_feats_valid_sum:,}'
+        num_feats_valid_perc_str = f'{self.num_feats_valid_perc:.1%}'
+        self.num_feats_valid_str = num_feats_valid_sum_str + '\n' + num_feats_valid_perc_str
