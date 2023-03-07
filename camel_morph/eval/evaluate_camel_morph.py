@@ -26,18 +26,78 @@ import os
 import argparse
 import json
 from tqdm import tqdm
-import pickle
 import re
 import itertools
 import random
+from collections import OrderedDict
 
 import pandas as pd
 from numpy import nan
 pd.options.mode.chained_assignment = None  # default='warn'
 
+parser = argparse.ArgumentParser()
+parser.add_argument("-egy_magold_path", default='eval_files/ARZ-All-train.113012.magold',
+                    type=str, help="Path of the file containing the EGY MAGOLD data to evaluate on.")
+parser.add_argument("-msa_magold_path", default='eval_files/ATB123-train.102312.calima-msa-s31_0.3.0.magold',
+                    type=str, help="Path of the file containing the MSA MAGOLD data to evaluate on.")
+parser.add_argument("-camel_tb_path", default='eval_files/camel_tb_uniq_types.txt',
+                    type=str, help="Path of the file containing the MSA CAMeLTB data to evaluate on.")
+parser.add_argument("-db_dir", default='databases',
+                    type=str, help="Path of the directory to load the DB from.")
+parser.add_argument("-output_dir", default='eval_files',
+                    type=str, help="Path of the directory to output evaluation results.")
+parser.add_argument("-config_file", default='configs/config_default.json',
+                    type=str, help="Config file specifying which sheets to use.")
+parser.add_argument("-egy_config_name", default='all_aspects_egy',
+                    type=str, help="Config name which specifies the path of the EGY Camel DB.")
+parser.add_argument("-msa_config_name", default='all_aspects_msa',
+                    type=str, help="Config name which specifies the path of the MSA Camel DB.")
+parser.add_argument("-msa_baseline_db", default='eval_files/calima-msa-s31_0.4.2.utf8.db',
+                    type=str, help="Path of the MSA baseline DB file we will be comparing against.")
+parser.add_argument("-egy_baseline_db", default='eval_files/calima-egy-c044_0.2.0.utf8.db',
+                    type=str, help="Path of the EGY baseline DB file we will be comparing against.")
+parser.add_argument("-pos_type", required=True, choices=['verbal', 'nominal'],
+                    type=str, help="POS type to evaluate")
+parser.add_argument("-eval_mode", required=True,
+                    choices=['recall_msa_magold_raw', 'recall_msa_magold_ldc_dediac',
+                             'recall_egy_magold_raw', 'recall_egy_magold_ldc_dediac',
+                             'recall_egy_union_msa_magold_raw', 'recall_egy_union_msa_magold_ldc_dediac', 'recall_egy_union_msa_magold_calima_dediac',
+                             'recall_egy_magold_raw_no_lex', 'recall_egy_magold_ldc_dediac_no_lex',
+                             'recall_msa_magold_ldc_dediac_backoff', 'recall_egy_magold_ldc_dediac_backoff',
+                             'compare_camel_tb_msa_raw', 'compare_camel_tb_egy_raw'],
+                    type=str, help="What evaluation to perform.")
+parser.add_argument("-n", default=1000000000,
+                    type=int, help="Number of instances to evaluate.")
+parser.add_argument("-camel_tools", default='local', choices=['local', 'official'],
+                    type=str, help="Path of the directory containing the camel_tools modules.")
+
+random.seed(42)
+
+args = parser.parse_args()
+
+with open(args.config_file) as f:
+    config = json.load(f)
+    config_local = config['local']
+
+    config_egy = config_local.get(args.egy_config_name)
+    config_msa = config_local.get(args.msa_config_name)
+
+if args.camel_tools == 'local':
+    camel_tools_dir = config['global']['camel_tools']
+    sys.path.insert(0, camel_tools_dir)
+
+from camel_tools.morphology.database import MorphologyDB
+from camel_tools.morphology.analyzer import Analyzer
+from camel_tools.utils.charmap import CharMapper
+from camel_tools.utils.dediac import dediac_bw
+
+bw2ar = CharMapper.builtin_mapper('bw2ar')
+ar2bw = CharMapper.builtin_mapper('ar2bw')
+
 sukun_regex = re.compile('o')
 aA_regex = re.compile(r'(?<!^[wf])aA')
 verb_bw_regex = re.compile(r'[PIC]V')
+nom_bw_regex = re.compile(r'NOUN|ADJ|\bADV\b|\bVERB\b')
 
 essential_keys = ['source', 'diac', 'lex', 'pos', 'asp', 'mod', 'vox', 'per', 'num', 'gen',
                   'prc0', 'prc1', 'prc1.5', 'prc2', 'prc3', 'enc0', 'enc1', 'enc2', 'stem_seg']
@@ -57,8 +117,14 @@ def _preprocess_magold_data(gold_data):
             word = info[0][word_start:]
             ldc = info[1]
 
-            pos_type = 'verbal' if verb_bw_regex.search(ldc) else 'other'
-            if pos_type == 'verbal':
+            if verb_bw_regex.search(ldc):
+                pos_type = 'verbal'
+            elif nom_bw_regex.search(ldc):
+                pos_type = 'nominal'
+            else:
+                pos_type = 'other'
+
+            if pos_type in ['verbal', 'nominal']:
                 analysis_ = {}
                 for field in info[4].split()[1:]:
                     field = field.split(':')
@@ -98,7 +164,7 @@ def _preprocess_ldc_dediac(ldc_diac):
     return analyzer_input
 
 
-def _preprocess_analysis(analysis, optional_keys=[], ar2bw=None):
+def _preprocess_analysis(analysis, optional_keys=[]):
     if analysis['prc0'] in ['mA_neg', 'lA_neg']:
         analysis['prc1.5'] = analysis['prc0']
         analysis['prc0'] = '0'
@@ -183,7 +249,7 @@ def recall_print(errors, correct_cases, drop_cases, results_path, bw2ar, best_an
 
 
 def evaluate_recall(data, n, eval_mode, output_path, pos_type,
-                    analyzer_camel, msa_camel_analyzer, ar2bw, bw2ar, best_analysis=True):
+                    analyzer_camel, msa_camel_analyzer=None, best_analysis=True):
     source_index = essential_keys.index('source')
     lex_index = essential_keys.index('lex')
     diac_index = essential_keys.index('diac')
@@ -207,7 +273,7 @@ def evaluate_recall(data, n, eval_mode, output_path, pos_type,
     elif 'calima_dediac' in eval_mode:
         print('Analyzer input: CALIMA DEDIAC')
 
-    data_, counts = {}, {}
+    data_, counts = OrderedDict(), {}
     for word_info in data[pos_type]:
         key = (word_info['info']['word'], tuple(
             word_info['info']['magold'][0].split(' # ')[1:4]))
@@ -221,7 +287,7 @@ def evaluate_recall(data, n, eval_mode, output_path, pos_type,
     pbar = tqdm(total=len(data_))
     for (word, ldc_bw), word_info in data_:
         total += 1
-        analysis_gold = _preprocess_analysis(word_info['analysis'], ar2bw=ar2bw)
+        analysis_gold = _preprocess_analysis(word_info['analysis'])
 
         if 'raw' in eval_mode:
             analyzer_input = word
@@ -235,7 +301,7 @@ def evaluate_recall(data, n, eval_mode, output_path, pos_type,
         analyses_pred_ = analyzer_camel.analyze(analyzer_input)
         for analysis in analyses_pred_:
             analysis['source'] = 'main'
-        analyses_pred = set([_preprocess_analysis(analysis, ar2bw=ar2bw)
+        analyses_pred = set([_preprocess_analysis(analysis)
                              for analysis in analyses_pred_])
 
         match = re.search(r'ADAM|CALIMA|SAMA', word_info['analysis']['gloss'])
@@ -247,8 +313,8 @@ def evaluate_recall(data, n, eval_mode, output_path, pos_type,
             analyses_msa_pred = msa_camel_analyzer.analyze(analyzer_input)
             for analysis in analyses_msa_pred:
                 analysis['source'] = 'msa'
-            analyses_msa_pred = set([_preprocess_analysis(
-                analysis, ar2bw=ar2bw) for analysis in analyses_msa_pred])
+            analyses_msa_pred = set([_preprocess_analysis(analysis)
+                                     for analysis in analyses_msa_pred])
             analyses_pred = analyses_pred | analyses_msa_pred
 
         analyses_pred_no_source = set(
@@ -298,10 +364,13 @@ def evaluate_recall(data, n, eval_mode, output_path, pos_type,
 
     pbar.close()
 
-    print(
-        f"Type space recall: {sum(case['count'] for case in correct_cases)/(sum(case['count'] for case in correct_cases) + sum(case['count'] for case in errors))}")
+    recall_type_space = sum(case['count'] for case in correct_cases)
+    recall_type_space /= (sum(case['count'] for case in correct_cases) +
+                          sum(case['count'] for case in errors))
+    print(f"Type space recall: {recall_type_space:.2%}")
 
-    # recall_print(errors, correct_cases, drop_cases, output_path, bw2ar, best_analysis)
+    recall_print(errors, correct_cases, drop_cases, output_path, bw2ar, best_analysis)
+    
     return correct_cases
 
 
@@ -425,9 +494,11 @@ def evaluate_verbs_analyzer_comparison(data, n, eval_mode):
         for analysis in analyses_baseline:
             match = re.search(r'ADAM|CALIMA|SAMA', analysis['gloss'])
             analysis['source'] = match.group().lower() if match else 'na'
-        analyses_camel = {tuple([f for i, f in enumerate(_preprocess_analysis(analysis)) if i != source_index]): analysis
+        analyses_camel = {tuple([f for i, f in enumerate(_preprocess_analysis(analysis))
+                                 if i != source_index]): analysis
                           for analysis in analyses_camel if analysis['pos'] == 'verb'}
-        analyses_baseline = {tuple([f for i, f in enumerate(_preprocess_analysis(analysis)) if i != source_index]): analysis
+        analyses_baseline = {tuple([f for i, f in enumerate(_preprocess_analysis(analysis))
+                                    if i != source_index]): analysis
                              for analysis in analyses_baseline if analysis['pos'] == 'verb'}
         analyses_camel_set, analyses_baseline_set = set(
             analyses_camel), set(analyses_baseline)
@@ -549,64 +620,9 @@ def compare_stats(compare_results):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-egy_magold_path", default='eval_files/ARZ-All-train.113012.magold',
-                        type=str, help="Path of the file containing the EGY MAGOLD data to evaluate on.")
-    parser.add_argument("-msa_magold_path", default='eval_files/ATB123-train.102312.calima-msa-s31_0.3.0.magold',
-                        type=str, help="Path of the file containing the MSA MAGOLD data to evaluate on.")
-    parser.add_argument("-camel_tb_path", default='eval_files/camel_tb_uniq_types.txt',
-                        type=str, help="Path of the file containing the MSA CAMeLTB data to evaluate on.")
-    parser.add_argument("-db_dir", default='databases',
-                        type=str, help="Path of the directory to load the DB from.")
-    parser.add_argument("-output_dir", default='eval_files',
-                        type=str, help="Path of the directory to output evaluation results.")
-    parser.add_argument("-config_file", default='configs/config.json',
-                        type=str, help="Config file specifying which sheets to use.")
-    parser.add_argument("-egy_config_name", default='all_aspects_egy',
-                        type=str, help="Config name which specifies the path of the EGY Camel DB.")
-    parser.add_argument("-msa_config_name", default='all_aspects_msa',
-                        type=str, help="Config name which specifies the path of the MSA Camel DB.")
-    parser.add_argument("-msa_baseline_db", default='eval_files/calima-msa-s31_0.4.2.utf8.db',
-                        type=str, help="Path of the MSA baseline DB file we will be comparing against.")
-    parser.add_argument("-egy_baseline_db", default='eval_files/calima-egy-c044_0.2.0.utf8.db',
-                        type=str, help="Path of the EGY baseline DB file we will be comparing against.")
-    parser.add_argument("-pos_type", default='verbal',
-                        type=str, help="POS type to evaluate")
-    parser.add_argument("-eval_mode", required=True,
-                        choices=['recall_msa_magold_raw', 'recall_msa_magold_ldc_dediac',
-                                 'recall_egy_magold_raw', 'recall_egy_magold_ldc_dediac',
-                                 'recall_egy_union_msa_magold_raw', 'recall_egy_union_msa_magold_ldc_dediac', 'recall_egy_union_msa_magold_calima_dediac',
-                                 'recall_egy_magold_raw_no_lex', 'recall_egy_magold_ldc_dediac_no_lex',
-                                 'recall_msa_magold_ldc_dediac_backoff', 'recall_egy_magold_ldc_dediac_backoff',
-                                 'compare_camel_tb_msa_raw', 'compare_camel_tb_egy_raw'],
-                        type=str, help="What evaluation to perform.")
-    parser.add_argument("-n", default=100,
-                        type=int, help="Number of verbs to input to the two compared systems.")
-    parser.add_argument("-camel_tools", default='local', choices=['local', 'official'],
-                        type=str, help="Path of the directory containing the camel_tools modules.")
-
-    random.seed(42)
-
-    args = parser.parse_args()
-
-    with open(args.config_file) as f:
-        config = json.load(f)
-        config_local = config['local']
-        config_egy = config_local[args.egy_config_name]
-        config_msa = config_local[args.msa_config_name]
-
-    if args.camel_tools == 'local':
-        camel_tools_dir = config['global']['camel_tools']
-        sys.path.insert(0, camel_tools_dir)
-
-    from camel_tools.morphology.database import MorphologyDB
-    from camel_tools.morphology.analyzer import Analyzer
-    from camel_tools.utils.charmap import CharMapper
-    from camel_tools.utils.dediac import dediac_bw
-
-    bw2ar = CharMapper.builtin_mapper('bw2ar')
-    ar2bw = CharMapper.builtin_mapper('ar2bw')
-
+    output_dir = os.path.join(args.output_dir, args.pos_type)
+    os.makedirs(output_dir, exist_ok=True)
+    print()
     print('Eval mode:', args.eval_mode)
     if 'msa' in args.eval_mode and 'egy' not in args.eval_mode:
         camel_db_path = os.path.join(args.db_dir, config_msa['db'])
@@ -648,6 +664,8 @@ if __name__ == "__main__":
     with open(data_path) as f:
         data = f.read()
 
+    print(f'POS Type: {args.pos_type}')
+
     print('Preprocessing data...', end=' ')
     if 'magold' in args.eval_mode:
         print('using dataset:', 'MAGOLD')
@@ -667,8 +685,9 @@ if __name__ == "__main__":
                 args.db_dir, config_msa['db']))
             msa_camel_analyzer = Analyzer(msa_camel_db)
 
-        output_path = os.path.join(args.output_dir, f'{args.eval_mode}.tsv')
-        evaluate_recall(data, args.n, args.eval_mode, output_path, args.pos_type, ar2bw, bw2ar)
+        output_path = os.path.join(output_dir, f'{args.eval_mode}.tsv')
+        evaluate_recall(data, args.n, args.eval_mode, output_path, args.pos_type,
+                        analyzer_camel, msa_camel_analyzer)
 
     elif 'compare' in args.eval_mode:
         print('Eval mode:', 'COMPARE')
@@ -680,12 +699,12 @@ if __name__ == "__main__":
         else:
             raise NotImplementedError
 
-        status = evaluate_verbs_analyzer_comparison(
-            data, args.n, args.eval_mode)
+        status = evaluate_verbs_analyzer_comparison(data, args.n, args.eval_mode)
 
-        with open(os.path.join(args.output_dir, 'status_compare.tsv')) as f:
+        with open(os.path.join(output_dir, 'status_compare.tsv')) as f:
             compare_results = [line.strip().split('\t')
                                for line in f.readlines()]
             compare_stats(compare_results)
     else:
         raise NotImplementedError
+    print()
