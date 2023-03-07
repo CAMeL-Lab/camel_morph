@@ -28,6 +28,7 @@ import pickle
 import numpy as np
 import re
 import sys
+from itertools import takewhile
 
 try:
     from .. import db_maker_utils
@@ -45,6 +46,8 @@ nominals = ["ABBREV", "ADJ", "ADJ_COMP", "ADJ_NUM", "ADV",
             "PRON", "PRON_DEM", "PRON_EXCLAM", "PRON_INTERROG",
             "PRON_REL", "VERB_NOM", "VERB_PSEUDO"]
 nominals = [n.lower() for n in nominals]
+
+cond_t_sort_order = {'MS':0, 'MD':1, 'MP':2, 'FS':3, 'FD':4, 'FP':5}
 
 def create_repr_lemmas_list(lexicon,
                             class_keys,
@@ -66,8 +69,7 @@ def create_repr_lemmas_list(lexicon,
             for k in stems[0]:
                 info[k] = ''.join([f"[{ct if ct else '-'}]{''.join(indexes)}"
                                     for ct, indexes in sorted(info[k].items(), key=lambda x: x[0])])
-        
-        elif info_display_format == 'expanded':
+        elif info_display_format == 'unique':
             for k in stems[0]:
                 if k in ['cond_t', 'cond_s']:
                     info[k] = ''.join(
@@ -76,6 +78,32 @@ def create_repr_lemmas_list(lexicon,
                     info[k] = ''.join(
                         list(set(sorted([f"[{stem[k]}]" if stem[k] else '[-]' for stem in stems]))))
             info['lemma'] = info['lemma'][1:-1]
+        elif info_display_format == 'expanded':
+            stem_order_indexes = sorted(range(len(stems)), reverse=True,
+                                         key=lambda i: len(lcp([stems[i]['form'], stems[i]['lemma']])))
+            for k in stems[0]:
+                if k in ['lemma', 'pos']:
+                    info[k] = '-'.join(
+                        set([stems[i][k] if stems[i][k] else '[-]'
+                            for i in stem_order_indexes]))
+                else:
+                    info[k] = '-'.join(f'[{stems[i][k]}]' if stems[i][k] else '[-]'
+                                    for i in stem_order_indexes)
+            
+            info['stem_count'] = len(stems)
+            info['lemma_ar'] = bw2ar(info['lemma'])
+            info['form_ar'] = bw2ar(info['form'])
+
+            stems_forms = [stems[i]['form'] for i in stem_order_indexes]
+            index2stem = sorted(
+                set([stem['form'] for stem in stems]), reverse=True,
+                key=lambda form: (len(lcp([form, stems[0]['lemma']])), -stems_forms.index(form)))
+            lemma_p = ' lemma:#p' if 'p' in info['lemma'] else ''
+            for stem in stems:
+                stem['meta_info'] = (str(index2stem.index(stem['form'])), lemma_p)
+            info['meta_info'] = 'stem:' + '-'.join(
+                stems[i]['meta_info'][0] for i in stem_order_indexes)
+            info['meta_info'] += lemma_p
         
         lemmas_cond_sig = [{k: stem.get(k) for k in class_keys} for stem in stems]
         lemmas_cond_sig = tuple(
@@ -84,6 +112,9 @@ def create_repr_lemmas_list(lexicon,
         uniq_lemma_classes[lemmas_cond_sig]['freq'] += 1
         uniq_lemma_classes[lemmas_cond_sig]['lemmas'].append(info)
 
+    if lemma2prob == 'return_all':
+        return uniq_lemma_classes
+    
     uniq_lemma_classes = get_highest_prob_lemmas(
         pos, uniq_lemma_classes, lemmas_stripped_uniq, bank, lemma2prob, db)
     
@@ -97,17 +128,19 @@ def get_extended_lemmas(lexicon, extended_lemma_keys):
     def get_info(row):
         feats = {feat.split(':')[0]: feat.split(':')[1]
                  for feat in row['FEAT'].split()}
-        cond_t = ' '.join(sorted(['||'.join(sorted([part for part in cond.split('||')]))
-                                  for cond in row['COND-T'].split()]))
-        cond_s = ' '.join(sorted(['||'.join(sorted([part for part in cond.split('||')]))
-                                  for cond in row['COND-S'].split()]))
+        cond_t = ' '.join(sorted('||'.join(
+            sorted([part for part in cond.split('||')], key=lambda x: cond_t_sort_order[x]))
+                   for cond in row['COND-T'].split()))
+        cond_s = ' '.join(sorted('||'.join(sorted([part for part in cond.split('||')]))
+                                  for cond in row['COND-S'].split()))
         lemma = row['LEMMA'].split(':')[1]
         info = dict(lemma=lemma,
                     form=row['FORM'],
                     cond_t=cond_t,
                     cond_s=cond_s,
                     gloss=row['GLOSS'],
-                    index=row['index'])
+                    index=row['index'],
+                    line=row.get('LINE'))
         info.update(feats)
         extended_lemma = tuple([lemma] + [info[k]
                                           for k in extended_lemma_keys[1:]])
@@ -183,10 +216,11 @@ def get_highest_prob_lemmas(pos,
             best_lemma_info['freq'] = lemmas_info['freq']
             lemma = best_lemma_info['lemma']
             lemma_stripped = strip_lex(lemma)
-            if not ('-' in lemma and
-                    len(lemmas_stripped_uniq[lemma_stripped]) > 2 and
-                    all([stem['cond_t'] == '' for stem in lemmas_stripped_uniq[lemma_stripped]])) or \
-                lemmas_stripped_uniq is None:
+            if (not ('-' in lemma and
+                len(lemmas_stripped_uniq[lemma_stripped]) > 2 and
+                all([stem['cond_t'] == '' for stem in lemmas_stripped_uniq[lemma_stripped]]))
+                or lemmas_stripped_uniq is None) \
+                and lemma_stripped not in exclusions:
                 break
         
         if not done:
@@ -199,8 +233,17 @@ def get_highest_prob_lemmas(pos,
             i += 1
         other_lemmas = ' '.join(other_lemmas)
         uniq_lemma_classes_[lemmas_cond_sig]['other_lemmas'] = other_lemmas
+        uniq_lemma_classes_[lemmas_cond_sig]['other_lemmas_ar'] = bw2ar(other_lemmas)
         
     return uniq_lemma_classes_
+
+
+def lcp(strings):
+    "Longest common prefix"
+    def allsame(strings_):
+        return len(set(strings_)) == 1
+    
+    return ''.join(i[0] for i in takewhile(allsame, zip(*strings)))
 
 
 if __name__ == "__main__":
@@ -227,7 +270,7 @@ if __name__ == "__main__":
                         type=str, help="Name of the annotation bank to use.")
     parser.add_argument("-lexprob",  default='',
                         type=str, help="Custom lexical probabilities file which contains two columns (lemma, frequency).")
-    parser.add_argument("-display_format", default='compact', choices=['compact', 'expanded'],
+    parser.add_argument("-display_format", default='compact', choices=['compact', 'unique', 'expanded'],
                         type=str, help="Display format of the debug info for each representative lemma.")
     parser.add_argument("-camel_tools", default='local', choices=['local', 'official'],
                         type=str, help="Path of the directory containing the camel_tools modules.")
@@ -270,6 +313,11 @@ if __name__ == "__main__":
     if pos:
         lexicon = lexicon[lexicon['FEAT'].str.contains(f'pos:{pos}\\b', regex=True)]
 
+    if 'exclusions' in config_local:
+        with open(config_local['exclusions']) as f:
+            exclusions = json.load(f)
+            exclusions = exclusions[pos] if pos in exclusions else []
+
     class_keys = config_local.get('class_keys')
     extended_lemma_keys = config_local.get('extended_lemma_keys')
     if class_keys == None:
@@ -279,28 +327,32 @@ if __name__ == "__main__":
 
     banks_dir = args.banks_dir if args.banks_dir else os.path.join(
         config_global['debugging'], config_global['banks_dir'], f"camel-morph-{config_local['dialect']}")
-    bank = args.bank if args.bank else config_local['debugging']['feats'][args.feats]['bank']
-    bank = AnnotationBank(bank_path=os.path.join(banks_dir, bank))
+    bank = args.bank if args.bank else (config_local['debugging']['feats'][args.feats]['bank'] if 'debugging' in config_local else None)
+    if bank:
+        bank = AnnotationBank(bank_path=os.path.join(banks_dir, bank))
 
     lemma2prob, db = None, None
     if config_local.get('lexprob'):
-        with open(config_local['lexprob']) as f:
-            freq_list_raw = f.readlines()
-            if len(freq_list_raw[0].split('\t')) == 2:
-                pos2lemma2prob = dict(map(lambda x: (x[0], int(x[1])),
-                                    [line.strip().split('\t') for line in freq_list_raw]))
-                pos2lemma2prob = {'verb': pos2lemma2prob}
-            elif len(freq_list_raw[0].split('\t')) == 3:
-                pos2lemma2prob = {}
-                for line in freq_list_raw:
-                    line = line.strip().split('\t')
-                    lemmas = pos2lemma2prob.setdefault(line[1], {})
-                    lemmas[line[0]] = int(line[2])
-            else:
-                raise NotImplementedError
-            pos2lemma2prob[''] = {'': 1}
-            total = sum(pos2lemma2prob[pos].values())
-            lemma2prob = {lemma: freq / total for lemma, freq in pos2lemma2prob[pos].items()}
+        if config_local['lexprob'] == 'return_all':
+            lemma2prob = 'return_all'
+        else:
+            with open(config_local['lexprob']) as f:
+                freq_list_raw = f.readlines()
+                if len(freq_list_raw[0].split('\t')) == 2:
+                    pos2lemma2prob = dict(map(lambda x: (x[0], int(x[1])),
+                                        [line.strip().split('\t') for line in freq_list_raw]))
+                    pos2lemma2prob = {'verb': pos2lemma2prob}
+                elif len(freq_list_raw[0].split('\t')) == 3:
+                    pos2lemma2prob = {}
+                    for line in freq_list_raw:
+                        line = line.strip().split('\t')
+                        lemmas = pos2lemma2prob.setdefault(line[1], {})
+                        lemmas[line[0]] = int(line[2])
+                else:
+                    raise NotImplementedError
+                pos2lemma2prob[''] = {'': 1}
+                total = sum(pos2lemma2prob[pos].values())
+                lemma2prob = {lemma: freq / total for lemma, freq in pos2lemma2prob[pos].items()}
     elif args.db:
         db = MorphologyDB(args.db)
     else:

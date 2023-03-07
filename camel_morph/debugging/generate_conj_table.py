@@ -88,7 +88,7 @@ sig2feat = {
     'feats4': {
         'enc0': {
             'VERB':['3ms_dobj'],
-            'NOM': ['3ms_poss'],
+            'NOM': ['3ms_poss', '1s_poss'],
             'OTHER': ['3ms_pron']
         },
         'enc1': {
@@ -243,7 +243,15 @@ def create_conjugation_tables(lemmas,
         outputs = {}
         for signature in paradigm:
             features = parse_signature(signature, _strip_brackets(pos))
-            for i, features_ in enumerate(features):
+            # This assumes that if we have multiple feature sets, they are all similiar
+            # in all feature dimensions except for one (thus the break).
+            diff = ''
+            if len(features) > 1:
+                for k, v in features[0].items():
+                    if v != features[1][k]:
+                        diff = k
+                        break
+            for features_ in features:
                 # Using altered local copy of generator.py in camel_tools
                 analyses, debug_message = generator.generate(lemma_raw, features_, debug=True)
                 prefix_cats = [a[1] for a in analyses]
@@ -266,7 +274,7 @@ def create_conjugation_tables(lemmas,
                                   freq=info.get('freq'),
                                   features=features_,
                                   debug_message=debug_message)
-                outputs[f"{signature}{f'_{i}' if len(features) > 1 else ''}"] = debug_info
+                outputs[f"{signature}{f'_{features_[diff]}' if len(features) > 1 else ''}"] = debug_info
 
         lemmas_conj.append(outputs)
     

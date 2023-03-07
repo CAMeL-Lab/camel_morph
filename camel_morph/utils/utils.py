@@ -410,12 +410,16 @@ def add_check_mark_online(rows,
         status_new = [[check] if i in indexes else ([ok] if status_old[i] != check else [check])
                             for i in range(len(rows['LEMMA']))]
     elif messages:
-        assert len(status_old) == len(lemmas) == len(messages) 
+        assert len(status_old) == len(lemmas) == len(messages)
+        if mode:
+            mode = f'{mode}:'
+        else:
+            mode = ''
         if write == 'overwrite':
-            status_new = [[f'{mode}:{message}'] if message else ['']
+            status_new = [[f'{mode}{message}'] if message else ['']
                             for message in messages]
         elif write == 'append':
-            status_new = [[f"{s}{' ' if s else ''}" + f'{mode}:{message}'] if message else [s + '']
+            status_new = [[f"{s}{' ' if s else ''}" + f'{mode}{message}'] if message else [s + '']
                             for s, message in zip(status_old, messages)]
     else:
         raise NotImplementedError
