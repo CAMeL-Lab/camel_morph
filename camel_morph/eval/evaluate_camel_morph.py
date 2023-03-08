@@ -42,8 +42,6 @@ parser.add_argument("-msa_magold_path", default='eval_files/ATB123-train.102312.
                     type=str, help="Path of the file containing the MSA MAGOLD data to evaluate on.")
 parser.add_argument("-camel_tb_path", default='eval_files/camel_tb_uniq_types.txt',
                     type=str, help="Path of the file containing the MSA CAMeLTB data to evaluate on.")
-parser.add_argument("-db_dir", default='databases',
-                    type=str, help="Path of the directory to load the DB from.")
 parser.add_argument("-output_dir", default='eval_files',
                     type=str, help="Path of the directory to output evaluation results.")
 parser.add_argument("-config_file", default='configs/config_default.json',
@@ -56,8 +54,10 @@ parser.add_argument("-msa_baseline_db", default='eval_files/calima-msa-s31_0.4.2
                     type=str, help="Path of the MSA baseline DB file we will be comparing against.")
 parser.add_argument("-egy_baseline_db", default='eval_files/calima-egy-c044_0.2.0.utf8.db',
                     type=str, help="Path of the EGY baseline DB file we will be comparing against.")
-parser.add_argument("-pos_type", required=True, choices=['verbal', 'nominal'],
+parser.add_argument("-pos_type", default='', choices=['verbal', 'nominal', 'other'],
                     type=str, help="POS type to evaluate")
+parser.add_argument("-pos", default='',
+                    type=str, help="POS to evaluate. Overrides pos_type.")
 parser.add_argument("-eval_mode", required=True,
                     choices=['recall_msa_magold_raw', 'recall_msa_magold_ldc_dediac',
                              'recall_egy_magold_raw', 'recall_egy_magold_ldc_dediac',
@@ -96,11 +96,11 @@ ar2bw = CharMapper.builtin_mapper('ar2bw')
 
 sukun_regex = re.compile('o')
 aA_regex = re.compile(r'(?<!^[wf])aA')
-verb_bw_regex = re.compile(r'[PIC]V')
-nom_bw_regex = re.compile(r'NOUN|ADJ|\bADV\b|\bVERB\b')
 
-essential_keys = ['source', 'diac', 'lex', 'pos', 'asp', 'mod', 'vox', 'per', 'num', 'gen',
-                  'prc0', 'prc1', 'prc1.5', 'prc2', 'prc3', 'enc0', 'enc1', 'enc2', 'stem_seg']
+essential_keys = ['source', 'diac', 'lex', 'pos', 'asp', 'mod',
+                  'vox', 'per', 'num', 'gen', 'stt', 'cas',
+                  'prc0', 'prc1', 'prc1.5', 'prc2', 'prc3',
+                  'enc0', 'enc1', 'enc2', 'stem_seg']
 
 
 def _preprocess_magold_data(gold_data):
@@ -110,27 +110,21 @@ def _preprocess_magold_data(gold_data):
                  for sentence in gold_data]
     gold_data = [{'sentence': ex[0].split('\n')[0], 'words': [ex[0].split(
         '\n')[1:]] + [x.split('\n') for x in ex[1:]]} for ex in gold_data]
-    gold_data_ = {}
+    gold_data_ = []
     word_start, sentence_start = len(";;WORD "), len(";;; SENTENCE ")
     for example in tqdm(gold_data):
         for info in example['words']:
             word = info[0][word_start:]
             ldc = info[1]
-
-            if verb_bw_regex.search(ldc):
-                pos_type = 'verbal'
-            elif nom_bw_regex.search(ldc):
-                pos_type = 'nominal'
-            else:
-                pos_type = 'other'
-
-            if pos_type in ['verbal', 'nominal']:
+            ldc_BW_components = set(ldc.split(' # ')[3].split('+'))
+                    
+            def get_word_info():
                 analysis_ = {}
                 for field in info[4].split()[1:]:
                     field = field.split(':')
                     analysis_[field[0]] = ''.join(field[1:])
 
-                word = {
+                word_info = {
                     'info': {
                         'sentence': example['sentence'][sentence_start:],
                         'word': word,
@@ -138,8 +132,12 @@ def _preprocess_magold_data(gold_data):
                     },
                     'analysis': analysis_
                 }
+                return word_info
 
-            gold_data_.setdefault(pos_type, []).append(word)
+            intersect = ldc_BW_components & ATB_POS
+            if bool(intersect):
+                word_info = get_word_info()
+                gold_data_.append(word_info)
 
     return gold_data_
 
@@ -248,8 +246,8 @@ def recall_print(errors, correct_cases, drop_cases, results_path, bw2ar, best_an
     errors.to_csv(results_path, index=False, sep='\t')
 
 
-def evaluate_recall(data, n, eval_mode, output_path, pos_type,
-                    analyzer_camel, msa_camel_analyzer=None, best_analysis=True):
+def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
+                    msa_camel_analyzer=None, best_analysis=True):
     source_index = essential_keys.index('source')
     lex_index = essential_keys.index('lex')
     diac_index = essential_keys.index('diac')
@@ -274,7 +272,7 @@ def evaluate_recall(data, n, eval_mode, output_path, pos_type,
         print('Analyzer input: CALIMA DEDIAC')
 
     data_, counts = OrderedDict(), {}
-    for word_info in data[pos_type]:
+    for word_info in data:
         key = (word_info['info']['word'], tuple(
             word_info['info']['magold'][0].split(' # ')[1:4]))
         counts.setdefault(key, 0)
@@ -364,10 +362,10 @@ def evaluate_recall(data, n, eval_mode, output_path, pos_type,
 
     pbar.close()
 
-    recall_type_space = sum(case['count'] for case in correct_cases)
-    recall_type_space /= (sum(case['count'] for case in correct_cases) +
+    recall_token_space = sum(case['count'] for case in correct_cases)
+    recall_token_space /= (sum(case['count'] for case in correct_cases) +
                           sum(case['count'] for case in errors))
-    print(f"Type space recall: {recall_type_space:.2%}")
+    print(f"Token space recall: {recall_token_space:.2%}")
 
     recall_print(errors, correct_cases, drop_cases, output_path, bw2ar, best_analysis)
     
@@ -620,14 +618,32 @@ def compare_stats(compare_results):
 
 
 if __name__ == "__main__":
-    output_dir = os.path.join(args.output_dir, args.pos_type)
+    pos_or_type = args.pos if args.pos else args.pos_type
+
+    with open('misc_files/atb2camel_pos.json') as f:
+        pos_type2atb2camel_pos = json.load(f)
+        ATB_POS = set()
+        for pos_type, atb_pos2camel_pos in pos_type2atb2camel_pos.items():
+            if pos_type != 'not_mappable':
+                atb_pos2camel_pos = {
+                    atb: set(camel) if type(camel) is list else set([camel])
+                    for atb, camel in atb_pos2camel_pos.items()}
+                if pos_or_type in ['verbal', 'nominal', 'other']:
+                    if pos_type == pos_or_type:
+                        ATB_POS.update(atb_pos2camel_pos.keys())
+                else:
+                    ATB_POS.update([atb
+                                    for atb, camel in atb_pos2camel_pos.items()
+                                    if pos_or_type.upper() in camel])
+
+    output_dir = os.path.join(args.output_dir, pos_or_type)
     os.makedirs(output_dir, exist_ok=True)
     print()
     print('Eval mode:', args.eval_mode)
     if 'msa' in args.eval_mode and 'egy' not in args.eval_mode:
-        camel_db_path = os.path.join(args.db_dir, config_msa['db'])
+        camel_db_path = os.path.join('databases/camel-morph-msa', config_msa['db'])
     elif 'egy' in args.eval_mode:
-        camel_db_path = os.path.join(args.db_dir, config_egy['db'])
+        camel_db_path = os.path.join('databases/camel-morph-egy', config_egy['db'])
     else:
         raise NotImplementedError
 
@@ -664,7 +680,7 @@ if __name__ == "__main__":
     with open(data_path) as f:
         data = f.read()
 
-    print(f'POS Type: {args.pos_type}')
+    print(f'POS (type): {pos_or_type}')
 
     print('Preprocessing data...', end=' ')
     if 'magold' in args.eval_mode:
@@ -682,17 +698,17 @@ if __name__ == "__main__":
         if 'egy_union_msa' in args.eval_mode and args.msa_config_name:
             print('Using union of EGY and MSA analyses.')
             msa_camel_db = MorphologyDB(os.path.join(
-                args.db_dir, config_msa['db']))
+                'databases/camel-morph-msa', config_msa['db']))
             msa_camel_analyzer = Analyzer(msa_camel_db)
 
         output_path = os.path.join(output_dir, f'{args.eval_mode}.tsv')
-        evaluate_recall(data, args.n, args.eval_mode, output_path, args.pos_type,
+        evaluate_recall(data, args.n, args.eval_mode, output_path,
                         analyzer_camel, msa_camel_analyzer)
 
     elif 'compare' in args.eval_mode:
         print('Eval mode:', 'COMPARE')
         if 'magold' in args.eval_mode:
-            data = [example['info']['word'] for example in data[args.pos_type]]
+            data = [example['info']['word'] for example in data[pos_or_type]]
         elif 'camel_tb' in args.eval_mode:
             print('Eval mode:', 'COMPARE')
             data = [word for word in list(data) if word]
