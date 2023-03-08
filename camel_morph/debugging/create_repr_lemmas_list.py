@@ -317,6 +317,8 @@ if __name__ == "__main__":
         with open(config_local['exclusions']) as f:
             exclusions = json.load(f)
             exclusions = exclusions[pos] if pos in exclusions else []
+    else:
+        exclusions = []
 
     class_keys = config_local.get('class_keys')
     extended_lemma_keys = config_local.get('extended_lemma_keys')
