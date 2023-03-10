@@ -31,6 +31,7 @@ import itertools
 import random
 from collections import OrderedDict
 
+import gspread
 import pandas as pd
 from numpy import nan
 pd.options.mode.chained_assignment = None  # default='warn'
@@ -54,10 +55,15 @@ parser.add_argument("-msa_baseline_db", default='eval_files/calima-msa-s31_0.4.2
                     type=str, help="Path of the MSA baseline DB file we will be comparing against.")
 parser.add_argument("-egy_baseline_db", default='eval_files/calima-egy-c044_0.2.0.utf8.db',
                     type=str, help="Path of the EGY baseline DB file we will be comparing against.")
-parser.add_argument("-pos_type", default='', choices=['verbal', 'nominal', 'other'],
-                    type=str, help="POS type to evaluate")
-parser.add_argument("-pos", default='',
-                    type=str, help="POS to evaluate. Overrides pos_type.")
+parser.add_argument("-spreadsheet", default='',
+                    type=str, help="Spreadsheet to write the results to.")
+parser.add_argument("-compare_stats_cell", default='',
+                    type=str, help="Cell at which to start printing the compare results in the sheet.")
+
+parser.add_argument("-pos_or_type", required=True, choices=['verbal', 'nominal', 'other',
+                                                            'noun', 'noun_num', 'noun_quant', 'noun_prop',
+                                                            'adj', 'adj_num', 'adj_comp'],
+                    type=str, help="POS or POS type to evaluate.")
 parser.add_argument("-eval_mode", required=True,
                     choices=['recall_msa_magold_raw', 'recall_msa_magold_ldc_dediac',
                              'recall_egy_magold_raw', 'recall_egy_magold_ldc_dediac',
@@ -144,7 +150,7 @@ def _preprocess_magold_data(gold_data):
 
 def _preprocess_camel_tb_data(data):
     data = data.split('\n')
-    data_fl = {}
+    data_fl = OrderedDict()
     for line in data:
         line = line.split()
         if len(line) == 2:
@@ -396,14 +402,16 @@ def compare_print(words, analyses_words, status, results_path, bw=False):
                     camel.loc[common_feat_rows_filter_camel,
                               'qc'] += f'check-{k}-features'
         return camel
+    
+    columns = ['filter'] + essential_keys + (['bw'] if bw else []) + ['status']
+    columns_extra = ['status-global', 'qc', 'cond_format']
+    columns_all = columns + columns_extra
 
     analysis_results = []
     count = 1
     for (word, analyses_word, status_word) in zip(words, analyses_words, status):
         if status_word == ['NOAN']:
             continue
-        columns = ['filter'] + essential_keys + \
-            (['bw'] if bw else []) + ['status']
         analyses_word = [(analyses_word[analysis]['source'],) + analysis + ((ar2bw(analyses_word[analysis]['bw']),) if bw else ())
                          for analysis in analyses_word]
         analyses_word = pd.DataFrame(analyses_word)
@@ -414,94 +422,130 @@ def compare_print(words, analyses_words, status, results_path, bw=False):
         example = pd.concat([ex_col, example], axis=1)
         example.columns = columns
         camel = example[example['status'] == 'CAMEL']
-        baseline = example[example['status'] == 'BASELINE']
+        baseline = example[example['status'].str.contains('BASELINE')]
         both = example[example['status'] == 'BOTH']
         camel['status-global'], baseline['status-global'], both['status-global'] = '', '', ''
         camel['qc'], baseline['qc'], both['qc'] = '', '', ''
         camel.sort_values(by=['lex'], inplace=True)
         baseline.sort_values(by=['lex'], inplace=True)
         both.sort_values(by=['lex'], inplace=True)
-        if baseline.empty or camel.empty:
+        if baseline.empty or camel.empty or both.empty:
             empty_row = pd.DataFrame(
                 [('-',)*len(camel.columns)], columns=camel.columns)
             empty_row.loc[0, 'filter'] = f'{count} {dediac_bw(word)}'
         if not both.empty:
-            both['status-global'] = 'full'
             if not baseline.empty and not camel.empty:
-                camel['status-global'] = 'mixed'
+                camel['status-global'] = 'both-camel-entry'
                 camel = qc_automatic(camel)
-                baseline['status-global'] = 'mixed'
-                both['status-global'] = 'mixed'
+                baseline['status-global'] = 'both-baseline-entry'
+                both['status-global'] = 'both-shared-entry'
             elif not baseline.empty and camel.empty:
-                camel = empty_row
-                camel['status-global'] = 'noadd-camel'
-                baseline['status-global'] = 'only-baseline'
-                both['status-global'] = 'mixed'
+                camel = empty_row.copy()
+                camel['status-global'] = 'baseline-super-noadd-camel'
+                baseline['status-global'] = 'baseline-super-entry'
+                both['status-global'] = 'baseline-super-shared-entry'
             elif baseline.empty and not camel.empty:
-                camel['status-global'] = 'only-camel'
+                camel['status-global'] = 'camel-super-entry'
                 camel = qc_automatic(camel)
-                baseline = empty_row
-                baseline['status-global'] = 'noadd-baseline'
-                both['status-global'] = 'mixed'
-            else:
-                camel = empty_row
-                camel['status-global'] = 'noadd-camel'
                 baseline = empty_row.copy()
-                baseline['status-global'] = 'noadd-baseline'
-                both['status-global'] = 'full'
-
-        else:
-            if not camel.empty:
-                camel['status-global'] = 'only-camel'
-                if not baseline.empty:
-                    camel = qc_automatic(camel)
+                baseline['status-global'] = 'camel-super-noadd-baseline'
+                both['status-global'] = 'camel-super-shared-entry'
             else:
                 camel = empty_row
-                camel['status-global'] = 'noan-camel'
-
-            if not baseline.empty:
-                baseline['status-global'] = 'only-baseline'
+                camel['status-global'] = 'exact-match-noadd-camel'
+                baseline = empty_row.copy()
+                baseline['status-global'] = 'exact-match-noadd-baseline'
+                both['status-global'] = 'exact-match'
+        else:
+            both = empty_row.copy()
+            if not baseline.empty and not camel.empty:
+                if len(baseline.index) < len(camel.index):
+                    status_ = 'camel-only-disj'
+                else:
+                    status_ = 'baseline-only-disj'
+                both['status-global'] = status_
+                camel['status-global'] = status_ + 'camel-entry'
+                camel = qc_automatic(camel)
+                baseline['status-global'] = status_ + 'baseline-entry'
+            elif not baseline.empty and camel.empty:
+                camel = empty_row.copy()
+                camel['status-global'] = 'baseline-only'
+                baseline['status-global'] = 'baseline-only-entry'
+            elif baseline.empty and not camel.empty:
+                baseline = empty_row.copy()
+                baseline['status-global'] = 'camel-only'
+                camel['status-global'] = 'camel-only-entry'
+                camel = qc_automatic(camel)
             else:
-                baseline = empty_row
-                baseline['status-global'] = 'noan-baseline'
+                # Should never happen because it is the case where nothing is generated
+                # on either side.
+                raise NotImplementedError
 
         example = pd.concat([both, camel, baseline])
+        example['cond_format'] = count % 2
         analysis_results.append(example)
         count += 1
 
     analysis_results = pd.concat(analysis_results)
     analysis_results = analysis_results.replace(nan, '', regex=True)
-    analysis_results.columns = columns + ['status-global', 'qc']
+    analysis_results.columns = columns_all
+    analysis_results = analysis_results[columns_all]
     analysis_results.to_csv(results_path, index=False, sep='\t')
 
+    if sh is not None:
+        sheets = sh.worksheets()
+        sheet_name = f"{DIALECT}-Compare-{args.pos_or_type}"
+        new_sheet = False
+        if sheet_name in [sheet.title for sheet in sheets]:
+            sheet = sh.worksheet(title=sheet_name)
+        else:
+            sheet_default_id = [(sheet.id, sheet.index)
+                                for sheet in sheets if sheet.title == 'Compare-template'][0]
+            sheet = sh.duplicate_sheet(sheet_default_id[0], sheet_default_id[1] + 1,
+                                       new_sheet_name=sheet_name)
+            new_sheet = True
+        sheet_df = pd.DataFrame(sheet.get_all_records())
+        assert list(sheet_df.columns[:len(columns_all)]) == columns_all
+        if not new_sheet:
+            sheet.batch_clear(['A:AA'])
+        sheet.update('A:AA', [analysis_results.columns.values.tolist()] +
+                            analysis_results.values.tolist())
+        if len(sheet_df.index) > len(analysis_results.index) and not new_sheet:
+            sheet.delete_rows(len(analysis_results.index) + 2,
+                              len(sheet_df.index) + 1)
+        else:
+            sheet.set_basic_filter('A:AA')
 
-def evaluate_verbs_analyzer_comparison(data, n, eval_mode):
+
+def evaluate_verbs_analyzer_comparison(data, n, output_path,
+                                       analyzer_camel, analyzer_baseline):
     words, analyses, status = [], [], []
     pbar = tqdm(total=min(n, len(data)))
     random.shuffle(data)
     count = 0
     source_index = essential_keys.index('source')
-    for word in data:
+    for word_ar in data:
         if count == n:
             break
-        word_dediac = bw2ar(word)
-        analyses_camel = analyzer_camel.analyze(word_dediac)
+        analyses_camel = analyzer_camel.analyze(word_ar)
         for analysis in analyses_camel:
             analysis['source'] = 'camel'
-        analyses_baseline = analyzer_baseline.analyze(word_dediac)
+        analyses_baseline = analyzer_baseline.analyze(word_ar)
         for analysis in analyses_baseline:
             match = re.search(r'ADAM|CALIMA|SAMA', analysis['gloss'])
             analysis['source'] = match.group().lower() if match else 'na'
-        analyses_camel = {tuple([f for i, f in enumerate(_preprocess_analysis(analysis))
-                                 if i != source_index]): analysis
-                          for analysis in analyses_camel if analysis['pos'] == 'verb'}
-        analyses_baseline = {tuple([f for i, f in enumerate(_preprocess_analysis(analysis))
-                                    if i != source_index]): analysis
-                             for analysis in analyses_baseline if analysis['pos'] == 'verb'}
+        analyses_camel = {
+            tuple([f for i, f in enumerate(_preprocess_analysis(analysis))
+                   if i != source_index]): analysis
+            for analysis in analyses_camel if analysis['pos'] in CAMEL_POS}
+        analyses_baseline = {
+            tuple([f for i, f in enumerate(_preprocess_analysis(analysis))
+                   if i != source_index]): analysis
+            for analysis in analyses_baseline if analysis['pos'] in CAMEL_POS}
         analyses_camel_set, analyses_baseline_set = set(
             analyses_camel), set(analyses_baseline)
 
-        words.append(ar2bw(word))
+        words.append(ar2bw(word_ar))
 
         if analyses_camel_set == analyses_baseline_set == set():
             analyses.append([])
@@ -542,107 +586,130 @@ def evaluate_verbs_analyzer_comparison(data, n, eval_mode):
         pbar.update(1)
     pbar.close()
 
-    with open(os.path.join(args.output_dir, 'status_compare.tsv'), 'w') as f:
-        for line in status:
-            print(*line, sep='\t', file=f)
-
-    compare_print(words, analyses, status, os.path.join(args.output_dir, f'{eval_mode}.tsv'), bw=True)
+    compare_print(words, analyses, status, output_path, bw=True)
 
     return status
 
 
 def compare_stats(compare_results):
-    stats = {'noan': 0, 'only_baseline': 0, 'only_camel': 0, 'equal': 0,
-             'disjoint': 0, 'overlap': 0, 'camel_superset': 0, 'baseline_superset': 0}
-    stats = {
-        'noan': {'word_count': 0, 'analyses_camel': 0, 'analyses_baseline': 0, 'overlap': 0},
-        'only_baseline': {'word_count': 0, 'analyses_camel': 0, 'analyses_baseline': 0, 'overlap': 0},
-        'only_camel': {'word_count': 0, 'analyses_camel': 0, 'analyses_baseline': 0, 'overlap': 0},
-        'equal': {'word_count': 0, 'analyses_camel': 0, 'analyses_baseline': 0, 'overlap': 0},
-        'disjoint': {'word_count': 0, 'analyses_camel': 0, 'analyses_baseline': 0, 'overlap': 0},
-        'overlap': {'word_count': 0, 'analyses_camel': 0, 'analyses_baseline': 0, 'overlap': 0},
-        'camel_superset': {'word_count': 0, 'analyses_camel': 0, 'analyses_baseline': 0, 'overlap': 0},
-        'baseline_superset': {'word_count': 0, 'analyses_camel': 0, 'analyses_baseline': 0, 'overlap': 0}
-    }
+    stats = {}
     for example in compare_results:
-        example = [e for e in example if e in [
-            'BASELINE', 'CAMEL', 'BOTH', 'NOAN']]
+        example = [e.split('-')[0] for e in example]
         example_set = set(example)
         both_count = example.count('BOTH')
         if example == ['NOAN'] or not example:
+            stats.setdefault('noan', {}).setdefault('word_count', 0)
             stats['noan']['word_count'] += 1
-        elif example_set == {'BASELINE'}:
-            stats['only_baseline']['word_count'] += 1
-            stats['only_baseline']['analyses_baseline'] += len(example)
-        elif example_set == {'CAMEL'}:
-            stats['only_camel']['word_count'] += 1
-            stats['only_camel']['analyses_camel'] += len(example)
+        elif example_set == {'BASELINE'} or example_set == {'CAMEL'}:
+            system = list(example_set)[0].lower()
+            stats.setdefault(f'only_{system}', {}).setdefault('word_count', 0)
+            stats.setdefault(f'only_{system}', {}).setdefault(f'analyses_{system}', 0)
+            stats[f'only_{system}']['word_count'] += 1
+            stats[f'only_{system}'][f'analyses_{system}'] += len(example)
         elif example_set == {'BOTH'}:
+            stats.setdefault('equal', {}).setdefault('word_count', 0)
+            stats.setdefault('equal', {}).setdefault('overlap', 0)
+            stats.setdefault('equal', {}).setdefault('analyses_camel', 0)
+            stats.setdefault('equal', {}).setdefault('analyses_baseline', 0)
             stats['equal']['word_count'] += 1
             stats['equal']['overlap'] += both_count
             stats['equal']['analyses_camel'] += len(example)
             stats['equal']['analyses_baseline'] += len(example)
         elif example_set == {'BOTH', 'CAMEL', 'BASELINE'}:
+            stats.setdefault('overlap', {}).setdefault('word_count', 0)
+            stats.setdefault('overlap', {}).setdefault('overlap', 0)
+            stats.setdefault('overlap', {}).setdefault('analyses_camel', 0)
+            stats.setdefault('overlap', {}).setdefault('analyses_baseline', 0)
             stats['overlap']['word_count'] += 1
             stats['overlap']['overlap'] += both_count
-            stats['overlap']['analyses_camel'] += both_count + \
-                example.count('CAMEL')
-            stats['overlap']['analyses_baseline'] += both_count + \
-                example.count('BASELINE')
-        elif example_set == {'BOTH', 'BASELINE'}:
-            stats['baseline_superset']['word_count'] += 1
-            stats['baseline_superset']['overlap'] += both_count
-            stats['baseline_superset']['analyses_camel'] += both_count
-            stats['baseline_superset']['analyses_baseline'] += both_count + \
-                example.count('BASELINE')
-        elif example_set == {'BOTH', 'CAMEL'}:
-            stats['camel_superset']['word_count'] += 1
-            stats['camel_superset']['overlap'] += both_count
-            stats['camel_superset']['analyses_baseline'] += both_count
-            stats['camel_superset']['analyses_camel'] += both_count + \
-                example.count('CAMEL')
+            stats['overlap']['analyses_camel'] += both_count + example.count('CAMEL')
+            stats['overlap']['analyses_baseline'] += both_count + example.count('BASELINE')
+        elif example_set == {'BOTH', 'BASELINE'} or example_set == {'BOTH', 'CAMEL'}:
+            system = list(example_set - {'BOTH'})[0].lower()
+            system_other = 'camel' if system == 'baseline' else 'baseline'
+            stats.setdefault(f'{system}_superset', {}).setdefault('word_count', 0)
+            stats.setdefault(f'{system}_superset', {}).setdefault('overlap', 0)
+            stats.setdefault(f'{system}_superset', {}).setdefault(f'analyses_camel', 0)
+            stats.setdefault(f'{system}_superset', {}).setdefault(f'analyses_baseline', 0)
+            stats[f'{system}_superset']['word_count'] += 1
+            stats[f'{system}_superset']['overlap'] += both_count
+            stats[f'{system}_superset'][f'analyses_{system_other}'] += both_count
+            stats[f'{system}_superset'][f'analyses_{system}'] += both_count + example.count(system.upper())
         elif example_set == {'CAMEL', 'BASELINE'}:
+            stats.setdefault('disjoint', {}).setdefault('word_count', 0)
+            stats.setdefault('disjoint', {}).setdefault('analyses_camel', 0)
+            stats.setdefault('disjoint', {}).setdefault('analyses_baseline', 0)
             stats['disjoint']['word_count'] += 1
             stats['disjoint']['analyses_camel'] += example.count('CAMEL')
             stats['disjoint']['analyses_baseline'] += example.count('BASELINE')
         else:
             raise NotImplementedError
 
-    with open(os.path.join(args.output_dir, 'stats_compare_results.tsv'), 'w') as f:
-        for row, info in stats.items():
-            info = [info[k] for k in ['word_count',
-                                      'analyses_camel', 'analyses_baseline', 'overlap']]
-            print(row, *info, sep='\t', file=f)
+    header_col = ['word_count', 'analyses_camel', 'analyses_baseline', 'overlap']
+    header_row = ['noan', 'only_baseline', 'only_camel', 'equal', 'disjoint',
+                  'overlap', 'camel_superset', 'baseline_superset']
+    table = []
+    with open(os.path.join(output_dir, 'stats_compare_results_1.tsv'), 'w') as f:
+        table.append([args.pos_or_type, *header_col])
+        print(args.pos_or_type, *header_col, sep='\t', file=f)
+        for row in header_row:
+            table.append([])
+            row_ = stats.get(row)
+            for col in header_col:
+                table[-1].append(row_.get(col, 0) if row_ is not None else 0)
+            table[-1].insert(0, row)
+            print(*table[-1], sep='\t', file=f)
+
+    if sh is not None:
+        sheet = sh.worksheet(title='Stats')
+        start_col, start_row = args.compare_stats_cell[0], args.compare_stats_cell[1:]
+        start_number = ord(start_col) - ord('A')
+        end_number = start_number + len(header_col)
+        end_row = int(start_row) + len(header_row)
+        end_col = (chr(ord('A') + end_number // 27) if end_number >= 26 else '') + \
+                     chr(ord('A') + end_number % 26)
+        sheet.update(f'{start_col}{start_row}:{end_col}{end_row}', table)
+
 
     return stats
 
 
 if __name__ == "__main__":
-    pos_or_type = args.pos if args.pos else args.pos_type
+    if args.spreadsheet:
+        sa = gspread.service_account(config['global']['service_account'])
+        sh = sa.open(args.spreadsheet)
+    else:
+        sh = None
 
     with open('misc_files/atb2camel_pos.json') as f:
         pos_type2atb2camel_pos = json.load(f)
-        ATB_POS = set()
-        for pos_type, atb_pos2camel_pos in pos_type2atb2camel_pos.items():
-            if pos_type != 'not_mappable':
-                atb_pos2camel_pos = {
-                    atb: set(camel) if type(camel) is list else set([camel])
-                    for atb, camel in atb_pos2camel_pos.items()}
-                if pos_or_type in ['verbal', 'nominal', 'other']:
-                    if pos_type == pos_or_type:
-                        ATB_POS.update(atb_pos2camel_pos.keys())
-                else:
-                    ATB_POS.update([atb
-                                    for atb, camel in atb_pos2camel_pos.items()
-                                    if pos_or_type.upper() in camel])
+    
+    ATB_POS, CAMEL_POS = set(), set()
+    for pos_type, atb_pos2camel_pos in pos_type2atb2camel_pos.items():
+        if pos_type != 'not_mappable':
+            atb_pos2camel_pos = {
+                atb: set(camel) if type(camel) is list else set([camel])
+                for atb, camel in atb_pos2camel_pos.items()}
+            if args.pos_or_type in ['verbal', 'nominal', 'other']:
+                if pos_type == args.pos_or_type:
+                    ATB_POS.update(atb_pos2camel_pos.keys())
+                    CAMEL_POS.update(*[map(str.lower, camel_pos)
+                                       for camel_pos in atb_pos2camel_pos.values()])
+            else:
+                ATB_POS.update([atb
+                                for atb, camel in atb_pos2camel_pos.items()
+                                if args.pos_or_type.upper() in camel])
+                CAMEL_POS.update([args.pos_or_type])
 
-    output_dir = os.path.join(args.output_dir, pos_or_type)
+    output_dir = os.path.join(args.output_dir, args.pos_or_type)
     os.makedirs(output_dir, exist_ok=True)
     print()
     print('Eval mode:', args.eval_mode)
     if 'msa' in args.eval_mode and 'egy' not in args.eval_mode:
+        DIALECT = 'MSA'
         camel_db_path = os.path.join('databases/camel-morph-msa', config_msa['db'])
     elif 'egy' in args.eval_mode:
+        DIALECT = 'EGY'
         camel_db_path = os.path.join('databases/camel-morph-egy', config_egy['db'])
     else:
         raise NotImplementedError
@@ -657,9 +724,15 @@ if __name__ == "__main__":
         analyzer_camel = Analyzer(db_camel)
 
     if 'compare' in args.eval_mode:
-        print('Baseline DB path:', args.baseline_db)
-        db_baseline = MorphologyDB(args.baseline_db)
-        analyzer_baseline = Analyzer(db_baseline)
+        if 'msa' in args.eval_mode:
+            db_baseline_path = args.msa_baseline_db
+        elif 'egy' in args.eval_mode:
+            db_baseline_path = args.egy_baseline_db
+        else:
+            raise NotImplementedError
+        print('Baseline DB path:', db_baseline_path)
+        db_baseline = MorphologyDB(db_baseline_path)
+        analyzer_baseline = Analyzer(db_baseline, legacy=True)
 
     if 'msa' in args.eval_mode and 'egy' not in args.eval_mode:
         if 'magold' in args.eval_mode:
@@ -680,7 +753,7 @@ if __name__ == "__main__":
     with open(data_path) as f:
         data = f.read()
 
-    print(f'POS (type): {pos_or_type}')
+    print(f'POS (type): {args.pos_or_type}')
 
     print('Preprocessing data...', end=' ')
     if 'magold' in args.eval_mode:
@@ -692,6 +765,7 @@ if __name__ == "__main__":
     else:
         raise NotImplementedError
 
+    output_path = os.path.join(output_dir, f'{args.eval_mode}.tsv')
     if 'recall' in args.eval_mode:
         print('Eval mode:', 'RECALL')
         msa_camel_analyzer = None
@@ -701,26 +775,22 @@ if __name__ == "__main__":
                 'databases/camel-morph-msa', config_msa['db']))
             msa_camel_analyzer = Analyzer(msa_camel_db)
 
-        output_path = os.path.join(output_dir, f'{args.eval_mode}.tsv')
         evaluate_recall(data, args.n, args.eval_mode, output_path,
                         analyzer_camel, msa_camel_analyzer)
 
     elif 'compare' in args.eval_mode:
         print('Eval mode:', 'COMPARE')
         if 'magold' in args.eval_mode:
-            data = [example['info']['word'] for example in data[pos_or_type]]
+            data = [example['info']['word'] for example in data]
         elif 'camel_tb' in args.eval_mode:
-            print('Eval mode:', 'COMPARE')
             data = [word for word in list(data) if word]
         else:
             raise NotImplementedError
 
-        status = evaluate_verbs_analyzer_comparison(data, args.n, args.eval_mode)
+        status = evaluate_verbs_analyzer_comparison(
+            data, args.n, output_path, analyzer_camel, analyzer_baseline)
 
-        with open(os.path.join(output_dir, 'status_compare.tsv')) as f:
-            compare_results = [line.strip().split('\t')
-                               for line in f.readlines()]
-            compare_stats(compare_results)
+        compare_stats(status)
     else:
         raise NotImplementedError
     print()
