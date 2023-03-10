@@ -67,8 +67,12 @@ data_egy_nom = pd.read_csv(
     '/Users/chriscay/Library/Mobile Documents/com~apple~CloudDocs/NYUAD/camel_morph/data/camel-morph-egy/nom_egy_red/EGY-Nom-LEX.csv')
 data_egy_verb = pd.read_csv(
     '/Users/chriscay/Library/Mobile Documents/com~apple~CloudDocs/NYUAD/camel_morph/data/camel-morph-egy/all_aspects_egy/EGY-Verb-LEX-PV.csv')
+data_pal = pd.read_csv(
+    '/Users/chriscay/Downloads/PACL-Letter-Split - Phrase-Lemma-Add.csv')
 data_msa_nom = data_msa_nom.replace(nan, '', regex=True)
 data_egy_nom = data_egy_nom.replace(nan, '', regex=True)
+data_egy_verb = data_egy_verb.replace(nan, '', regex=True)
+data_pal = data_pal.replace(nan, '', regex=True)
 
 pattern2freq = {}
 for _, row in tqdm(data_msa_nom.iterrows(), total=len(data_msa_nom.index)):
@@ -101,7 +105,8 @@ for _, row in tqdm(data_msa_nom.iterrows(), total=len(data_msa_nom.index)):
 
 roots_msa_nom = set(data_msa_nom['ROOT'].replace(r'[wy]', '#', regex=True).values.tolist())
 roots_egy_verb = set(data_egy_verb['ROOT'].replace(r'[wy]', '#', regex=True).values.tolist())
-gold_roots = roots_msa_nom | roots_egy_verb
+roots_egy_nom = set(data_egy_nom['ROOT'].replace(r'[wy]', '#', regex=True).values.tolist())
+gold_roots = roots_msa_nom | roots_egy_verb | roots_egy_nom
 
 def get_pattern(lemma_egy, lemma_dediac_norm_egy, pattern_lemma_msa, roots_msa):
     roots_msa = list(roots_msa)
@@ -139,7 +144,7 @@ def filter_roots(possible_roots):
 # data_egy_nom = data_egy_nom[data_egy_nom['LEMMA'] == 'mitqaw~il']
 roots_egy = []
 roots_counter = Counter()
-for _, row in tqdm(data_egy_nom.iterrows(), total=len(data_egy_nom.index)):
+for _, row in tqdm(data_pal.iterrows(), total=len(data_pal.index)):
     if not row['LEMMA']:
         roots_egy.append((row['LEMMA'], '', 'NO_LEMMA', '', ''))
         continue
@@ -209,7 +214,7 @@ for _, row in tqdm(data_egy_nom.iterrows(), total=len(data_egy_nom.index)):
         else:
             roots_egy.append((row['LEMMA'], '', 'NO_ROOT', '', ''))
 
-with open('/Users/chriscay/Library/Mobile Documents/com~apple~CloudDocs/NYUAD/camel_morph/sandbox_files/egy_nom_roots.tsv', 'w') as f:
+with open('/Users/chriscay/Library/Mobile Documents/com~apple~CloudDocs/NYUAD/camel_morph/sandbox_files/pal_roots.tsv', 'w') as f:
     # print('LEMMA', 'ROOT', 'STATUS', sep='\t', file=f)
     print('ROOT', 'STATUS', 'PATTERN_LEMMA_PROPOSED', sep='\t', file=f)
     # print('LEMMA', 'ROOT', 'STATUS', 'PATTERN_LEMMA_PROPOSED', sep='\t', file=f)

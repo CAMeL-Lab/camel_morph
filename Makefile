@@ -54,46 +54,46 @@ make_db_nom_glf:
 	python camel_morph/db_maker.py -config_file configs/config_capstones.json -config_name nom_glf_split_red
 
 repr_lemmas_pv_msa:
-	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name pv_msa -display_format expanded -feats "asp:p mod:i" -db eval_files/calima-msa-s31_0.4.2.utf8.db
+	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name pv_msa -display_format unique -feats "asp:p mod:i" -db eval_files/calima-msa-s31_0.4.2.utf8.db
 repr_lemmas_iv_msa:	
-	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name iv_msa -display_format expanded -feats "asp:i mod:i" -db eval_files/calima-msa-s31_0.4.2.utf8.db
+	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name iv_msa -display_format unique -feats "asp:i mod:i" -db eval_files/calima-msa-s31_0.4.2.utf8.db
 repr_lemmas_cv_msa:	
-	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name cv_msa -display_format expanded -feats "asp:c mod:i" -db eval_files/calima-msa-s31_0.4.2.utf8.db
+	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name cv_msa -display_format unique -feats "asp:c mod:i" -db eval_files/calima-msa-s31_0.4.2.utf8.db
 
 repr_lemmas_pv_glf:	
-	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name pv_glf_red -display_format expanded -feats "asp:p mod:i"
+	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name pv_glf_red -display_format unique -feats "asp:p mod:i"
 repr_lemmas_iv_glf:	
-	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name iv_glf_red -display_format expanded -feats "asp:i mod:i"
+	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name iv_glf_red -display_format unique -feats "asp:i mod:i"
 repr_lemmas_cv_glf:	
-	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name cv_glf_red -display_format expanded -feats "asp:c mod:i"
+	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name cv_glf_red -display_format unique -feats "asp:c mod:i"
 
 repr_lemmas_pv_egy:	
-	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name pv_egy -display_format expanded -feats "asp:p mod:i"
+	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name pv_egy -display_format unique -feats "asp:p mod:i"
 repr_lemmas_iv_egy:	
-	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name iv_egy -display_format expanded -feats "asp:i mod:i"
+	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name iv_egy -display_format unique -feats "asp:i mod:i"
 repr_lemmas_cv_egy:	
-	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name cv_egy -display_format expanded -feats "asp:c mod:i"
+	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name cv_egy -display_format unique -feats "asp:c mod:i"
 
 repr_lemmas_adj_msa:
-	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name adj_msa_split_red -display_format expanded -db eval_files/calima-msa-s31_0.4.2.utf8.db
+	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name adj_msa_split_red -display_format unique -db eval_files/calima-msa-s31_0.4.2.utf8.db
 repr_lemmas_noun_msa:
-	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name noun_msa_split_red adj_msa_split_red -display_format expanded -db eval_files/calima-msa-s31_0.4.2.utf8.db
+	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name noun_msa_split_red adj_msa_split_red -display_format unique -db eval_files/calima-msa-s31_0.4.2.utf8.db
 repr_lemmas_noun_prop_msa:
-	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name noun_prop_msa_split_red -display_format expanded -db eval_files/calima-msa-s31_0.4.2.utf8.db
+	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name noun_prop_msa_split_red -display_format unique -db eval_files/calima-msa-s31_0.4.2.utf8.db
 repr_lemmas_other_msa:
-	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name other_msa_split_red -display_format expanded -db eval_files/calima-msa-s31_0.4.2.utf8.db
+	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name other_msa_split_red -display_format unique -db eval_files/calima-msa-s31_0.4.2.utf8.db
 
 repr_lemmas_adj_egy:
-	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name adj_egy_split_red -display_format expanded
+	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name adj_egy_split_red -display_format unique
 repr_lemmas_noun_egy:
-	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name noun_egy_split_red adj_egy_split_red -display_format expanded
+	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name noun_egy_split_red adj_egy_split_red -display_format unique
 repr_lemmas_noun_prop_egy:
-	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name noun_prop_egy_split_red -display_format expanded
+	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name noun_prop_egy_split_red -display_format unique
 repr_lemmas_other_egy:
-	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name other_egy_split_red -display_format expanded
+	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config.json -config_name other_egy_split_red -display_format unique
 
 repr_lemmas_nom_glf:
-	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config_capstones.json -config_name nom_glf_split_red -display_format expanded
+	python camel_morph/debugging/create_repr_lemmas_list.py -config_file configs/config_capstones.json -config_name nom_glf_split_red -display_format unique
 
 
 conj_pv_msa:
@@ -427,6 +427,22 @@ msa_noun_auto_qc_upload:
 	python camel_morph/debugging/upload_sheets.py -config_file configs/config.json -config_name noun_msa_split_red -input_dir paradigm_debugging_dir -mode backup
 msa_noun_debug: download_msa_noun repr_lemmas_noun_msa make_db_noun_msa conj_noun_msa msa_noun_bank_annotation msa_noun_bank_upload msa_noun_auto_qc_upload
 
+msa_noun_prop_bank_annotation:
+	python camel_morph/debugging/paradigm_debugging.py -config_file configs/config.json -config_name noun_prop_msa_split_red
+msa_noun_prop_bank_upload:
+	python camel_morph/debugging/upload_sheets.py -config_file configs/config.json -config_name noun_prop_msa_split_red -input_dir banks_dir -mode backup
+msa_noun_prop_auto_qc_upload:
+	python camel_morph/debugging/upload_sheets.py -config_file configs/config.json -config_name noun_prop_msa_split_red -input_dir paradigm_debugging_dir -mode backup
+msa_noun_prop_debug: download_msa_noun_prop repr_lemmas_noun_prop_msa make_db_noun_prop_msa conj_noun_prop_msa msa_noun_prop_bank_annotation msa_noun_prop_bank_upload msa_noun_prop_auto_qc_upload
+
+msa_other_bank_annotation:
+	python camel_morph/debugging/paradigm_debugging.py -config_file configs/config.json -config_name other_msa_split_red
+msa_other_bank_upload:
+	python camel_morph/debugging/upload_sheets.py -config_file configs/config.json -config_name other_msa_split_red -input_dir banks_dir -mode backup
+msa_other_auto_qc_upload:
+	python camel_morph/debugging/upload_sheets.py -config_file configs/config.json -config_name other_msa_split_red -input_dir paradigm_debugging_dir -mode backup
+msa_other_debug: download_msa_other repr_lemmas_other_msa make_db_other_msa conj_other_msa msa_other_bank_annotation msa_other_bank_upload msa_other_auto_qc_upload
+
 egy_pv_bank_annotation:
 	python camel_morph/debugging/paradigm_debugging.py -config_file configs/config.json -config_name pv_egy -feats "asp:p mod:i"
 egy_pv_bank_upload:
@@ -520,3 +536,14 @@ auto_docs_glf_nom_process: download_glf_nom_docs make_db_glf_nom_docs generate_a
 
 glf_pilot:
 	python camel_morph/sandbox/glf_pilot.py -config_file_egy configs/config_docs.json -config_name_egy nominals_egy_docs -config_file_glf configs/config_capstones.json -config_name_glf nom_glf_split_red -config_name_glf_docs nominals_glf_docs -eval_mode recall_glf_magold_raw_no_lex
+glf_pilot_mp:
+	python camel_morph/sandbox/disambig_experiment.py
+
+debug_eval_gen:
+	python camel_morph/eval/debug_evaluate_full_generative.py -msa_config_name all_aspects_msa -n 2 -camel_tools local -db_dir databases/camel-morph-msa -feats_debug mod:u\>i mod:u\>s mod:u\>j gen:u prc0:0 prc1:0 enc0:0 -feat_combs 2 -report_dir eval_files/results_multiproc_all_2
+
+evab_gen_verb:
+	python camel_morph/eval/evaluate_full_generative.py -db_system databases/camel-morph-msa/XYZ_msa_all_v1.0.db -camel_tools local -report_dir eval_files/results_multiproc_all_1 -possible_feat_combs eval_files/results_multiproc_all_1/possible_feat_combs.pkl -multiprocessing -pos verb
+
+evab_gen_noun:
+	python camel_morph/eval/evaluate_full_generative.py -db_system databases/camel-morph-msa/XYZ_msa_nom_v1.0.db -camel_tools local -report_dir eval_files/results_multiproc_20_noun -pos noun -multiprocessing

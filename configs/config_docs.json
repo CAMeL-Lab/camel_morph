@@ -72,10 +72,10 @@
             },
             "docs_debugging": {
                 "bank": "",
-                "output_name": "",
+                "output_name": "docs_debug_msa_v1.0.tsv",
                 "debugging_spreadsheet": "",
                 "debugging_sheet": "",
-                "docs_tables": ""
+                "docs_tables": "docs_tables_msa_v1.0.tsv"
             },
             "dialect": "msa",
             "db": "XYZ_msa_nom_docs_red.db",
