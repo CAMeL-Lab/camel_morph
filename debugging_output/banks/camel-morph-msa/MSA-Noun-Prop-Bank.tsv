@@ -1,0 +1,758 @@
+SIGNATURE	LEMMA	DIAC	QC	COMMENTS	STATUS
+NOM.MS.DN.P0	kuwn	Alkuwnu	OK		
+NOM.MS.DG.P0	kuwn	Alkuwni	OK		
+NOM.MS.DA.P0	kuwn	Alkuwna	OK		
+NOM.MS.IN	kuwn	kuwnu	OK		
+NOM.MS.IG	kuwn	kuwna	OK		
+NOM.MS.IA	kuwn	kuwna	OK		
+NOM.MS.CN	kuwn	kuwnu	OK		
+NOM.MS.CG	kuwn	kuwni	OK		
+NOM.MS.CA	kuwn	kuwna	OK		
+NOM.MS.DN.P0.E0	kuwn		OK		
+NOM.MS.DG.P0.E0	kuwn		OK		
+NOM.MS.DA.P0.E0	kuwn		OK		
+NOM.MS.CN.E0	kuwn	kuwnuhu	OK		
+NOM.MS.CG.E0	kuwn	kuwnihi	OK		
+NOM.MS.CA.E0	kuwn	kuwnahu	OK		
+NOM.FS.DN.P0	wafA'	AlwafA'u	OK		
+NOM.FS.DG.P0	wafA'	AlwafA'i	OK		
+NOM.FS.DA.P0	wafA'	AlwafA'a	OK		
+NOM.FS.IN	wafA'	wafA'u	OK		
+NOM.FS.IG	wafA'	wafA'a	OK		
+NOM.FS.IA	wafA'	wafA'F	PROB		
+NOM.FS.CN	wafA'	wafA'u	OK		
+NOM.FS.CG	wafA'	wafA'i	OK		
+NOM.FS.CA	wafA'	wafA'a	OK		
+NOM.FS.DN.P0.E0	wafA'		OK		
+NOM.FS.DG.P0.E0	wafA'		OK		
+NOM.FS.DA.P0.E0	wafA'		OK		
+NOM.FS.CN.E0	wafA'	wafA&uhu	OK		
+NOM.FS.CG.E0	wafA'	wafA}ihi	OK		
+NOM.FS.CA.E0	wafA'	wafA'ahu	OK		
+NOM.FS.DN.P0	>asomA'	Al>asomA'u	OK		
+NOM.FS.DG.P0	>asomA'	Al>asomA'i	OK		
+NOM.FS.DA.P0	>asomA'	Al>asomA'a	OK		
+NOM.FS.IN	>asomA'	>asomA'u	OK		
+NOM.FS.IG	>asomA'	>asomA'a	OK		
+NOM.FS.IA	>asomA'	>asomA'F	PROB		
+NOM.FS.CN	>asomA'	>asomA'u	OK		
+NOM.FS.CG	>asomA'	>asomA'i	OK		
+NOM.FS.CA	>asomA'	>asomA'a	OK		
+NOM.FS.DN.P0.E0	>asomA'		OK		
+NOM.FS.DG.P0.E0	>asomA'		OK		
+NOM.FS.DA.P0.E0	>asomA'		OK		
+NOM.FS.CN.E0	>asomA'	>asomA&uhu	OK		
+NOM.FS.CG.E0	>asomA'	>asomA}ihi	OK		
+NOM.FS.CA.E0	>asomA'	>asomA'ahu	OK		
+NOM.MS.DN.P0	<isorA'	Al<isorA'u	OK		
+NOM.MS.DG.P0	<isorA'	Al<isorA'i	OK		
+NOM.MS.DA.P0	<isorA'	Al<isorA'a	OK		
+NOM.MS.IN	<isorA'	<isorA'u	OK		
+NOM.MS.IG	<isorA'	<isorA'a	OK		
+NOM.MS.IA	<isorA'	<isorA'F	PROB		
+NOM.MS.CN	<isorA'	<isorA'u	OK		
+NOM.MS.CG	<isorA'	<isorA'i	OK		
+NOM.MS.CA	<isorA'	<isorA'a	OK		
+NOM.MS.DN.P0.E0	<isorA'		OK		
+NOM.MS.DG.P0.E0	<isorA'		OK		
+NOM.MS.DA.P0.E0	<isorA'		OK		
+NOM.MS.CN.E0	<isorA'	<isorA&uhu	OK		
+NOM.MS.CG.E0	<isorA'	<isorA}ihi	OK		
+NOM.MS.CA.E0	<isorA'	<isorA'ahu	OK		
+NOM.MS.DN.P0	liwA'	All~iwA'u	OK		
+NOM.MS.DG.P0	liwA'	All~iwA'i	OK		
+NOM.MS.DA.P0	liwA'	All~iwA'a	OK		
+NOM.MS.IN	liwA'	liwA'u	OK		
+NOM.MS.IG	liwA'	liwA'a	OK		
+NOM.MS.IA	liwA'	liwA'F	OK		
+NOM.MS.CN	liwA'	liwA'u	OK		
+NOM.MS.CG	liwA'	liwA'i	OK		
+NOM.MS.CA	liwA'	liwA'a	OK		
+NOM.MS.DN.P0.E0	liwA'		OK		
+NOM.MS.DG.P0.E0	liwA'		OK		
+NOM.MS.DA.P0.E0	liwA'		OK		
+NOM.MS.CN.E0	liwA'	liwA&uhu	OK		
+NOM.MS.CG.E0	liwA'	liwA}ihi	OK		
+NOM.MS.CA.E0	liwA'	liwA'ahu	OK		
+NOM.FS.IA	wafA'	wafA'a	OK		
+NOM.FS.IA	>asomA'	>asomA'a	OK		
+NOM.MS.IA	<isorA'	<isorA'a	OK		
+NOM.MS.DN.P0.E0	dA}iy		OK		
+NOM.MS.DG.P0.E0	dA}iy		OK		
+NOM.MS.DA.P0.E0	dA}iy		OK		
+NOM.MS.IA	liwA'	liwA'a	OK		
+NOM.MS.DN.P0.E0	rAy		OK		
+NOM.MS.DG.P0.E0	rAy		OK		
+NOM.MS.DA.P0.E0	rAy		OK		
+NOM.FS.DN.P0	yumonaY	AlyumonaY	OK		
+NOM.FS.DG.P0	yumonaY	AlyumonaY	OK		
+NOM.FS.DA.P0	yumonaY	AlyumonaY	OK		
+NOM.FS.CN	yumonaY	yumonaY	OK		
+NOM.FS.CG	yumonaY	yumonaY	OK		
+NOM.FS.CA	yumonaY	yumonaY	OK		
+NOM.FS.DN.P0.E0	yumonaY		OK		
+NOM.FS.DG.P0.E0	yumonaY		OK		
+NOM.FS.DA.P0.E0	yumonaY		OK		
+NOM.FS.CN.E0	yumonaY	yumonAhu	OK		
+NOM.FS.CG.E0	yumonaY	yumonAhu	OK		
+NOM.FS.CA.E0	yumonaY	yumonAhu	OK		
+NOM.MS.DN.P0	<i$aEoyA'	Al<i$aEoyA'u	OK		
+NOM.MS.DG.P0	<i$aEoyA'	Al<i$aEoyA'i	OK		
+NOM.MS.DA.P0	<i$aEoyA'	Al<i$aEoyA'a	OK		
+NOM.MS.IN	<i$aEoyA'	<i$aEoyA'u	OK		
+NOM.MS.IG	<i$aEoyA'	<i$aEoyA'a	OK		
+NOM.MS.IA	<i$aEoyA'	<i$aEoyA'a	OK		
+NOM.MS.CN	<i$aEoyA'	<i$aEoyA'u	OK		
+NOM.MS.CG	<i$aEoyA'	<i$aEoyA'i	OK		
+NOM.MS.CA	<i$aEoyA'	<i$aEoyA'a	OK		
+NOM.MS.DN.P0.E0	<i$aEoyA'		OK		
+NOM.MS.DG.P0.E0	<i$aEoyA'		OK		
+NOM.MS.DA.P0.E0	<i$aEoyA'		OK		
+NOM.MS.CN.E0	<i$aEoyA'	<i$aEoyA&uhu	OK		
+NOM.MS.CG.E0	<i$aEoyA'	<i$aEoyA}ihi	OK		
+NOM.MS.CA.E0	<i$aEoyA'	<i$aEoyA'ahu	OK		
+NOM.FS.DN.P0	saloT	Als~aloTu	OK		
+NOM.FS.DG.P0	saloT	Als~aloTi	OK		
+NOM.FS.DA.P0	saloT	Als~aloTa	OK		
+NOM.FS.IN	saloT	saloTu	OK		
+NOM.FS.IG	saloT	saloTa	OK		
+NOM.FS.IA	saloT	saloTa	OK		
+NOM.FS.CN	saloT	saloTu	OK		
+NOM.FS.CG	saloT	saloTi	OK		
+NOM.FS.CA	saloT	saloTa	OK		
+NOM.FS.DN.P0.E0	saloT		OK		
+NOM.FS.DG.P0.E0	saloT		OK		
+NOM.FS.DA.P0.E0	saloT		OK		
+NOM.FS.CN.E0	saloT	saloTuhu	OK		
+NOM.FS.CG.E0	saloT	saloTihi	OK		
+NOM.FS.CA.E0	saloT	saloTahu	OK		
+NOM.FS.DN.P0	balanosiyap	Albalanosiyapu	OK		
+NOM.FS.DG.P0	balanosiyap	Albalanosiyapi	OK		
+NOM.FS.DA.P0	balanosiyap	Albalanosiyapa	OK		
+NOM.FS.IN	balanosiyap	balanosiyapu	OK		
+NOM.FS.IG	balanosiyap	balanosiyapa	OK		
+NOM.FS.IA	balanosiyap	balanosiyapa	OK		
+NOM.FS.CN	balanosiyap	balanosiyapu	OK		
+NOM.FS.CG	balanosiyap	balanosiyapi	OK		
+NOM.FS.CA	balanosiyap	balanosiyapa	OK		
+NOM.FS.DN.P0.E0	balanosiyap		OK		
+NOM.FS.DG.P0.E0	balanosiyap		OK		
+NOM.FS.DA.P0.E0	balanosiyap		OK		
+NOM.FS.CN.E0	balanosiyap	balanosiyatuhu	OK		
+NOM.FS.CG.E0	balanosiyap	balanosiyatihi	OK		
+NOM.FS.CA.E0	balanosiyap	balanosiyatahu	OK		
+NOM.MS.DN.P0.E0	<il		OK		
+NOM.MS.DG.P0.E0	<il		OK		
+NOM.MS.DA.P0.E0	<il		OK		
+NOM.FS.DN.P0	saba>	Als~aba>u	OK		
+NOM.FS.DG.P0	saba>	Als~aba>i	OK		
+NOM.FS.DA.P0	saba>	Als~aba>a	OK		
+NOM.FS.IN	saba>	saba>u	OK		
+NOM.FS.IG	saba>	saba>a	OK		
+NOM.FS.IA	saba>	saba>a	OK		
+NOM.FS.CN	saba>	saba>u	OK		
+NOM.FS.CG	saba>	saba>i	OK		
+NOM.FS.CA	saba>	saba>a	OK		
+NOM.FS.DN.P0.E0	saba>		OK		
+NOM.FS.DG.P0.E0	saba>		OK		
+NOM.FS.DA.P0.E0	saba>		OK		
+NOM.FS.CN.E0	saba>	saba&uhu	OK		
+NOM.FS.CG.E0	saba>	saba}ihi	OK		
+NOM.FS.CA.E0	saba>	saba>ahu	OK		
+NOM.FP.DN.P0	EawATif	AlEawATifu	OK		
+NOM.FP.DG.P0	EawATif	AlEawATifi	OK		
+NOM.FP.DA.P0	EawATif	AlEawATifa	OK		
+NOM.FP.IN	EawATif	EawATifu	OK		
+NOM.FP.IG	EawATif	EawATifa	OK		
+NOM.FP.IA	EawATif	EawATifa	OK		
+NOM.FP.CN	EawATif	EawATifu	OK		
+NOM.FP.CG	EawATif	EawATifi	OK		
+NOM.FP.CA	EawATif	EawATifa	OK		
+NOM.FP.DN.P0.E0	EawATif		OK		
+NOM.FP.DG.P0.E0	EawATif		OK		
+NOM.FP.DA.P0.E0	EawATif		OK		
+NOM.FP.CN.E0	EawATif	EawATifuhu	OK		
+NOM.FP.CG.E0	EawATif	EawATifihi	OK		
+NOM.FP.CA.E0	EawATif	EawATifahu	OK		
+NOM.MP.DN.P0	$uyuwx	Al$~uyuwxu	OK		
+NOM.MP.DG.P0	$uyuwx	Al$~uyuwxi	OK		
+NOM.MP.DA.P0	$uyuwx	Al$~uyuwxa	OK		
+NOM.MP.IN	$uyuwx	$uyuwxu	OK		
+NOM.MP.IG	$uyuwx	$uyuwxa	OK		
+NOM.MP.IA	$uyuwx	$uyuwxa	OK		
+NOM.MP.CN	$uyuwx	$uyuwxu	OK		
+NOM.MP.CG	$uyuwx	$uyuwxi	OK		
+NOM.MP.CA	$uyuwx	$uyuwxa	OK		
+NOM.MP.DN.P0.E0	$uyuwx		OK		
+NOM.MP.DG.P0.E0	$uyuwx		OK		
+NOM.MP.DA.P0.E0	$uyuwx		OK		
+NOM.MP.CN.E0	$uyuwx	$uyuwxuhu	OK		
+NOM.MP.CG.E0	$uyuwx	$uyuwxihi	OK		
+NOM.MP.CA.E0	$uyuwx	$uyuwxahu	OK		
+NOM.MS.DN.P0	lubonAn	All~ubonAnu	OK		
+NOM.MS.DG.P0	lubonAn	All~ubonAni	OK		
+NOM.MS.DA.P0	lubonAn	All~ubonAna	OK		
+NOM.MS.IN	lubonAn	lubonAnu	OK		
+NOM.MS.IG	lubonAn	lubonAna	OK		
+NOM.MS.IA	lubonAn	lubonAna	OK		
+NOM.MS.CN	lubonAn	lubonAnu	OK		
+NOM.MS.CG	lubonAn	lubonAni	OK		
+NOM.MS.CA	lubonAn	lubonAna	OK		
+NOM.MS.DN.P0.E0	lubonAn		OK		
+NOM.MS.DG.P0.E0	lubonAn		OK		
+NOM.MS.DA.P0.E0	lubonAn		OK		
+NOM.MS.CN.E0	lubonAn	lubonAnuhu	OK		
+NOM.MS.CG.E0	lubonAn	lubonAnihi	OK		
+NOM.MS.CA.E0	lubonAn	lubonAnahu	OK		
+NOM.FS.DN.P0	sabotap	Als~abotahapu	OK		
+NOM.FS.DG.P0	sabotap	Als~abotahapi	OK		
+NOM.FS.DA.P0	sabotap	Als~abotahapa	OK		
+NOM.FS.IN	sabotap	sabotahapu	OK		
+NOM.FS.IG	sabotap	sabotahapa	OK		
+NOM.FS.IA	sabotap	sabotahapa	OK		
+NOM.FS.CN	sabotap	sabotahapu	OK		
+NOM.FS.CG	sabotap	sabotahapi	OK		
+NOM.FS.CA	sabotap	sabotahapa	OK		
+NOM.FS.DN.P0.E0	sabotap		OK		
+NOM.FS.DG.P0.E0	sabotap		OK		
+NOM.FS.DA.P0.E0	sabotap		OK		
+NOM.FS.CN.E0	sabotap	sabotahatuhu	OK		
+NOM.FS.CG.E0	sabotap	sabotahatihi	OK		
+NOM.FS.CA.E0	sabotap	sabotahatahu	OK		
+NOM.S.DN.P0.E0	>uwl		OK		
+NOM.S.DG.P0.E0	>uwl		OK		
+NOM.S.DA.P0.E0	>uwl		OK		
+NOM.MS.DN.P0.E0	vAniy		OK		
+NOM.MS.DG.P0.E0	vAniy		OK		
+NOM.MS.DA.P0.E0	vAniy		OK		
+NOM.MS.DN.P0.E0	xAyomiy		OK		
+NOM.MS.DG.P0.E0	xAyomiy		OK		
+NOM.MS.DA.P0.E0	xAyomiy		OK		
+NOM.S.DN.P0.E0	*iy		OK		
+NOM.S.DG.P0.E0	*iy		OK		
+NOM.S.DA.P0.E0	*iy		OK		
+NOM.FS.DN.P0.E0	maEAdiy		OK		
+NOM.FS.DG.P0.E0	maEAdiy		OK		
+NOM.FS.DA.P0.E0	maEAdiy		OK		
+NOM.FS.DN.P0	HamAp	AlHamApu	OK		
+NOM.FS.DG.P0	HamAp	AlHamApi	OK		
+NOM.FS.DA.P0	HamAp	AlHamApa	OK		
+NOM.FS.IN	HamAp	HamApu	OK		
+NOM.FS.IG	HamAp	HamApa	OK		
+NOM.FS.IA	HamAp	HamApa	OK		
+NOM.FS.CN	HamAp	HamApu	OK		
+NOM.FS.CG	HamAp	HamApi	OK		
+NOM.FS.CA	HamAp	HamApa	OK		
+NOM.FS.DN.P0.E0	HamAp		OK		
+NOM.FS.DG.P0.E0	HamAp		OK		
+NOM.FS.DA.P0.E0	HamAp		OK		
+NOM.FS.CN.E0	HamAp	HamAtuhu	OK		
+NOM.FS.CG.E0	HamAp	HamAtihi	OK		
+NOM.FS.CA.E0	HamAp	HamAtahu	OK		
+NOM.FS.DN.P0	lanodan	All~anodanu	OK		
+NOM.FS.DG.P0	lanodan	All~anodani	OK		
+NOM.FS.DA.P0	lanodan	All~anodana	OK		
+NOM.FS.IN	lanodan	lanodanu	OK		
+NOM.FS.IG	lanodan	lanodana	OK		
+NOM.FS.IA	lanodan	lanodana	OK		
+NOM.FS.CN	lanodan	lanodanu	OK		
+NOM.FS.CG	lanodan	lanodani	OK		
+NOM.FS.CA	lanodan	lanodana	OK		
+NOM.FS.DN.P0.E0	lanodan		OK		
+NOM.FS.DG.P0.E0	lanodan		OK		
+NOM.FS.DA.P0.E0	lanodan		OK		
+NOM.FS.CN.E0	lanodan	lanodanuhu	OK		
+NOM.FS.CG.E0	lanodan	lanodanihi	OK		
+NOM.FS.CA.E0	lanodan	lanodanahu	OK		
+NOM.MS.DN.P0	lamobuwr	All~amobuwru	OK		
+NOM.MS.DG.P0	lamobuwr	All~amobuwri	OK		
+NOM.MS.DA.P0	lamobuwr	All~amobuwra	OK		
+NOM.MS.IN	lamobuwr	lamobuwru	OK		
+NOM.MS.IG	lamobuwr	lamobuwra	OK		
+NOM.MS.IA	lamobuwr	lamobuwra	OK		
+NOM.MS.CN	lamobuwr	lamobuwru	OK		
+NOM.MS.CG	lamobuwr	lamobuwri	OK		
+NOM.MS.CA	lamobuwr	lamobuwra	OK		
+NOM.MS.DN.P0.E0	lamobuwr		OK		
+NOM.MS.DG.P0.E0	lamobuwr		OK		
+NOM.MS.DA.P0.E0	lamobuwr		OK		
+NOM.MS.CN.E0	lamobuwr	lamobuwruhu	OK		
+NOM.MS.CG.E0	lamobuwr	lamobuwrihi	OK		
+NOM.MS.CA.E0	lamobuwr	lamobuwrahu	OK		
+NOM.FS.DN.P0.E0	layolaY		OK		
+NOM.FS.DG.P0.E0	layolaY		OK		
+NOM.FS.DA.P0.E0	layolaY		OK		
+NOM.MS.DN.P0.E0	liy		OK		
+NOM.MS.DG.P0.E0	liy		OK		
+NOM.MS.DA.P0.E0	liy		OK		
+NOM.FS.DN.P0.E0	luwkirobiy		OK		
+NOM.FS.DG.P0.E0	luwkirobiy		OK		
+NOM.FS.DA.P0.E0	luwkirobiy		OK		
+NOM.FS.DN.P0	lA*iqiy~ap	All~A*iqiy~apu	OK		
+NOM.FS.DG.P0	lA*iqiy~ap	All~A*iqiy~api	OK		
+NOM.FS.DA.P0	lA*iqiy~ap	All~A*iqiy~apa	OK		
+NOM.FS.IN	lA*iqiy~ap	lA*iqiy~apu	OK		
+NOM.FS.IG	lA*iqiy~ap	lA*iqiy~apa	OK		
+NOM.FS.IA	lA*iqiy~ap	lA*iqiy~apa	OK		
+NOM.FS.CN	lA*iqiy~ap	lA*iqiy~apu	OK		
+NOM.FS.CG	lA*iqiy~ap	lA*iqiy~api	OK		
+NOM.FS.CA	lA*iqiy~ap	lA*iqiy~apa	OK		
+NOM.FS.DN.P0.E0	lA*iqiy~ap		OK		
+NOM.FS.DG.P0.E0	lA*iqiy~ap		OK		
+NOM.FS.DA.P0.E0	lA*iqiy~ap		OK		
+NOM.FS.CN.E0	lA*iqiy~ap	lA*iqiy~atuhu	OK		
+NOM.FS.CG.E0	lA*iqiy~ap	lA*iqiy~atihi	OK		
+NOM.FS.CA.E0	lA*iqiy~ap	lA*iqiy~atahu	OK		
+NOM.MS.DN.P0	yawom	Alyawomu	OK		
+NOM.MS.DG.P0	yawom	Alyawomi	OK		
+NOM.MS.DA.P0	yawom	Alyawoma	OK		
+NOM.MS.IN	yawom	yawomN	OK		
+NOM.MS.IG	yawom	yawomK	OK		
+NOM.MS.IA	yawom	yawomAF	OK		
+NOM.MS.CN	yawom	yawomu	OK		
+NOM.MS.CG	yawom	yawomi	OK		
+NOM.MS.CA	yawom	yawoma	OK		
+NOM.MS.DN.P0.E0	yawom		OK		
+NOM.MS.DG.P0.E0	yawom		OK		
+NOM.MS.DA.P0.E0	yawom		OK		
+NOM.MS.CN.E0	yawom	yawomuhu	OK		
+NOM.MS.CG.E0	yawom	yawomihi	OK		
+NOM.MS.CA.E0	yawom	yawomahu	OK		
+NOM.MS.DN.P0	SabAH	AlS~abAHu	OK		
+NOM.MS.DG.P0	SabAH	AlS~abAHi	OK		
+NOM.MS.DA.P0	SabAH	AlS~abAHa	OK		
+NOM.MS.IN	SabAH	SabAHN	OK		
+NOM.MS.IG	SabAH	SabAHK	OK		
+NOM.MS.IA	SabAH	SabAHAF	OK		
+NOM.MS.CN	SabAH	SabAHu	OK		
+NOM.MS.CG	SabAH	SabAHi	OK		
+NOM.MS.CA	SabAH	SabAHa	OK		
+NOM.MS.DN.P0.E0	SabAH		OK		
+NOM.MS.DG.P0.E0	SabAH		OK		
+NOM.MS.DA.P0.E0	SabAH		OK		
+NOM.MS.CN.E0	SabAH	SabAHuhu	OK		
+NOM.MS.CG.E0	SabAH	SabAHihi	OK		
+NOM.MS.CA.E0	SabAH	SabAHahu	OK		
+NOM.FD.DN.P0	>alomAniy~ap	Al>alomAniy~atAni	OK		
+NOM.FD.DG.P0	>alomAniy~ap	Al>alomAniy~atayoni	OK		
+NOM.FD.DA.P0	>alomAniy~ap	Al>alomAniy~atayoni	OK		
+NOM.FD.IN	>alomAniy~ap	>alomAniy~atAni	OK		
+NOM.FD.IG	>alomAniy~ap	>alomAniy~atayoni	OK		
+NOM.FD.IA	>alomAniy~ap	>alomAniy~atayoni	OK		
+NOM.FD.CN	>alomAniy~ap	>alomAniy~atA	OK		
+NOM.FD.CG	>alomAniy~ap	>alomAniy~atayo	OK		
+NOM.FD.CA	>alomAniy~ap	>alomAniy~atayo	OK		
+NOM.FD.DN.P0.E0	>alomAniy~ap		OK		
+NOM.FD.DG.P0.E0	>alomAniy~ap		OK		
+NOM.FD.DA.P0.E0	>alomAniy~ap		OK		
+NOM.FD.CN.E0	>alomAniy~ap	>alomAniy~atAhu	OK		
+NOM.FD.CG.E0	>alomAniy~ap	>alomAniy~atayohi	OK		
+NOM.FD.CA.E0	>alomAniy~ap	>alomAniy~atayohi	OK		
+NOM.MS.DN.P0	>anodriyap	Al>anodriyapu	OK		
+NOM.MS.DG.P0	>anodriyap	Al>anodriyapi	OK		
+NOM.MS.DA.P0	>anodriyap	Al>anodriyapa	OK		
+NOM.MS.IN	>anodriyap	>anodriyapu	OK		
+NOM.MS.IG	>anodriyap	>anodriyapa	OK		
+NOM.MS.IA	>anodriyap	>anodriyapa	OK		
+NOM.MS.CN	>anodriyap	>anodriyapu	OK		
+NOM.MS.CG	>anodriyap	>anodriyapi	OK		
+NOM.MS.CA	>anodriyap	>anodriyapa	OK		
+NOM.MS.DN.P0.E0	>anodriyap		OK		
+NOM.MS.DG.P0.E0	>anodriyap		OK		
+NOM.MS.DA.P0.E0	>anodriyap		OK		
+NOM.MS.CN.E0	>anodriyap	>anodriyatuhu	OK		
+NOM.MS.CG.E0	>anodriyap	>anodriyatihi	OK		
+NOM.MS.CA.E0	>anodriyap	>anodriyatahu	OK		
+NOM.MS.DN.P0	All~`h	AlAll~`hu	PROB		
+NOM.MS.DG.P0	All~`h	AlAll~`hi	PROB		
+NOM.MS.DA.P0	All~`h	AlAll~`ha	PROB		
+NOM.MS.IN	All~`h	All~`hu	PROB		
+NOM.MS.IG	All~`h	All~`ha	PROB		
+NOM.MS.IA	All~`h	All~`ha	PROB		
+NOM.MS.CN	All~`h	All~`hu	PROB		
+NOM.MS.CG	All~`h	All~`hi	PROB		
+NOM.MS.CA	All~`h	All~`ha	PROB		
+NOM.MS.DN.P0.E0	All~`h		OK		
+NOM.MS.DG.P0.E0	All~`h		OK		
+NOM.MS.DA.P0.E0	All~`h		OK		
+NOM.MS.CN.E0	All~`h	All~`huhu	PROB		
+NOM.MS.CG.E0	All~`h	All~`hihi	PROB		
+NOM.MS.CA.E0	All~`h	All~`hahu	PROB		
+NOM.MS.DN.P0.E0	barakAt		OK		
+NOM.MS.DG.P0.E0	barakAt		OK		
+NOM.MS.DA.P0.E0	barakAt		OK		
+NOM.MP.DN.P0.E0	burayokAt		OK		
+NOM.MP.DG.P0.E0	burayokAt		OK		
+NOM.MP.DA.P0.E0	burayokAt		OK		
+NOM.MP.DN.P0	baTAlisap	AlbaTAlisapu	OK		
+NOM.MP.DG.P0	baTAlisap	AlbaTAlisapi	OK		
+NOM.MP.DA.P0	baTAlisap	AlbaTAlisapa	OK		
+NOM.MP.IN	baTAlisap	baTAlisapu	OK		
+NOM.MP.IG	baTAlisap	baTAlisapa	OK		
+NOM.MP.IA	baTAlisap	baTAlisapa	OK		
+NOM.MP.CN	baTAlisap	baTAlisapu	OK		
+NOM.MP.CG	baTAlisap	baTAlisapi	OK		
+NOM.MP.CA	baTAlisap	baTAlisapa	OK		
+NOM.MP.DN.P0.E0	baTAlisap		OK		
+NOM.MP.DG.P0.E0	baTAlisap		OK		
+NOM.MP.DA.P0.E0	baTAlisap		OK		
+NOM.MP.CN.E0	baTAlisap	baTAlisatuhu	OK		
+NOM.MP.CG.E0	baTAlisap	baTAlisatihi	OK		
+NOM.MP.CA.E0	baTAlisap	baTAlisatahu	OK		
+NOM.MP.DN.P0	ruwm	Al>arowAmu	OK		
+NOM.MP.DG.P0	ruwm	Al>arowAmi	OK		
+NOM.MP.DA.P0	ruwm	Al>arowAma	OK		
+NOM.MP.IN	ruwm	>arowAmN	OK		
+NOM.MP.IG	ruwm	>arowAmK	OK		
+NOM.MP.IA	ruwm	>arowAmAF	OK		
+NOM.MP.CN	ruwm	>arowAmu	OK		
+NOM.MP.CG	ruwm	>arowAmi	OK		
+NOM.MP.CA	ruwm	>arowAma	OK		
+NOM.MP.DN.P0.E0	ruwm		OK		
+NOM.MP.DG.P0.E0	ruwm		OK		
+NOM.MP.DA.P0.E0	ruwm		OK		
+NOM.MP.CN.E0	ruwm	>arowAmuhu	OK		
+NOM.MP.CG.E0	ruwm	>arowAmihi	OK		
+NOM.MP.CA.E0	ruwm	>arowAmahu	OK		
+NOM.MS.DN.P0.E0	Husoniy		OK		
+NOM.MS.DG.P0.E0	Husoniy		OK		
+NOM.MS.DA.P0.E0	Husoniy		OK		
+NOM.MD.DN.P0	Haram	AlHaramAni	OK		
+NOM.MD.DG.P0	Haram	AlHaramayoni	OK		
+NOM.MD.DA.P0	Haram	AlHaramayoni	OK		
+NOM.MD.IN	Haram	HaramAni	OK		
+NOM.MD.IG	Haram	Haramayoni	OK		
+NOM.MD.IA	Haram	Haramayoni	OK		
+NOM.MD.CN	Haram	HaramA	OK		
+NOM.MD.CG	Haram	Haramayo	OK		
+NOM.MD.CA	Haram	Haramayo	OK		
+NOM.MD.DN.P0.E0	Haram		OK		
+NOM.MD.DG.P0.E0	Haram		OK		
+NOM.MD.DA.P0.E0	Haram		OK		
+NOM.MD.CN.E0	Haram	HaramAhu	OK		
+NOM.MD.CG.E0	Haram	Haramayohi	OK		
+NOM.MD.CA.E0	Haram	Haramayohi	OK		
+NOM.MP.DN.P0	zuwAng	Alz~uwAngu	OK		
+NOM.MP.DG.P0	zuwAng	Alz~uwAngi	OK		
+NOM.MP.DA.P0	zuwAng	Alz~uwAnga	OK		
+NOM.MP.IN	zuwAng	zuwAngu	OK		
+NOM.MP.IG	zuwAng	zuwAnga	OK		
+NOM.MP.IA	zuwAng	zuwAnga	OK		
+NOM.MP.CN	zuwAng	zuwAngu	OK		
+NOM.MP.CG	zuwAng	zuwAngi	OK		
+NOM.MP.CA	zuwAng	zuwAnga	OK		
+NOM.MP.DN.P0.E0	zuwAng		OK		
+NOM.MP.DG.P0.E0	zuwAng		OK		
+NOM.MP.DA.P0.E0	zuwAng		OK		
+NOM.MP.CN.E0	zuwAng	zuwAnguhu	OK		
+NOM.MP.CG.E0	zuwAng	zuwAngihi	OK		
+NOM.MP.CA.E0	zuwAng	zuwAngahu	OK		
+NOM.FD.DN.P0	baSorap	AlbaSoratatAni	PROB		
+NOM.FD.DG.P0	baSorap	AlbaSoratatayoni	PROB		
+NOM.FD.DA.P0	baSorap	AlbaSoratatayoni	PROB		
+NOM.FD.IN	baSorap	baSoratatAni	PROB		
+NOM.FD.IG	baSorap	baSoratatayoni	PROB		
+NOM.FD.IA	baSorap	baSoratatayoni	PROB		
+NOM.FD.CN	baSorap	baSoratatA	PROB		
+NOM.FD.CG	baSorap	baSoratatayo	PROB		
+NOM.FD.CA	baSorap	baSoratatayo	PROB		
+NOM.FD.DN.P0.E0	baSorap		OK		
+NOM.FD.DG.P0.E0	baSorap		OK		
+NOM.FD.DA.P0.E0	baSorap		OK		
+NOM.FD.CN.E0	baSorap	baSoratatAhu	PROB		
+NOM.FD.CG.E0	baSorap	baSoratatayohi	PROB		
+NOM.FD.CA.E0	baSorap	baSoratatayohi	PROB		
+NOM.FP.DN.P0.E0	burayokAt		OK		
+NOM.FP.DG.P0.E0	burayokAt		OK		
+NOM.FP.DA.P0.E0	burayokAt		OK		
+NOM.MS.DN.P0.E0	lAdin		OK		
+NOM.MS.DG.P0.E0	lAdin		OK		
+NOM.MS.DA.P0.E0	lAdin		OK		
+NOM.MS.DN.P0.E0	juwiyliy		OK		
+NOM.MS.DG.P0.E0	juwiyliy		OK		
+NOM.MS.DA.P0.E0	juwiyliy		OK		
+NOM.S.DN.P0.E0	duw		OK		
+NOM.S.DG.P0.E0	duw		OK		
+NOM.S.DA.P0.E0	duw		OK		
+NOM.FP.DN.P0	xalowAt	AlxalawAtu	OK		
+NOM.FP.DG.P0	xalowAt	AlxalawAti	OK		
+NOM.FP.DA.P0	xalowAt	AlxalawAti	OK		
+NOM.FP.IN	xalowAt	xalawAtN	OK		
+NOM.FP.IG	xalowAt	xalawAtK	OK		
+NOM.FP.IA	xalowAt	xalawAtK	OK		
+NOM.FP.CN	xalowAt	xalawAtu	OK		
+NOM.FP.CG	xalowAt	xalawAti	OK		
+NOM.FP.CA	xalowAt	xalawAti	OK		
+NOM.FP.DN.P0.E0	xalowAt		OK		
+NOM.FP.DG.P0.E0	xalowAt		OK		
+NOM.FP.DA.P0.E0	xalowAt		OK		
+NOM.FP.CN.E0	xalowAt	xalawAtuhu	OK		
+NOM.FP.CG.E0	xalowAt	xalawAtihi	OK		
+NOM.FP.CA.E0	xalowAt	xalawAtihi	OK		
+NOM.MP.DN.P0	murAbiT	AlmurAbiTuwna	OK		
+NOM.MP.DG.P0	murAbiT	AlmurAbiTiyna	OK		
+NOM.MP.DA.P0	murAbiT	AlmurAbiTiyna	OK		
+NOM.MP.IN	murAbiT	murAbiTuwna	OK		
+NOM.MP.IG	murAbiT	murAbiTiyna	OK		
+NOM.MP.IA	murAbiT	murAbiTiyna	OK		
+NOM.MP.CN	murAbiT	murAbiTuw	OK		
+NOM.MP.CG	murAbiT	murAbiTiy	OK		
+NOM.MP.CA	murAbiT	murAbiTiy	OK		
+NOM.MP.DN.P0.E0	murAbiT		OK		
+NOM.MP.DG.P0.E0	murAbiT		OK		
+NOM.MP.DA.P0.E0	murAbiT		OK		
+NOM.MP.CN.E0	murAbiT	murAbiTuwhu	OK		
+NOM.MP.CG.E0	murAbiT	murAbiTiyhi	OK		
+NOM.MP.CA.E0	murAbiT	murAbiTiyhi	OK		
+NOM.S.DN.P0.E0	luw		OK		
+NOM.S.DG.P0.E0	luw		OK		
+NOM.S.DA.P0.E0	luw		OK		
+NOM.FS.DN.P0	<il	Al<ilu	OK	Wrong example because it is foreign with less than three radicals so it should actually be triptotic (but since the class is of #dip only then it is correct)	
+NOM.FS.DG.P0	<il	Al<ili	OK	Wrong example because it is foreign with less than three radicals so it should actually be triptotic (but since the class is of #dip only then it is correct)	
+NOM.FS.DA.P0	<il	Al<ila	OK	Wrong example because it is foreign with less than three radicals so it should actually be triptotic (but since the class is of #dip only then it is correct)	
+NOM.FS.IN	<il	<ilu	OK	Wrong example because it is foreign with less than three radicals so it should actually be triptotic (but since the class is of #dip only then it is correct)	
+NOM.FS.IG	<il	<ila	OK	Wrong example because it is foreign with less than three radicals so it should actually be triptotic (but since the class is of #dip only then it is correct)	
+NOM.FS.IA	<il	<ila	OK	Wrong example because it is foreign with less than three radicals so it should actually be triptotic (but since the class is of #dip only then it is correct)	
+NOM.FS.CN	<il	<ilu	OK	Wrong example because it is foreign with less than three radicals so it should actually be triptotic (but since the class is of #dip only then it is correct)	
+NOM.FS.CG	<il	<ili	OK	Wrong example because it is foreign with less than three radicals so it should actually be triptotic (but since the class is of #dip only then it is correct)	
+NOM.FS.CA	<il	<ila	OK	Wrong example because it is foreign with less than three radicals so it should actually be triptotic (but since the class is of #dip only then it is correct)	
+NOM.FS.DN.P0.E0	<il		OK	Wrong example because it is foreign with less than three radicals so it should actually be triptotic (but since the class is of #dip only then it is correct)	
+NOM.FS.DG.P0.E0	<il		OK	Wrong example because it is foreign with less than three radicals so it should actually be triptotic (but since the class is of #dip only then it is correct)	
+NOM.FS.DA.P0.E0	<il		OK	Wrong example because it is foreign with less than three radicals so it should actually be triptotic (but since the class is of #dip only then it is correct)	
+NOM.FS.CN.E0	<il	<iluhu	OK	Wrong example because it is foreign with less than three radicals so it should actually be triptotic (but since the class is of #dip only then it is correct)	
+NOM.FS.CG.E0	<il	<ilihi	OK	Wrong example because it is foreign with less than three radicals so it should actually be triptotic (but since the class is of #dip only then it is correct)	
+NOM.FS.CA.E0	<il	<ilahu	OK	Wrong example because it is foreign with less than three radicals so it should actually be triptotic (but since the class is of #dip only then it is correct)	
+NOM.MS.DN.P0	<il	Al<ilu	OK	Wrong example because it is foreign with less than three radicals so it should actually be triptotic (but since the class is of #dip only then it is correct)	
+NOM.MS.DG.P0	<il	Al<ili	OK	Wrong example because it is foreign with less than three radicals so it should actually be triptotic (but since the class is of #dip only then it is correct)	
+NOM.MS.DA.P0	<il	Al<ila	OK	Wrong example because it is foreign with less than three radicals so it should actually be triptotic (but since the class is of #dip only then it is correct)	
+NOM.MS.IN	<il	<ilu	OK	Wrong example because it is foreign with less than three radicals so it should actually be triptotic (but since the class is of #dip only then it is correct)	
+NOM.MS.IG	<il	<ila	OK	Wrong example because it is foreign with less than three radicals so it should actually be triptotic (but since the class is of #dip only then it is correct)	
+NOM.MS.IA	<il	<ila	OK	Wrong example because it is foreign with less than three radicals so it should actually be triptotic (but since the class is of #dip only then it is correct)	
+NOM.MS.CN	<il	<ilu	OK	Wrong example because it is foreign with less than three radicals so it should actually be triptotic (but since the class is of #dip only then it is correct)	
+NOM.MS.CG	<il	<ili	OK	Wrong example because it is foreign with less than three radicals so it should actually be triptotic (but since the class is of #dip only then it is correct)	
+NOM.MS.CA	<il	<ila	OK	Wrong example because it is foreign with less than three radicals so it should actually be triptotic (but since the class is of #dip only then it is correct)	
+NOM.MS.CN.E0	<il	<iluhu	OK	Wrong example because it is foreign with less than three radicals so it should actually be triptotic (but since the class is of #dip only then it is correct)	
+NOM.MS.CG.E0	<il	<ilihi	OK	Wrong example because it is foreign with less than three radicals so it should actually be triptotic (but since the class is of #dip only then it is correct)	
+NOM.MS.CA.E0	<il	<ilahu	OK	Wrong example because it is foreign with less than three radicals so it should actually be triptotic (but since the class is of #dip only then it is correct)	
+NOM.FP.DN.P0	zuwAng	Alz~uwAngu	OK		
+NOM.FP.DG.P0	zuwAng	Alz~uwAngi	OK		
+NOM.FP.DA.P0	zuwAng	Alz~uwAnga	OK		
+NOM.FP.IN	zuwAng	zuwAngu	OK		
+NOM.FP.IG	zuwAng	zuwAnga	OK		
+NOM.FP.IA	zuwAng	zuwAnga	OK		
+NOM.FP.CN	zuwAng	zuwAngu	OK		
+NOM.FP.CG	zuwAng	zuwAngi	OK		
+NOM.FP.CA	zuwAng	zuwAnga	OK		
+NOM.FP.DN.P0.E0	zuwAng		OK		
+NOM.FP.DG.P0.E0	zuwAng		OK		
+NOM.FP.DA.P0.E0	zuwAng		OK		
+NOM.FP.CN.E0	zuwAng	zuwAnguhu	OK		
+NOM.FP.CG.E0	zuwAng	zuwAngihi	OK		
+NOM.FP.CA.E0	zuwAng	zuwAngahu	OK		
+NOM.S.DN.P0	>uwl	Al>uwlu	OK		
+NOM.S.DG.P0	>uwl	Al>uwli	OK		
+NOM.S.DA.P0	>uwl	Al>uwla	OK		
+NOM.S.IN	>uwl	>uwlu	OK		
+NOM.S.IG	>uwl	>uwla	OK		
+NOM.S.IA	>uwl	>uwla	OK		
+NOM.S.CN	>uwl	>uwlu	OK		
+NOM.S.CG	>uwl	>uwli	OK		
+NOM.S.CA	>uwl	>uwla	OK		
+NOM.S.CN.E0	>uwl	>uwluhu	OK		
+NOM.S.CG.E0	>uwl	>uwlihi	OK		
+NOM.S.CA.E0	>uwl	>uwlahu	OK		
+NOM.FS.DN.P0	lamobuwr	All~amobuwru	OK		
+NOM.FS.DG.P0	lamobuwr	All~amobuwri	OK		
+NOM.FS.DA.P0	lamobuwr	All~amobuwra	OK		
+NOM.FS.IN	lamobuwr	lamobuwru	OK		
+NOM.FS.IG	lamobuwr	lamobuwra	OK		
+NOM.FS.IA	lamobuwr	lamobuwra	OK		
+NOM.FS.CN	lamobuwr	lamobuwru	OK		
+NOM.FS.CG	lamobuwr	lamobuwri	OK		
+NOM.FS.CA	lamobuwr	lamobuwra	OK		
+NOM.FS.DN.P0.E0	lamobuwr		OK		
+NOM.FS.DG.P0.E0	lamobuwr		OK		
+NOM.FS.DA.P0.E0	lamobuwr		OK		
+NOM.FS.CN.E0	lamobuwr	lamobuwruhu	OK		
+NOM.FS.CG.E0	lamobuwr	lamobuwrihi	OK		
+NOM.FS.CA.E0	lamobuwr	lamobuwrahu	OK		
+NOM.FS.DN.P0	layolaY	All~ayolaY	OK		
+NOM.FS.DG.P0	layolaY	All~ayolaY	OK		
+NOM.FS.DA.P0	layolaY	All~ayolaY	OK		
+NOM.FS.IN	layolaY	layolY	OK		
+NOM.FS.IG	layolaY	layolY	OK		
+NOM.FS.IA	layolaY	layolY	OK		
+NOM.FS.CN	layolaY	layolaY	OK		
+NOM.FS.CG	layolaY	layolaY	OK		
+NOM.FS.CA	layolaY	layolaY	OK		
+NOM.FS.CN.E0	layolaY	layolAhu	OK		
+NOM.FS.CG.E0	layolaY	layolAhu	OK		
+NOM.FS.CA.E0	layolaY	layolAhu	OK		
+NOM.MS.DN.P0	ruwm	Alr~uwmu	OK		
+NOM.MS.DG.P0	ruwm	Alr~uwmi	OK		
+NOM.MS.DA.P0	ruwm	Alr~uwma	OK		
+NOM.MS.IN	ruwm	ruwmN	OK		
+NOM.MS.IG	ruwm	ruwmK	OK		
+NOM.MS.IA	ruwm	ruwmAF	OK		
+NOM.MS.CN	ruwm	ruwmu	OK		
+NOM.MS.CG	ruwm	ruwmi	OK		
+NOM.MS.CA	ruwm	ruwma	OK		
+NOM.MS.DN.P0.E0	ruwm		OK		
+NOM.MS.DG.P0.E0	ruwm		OK		
+NOM.MS.DA.P0.E0	ruwm		OK		
+NOM.MS.CN.E0	ruwm	ruwmuhu	OK		
+NOM.MS.CG.E0	ruwm	ruwmihi	OK		
+NOM.MS.CA.E0	ruwm	ruwmahu	OK		
+NOM.MS.DN.P0	barakAt	AlbarakAtu	OK		
+NOM.MS.DG.P0	barakAt	AlbarakAti	OK		
+NOM.MS.DA.P0	barakAt	AlbarakAti	OK		
+NOM.MS.IN	barakAt	barakAtN	OK		
+NOM.MS.IG	barakAt	barakAtK	OK		
+NOM.MS.IA	barakAt	barakAtK	OK		
+NOM.MS.CN	barakAt	barakAtu	OK		
+NOM.MS.CG	barakAt	barakAti	OK		
+NOM.MS.CA	barakAt	barakAti	OK		
+NOM.MS.CN.E0	barakAt	barakAtuhu	OK		
+NOM.MS.CG.E0	barakAt	barakAtihi	OK		
+NOM.MS.CA.E0	barakAt	barakAtihi	OK		
+NOM.MP.DN.P0	burayokAt	AlburayokAtu	OK		
+NOM.MP.DG.P0	burayokAt	AlburayokAti	OK		
+NOM.MP.DA.P0	burayokAt	AlburayokAti	OK		
+NOM.MP.IN	burayokAt	burayokAtN	OK		
+NOM.MP.IG	burayokAt	burayokAtK	OK		
+NOM.MP.IA	burayokAt	burayokAtK	OK		
+NOM.MP.CN	burayokAt	burayokAtu	OK		
+NOM.MP.CG	burayokAt	burayokAti	OK		
+NOM.MP.CA	burayokAt	burayokAti	OK		
+NOM.MP.CN.E0	burayokAt	burayokAtuhu	OK		
+NOM.MP.CG.E0	burayokAt	burayokAtihi	OK		
+NOM.MP.CA.E0	burayokAt	burayokAtihi	OK		
+NOM.MS.DN.P0	lAdin	All~Adinu	OK		
+NOM.MS.DG.P0	lAdin	All~Adini	OK		
+NOM.MS.DA.P0	lAdin	All~Adina	OK		
+NOM.MS.IN	lAdin	lAdinN	OK		
+NOM.MS.IG	lAdin	lAdinK	OK		
+NOM.MS.IA	lAdin	lAdinAF	OK		
+NOM.MS.CN	lAdin	lAdinu	OK		
+NOM.MS.CG	lAdin	lAdini	OK		
+NOM.MS.CA	lAdin	lAdina	OK		
+NOM.MS.CN.E0	lAdin	lAdinuhu	OK		
+NOM.MS.CG.E0	lAdin	lAdinihi	OK		
+NOM.MS.CA.E0	lAdin	lAdinahu	OK		
+NOM.MS.DN.P0	dA}iy	Ald~A}iy	OK		
+NOM.MS.DG.P0	dA}iy	Ald~A}iy	OK		
+NOM.MS.DA.P0	dA}iy	Ald~A}iya	PROB		
+NOM.MS.IN	dA}iy	dA}iy	OK		
+NOM.MS.IG	dA}iy	dA}iya	PROB		
+NOM.MS.IA	dA}iy	dA}iya	PROB		
+NOM.MS.CN	dA}iy	dA}iy	OK		
+NOM.MS.CG	dA}iy	dA}iy	OK		
+NOM.MS.CA	dA}iy	dA}iya	PROB		
+NOM.MS.CN.E0	dA}iy	dA}iyhi	OK		
+NOM.MS.CG.E0	dA}iy	dA}iyhi	OK		
+NOM.MS.CA.E0	dA}iy	dA}iyahu	PROB		
+NOM.FS.IN	yumonaY	yumonY	OK		
+NOM.FS.IG	yumonaY	yumonY	OK		
+NOM.FS.IA	yumonaY	yumonY	OK		
+NOM.MS.DN.P0	muwsaY	AlmuwsaY	OK		
+NOM.MS.DG.P0	muwsaY	AlmuwsaY	OK		
+NOM.MS.DA.P0	muwsaY	AlmuwsaY	OK		
+NOM.MS.IN	muwsaY	muwsY	OK		
+NOM.MS.IG	muwsaY	muwsY	OK		
+NOM.MS.IA	muwsaY	muwsY	OK		
+NOM.MS.CN	muwsaY	muwsaY	OK		
+NOM.MS.CG	muwsaY	muwsaY	OK		
+NOM.MS.CA	muwsaY	muwsaY	OK		
+NOM.MS.DN.P0.E0	muwsaY		OK		
+NOM.MS.DG.P0.E0	muwsaY		OK		
+NOM.MS.DA.P0.E0	muwsaY		OK		
+NOM.MS.CN.E0	muwsaY	muwsAhu	OK		
+NOM.MS.CG.E0	muwsaY	muwsAhu	OK		
+NOM.MS.CA.E0	muwsaY	muwsAhu	OK		
+NOM.MS.DN.P0	rAy	Alr~Ayu	OK		
+NOM.MS.DG.P0	rAy	Alr~Ayi	OK		
+NOM.MS.DA.P0	rAy	Alr~Aya	OK		
+NOM.MS.IN	rAy	rAyN	OK		
+NOM.MS.IG	rAy	rAyK	OK		
+NOM.MS.IA	rAy	rAyAF	OK		
+NOM.MS.CN	rAy	rAyu	OK		
+NOM.MS.CG	rAy	rAyi	OK		
+NOM.MS.CA	rAy	rAya	OK		
+NOM.MS.CN.E0	rAy	rAyuhu	OK		
+NOM.MS.CG.E0	rAy	rAyihi	OK		
+NOM.MS.CA.E0	rAy	rAyahu	OK		
+NOM.MS.DN.P0	vAniy	Alv~Aniy	OK		
+NOM.MS.DG.P0	vAniy	Alv~Aniy	OK		
+NOM.MS.DA.P0	vAniy	Alv~Aniya	PROB		
+NOM.MS.IN	vAniy	vAniy	OK		
+NOM.MS.IG	vAniy	vAniya	PROB		
+NOM.MS.IA	vAniy	vAniya	PROB		
+NOM.MS.CN	vAniy	vAniy	OK		
+NOM.MS.CG	vAniy	vAniy	OK		
+NOM.MS.CA	vAniy	vAniya	PROB		
+NOM.MS.CN.E0	vAniy	vAniyhi	OK		
+NOM.MS.CG.E0	vAniy	vAniyhi	OK		
+NOM.MS.CA.E0	vAniy	vAniyahu	PROB		
+NOM.MS.DN.P0	xAyomiy	AlxAyomiy	OK		
+NOM.MS.DG.P0	xAyomiy	AlxAyomiy	OK		
+NOM.MS.DA.P0	xAyomiy	AlxAyomiya	PROB		
+NOM.MS.IN	xAyomiy	xAyomiy	OK		
+NOM.MS.IG	xAyomiy	xAyomiya	PROB		
+NOM.MS.IA	xAyomiy	xAyomiya	PROB		
+NOM.MS.CN	xAyomiy	xAyomiy	OK		
+NOM.MS.CG	xAyomiy	xAyomiy	OK		
+NOM.MS.CA	xAyomiy	xAyomiya	PROB		
+NOM.MS.CN.E0	xAyomiy	xAyomiyhi	OK		
+NOM.MS.CG.E0	xAyomiy	xAyomiyhi	OK		
+NOM.MS.CA.E0	xAyomiy	xAyomiyahu	PROB		
+NOM.S.DN.P0	*iy	Al*~iy	OK		
+NOM.S.DG.P0	*iy	Al*~iy	OK		
+NOM.S.DA.P0	*iy	Al*~iya	PROB		
+NOM.S.IN	*iy	*iy	OK		
+NOM.S.IG	*iy	*iya	PROB		
+NOM.S.IA	*iy	*iya	PROB		
+NOM.S.CN	*iy	*iy	OK		
+NOM.S.CG	*iy	*iy	OK		
+NOM.S.CA	*iy	*iya	PROB		
+NOM.S.CN.E0	*iy	*iyhi	OK		
+NOM.S.CG.E0	*iy	*iyhi	OK		
+NOM.S.CA.E0	*iy	*iyahu	PROB		
+NOM.FS.DN.P0	xAyomiy	AlxAyomiy	OK		
+NOM.FS.DG.P0	xAyomiy	AlxAyomiy	OK		
+NOM.FS.DA.P0	xAyomiy	AlxAyomiya	PROB		
+NOM.FS.IN	xAyomiy	xAyomiy	OK		
+NOM.FS.IG	xAyomiy	xAyomiya	PROB		
+NOM.FS.IA	xAyomiy	xAyomiya	PROB		
+NOM.FS.CN	xAyomiy	xAyomiy	OK		
+NOM.FS.CG	xAyomiy	xAyomiy	OK		
+NOM.FS.CA	xAyomiy	xAyomiya	PROB		
+NOM.FS.DN.P0.E0	xAyomiy		OK		
+NOM.FS.DG.P0.E0	xAyomiy		OK		
+NOM.FS.DA.P0.E0	xAyomiy		OK		
+NOM.FS.CN.E0	xAyomiy	xAyomiyhi	OK		
+NOM.FS.CG.E0	xAyomiy	xAyomiyhi	OK		
+NOM.FS.CA.E0	xAyomiy	xAyomiyahu	PROB		
+NOM.MS.DN.P0	liy	All~iy	OK		
+NOM.MS.DG.P0	liy	All~iy	OK		
+NOM.MS.DA.P0	liy	All~iya	PROB		
+NOM.MS.IN	liy	liy	OK		
+NOM.MS.IG	liy	liya	PROB		
+NOM.MS.IA	liy	liya	PROB		
+NOM.MS.CN	liy	liy	OK		
+NOM.MS.CG	liy	liy	OK		
+NOM.MS.CA	liy	liya	PROB		
+NOM.MS.CN.E0	liy	liyhi	OK		
+NOM.MS.CG.E0	liy	liyhi	OK		
+NOM.MS.CA.E0	liy	liyahu	PROB		
+NOM.FS.DN.P0	luwkirobiy	All~uwkirobiy	OK		
+NOM.FS.DG.P0	luwkirobiy	All~uwkirobiy	OK		
+NOM.FS.DA.P0	luwkirobiy	All~uwkirobiya	PROB		
+NOM.FS.IN	luwkirobiy	luwkirobiy	OK		
+NOM.FS.IG	luwkirobiy	luwkirobiya	PROB		
+NOM.FS.IA	luwkirobiy	luwkirobiya	PROB		
+NOM.FS.CN	luwkirobiy	luwkirobiy	OK		
+NOM.FS.CG	luwkirobiy	luwkirobiy	OK		
+NOM.FS.CA	luwkirobiy	luwkirobiya	PROB		
+NOM.FS.CN.E0	luwkirobiy	luwkirobiyhi	OK		
+NOM.FS.CG.E0	luwkirobiy	luwkirobiyhi	OK		
+NOM.FS.CA.E0	luwkirobiy	luwkirobiyahu	PROB		

@@ -1,0 +1,621 @@
+SIGNATURE	LEMMA	DIAC	QC	COMMENTS	STATUS
+OTHER....	*`lika	tiloka	OK		
+OTHER...P1_bi_prep	*`lika	bitiloka	OK		
+OTHER...P1_li_prep	*`lika	litiloka	OK		
+OTHER...P2	*`lika	watiloka	OK		
+OTHER...P12_bi_prep	*`lika	wabitiloka	OK		
+OTHER...P12_li_prep	*`lika	walitiloka	OK		
+OTHER...E0	*`lika		OK		
+OTHER...P1.E0_bi_prep	*`lika		OK		
+OTHER...P1.E0_li_prep	*`lika		OK		
+OTHER...P2.E0	*`lika		OK		
+OTHER...P12.E0_bi_prep	*`lika		OK		
+OTHER...P12.E0_li_prep	*`lika		OK		
+OTHER....	mAxalA	mAxalA	OK		
+OTHER...P1_bi_prep	mAxalA		OK		
+OTHER...P1_li_prep	mAxalA		OK		
+OTHER...P2	mAxalA	wamAxalA	OK		
+OTHER...P12_bi_prep	mAxalA		OK		
+OTHER...P12_li_prep	mAxalA		OK		
+OTHER...E0	mAxalA	mAxalAhu	OK		
+OTHER...P1.E0_bi_prep	mAxalA		OK		
+OTHER...P1.E0_li_prep	mAxalA		OK		
+OTHER...P2.E0	mAxalA	wamAxalAhu	OK		
+OTHER...P12.E0_bi_prep	mAxalA		OK		
+OTHER...P12.E0_li_prep	mAxalA		OK		
+OTHER....	bi	bi	OK		
+OTHER...P1_bi_prep	bi		OK		
+OTHER...P1_li_prep	bi		OK		
+OTHER...P2	bi	wabi	OK		
+OTHER...P12_bi_prep	bi		OK		
+OTHER...P12_li_prep	bi		OK		
+OTHER...E0	bi	bihi	OK		
+OTHER...P1.E0_bi_prep	bi		OK		
+OTHER...P1.E0_li_prep	bi		OK		
+OTHER...P2.E0	bi	wabihi	OK		
+OTHER...P12.E0_bi_prep	bi		OK		
+OTHER...P12.E0_li_prep	bi		OK		
+OTHER....	li		OK		
+OTHER...P1_bi_prep	li		OK		
+OTHER...P1_li_prep	li		OK		
+OTHER...P2	li		OK		
+OTHER...P12_bi_prep	li		OK		
+OTHER...P12_li_prep	li		OK		
+OTHER...E0	li		OK		
+OTHER...P1.E0_bi_prep	li		OK		
+OTHER...P1.E0_li_prep	li		OK		
+OTHER...P2.E0	li		OK		
+OTHER...P12.E0_bi_prep	li		OK		
+OTHER...P12.E0_li_prep	li		OK		
+OTHER....	<il~A	<il~A	OK		
+OTHER...P1_bi_prep	<il~A		OK		
+OTHER...P1_li_prep	<il~A		OK		
+OTHER...P2	<il~A	wa<il~A	OK		
+OTHER...P12_bi_prep	<il~A		OK		
+OTHER...P12_li_prep	<il~A		OK		
+OTHER...E0	<il~A		OK		
+OTHER...P1.E0_bi_prep	<il~A		OK		
+OTHER...P1.E0_li_prep	<il~A		OK		
+OTHER...P2.E0	<il~A		OK		
+OTHER...P12.E0_bi_prep	<il~A		OK		
+OTHER...P12.E0_li_prep	<il~A		OK		
+OTHER....	km		PROB		
+OTHER...P1_bi_prep	km		OK		
+OTHER...P1_li_prep	km		OK		
+OTHER...P2	km		OK		
+OTHER...P12_bi_prep	km		OK		
+OTHER...P12_li_prep	km		OK		
+OTHER...E0	km		OK		
+OTHER...P1.E0_bi_prep	km		OK		
+OTHER...P1.E0_li_prep	km		OK		
+OTHER...P2.E0	km		OK		
+OTHER...P12.E0_bi_prep	km		OK		
+OTHER...P12.E0_li_prep	km		OK		
+OTHER....	>uHayolaY		PROB		
+OTHER...P1_bi_prep	>uHayolaY		OK		
+OTHER...P1_li_prep	>uHayolaY		OK		
+OTHER...P2	>uHayolaY		OK		
+OTHER...P12_bi_prep	>uHayolaY		OK		
+OTHER...P12_li_prep	>uHayolaY		OK		
+OTHER...E0	>uHayolaY		OK		
+OTHER...P1.E0_bi_prep	>uHayolaY		OK		
+OTHER...P1.E0_li_prep	>uHayolaY		OK		
+OTHER...P2.E0	>uHayolaY		OK		
+OTHER...P12.E0_bi_prep	>uHayolaY		OK		
+OTHER...P12.E0_li_prep	>uHayolaY		OK		
+OTHER....	>alA	>alA	OK		
+OTHER...P1_bi_prep	>alA		OK		
+OTHER...P1_li_prep	>alA		OK		
+OTHER...P2	>alA		OK		
+OTHER...P12_bi_prep	>alA		OK		
+OTHER...P12_li_prep	>alA		OK		
+OTHER...E0	>alA		OK		
+OTHER...P1.E0_bi_prep	>alA		OK		
+OTHER...P1.E0_li_prep	>alA		OK		
+OTHER...P2.E0	>alA		OK		
+OTHER...P12.E0_bi_prep	>alA		OK		
+OTHER...P12.E0_li_prep	>alA		OK		
+OTHER....	>ayo	>ayo	OK		
+OTHER...P1_bi_prep	>ayo		OK		
+OTHER...P1_li_prep	>ayo		OK		
+OTHER...P2	>ayo		OK		
+OTHER...P12_bi_prep	>ayo		OK		
+OTHER...P12_li_prep	>ayo		OK		
+OTHER...E0	>ayo		OK		
+OTHER...P1.E0_bi_prep	>ayo		OK		
+OTHER...P1.E0_li_prep	>ayo		OK		
+OTHER...P2.E0	>ayo		OK		
+OTHER...P12.E0_bi_prep	>ayo		OK		
+OTHER...P12.E0_li_prep	>ayo		OK		
+OTHER....	fa	fa	OK		
+OTHER...P1_bi_prep	fa		OK		
+OTHER...P1_li_prep	fa		OK		
+OTHER...P2	fa		OK		
+OTHER...P12_bi_prep	fa		OK		
+OTHER...P12_li_prep	fa		OK		
+OTHER...E0	fa		OK		
+OTHER...P1.E0_bi_prep	fa		OK		
+OTHER...P1.E0_li_prep	fa		OK		
+OTHER...P2.E0	fa		OK		
+OTHER...P12.E0_bi_prep	fa		OK		
+OTHER...P12.E0_li_prep	fa		OK		
+OTHER....	fiy		PROB	fiymA?	
+OTHER...P1_bi_prep	fiy		OK		
+OTHER...P1_li_prep	fiy		OK		
+OTHER...P2	fiy		PROB	fiymA?	
+OTHER...P12_bi_prep	fiy		OK		
+OTHER...P12_li_prep	fiy		OK		
+OTHER...E0	fiy		OK		
+OTHER...P1.E0_bi_prep	fiy		OK		
+OTHER...P1.E0_li_prep	fiy		OK		
+OTHER...P2.E0	fiy		OK		
+OTHER...P12.E0_bi_prep	fiy		OK		
+OTHER...P12.E0_li_prep	fiy		OK		
+OTHER....	|na}i*K	|na}i*K	OK		
+OTHER...P1_bi_prep	|na}i*K		OK		
+OTHER...P1_li_prep	|na}i*K		OK		
+OTHER...P2	|na}i*K	wa|na}i*K	OK		
+OTHER...P12_bi_prep	|na}i*K		OK		
+OTHER...P12_li_prep	|na}i*K		OK		
+OTHER...E0	|na}i*K		OK		
+OTHER...P1.E0_bi_prep	|na}i*K		OK		
+OTHER...P1.E0_li_prep	|na}i*K		OK		
+OTHER...P2.E0	|na}i*K		OK		
+OTHER...P12.E0_bi_prep	|na}i*K		OK		
+OTHER...P12.E0_li_prep	|na}i*K		OK		
+OTHER....	>a	>a	OK		
+OTHER...P1_bi_prep	>a		OK		
+OTHER...P1_li_prep	>a		OK		
+OTHER...P2	>a	wa>a	OK		
+OTHER...P12_bi_prep	>a		OK		
+OTHER...P12_li_prep	>a		OK		
+OTHER...E0	>a		OK		
+OTHER...P1.E0_bi_prep	>a		OK		
+OTHER...P1.E0_li_prep	>a		OK		
+OTHER...P2.E0	>a		OK		
+OTHER...P12.E0_bi_prep	>a		OK		
+OTHER...P12.E0_li_prep	>a		OK		
+OTHER....	>ajal		PROB		
+OTHER...P1_bi_prep	>ajal		OK		
+OTHER...P1_li_prep	>ajal		OK		
+OTHER...P2	>ajal		PROB	CONJ	
+OTHER...P12_bi_prep	>ajal		OK		
+OTHER...P12_li_prep	>ajal		OK		
+OTHER...E0	>ajal		OK		
+OTHER...P1.E0_bi_prep	>ajal		OK		
+OTHER...P1.E0_li_prep	>ajal		OK		
+OTHER...P2.E0	>ajal		OK		
+OTHER...P12.E0_bi_prep	>ajal		OK		
+OTHER...P12.E0_li_prep	>ajal		OK		
+OTHER....	>amo	>amo	OK		
+OTHER...P1_bi_prep	>amo		OK		
+OTHER...P1_li_prep	>amo		OK		
+OTHER...P2	>amo	wa>amo	OK		
+OTHER...P12_bi_prep	>amo		OK		
+OTHER...P12_li_prep	>amo		OK		
+OTHER...E0	>amo		OK		
+OTHER...P1.E0_bi_prep	>amo		OK		
+OTHER...P1.E0_li_prep	>amo		OK		
+OTHER...P2.E0	>amo		OK		
+OTHER...P12.E0_bi_prep	>amo		OK		
+OTHER...P12.E0_li_prep	>amo		OK		
+OTHER....	>am~A	>am~A	OK		
+OTHER...P1_bi_prep	>am~A		OK		
+OTHER...P1_li_prep	>am~A		OK		
+OTHER...P2	>am~A	wa>am~A	OK		
+OTHER...P12_bi_prep	>am~A		OK		
+OTHER...P12_li_prep	>am~A		OK		
+OTHER...E0	>am~A		OK		
+OTHER...P1.E0_bi_prep	>am~A		OK		
+OTHER...P1.E0_li_prep	>am~A		OK		
+OTHER...P2.E0	>am~A		OK		
+OTHER...P12.E0_bi_prep	>am~A		OK		
+OTHER...P12.E0_li_prep	>am~A		OK		
+OTHER....	>an~a	>an~a	OK		
+OTHER...P1_bi_prep	>an~a	bi>an~a	OK		
+OTHER...P1_li_prep	>an~a	li>an~a	OK		
+OTHER...P2	>an~a	wa>an~a	OK		
+OTHER...P12_bi_prep	>an~a	wabi>an~a	OK		
+OTHER...P12_li_prep	>an~a	wali>an~a	OK		
+OTHER...E0	>an~a	>an~ahu	OK		
+OTHER...P1.E0_bi_prep	>an~a	bi>an~ahu	OK		
+OTHER...P1.E0_li_prep	>an~a	li>an~ahu	OK		
+OTHER...P2.E0	>an~a	wa>an~ahu	OK		
+OTHER...P12.E0_bi_prep	>an~a	wabi>an~ahu	OK		
+OTHER...P12.E0_li_prep	>an~a	wali>an~ahu	OK		
+OTHER....	>an~a	>an~amA	OK		
+OTHER...P1_bi_prep	>an~a	bi>an~amA	OK		
+OTHER...P1_li_prep	>an~a	li>an~amA	OK		
+OTHER...P2	>an~a	wa>an~amA	OK		
+OTHER...P12_bi_prep	>an~a	wabi>an~amA	OK		
+OTHER...P12_li_prep	>an~a	wali>an~amA	OK		
+OTHER....	>anA	>anA	OK		
+OTHER...P1_bi_prep	>anA		OK		
+OTHER...P1_li_prep	>anA		OK		
+OTHER...P2	>anA	wa>anA	OK		
+OTHER...P12_bi_prep	>anA		OK		
+OTHER...P12_li_prep	>anA		OK		
+OTHER...E0	>anA		OK		
+OTHER...P1.E0_bi_prep	>anA		OK		
+OTHER...P1.E0_li_prep	>anA		OK		
+OTHER...P2.E0	>anA		OK		
+OTHER...P12.E0_bi_prep	>anA		OK		
+OTHER...P12.E0_li_prep	>anA		OK		
+OTHER....	<i*o	<i*o	PROB	PART	
+OTHER...P1_bi_prep	<i*o		OK		
+OTHER...P1_li_prep	<i*o		OK		
+OTHER...P2	<i*o	wa<i*o	PROB	PART	
+OTHER...P12_bi_prep	<i*o		OK		
+OTHER...P12_li_prep	<i*o		OK		
+OTHER...E0	<i*o		OK		
+OTHER...P1.E0_bi_prep	<i*o		OK		
+OTHER...P1.E0_li_prep	<i*o		OK		
+OTHER...P2.E0	<i*o		OK		
+OTHER...P12.E0_bi_prep	<i*o		OK		
+OTHER...P12.E0_li_prep	<i*o		OK		
+OTHER....	sawofa	sawofa	OK		
+OTHER...P1_bi_prep	sawofa		OK		
+OTHER...P1_li_prep	sawofa		OK		
+OTHER...P2	sawofa	wasawofa	OK		
+OTHER...P12_bi_prep	sawofa		OK		
+OTHER...P12_li_prep	sawofa		OK		
+OTHER...E0	sawofa		OK		
+OTHER...P1.E0_bi_prep	sawofa		OK		
+OTHER...P1.E0_li_prep	sawofa		OK		
+OTHER...P2.E0	sawofa		OK		
+OTHER...P12.E0_bi_prep	sawofa		OK		
+OTHER...P12.E0_li_prep	sawofa		OK		
+OTHER....	qado	qado	OK		
+OTHER...P1_bi_prep	qado		OK		
+OTHER...P1_li_prep	qado		OK		
+OTHER...P2	qado	waqado	OK		
+OTHER...P12_bi_prep	qado		OK		
+OTHER...P12_li_prep	qado		OK		
+OTHER...E0	qado		OK		
+OTHER...P1.E0_bi_prep	qado		OK		
+OTHER...P1.E0_li_prep	qado		OK		
+OTHER...P2.E0	qado		OK		
+OTHER...P12.E0_bi_prep	qado		OK		
+OTHER...P12.E0_li_prep	qado		OK		
+OTHER....	lA	lA	OK		
+OTHER...P1_bi_prep	lA		OK		
+OTHER...P1_li_prep	lA		OK		
+OTHER...P2	lA	walA	OK		
+OTHER...P12_bi_prep	lA		OK		
+OTHER...P12_li_prep	lA		OK		
+OTHER...E0	lA		OK		
+OTHER...P1.E0_bi_prep	lA		OK		
+OTHER...P1.E0_li_prep	lA		OK		
+OTHER...P2.E0	lA		OK		
+OTHER...P12.E0_bi_prep	lA		OK		
+OTHER...P12.E0_li_prep	lA		OK		
+OTHER....	mA	mA	OK		
+OTHER...P1_bi_prep	mA		OK		
+OTHER...P1_li_prep	mA		OK		
+OTHER...P2	mA	wamA	OK		
+OTHER...P12_bi_prep	mA		OK		
+OTHER...P12_li_prep	mA		OK		
+OTHER...E0	mA		OK		
+OTHER...P1.E0_bi_prep	mA		OK		
+OTHER...P1.E0_li_prep	mA		OK		
+OTHER...P2.E0	mA		OK		
+OTHER...P12.E0_bi_prep	mA		OK		
+OTHER...P12.E0_li_prep	mA		OK		
+OTHER....	mAhuwa	mAhuwa	OK		
+OTHER...P1_bi_prep	mAhuwa		OK		
+OTHER...P1_li_prep	mAhuwa		OK		
+OTHER...P2	mAhuwa	wamAhuwa	OK		
+OTHER...P12_bi_prep	mAhuwa		OK		
+OTHER...P12_li_prep	mAhuwa		OK		
+OTHER...E0	mAhuwa		OK		
+OTHER...P1.E0_bi_prep	mAhuwa		OK		
+OTHER...P1.E0_li_prep	mAhuwa		OK		
+OTHER...P2.E0	mAhuwa		OK		
+OTHER...P12.E0_bi_prep	mAhuwa		OK		
+OTHER...P12.E0_li_prep	mAhuwa		OK		
+OTHER....	halo	halo	OK		
+OTHER...P1_bi_prep	halo		OK		
+OTHER...P1_li_prep	halo		OK		
+OTHER...P2	halo	wahalo	OK		
+OTHER...P12_bi_prep	halo		OK		
+OTHER...P12_li_prep	halo		OK		
+OTHER...E0	halo		OK		
+OTHER...P1.E0_bi_prep	halo		OK		
+OTHER...P1.E0_li_prep	halo		OK		
+OTHER...P2.E0	halo		OK		
+OTHER...P12.E0_bi_prep	halo		OK		
+OTHER...P12.E0_li_prep	halo		OK		
+OTHER....	<iy~A	<iy~A	OK		
+OTHER...P1_bi_prep	<iy~A		OK		
+OTHER...P1_li_prep	<iy~A		OK		
+OTHER...P2	<iy~A	wa<iy~A	OK		
+OTHER...P12_bi_prep	<iy~A		OK		
+OTHER...P12_li_prep	<iy~A		OK		
+OTHER...E0	<iy~A	<iy~Ahu	OK		
+OTHER...P1.E0_bi_prep	<iy~A		OK		
+OTHER...P1.E0_li_prep	<iy~A		OK		
+OTHER...P2.E0	<iy~A	wa<iy~Ahu	OK		
+OTHER...P12.E0_bi_prep	<iy~A		OK		
+OTHER...P12.E0_li_prep	<iy~A		OK		
+OTHER....	lawolA	lawolA	OK		
+OTHER...P1_bi_prep	lawolA		OK		
+OTHER...P1_li_prep	lawolA		OK		
+OTHER...P2	lawolA	walawolA	OK		
+OTHER...P12_bi_prep	lawolA		OK		
+OTHER...P12_li_prep	lawolA		OK		
+OTHER...E0	lawolA	lawolAhu	OK		
+OTHER...P1.E0_bi_prep	lawolA		OK		
+OTHER...P1.E0_li_prep	lawolA		OK		
+OTHER...P2.E0	lawolA	walawolAhu	OK		
+OTHER...P12.E0_bi_prep	lawolA		OK		
+OTHER...P12.E0_li_prep	lawolA		OK		
+OTHER....	>an~a		PROB		
+OTHER...P1_bi_prep	>an~a		PROB		
+OTHER...P1_li_prep	>an~a		PROB		
+OTHER...P2	>an~a		PROB		
+OTHER...P12_bi_prep	>an~a		PROB		
+OTHER...P12_li_prep	>an~a		PROB		
+OTHER...E0	>an~a		OK		
+OTHER...P1.E0_bi_prep	>an~a		OK		
+OTHER...P1.E0_li_prep	>an~a		OK		
+OTHER...P2.E0	>an~a		OK		
+OTHER...P12.E0_bi_prep	>an~a		OK		
+OTHER...P12.E0_li_prep	>an~a		OK		
+OTHER....	laEal~a		PROB		
+OTHER...P1_bi_prep	laEal~a		OK		
+OTHER...P1_li_prep	laEal~a		OK		
+OTHER...P2	laEal~a		OK		
+OTHER...P12_bi_prep	laEal~a		OK		
+OTHER...P12_li_prep	laEal~a		OK		
+OTHER...E0	laEal~a		OK		
+OTHER...P1.E0_bi_prep	laEal~a		OK		
+OTHER...P1.E0_li_prep	laEal~a		OK		
+OTHER...P2.E0	laEal~a		OK		
+OTHER...P12.E0_bi_prep	laEal~a		OK		
+OTHER...P12.E0_li_prep	laEal~a		OK		
+OTHER....	<in~a	<in~a	OK		
+OTHER...P1_bi_prep	<in~a		OK		
+OTHER...P1_li_prep	<in~a		OK		
+OTHER...P2	<in~a	wa<in~a	OK		
+OTHER...P12_bi_prep	<in~a		OK		
+OTHER...P12_li_prep	<in~a		OK		
+OTHER...E0	<in~a	<in~ahu	OK		
+OTHER...P1.E0_bi_prep	<in~a		OK		
+OTHER...P1.E0_li_prep	<in~a		OK		
+OTHER...P2.E0	<in~a	wa<in~ahu	OK		
+OTHER...P12.E0_bi_prep	<in~a		OK		
+OTHER...P12.E0_li_prep	<in~a		OK		
+OTHER....	Eal~a	Eal~a	OK		
+OTHER...P1_bi_prep	Eal~a		OK		
+OTHER...P1_li_prep	Eal~a		OK		
+OTHER...P2	Eal~a	waEal~a	OK		
+OTHER...P12_bi_prep	Eal~a		OK		
+OTHER...P12_li_prep	Eal~a		OK		
+OTHER...E0	Eal~a	Eal~ahu	OK		
+OTHER...P1.E0_bi_prep	Eal~a		OK		
+OTHER...P1.E0_li_prep	Eal~a		OK		
+OTHER...P2.E0	Eal~a	waEal~ahu	OK		
+OTHER...P12.E0_bi_prep	Eal~a		OK		
+OTHER...P12.E0_li_prep	Eal~a		OK		
+OTHER...P1_bi_prep	>a	bi>a	PROB	p1	
+OTHER...P1_li_prep	>a	li>a	PROB	P1	
+OTHER...P12_bi_prep	>a	wabi>a	PROB	P1	
+OTHER...P12_li_prep	>a	wali>a	PROB	P1	
+OTHER....	Al	Al	OK		
+OTHER...P1_bi_prep	Al	biAl	OK		
+OTHER...P1_li_prep	Al	liAl	OK		
+OTHER...P2	Al	waAl	OK		
+OTHER...P12_bi_prep	Al	wabiAl	OK		
+OTHER...P12_li_prep	Al	waliAl	OK		
+OTHER...E0	Al		OK		
+OTHER...P1.E0_bi_prep	Al		OK		
+OTHER...P1.E0_li_prep	Al		OK		
+OTHER...P2.E0	Al		OK		
+OTHER...P12.E0_bi_prep	Al		OK		
+OTHER...P12.E0_li_prep	Al		OK		
+OTHER...P1_bi_prep	mA	bimA	OK		
+OTHER...P1_li_prep	mA	limA	OK		
+OTHER...P12_bi_prep	mA	wabimA	OK		
+OTHER...P12_li_prep	mA	walimA	OK		
+OTHER....	*A	*A	OK		
+OTHER...P1_bi_prep	*A		OK		
+OTHER...P1_li_prep	*A		OK		
+OTHER...P2	*A	wa*A	OK		
+OTHER...P12_bi_prep	*A		OK		
+OTHER...P12_li_prep	*A		OK		
+OTHER...E0	*A		OK		
+OTHER...P1.E0_bi_prep	*A		OK		
+OTHER...P1.E0_li_prep	*A		OK		
+OTHER...P2.E0	*A		OK		
+OTHER...P12.E0_bi_prep	*A		OK		
+OTHER...P12.E0_li_prep	*A		OK		
+OTHER....	h`*A	h`*Ani	OK		
+OTHER...P1_bi_prep	h`*A		OK		
+OTHER...P1_li_prep	h`*A		OK		
+OTHER...P2	h`*A	wah`*Ani	OK		
+OTHER...P12_bi_prep	h`*A		OK		
+OTHER...P12_li_prep	h`*A		OK		
+OTHER...E0	h`*A	h`*Anihu	PROB		
+OTHER...P1.E0_bi_prep	h`*A		OK		
+OTHER...P1.E0_li_prep	h`*A		OK		
+OTHER...P2.E0	h`*A	wah`*Anihu	PROB		
+OTHER...P12.E0_bi_prep	h`*A		OK		
+OTHER...P12.E0_li_prep	h`*A		OK		
+OTHER....	Eam~a}i*K	Eam~a}i*K	OK		
+OTHER...P1_bi_prep	Eam~a}i*K	biEam~a}i*K	PROB	P	
+OTHER...P1_li_prep	Eam~a}i*K	liEam~a}i*K	PROB	P	
+OTHER...P2	Eam~a}i*K	waEam~a}i*K	OK		
+OTHER...P12_bi_prep	Eam~a}i*K	wabiEam~a}i*K	PROB	P	
+OTHER...P12_li_prep	Eam~a}i*K	waliEam~a}i*K	PROB	P	
+OTHER...E0	Eam~a}i*K		OK		
+OTHER...P1.E0_bi_prep	Eam~a}i*K		OK		
+OTHER...P1.E0_li_prep	Eam~a}i*K		OK		
+OTHER...P2.E0	Eam~a}i*K		OK		
+OTHER...P12.E0_bi_prep	Eam~a}i*K		OK		
+OTHER...P12.E0_li_prep	Eam~a}i*K		OK		
+OTHER....	>an~Y	>an~Y	OK		
+OTHER...P1_bi_prep	>an~Y	bi>an~Y	OK		
+OTHER...P1_li_prep	>an~Y	li>an~Y	OK		
+OTHER...P2	>an~Y	wa>an~Y	OK		
+OTHER...P12_bi_prep	>an~Y	wabi>an~Y	OK		
+OTHER...P12_li_prep	>an~Y	wali>an~Y	OK		
+OTHER...E0	>an~Y		OK		
+OTHER...P1.E0_bi_prep	>an~Y		OK		
+OTHER...P1.E0_li_prep	>an~Y		OK		
+OTHER...P2.E0	>an~Y		OK		
+OTHER...P12.E0_bi_prep	>an~Y		OK		
+OTHER...P12.E0_li_prep	>an~Y		OK		
+OTHER....	lima	lima	OK		
+OTHER...P1_bi_prep	lima		OK		
+OTHER...P1_li_prep	lima		OK		
+OTHER...P2	lima	walima	OK		
+OTHER...P12_bi_prep	lima		OK		
+OTHER...P12_li_prep	lima		OK		
+OTHER...E0	lima		OK		
+OTHER...P1.E0_bi_prep	lima		OK		
+OTHER...P1.E0_li_prep	lima		OK		
+OTHER...P2.E0	lima		OK		
+OTHER...P12.E0_bi_prep	lima		OK		
+OTHER...P12.E0_li_prep	lima		OK		
+OTHER....	li	li	OK		
+OTHER...P2	li	wali	OK		
+OTHER....	<ilaY		PROB		
+OTHER...P1_bi_prep	<ilaY		OK		
+OTHER...P1_li_prep	<ilaY		OK		
+OTHER...P2	<ilaY		PROB	CONJ	
+OTHER...P12_bi_prep	<ilaY		OK		
+OTHER...P12_li_prep	<ilaY		OK		
+OTHER...E0	<ilaY	<ilayhi	OK		
+OTHER...P1.E0_bi_prep	<ilaY		OK		
+OTHER...P1.E0_li_prep	<ilaY		OK		
+OTHER...P2.E0	<ilaY	wa<ilayhi	OK		
+OTHER...P12.E0_bi_prep	<ilaY		OK		
+OTHER...P12.E0_li_prep	<ilaY		OK		
+OTHER....	min	lamin	OK		
+OTHER...P1_bi_prep	min		OK		
+OTHER...P1_li_prep	min		OK		
+OTHER...P2	min	walamin	OK		
+OTHER...P12_bi_prep	min		OK		
+OTHER...P12_li_prep	min		OK		
+OTHER...E0	min	laminhu	OK		
+OTHER...P1.E0_bi_prep	min		OK		
+OTHER...P1.E0_li_prep	min		OK		
+OTHER...P2.E0	min	walaminhu	OK		
+OTHER...P12.E0_bi_prep	min		OK		
+OTHER...P12.E0_li_prep	min		OK		
+OTHER....	Al	lil	OK		
+OTHER...P1_bi_prep	Al		OK		
+OTHER...P1_li_prep	Al		OK		
+OTHER...P2	Al	walil	OK		
+OTHER...P12_bi_prep	Al		OK		
+OTHER...P12_li_prep	Al		OK		
+OTHER....	HanAnay		PROB		
+OTHER...P1_bi_prep	HanAnay		OK		
+OTHER...P1_li_prep	HanAnay		OK		
+OTHER...P2	HanAnay		PROB	CONJ	
+OTHER...P12_bi_prep	HanAnay		OK		
+OTHER...P12_li_prep	HanAnay		OK		
+OTHER...E0	HanAnay		OK		
+OTHER...P1.E0_bi_prep	HanAnay		OK		
+OTHER...P1.E0_li_prep	HanAnay		OK		
+OTHER...P2.E0	HanAnay		OK		
+OTHER...P12.E0_bi_prep	HanAnay		OK		
+OTHER...P12.E0_li_prep	HanAnay		OK		
+OTHER....	Al~a*iy	All~a*ayoni	OK		
+OTHER...P1_bi_prep	Al~a*iy	biAll~a*ayoni	OK		
+OTHER...P1_li_prep	Al~a*iy	liAll~a*ayoni	PROB		
+OTHER...P2	Al~a*iy	waAll~a*ayoni	OK		
+OTHER...P12_bi_prep	Al~a*iy	wabiAll~a*ayoni	OK		
+OTHER...P12_li_prep	Al~a*iy	waliAll~a*ayoni	PROB		
+OTHER...E0	Al~a*iy		OK		
+OTHER...P1.E0_bi_prep	Al~a*iy		OK		
+OTHER...P1.E0_li_prep	Al~a*iy		OK		
+OTHER...P2.E0	Al~a*iy		OK		
+OTHER...P12.E0_bi_prep	Al~a*iy		OK		
+OTHER...P12.E0_li_prep	Al~a*iy		OK		
+OTHER....	Al~a*iy		PROB		
+OTHER...P1_bi_prep	Al~a*iy		OK		
+OTHER...P1_li_prep	Al~a*iy		OK		
+OTHER...P2	Al~a*iy		OK		
+OTHER...P12_bi_prep	Al~a*iy		OK		
+OTHER...P12_li_prep	Al~a*iy		OK		
+OTHER....	fiy	fiy	OK		
+OTHER...P2	fiy	wafiy	OK		
+OTHER...E0	fiy	fiyhi	OK		
+OTHER...P2.E0	fiy	wafiyhi	OK		
+OTHER....	>ay~		PROB	COND-T	
+OTHER...P1_bi_prep	>ay~		PROB	COND-T	
+OTHER...P1_li_prep	>ay~		PROB	COND-T	
+OTHER...P2	>ay~		PROB	COND-T	
+OTHER...P12_bi_prep	>ay~		PROB	COND-T	
+OTHER...P12_li_prep	>ay~		PROB	COND-T	
+OTHER...E0	>ay~		OK		
+OTHER...P1.E0_bi_prep	>ay~		OK		
+OTHER...P1.E0_li_prep	>ay~		OK		
+OTHER...P2.E0	>ay~		OK		
+OTHER...P12.E0_bi_prep	>ay~		OK		
+OTHER...P12.E0_li_prep	>ay~		OK		
+OTHER....	>akosaH	>akosaH	PROB	CASE ENDING	
+OTHER...P1_bi_prep	>akosaH	bi>akosaH	PROB	CASE ENDING	
+OTHER...P1_li_prep	>akosaH	li>akosaH	PROB	CASE ENDING	
+OTHER...P2	>akosaH	wa>akosaH	PROB	CASE ENDING	
+OTHER...P12_bi_prep	>akosaH	wabi>akosaH	PROB	CASE ENDING	
+OTHER...P12_li_prep	>akosaH	wali>akosaH	PROB	CASE ENDING	
+OTHER...E0	>akosaH	>akosaHhu	PROB	CASE ENDING	
+OTHER...P1.E0_bi_prep	>akosaH	bi>akosaHhu	PROB	CASE ENDING	
+OTHER...P1.E0_li_prep	>akosaH	li>akosaHhu	PROB	CASE ENDING	
+OTHER...P2.E0	>akosaH	wa>akosaHhu	PROB	CASE ENDING	
+OTHER...P12.E0_bi_prep	>akosaH	wabi>akosaHhu	PROB	CASE ENDING	
+OTHER...P12.E0_li_prep	>akosaH	wali>akosaHhu	PROB	CASE ENDING	
+OTHER....	>uluw	>uluw	PROB	POS: INTERJ	
+OTHER...P1_bi_prep	>uluw	bi>uluw	PROB	POS: INTERJ	
+OTHER...P1_li_prep	>uluw	li>uluw	PROB	POS: INTERJ	
+OTHER...P2	>uluw	wa>uluw	PROB	POS: INTERJ	
+OTHER...P12_bi_prep	>uluw	wabi>uluw	PROB	POS: INTERJ	
+OTHER...P12_li_prep	>uluw	wali>uluw	PROB	POS: INTERJ	
+OTHER...E0	>uluw	>uluwhu	PROB	POS: INTERJ	
+OTHER...P1.E0_bi_prep	>uluw	bi>uluwhu	PROB	POS: INTERJ	
+OTHER...P1.E0_li_prep	>uluw	li>uluwhu	PROB	POS: INTERJ	
+OTHER...P2.E0	>uluw	wa>uluwhu	PROB	POS: INTERJ	
+OTHER...P12.E0_bi_prep	>uluw	wabi>uluwhu	PROB	POS: INTERJ	
+OTHER...P12.E0_li_prep	>uluw	wali>uluwhu	PROB	POS: INTERJ	
+OTHER....	All~`hum~a	All~`hum~a	OK		
+OTHER...P1_bi_prep	All~`hum~a	biAll~`hum~a	OK		
+OTHER...P1_li_prep	All~`hum~a	liAll~`hum~a	OK		
+OTHER...P2	All~`hum~a	waAll~`hum~a	OK		
+OTHER...P12_bi_prep	All~`hum~a	wabiAll~`hum~a	OK		
+OTHER...P12_li_prep	All~`hum~a	waliAll~`hum~a	OK		
+OTHER...E0	All~`hum~a	All~`hum~ahu	PROB	E	
+OTHER...P1.E0_bi_prep	All~`hum~a	biAll~`hum~ahu	PROB	E	
+OTHER...P1.E0_li_prep	All~`hum~a	liAll~`hum~ahu	PROB	E	
+OTHER...P2.E0	All~`hum~a	waAll~`hum~ahu	PROB	E	
+OTHER...P12.E0_bi_prep	All~`hum~a	wabiAll~`hum~ahu	PROB	E	
+OTHER...P12.E0_li_prep	All~`hum~a	waliAll~`hum~ahu	PROB	E	
+OTHER....	bliyz		PROB	NO COND-S COND-T	
+OTHER...P1_bi_prep	bliyz		PROB	COND-T COND_S	
+OTHER...P1_li_prep	bliyz		PROB	COND-T	
+OTHER...P2	bliyz		PROB	NO COND-S COND-T	
+OTHER...P12_bi_prep	bliyz		PROB	NO COND-S COND-T	
+OTHER...P12_li_prep	bliyz		PROB	NO COND-S COND-T	
+OTHER...E0	bliyz		PROB	NO COND-S COND-T	
+OTHER...P1.E0_bi_prep	bliyz		PROB	NO COND-S COND-T	
+OTHER...P1.E0_li_prep	bliyz		PROB	NO COND-S COND-T	
+OTHER...P2.E0	bliyz		PROB	NO COND-S COND-T	
+OTHER...P12.E0_bi_prep	bliyz		PROB	NO COND-S COND-T	
+OTHER...P12.E0_li_prep	bliyz		PROB	NO COND-S COND-T	
+OTHER....	siwaY	siw	PROB	cond: aY in morph file	
+OTHER...P1_bi_prep	siwaY	bisiw	PROB	cond: aY in morph file	
+OTHER...P1_li_prep	siwaY	lisiw	PROB	cond: aY in morph file	
+OTHER...P2	siwaY	wasiw	PROB	cond: aY in morph file	
+OTHER...P12_bi_prep	siwaY	wabisiw	PROB	cond: aY in morph file	
+OTHER...P12_li_prep	siwaY	walisiw	PROB	cond: aY in morph file	
+OTHER...E0	siwaY	siwhu	PROB	cond: aY in morph file	
+OTHER...P1.E0_bi_prep	siwaY	bisiwhu	PROB	cond: aY in morph file	
+OTHER...P1.E0_li_prep	siwaY	lisiwhu	PROB	cond: aY in morph file	
+OTHER...P2.E0	siwaY	wasiwhu	PROB	cond: aY in morph file	
+OTHER...P12.E0_bi_prep	siwaY	wabisiwhu	PROB	cond: aY in morph file	
+OTHER...P12.E0_li_prep	siwaY	walisiwhu	PROB	cond: aY in morph file	
+OTHER....	bi}osa	bi}osa	OK		
+OTHER...P1_bi_prep	bi}osa	bibi}osa	OK		
+OTHER...P1_li_prep	bi}osa	libi}osa	OK		
+OTHER...P2	bi}osa	wabi}osa	OK		
+OTHER...P12_bi_prep	bi}osa	wabibi}osa	OK		
+OTHER...P12_li_prep	bi}osa	walibi}osa	OK		
+OTHER...E0	bi}osa	bi}osahu	OK	E	
+OTHER...P1.E0_bi_prep	bi}osa	bibi}osahu	OK	E	
+OTHER...P1.E0_li_prep	bi}osa	libi}osahu	OK	E	
+OTHER...P2.E0	bi}osa	wabi}osahu	OK	E	
+OTHER...P12.E0_bi_prep	bi}osa	wabibi}osahu	OK	E	
+OTHER...P12.E0_li_prep	bi}osa	walibi}osahu	OK	E	
+OTHER....	lab~ay	lab~ayoka	OK		
+OTHER...P1_bi_prep	lab~ay	bilab~ayoka	OK		
+OTHER...P1_li_prep	lab~ay	lilab~ayoka	OK		
+OTHER...P2	lab~ay	walab~ayoka	OK		
+OTHER...P12_bi_prep	lab~ay	wabilab~ayoka	OK		
+OTHER...P12_li_prep	lab~ay	walilab~ayoka	OK		
+OTHER...E0	lab~ay	lab~ayokahu	PROB	E	
+OTHER...P1.E0_bi_prep	lab~ay	bilab~ayokahu	PROB	E	
+OTHER...P1.E0_li_prep	lab~ay	lilab~ayokahu	PROB	E	
+OTHER...P2.E0	lab~ay	walab~ayokahu	PROB	E	
+OTHER...P12.E0_bi_prep	lab~ay	wabilab~ayokahu	PROB	E	
+OTHER...P12.E0_li_prep	lab~ay	walilab~ayokahu	PROB	E	

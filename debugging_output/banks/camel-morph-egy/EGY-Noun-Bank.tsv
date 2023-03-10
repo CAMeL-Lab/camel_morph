@@ -1,0 +1,584 @@
+SIGNATURE	LEMMA	DIAC	QC	COMMENTS	STATUS
+NOM.MP.D.P0.E0	EAlim		OK		
+NOM.MP.C.E0	EAlim		PROB		
+NOM.MP.D.P0	tafSiyl	Alt~afASiyl	PROB	wrong lemma	
+NOM.MP.D.P0	tafSiyl	Alt~afASiylayon	PROB	wrong lemma	
+NOM.MP.D.P0	tafSiyl	Alt~afASiylAt	PROB	wrong lemma	
+NOM.MP.I	tafSiyl	tafASiyl	PROB	wrong lemma	
+NOM.MP.I	tafSiyl	tafASiylayon	PROB	wrong lemma	
+NOM.MP.I	tafSiyl	tafASiylAt	PROB	wrong lemma	
+NOM.MP.C	tafSiyl	tafASiyl	PROB	wrong lemma	
+NOM.MP.C	tafSiyl	tafASiylayon	PROB	wrong lemma	
+NOM.MP.C	tafSiyl	tafASiylAt	PROB	wrong lemma	
+NOM.MP.D.P0.E0	tafSiyl		OK		
+NOM.MP.C.E0	tafSiyl		PROB		
+NOM.MP.D.P0.E0	laHm		OK		
+NOM.MP.C.E0	laHm		PROB		
+NOM.MP.D.P0	nafs	Al>anfus	PROB	wrong cond	
+NOM.MP.D.P0	nafs	Al>anfusayon	PROB	wrong cond	
+NOM.MP.I	nafs	>anfus	PROB	wrong cond	
+NOM.MP.I	nafs	>anfusayon	PROB	wrong cond	
+NOM.MP.C	nafs	>anfus	PROB	wrong cond	
+NOM.MP.C	nafs	>anfusayon	PROB	wrong cond	
+NOM.MP.D.P0.E0	nafs		OK		
+NOM.MP.C.E0	nafs		PROB		
+NOM.FP.D.P0.E0	dawlap		OK		
+NOM.FP.C.E0	dawlap		PROB		
+NOM.FP.D.P0	sin~ap	Als~inAnap	PROB	WRONG COND	
+NOM.FP.D.P0	sin~ap	Als~inAntayon	PROB	WRONG COND	
+NOM.FP.D.P0	sin~ap	Als~inAnAt	PROB	WRONG COND	
+NOM.FP.I	sin~ap	sinAnap	PROB	WRONG COND	
+NOM.FP.I	sin~ap	sinAntayon	PROB	WRONG COND	
+NOM.FP.I	sin~ap	sinAnAt	PROB	WRONG COND	
+NOM.FP.C	sin~ap	sinAnip	PROB	WRONG COND	
+NOM.FP.C	sin~ap	sinAntayon	PROB	WRONG COND	
+NOM.FP.C	sin~ap	sinAnAt	PROB	WRONG COND	
+NOM.FP.D.P0.E0	sin~ap		OK		
+NOM.FP.C.E0	sin~ap		PROB		
+NOM.FP.D.P0.E0	lajnap		OK		
+NOM.FP.C.E0	lajnap		PROB		
+NOM.MS.D.P0.E0	laDamAn		OK		
+NOM.MS.C.E0	laDamAn		PROB		
+NOM.MD.D.P0.E0	laDamAn		OK		
+NOM.MD.C.E0	laDamAn		PROB		
+NOM.MP.D.P0.E0	laDamAn		OK		
+NOM.MP.C.E0	laDamAn		PROB		
+NOM.FS.D.P0.E0	mAmA		OK		
+NOM.FS.C.E0	mAmA		PROB		
+NOM.FD.D.P0.E0	mAmA		OK		
+NOM.FD.C.E0	mAmA		PROB		
+NOM.MS.D.P0.E0	mAs		OK		
+NOM.MS.C.E0	mAs		PROB		
+NOM.MD.D.P0	>asmant	Al>asmantayon	OK		
+NOM.MD.I	>asmant	>asmantayon	OK		
+NOM.MD.C	>asmant	>asmantayon	OK		
+NOM.MD.D.P0.E0	>asmant		OK		
+NOM.MD.C.E0	>asmant		PROB		
+NOM.MS.D.P0.E0	bA$A		OK		
+NOM.MS.C.E0	bA$A		PROB		
+NOM.MD.D.P0.E0	bA$A		OK		
+NOM.MD.C.E0	bA$A		PROB		
+NOM.MP.D.P0.E0	bA$A		OK		
+NOM.MP.C.E0	bA$A		PROB		
+NOM.MP.D.P0	>arD	Al>arADiy	PROB	wrong cond	
+NOM.MP.D.P0	>arD	Al>arADiyayon	PROB	wrong cond	
+NOM.MP.I	>arD	>arADiy	PROB	wrong cond	
+NOM.MP.I	>arD	>arADiyayon	PROB	wrong cond	
+NOM.MP.C	>arD	>arADiy	PROB	wrong cond	
+NOM.MP.C	>arD	>arADiyayon	PROB	wrong cond	
+NOM.MP.D.P0.E0	>arD		OK		
+NOM.MP.C.E0	>arD		PROB		
+NOM.FP.D.P0.E0	fiyl~A		OK		
+NOM.FP.C.E0	fiyl~A		PROB		
+NOM.MS.D.P0.E0	musta$faY		OK		
+NOM.MS.C.E0	musta$faY		PROB		
+NOM.MD.D.P0.E0	mustawaY		OK		
+NOM.MD.C.E0	mustawaY		PROB		
+NOM.MP.D.P0.E0	musta$faY		OK		
+NOM.MP.C.E0	musta$faY		PROB		
+NOM.FP.D.P0.E0	>ugniyap		OK		
+NOM.FP.C.E0	>ugniyap		PROB		
+NOM.FS.D.P0.E0	>um~ap		OK		
+NOM.FS.C.E0	>um~ap		PROB		
+NOM.FD.D.P0.E0	>um~ap		OK		
+NOM.FD.C.E0	>um~ap		PROB		
+NOM.FP.D.P0.E0	>um~		OK		
+NOM.FP.C.E0	>um~		PROB		
+NOM.MS.D.P0.E0	siy		OK		
+NOM.MS.C.E0	siy		PROB		
+NOM.MD.D.P0.E0	$iy		OK		
+NOM.MD.C.E0	$iy		PROB		
+NOM.MP.D.P0	$iy		OK		
+NOM.MP.I	$iy		PROB		
+NOM.MP.C	$iy		PROB		
+NOM.MP.D.P0.E0	$iy		OK		
+NOM.MP.C.E0	$iy		PROB		
+NOM.MS.D.P0.E0	jiytAr		OK		
+NOM.MS.C.E0	jiytAr		PROB		
+NOM.MD.D.P0.E0	jiytAr		OK		
+NOM.MD.C.E0	jiytAr		PROB		
+NOM.MP.D.P0.E0	jiytAr		OK		
+NOM.MP.C.E0	jiytAr		PROB		
+NOM.MP.D.P0.E0	qatiyl		OK		
+NOM.MP.C.E0	qatiyl		PROB		
+NOM.MP.D.P0.E0	jar~AH		OK		
+NOM.MP.C.E0	jar~AH		PROB		
+NOM.FS.D.P0.E0	jar~AH		OK		
+NOM.FS.C.E0	jar~AH		PROB		
+NOM.FD.D.P0.E0	jar~AH		OK		
+NOM.FD.C.E0	jar~AH		PROB		
+NOM.FP.D.P0.E0	jar~AH		OK		
+NOM.FP.C.E0	jar~AH		PROB		
+NOM.FD.D.P0.E0	>um~		OK		
+NOM.FD.C.E0	>um~		PROB		
+NOM.MP.D.P0.E0	mabnaY		OK		
+NOM.MP.C.E0	mabnaY		PROB		
+NOM.MS.D.P0.E0	dilwaqtiy		OK		
+NOM.MS.C.E0	dilwaqtiy		PROB		
+NOM.MS.D.P0.E0	rA'		OK		
+NOM.MS.C.E0	rA'		PROB		
+NOM.MD.D.P0.E0	rA'		OK		
+NOM.MD.C.E0	rA'		PROB		
+NOM.MP.D.P0.E0	rA'		OK		
+NOM.MP.C.E0	rA'		PROB		
+NOM.FP.D.P0.E0	DaHiy~ap		OK		
+NOM.FP.C.E0	DaHiy~ap		PROB		
+NOM.MD.D.P0.E0	maTAfiy		OK		
+NOM.MD.C.E0	maTAfiy		PROB		
+NOM.MS.D.P0.E0	luwliy		OK		
+NOM.MS.C.E0	luwliy		PROB		
+NOM.MD.D.P0.E0	luwliy		OK		
+NOM.MD.C.E0	luwliy		PROB		
+NOM.MP.D.P0.E0	luwliy		OK		
+NOM.MP.C.E0	luwliy		PROB		
+NOM.FP.D.P0.E0	mun$a>ap		OK		
+NOM.FP.C.E0	mun$a>ap		PROB		
+NOM.FS.D.P0.E0	qanAp		OK		
+NOM.FS.C.E0	qanAp		PROB		
+NOM.FD.D.P0.E0	qanAp		OK		
+NOM.FD.C.E0	qanAp		PROB		
+NOM.FP.D.P0.E0	qanAp		OK		
+NOM.FP.C.E0	qanAp		PROB		
+NOM.FS.D.P0.E0	fawDaY		OK		
+NOM.FS.C.E0	fawDaY		PROB		
+NOM.FD.D.P0.E0	fawDaY		OK		
+NOM.FD.C.E0	fawDaY		PROB		
+NOM.FP.D.P0.E0	daEwaY		OK		
+NOM.FP.C.E0	daEwaY		PROB		
+NOM.FD.D.P0.E0	faHwaY		OK		
+NOM.FD.C.E0	faHwaY		PROB		
+NOM.MS.D.P0.E0	ladaY		OK		
+NOM.MS.C.E0	ladaY		PROB		
+NOM.MD.D.P0.E0	ladaY		OK		
+NOM.MD.C.E0	ladaY		PROB		
+NOM.FS.D.P0.E0	Sifap		OK		
+NOM.FS.C.E0	Sifap		PROB		
+NOM.FD.D.P0.E0	Sifap		OK		
+NOM.FD.C.E0	Sifap		PROB		
+NOM.FP.D.P0.E0	Sifap		OK		
+NOM.FP.C.E0	Sifap		PROB		
+NOM.MD.D.P0.E0	musta$faY		OK		
+NOM.MD.C.E0	musta$faY		PROB		
+NOM.MP.D.P0.E0	$ay'		OK		
+NOM.MP.C.E0	$ay'		PROB		
+NOM.MS.D.P0.E0	juz'		OK		
+NOM.MS.C.E0	juz'		PROB		
+NOM.MD.D.P0.E0	juz'		OK		
+NOM.MD.C.E0	juz'		PROB		
+NOM.MS.D.P0.E0	suw'		OK		
+NOM.MS.C.E0	suw'		PROB		
+NOM.MD.D.P0.E0	suw'		OK		
+NOM.MD.C.E0	suw'		PROB		
+NOM.MS.D.P0.E0	taqAwiy		OK		
+NOM.MS.C.E0	taqAwiy		PROB		
+NOM.MD.D.P0.E0	taqAwiy		OK		
+NOM.MD.C.E0	taqAwiy		PROB		
+NOM.MS.D.P0	>adAp	Al>adA	PROB	FIXED	
+NOM.MS.I	>adAp	>adA	PROB	FIXED	
+NOM.MS.C	>adAp	>adA	PROB	FIXED	
+NOM.MS.D.P0.E0	>adAp		OK		
+NOM.MS.C.E0	>adAp		PROB		
+NOM.MD.D.P0	>adAp		OK		
+NOM.MD.I	>adAp		PROB		
+NOM.MD.C	>adAp		PROB		
+NOM.MD.D.P0.E0	>adAp		OK		
+NOM.MD.C.E0	>adAp		PROB		
+NOM.MS.D.P0.E0	AiftirA		OK		
+NOM.MS.C.E0	AiftirA		PROB		
+NOM.MD.D.P0.E0	AiftirA		OK		
+NOM.MD.C.E0	AiftirA		PROB		
+NOM.MP.D.P0.E0	AiftirA		OK		
+NOM.MP.C.E0	AiftirA		PROB		
+NOM.MP.D.P0.E0	ban~A		OK		
+NOM.MP.C.E0	ban~A		PROB		
+NOM.FS.D.P0.E0	dawA		OK		
+NOM.FS.C.E0	dawA		PROB		
+NOM.MP.D.P0	EAlim	AlEulamA	OK		
+NOM.MP.I	EAlim	EulamA	OK		
+NOM.MP.C	EAlim	EulamA	OK		
+NOM.MP.D.P0	taHliyl	Alt~aHAliyl	OK		
+NOM.MP.D.P0	taHliyl	Alt~aHAliylayon	PROB		
+NOM.MP.D.P0	taHliyl	Alt~aHAliylAt	PROB		
+NOM.MP.I	taHliyl	taHAliyl	OK		
+NOM.MP.I	taHliyl	taHAliylayon	PROB		
+NOM.MP.I	taHliyl	taHAliylAt	PROB		
+NOM.MP.C	taHliyl	taHAliyl	OK		
+NOM.MP.C	taHliyl	taHAliylayon	PROB		
+NOM.MP.C	taHliyl	taHAliylAt	PROB		
+NOM.MP.D.P0.E0	taHliyl		OK		
+NOM.MP.C.E0	taHliyl		PROB		
+NOM.MP.D.P0	laHm	All~uHuwm	OK		
+NOM.MP.I	laHm	luHuwm	OK		
+NOM.MP.C	laHm	luHuwm	OK		
+NOM.FP.D.P0	dawlap	Ald~iwal	OK		
+NOM.FP.I	dawlap	diwal	OK		
+NOM.FP.C	dawlap	diwal	OK		
+NOM.FP.D.P0	xiT~ap	AlxiTaTap	PROB		
+NOM.FP.D.P0	xiT~ap	AlxiTaTtayon	PROB		
+NOM.FP.D.P0	xiT~ap	AlxiTaTAt	PROB		
+NOM.FP.I	xiT~ap	xiTaTap	PROB		
+NOM.FP.I	xiT~ap	xiTaTtayon	PROB		
+NOM.FP.I	xiT~ap	xiTaTAt	PROB		
+NOM.FP.C	xiT~ap	xiTaTip	PROB		
+NOM.FP.C	xiT~ap	xiTaTtayon	PROB		
+NOM.FP.C	xiT~ap	xiTaTAt	PROB		
+NOM.FP.D.P0.E0	xiT~ap		PROB		
+NOM.FP.C.E0	xiT~ap		PROB		
+NOM.FP.D.P0	lajnap	All~ijAn	OK		
+NOM.FP.I	lajnap	lijAn	OK		
+NOM.FP.C	lajnap	lijAn	OK		
+NOM.MS.D.P0	laDamAn	All~aDamAn	OK		
+NOM.MS.I	laDamAn	laDamAn	OK		
+NOM.MS.C	laDamAn	laDamAn	OK		
+NOM.MD.D.P0	laDamAn	All~aDamAnayon	OK		
+NOM.MD.I	laDamAn	laDamAnayon	OK		
+NOM.MD.C	laDamAn	laDamAnayon	OK		
+NOM.MP.D.P0	laDamAn	All~aDamAnAt	OK		
+NOM.MP.I	laDamAn	laDamAnAt	OK		
+NOM.MP.C	laDamAn	laDamAnAt	OK		
+NOM.MS.D.P0	mAs	AlmAs	OK		
+NOM.MS.I	mAs	mAs	OK		
+NOM.MS.C	mAs	mAs	OK		
+NOM.MS.D.P0	bA$A	AlbA$awA	OK		
+NOM.MS.I	bA$A	bA$awA	OK		
+NOM.MS.C	bA$A	bA$awA	OK		
+NOM.MD.D.P0	bA$A	AlbA$awayon	OK		
+NOM.MD.I	bA$A	bA$awayon	OK		
+NOM.MD.C	bA$A	bA$awayon	OK		
+NOM.MD.D.P0	bAbA	AlbAbAhayon	OK		
+NOM.MD.I	bAbA	bAbAhayon	OK		
+NOM.MD.C	bAbA	bAbAhayon	OK		
+NOM.MD.D.P0.E0	bAbA		OK		
+NOM.MD.C.E0	bAbA		PROB		
+NOM.MP.D.P0	bA$A	AlbA$AwAt	OK		
+NOM.MP.I	bA$A	bA$AwAt	OK		
+NOM.MP.C	bA$A	bA$AwAt	OK		
+NOM.MP.D.P0	>aSl	Al>uSuwl	OK		
+NOM.MP.D.P0	>aSl	Al>uSuwlayon	PROB	WRONG COND FIXED	
+NOM.MP.I	>aSl	>uSuwl	OK		
+NOM.MP.I	>aSl	>uSuwlayon	PROB	WRONG COND FIXED	
+NOM.MP.C	>aSl	>uSuwl	OK		
+NOM.MP.C	>aSl	>uSuwlayon	PROB	WRONG COND FIXED	
+NOM.MP.D.P0.E0	>aSl		PROB		
+NOM.MP.C.E0	>aSl		OK		
+NOM.FP.D.P0	fiyl~A	Alfiyl~At	OK		
+NOM.FP.I	fiyl~A	fiyl~At	OK		
+NOM.FP.C	fiyl~A	fiyl~At	OK		
+NOM.MS.D.P0	musta$faY	Almusta$faY	OK		
+NOM.MS.I	musta$faY	musta$faY	OK		
+NOM.MS.C	musta$faY	musta$faY	OK		
+NOM.MD.D.P0	mustawaY	Almustawayayon	OK		
+NOM.MD.I	mustawaY	mustawayayon	OK		
+NOM.MD.C	mustawaY	mustawayayon	OK		
+NOM.MP.D.P0	musta$faY	Almusta$fayAt	OK		
+NOM.MP.I	musta$faY	musta$fayAt	OK		
+NOM.MP.C	musta$faY	musta$fayAt	OK		
+NOM.FP.D.P0	>ugniyap	Al>agAniy	OK		
+NOM.FP.I	>ugniyap	>agAniy	OK		
+NOM.FP.C	>ugniyap	>agAniy	OK		
+NOM.FS.D.P0	>um~ap	Al>um~ap	OK		
+NOM.FS.I	>um~ap	>um~ap	OK		
+NOM.FS.C	>um~ap	>um~ip	OK		
+NOM.FD.D.P0	>um~ap	Al>um~itayon	OK		
+NOM.FD.I	>um~ap	>um~itayon	OK		
+NOM.FD.C	>um~ap	>um~itayon	OK		
+NOM.FP.D.P0	>um~	Al>um~ahAt	OK		
+NOM.FP.I	>um~	>um~ahAt	OK		
+NOM.FP.C	>um~	>um~ahAt	OK		
+NOM.MS.D.P0	siy	Als~iy	OK		
+NOM.MS.I	siy	siy	OK		
+NOM.MS.C	siy	siy	OK		
+NOM.MD.D.P0	$iy	AlAi$iyayon	PROB		
+NOM.MD.I	$iy	Ai$iyayon	PROB		
+NOM.MD.C	$iy	Ai$iyayon	PROB		
+NOM.MP.D.P0	$iy	AlAi$iyAt	PROB		
+NOM.MP.I	$iy	Ai$iyAt	PROB		
+NOM.MP.C	$iy	Ai$iyAt	PROB		
+NOM.MS.D.P0	jiytAr	AljiytAr	OK		
+NOM.MS.I	jiytAr	jiytAr	OK		
+NOM.MS.C	jiytAr	jiytAr	OK		
+NOM.MD.D.P0	jiytAr	AljiytArayon	OK		
+NOM.MD.I	jiytAr	jiytArayon	OK		
+NOM.MD.C	jiytAr	jiytArayon	OK		
+NOM.MP.D.P0	jiytAr	AljiytArAt	OK		
+NOM.MP.I	jiytAr	jiytArAt	OK		
+NOM.MP.C	jiytAr	jiytArAt	OK		
+NOM.MS.D.P0	ta>an~iy	Alt~a>an~iy	OK		
+NOM.MS.I	ta>an~iy	ta>an~iy	OK		
+NOM.MS.C	ta>an~iy	ta>an~iy	OK		
+NOM.MS.D.P0.E0	ta>an~iy		OK		
+NOM.MS.C.E0	ta>an~iy		PROB		
+NOM.MD.D.P0	ta>an~iy	Alt~a>an~iy~ayon	OK		
+NOM.MD.I	ta>an~iy	ta>an~iy~ayon	OK		
+NOM.MD.C	ta>an~iy	ta>an~iy~ayon	OK		
+NOM.MD.D.P0.E0	ta>an~iy		OK		
+NOM.MD.C.E0	ta>an~iy		OK		
+NOM.MP.D.P0	ta>an~iy	Alt~a>an~iy~At	OK		
+NOM.MP.I	ta>an~iy	ta>an~iy~At	OK		
+NOM.MP.C	ta>an~iy	ta>an~iy~At	OK		
+NOM.MP.D.P0.E0	ta>an~iy		OK		
+NOM.MP.C.E0	ta>an~iy		PROB		
+NOM.MP.D.P0	qatiyl	AlqatlaY	OK		
+NOM.MP.I	qatiyl	qatlaY	OK		
+NOM.MP.C	qatiyl	qatlaY	OK		
+NOM.MP.D.P0	jar~AH	Aljar~AHiyn	OK		
+NOM.MP.I	jar~AH	jar~AHiyn	OK		
+NOM.MP.C	jar~AH	jar~AHiyn	OK		
+NOM.FS.D.P0	jar~AH	Aljar~AHap	OK		
+NOM.FS.I	jar~AH	jar~AHap	OK		
+NOM.FS.C	jar~AH	jar~AHip	OK		
+NOM.FD.D.P0	jar~AH	Aljar~AHtayon	OK		
+NOM.FD.I	jar~AH	jar~AHtayon	OK		
+NOM.FD.C	jar~AH	jar~AHtayon	OK		
+NOM.FP.D.P0	jar~AH	Aljar~AHAt	OK		
+NOM.FP.I	jar~AH	jar~AHAt	OK		
+NOM.FP.C	jar~AH	jar~AHAt	OK		
+NOM.FD.D.P0	>um~	Al>um~ayon	OK		
+NOM.FD.I	>um~	>um~ayon	OK		
+NOM.FD.C	>um~	>um~ayon	OK		
+NOM.MP.D.P0	mabnaY	AlmabAniy	OK		
+NOM.MP.I	mabnaY	mabAniy	OK		
+NOM.MP.C	mabnaY	mabAniy	OK		
+NOM.MS.D.P0	rA'	Alr~A'	OK		
+NOM.MS.I	rA'	rA'	OK		
+NOM.MS.C	rA'	rA'	OK		
+NOM.MD.D.P0	rA'	Alr~A'ayon	OK		
+NOM.MD.I	rA'	rA'ayon	OK		
+NOM.MD.C	rA'	rA'ayon	OK		
+NOM.MP.D.P0	rA'	Alr~A'At	OK		
+NOM.MP.I	rA'	rA'At	OK		
+NOM.MP.C	rA'	rA'At	OK		
+NOM.FP.D.P0	DaHiy~ap	AlD~aHAyA	OK		
+NOM.FP.I	DaHiy~ap	DaHAyA	OK		
+NOM.FP.C	DaHiy~ap	DaHAyA	OK		
+NOM.MD.D.P0	maTAfiy	AlmaTAfiyayon	OK		
+NOM.MD.I	maTAfiy	maTAfiyayon	OK		
+NOM.MD.C	maTAfiy	maTAfiyayon	OK		
+NOM.MS.D.P0	luwliy	All~uwliy	OK		
+NOM.MS.I	luwliy	luwliy	OK		
+NOM.MS.C	luwliy	luwliy	OK		
+NOM.MD.D.P0	luwliy	All~uwliy~ayon	OK		
+NOM.MD.I	luwliy	luwliy~ayon	OK		
+NOM.MD.C	luwliy	luwliy~ayon	OK		
+NOM.MP.D.P0	luwliy	All~uwliy~At	OK		
+NOM.MP.I	luwliy	luwliy~At	OK		
+NOM.MP.C	luwliy	luwliy~At	OK		
+NOM.FP.D.P0	mun$a>ap	Almun$|At	PROB	fixed	
+NOM.FP.I	mun$a>ap	mun$|At	PROB	fixed	
+NOM.FP.C	mun$a>ap	mun$|At	PROB	fixed	
+NOM.MS.D.P0	>ajiyr	Al>ajiyr	OK		
+NOM.MS.D.P0	>ajiyr	Al>ajiyrap	OK		
+NOM.MS.I	>ajiyr	>ajiyr	OK		
+NOM.MS.I	>ajiyr	>ajiyrap	OK		
+NOM.MS.C	>ajiyr	>ajiyr	OK		
+NOM.MS.C	>ajiyr	>ajiyrip	OK		
+NOM.MS.D.P0.E0	>ajiyr		OK		
+NOM.MS.C.E0	>ajiyr		OK		
+NOM.MD.D.P0	>ajiyr	Al>ajiyrayon	OK		
+NOM.MD.D.P0	>ajiyr	Al>ajiyrtayon	OK		
+NOM.MD.I	>ajiyr	>ajiyrayon	OK		
+NOM.MD.I	>ajiyr	>ajiyrtayon	OK		
+NOM.MD.C	>ajiyr	>ajiyrayon	OK		
+NOM.MD.C	>ajiyr	>ajiyrtayon	OK		
+NOM.MD.D.P0.E0	>ajiyr		OK		
+NOM.MD.C.E0	>ajiyr		PROB		
+NOM.FS.D.P0	qanAp	AlqanAp	OK		
+NOM.FS.I	qanAp	qanAp	OK		
+NOM.FS.C	qanAp	qanAp	OK		
+NOM.FD.D.P0	qanAp	AlqanAtayon	OK		
+NOM.FD.I	qanAp	qanAtayon	OK		
+NOM.FD.C	qanAp	qanAtayon	OK		
+NOM.FP.D.P0	qanAp	AlqanawAt	OK		
+NOM.FP.I	qanAp	qanawAt	OK		
+NOM.FP.C	qanAp	qanawAt	OK		
+NOM.FD.D.P0	$akwaY	Al$~akwAtayon	PROB	FIXED	
+NOM.FD.I	$akwaY	$akwAtayon	PROB	FIXED	
+NOM.FD.C	$akwaY	$akwAtayon	PROB	FIXED	
+NOM.FD.D.P0.E0	$akwaY		PROB	FIXED	
+NOM.FD.C.E0	$akwaY		PROB	FIXED	
+NOM.FP.D.P0	$akwaY	Al$~akwayAt	PROB	FIXED	
+NOM.FP.I	$akwaY	$akwayAt	PROB	FIXED	
+NOM.FP.C	$akwaY	$akwayAt	PROB	FIXED	
+NOM.FP.D.P0.E0	$akwaY		PROB	FIXED	
+NOM.FP.C.E0	$akwaY		PROB	FIXED	
+NOM.FS.D.P0	fawDaY	AlfawD	PROB	FIXED	
+NOM.FS.I	fawDaY	fawD	PROB	FIXED	
+NOM.FS.C	fawDaY	fawD	PROB	FIXED	
+NOM.FD.D.P0	fawDaY	AlfawDtayon	PROB	FIXED	
+NOM.FD.I	fawDaY	fawDtayon	PROB	FIXED	
+NOM.FD.C	fawDaY	fawDtayon	PROB	FIXED	
+NOM.FP.D.P0	daEwaY	Ald~aEwAt	OK		
+NOM.FP.I	daEwaY	daEwAt	OK		
+NOM.FP.C	daEwaY	daEwAt	OK		
+NOM.FD.D.P0	faHwaY	AlfaHwayon	OK		
+NOM.FD.I	faHwaY	faHwayon	OK		
+NOM.FD.C	faHwaY	faHwayon	OK		
+NOM.MS.D.P0	ladaY	All~adaY	PROB		
+NOM.MS.I	ladaY	ladaY	PROB		
+NOM.MS.C	ladaY	ladaY	PROB		
+NOM.MD.D.P0	ladaY	All~adaYayon	PROB		
+NOM.MD.I	ladaY	ladaYayon	PROB		
+NOM.MD.C	ladaY	ladaYayon	PROB		
+NOM.FS.D.P0	Sifap	AlS~ifap	OK		
+NOM.FS.I	Sifap	Sifap	OK		
+NOM.FS.C	Sifap	Sifap	OK		
+NOM.FD.D.P0	Sifap	AlS~ifatayon	OK		
+NOM.FD.I	Sifap	Sifatayon	OK		
+NOM.FD.C	Sifap	Sifatayon	OK		
+NOM.FP.D.P0	Sifap	AlS~ifAt	OK		
+NOM.FP.I	Sifap	SifAt	OK		
+NOM.FP.C	Sifap	SifAt	OK		
+NOM.MD.D.P0	musta$faY	Almusta$fAtayon	PROB	could be with ap ?	
+NOM.MD.I	musta$faY	musta$fAtayon	PROB	could be with ap ?	
+NOM.MD.C	musta$faY	musta$fAtayon	PROB	could be with ap ?	
+NOM.MP.D.P0	$ay'	Al>a$yA'	OK		
+NOM.MP.I	$ay'	>a$yA'	OK		
+NOM.MP.C	$ay'	>a$yA'	OK		
+NOM.MS.D.P0	juz'	Aljuz'	OK		
+NOM.MS.I	juz'	juz'	OK		
+NOM.MS.C	juz'	juz'	OK		
+NOM.MD.D.P0	juz'	Aljuz>ayon	OK		
+NOM.MD.I	juz'	juz>ayon	OK		
+NOM.MD.C	juz'	juz>ayon	OK		
+NOM.MS.D.P0	suw'	Als~uw'	OK		
+NOM.MS.I	suw'	suw'	OK		
+NOM.MS.C	suw'	suw'	OK		
+NOM.MD.D.P0	suw'	Als~uw'ayon	OK		
+NOM.MD.I	suw'	suw'ayon	OK		
+NOM.MD.C	suw'	suw'ayon	OK		
+NOM.MS.D.P0	taqAwiy	Alt~aqAwiy	OK		
+NOM.MS.I	taqAwiy	taqAwiy	OK		
+NOM.MS.C	taqAwiy	taqAwiy	OK		
+NOM.MD.D.P0	taqAwiy	Alt~aqAwiyayon	OK		
+NOM.MD.I	taqAwiy	taqAwiyayon	OK		
+NOM.MD.C	taqAwiy	taqAwiyayon	OK		
+NOM.MS.D.P0	AiftirA	AlAiftirA	OK		
+NOM.MS.I	AiftirA	AiftirA	OK		
+NOM.MS.C	AiftirA	AiftirA	OK		
+NOM.MD.D.P0	AiftirA	AlAiftirA'ayon	OK		
+NOM.MD.I	AiftirA	AiftirA'ayon	OK		
+NOM.MD.C	AiftirA	AiftirA'ayon	OK		
+NOM.MP.D.P0	AiftirA	AlAiftirA'At	OK		
+NOM.MP.I	AiftirA	AiftirA'At	OK		
+NOM.MP.C	AiftirA	AiftirA'At	OK		
+NOM.MP.D.P0	ban~A	Alban~iyn	OK		
+NOM.MP.I	ban~A	ban~iyn	OK		
+NOM.MP.C	ban~A	ban~iyn	OK		
+NOM.FS.D.P0	dawA	AlAdwiyap	OK		
+NOM.FS.I	dawA	Adwiyap	OK		
+NOM.FS.C	dawA	Adwiyp	OK		
+NOM.MP.C.E0	EAlim	EulamAh	PROB	cond (fixed to A-A')	
+NOM.MP.C.E0	laHm	luHuwmuh	OK		
+NOM.FP.C.E0	dawlap	diwaluh	OK		
+NOM.FP.C.E0	lajnap	lijAnuh	OK		
+NOM.FP.D.P0	TAgyap	AlT~ugApap	PROB	class (fixed)	
+NOM.FP.I	TAgyap	TugApap	PROB	class (fixed)	
+NOM.FP.C	TAgyap	TugApip	PROB	class (fixed)	
+NOM.FP.D.P0.E0	TAgyap		PROB	class (fixed)	
+NOM.FP.C.E0	TAgyap	TugAptuh	PROB	class (fixed)	
+NOM.MS.C.E0	laDamAn	laDamAnuh	OK		
+NOM.MD.C.E0	laDamAn	laDamAnayonuh	OK		
+NOM.MP.C.E0	laDamAn	laDamAnAtuh	OK		
+NOM.MS.D.P0	>asmant	Al>asmant	OK		
+NOM.MS.I	>asmant	>asmant	OK		
+NOM.MS.C	>asmant	>asmant	OK		
+NOM.MS.D.P0.E0	>asmant		OK		
+NOM.MS.C.E0	>asmant	>asmantuh	OK		
+NOM.MD.C.E0	>asmant	>asmantayonuh	OK		
+NOM.MS.C.E0	bA$A	bA$awAh	PROB		
+NOM.MD.C.E0	bA$A	bA$awayonuh	OK		
+NOM.MD.C.E0	bAbA	bAbAhayonuh	OK		
+NOM.MP.C.E0	bA$A	bA$AwAtuh	OK		
+NOM.FP.C.E0	fiyl~A	fiyl~Atuh	OK		
+NOM.MS.C.E0	musta$faY	musta$fAh	OK		
+NOM.MD.C.E0	mustawaY	mustawayayonuh	OK		
+NOM.MP.C.E0	musta$faY	musta$fayAtuh	OK		
+NOM.FP.C.E0	>ugniyap	>agAniyh	OK		
+NOM.FS.C.E0	>um~ap	>um~ituh	OK		
+NOM.FD.C.E0	>um~ap	>um~itayonuh	OK		
+NOM.FP.C.E0	>um~	>um~ahAtuh	OK		
+NOM.MS.D.P0	$iy	AlAi$iy	OK	unchangable	
+NOM.MS.I	$iy	Ai$iy	OK	unchangable	
+NOM.MS.C	$iy	Ai$iy	OK	unchangable	
+NOM.MS.D.P0.E0	$iy		OK	unchangable	
+NOM.MS.C.E0	$iy	Ai$iyh	PROB	unchangable	
+NOM.MD.C.E0	$iy	Ai$iyayonuh	PROB	unchangable	
+NOM.MP.C.E0	$iy	Ai$iyAtuh	PROB		
+NOM.MS.C.E0	jiytAr	jiytAruh	OK		
+NOM.MD.C.E0	jiytAr	jiytArayonuh	OK		
+NOM.MP.C.E0	jiytAr	jiytArAtuh	OK		
+NOM.MS.C.E0	ta>an~iy	ta>an~iyh	OK		
+NOM.MD.C.E0	ta>an~iy	ta>an~iy~ayonuh	OK		
+NOM.MP.C.E0	ta>an~iy	ta>an~iy~Atuh	OK		
+NOM.MP.C.E0	qatiyl	qatlAh	OK		
+NOM.MP.C.E0	jar~AH	jar~AHiynuh	OK		
+NOM.FS.C.E0	jar~AH	jar~AHtuh	OK		
+NOM.FD.C.E0	jar~AH	jar~AHtayonuh	OK		
+NOM.FP.C.E0	jar~AH	jar~AHAtuh	OK		
+NOM.FD.C.E0	>um~	>um~ayonuh	OK		
+NOM.MP.C.E0	mabnaY	mabAniyh	OK		
+NOM.MS.C.E0	rA'	rA'uh	OK		
+NOM.MD.C.E0	rA'	rA'ayonuh	OK		
+NOM.MP.C.E0	rA'	rA'Atuh	OK		
+NOM.FP.C.E0	DaHiy~ap	DaHAyAh	OK		
+NOM.MD.C.E0	maTAfiy	maTAfiyayonuh	OK		
+NOM.MS.C.E0	luwliy	luwliyh	OK		
+NOM.MD.C.E0	luwliy	luwliy~ayonuh	OK		
+NOM.MP.C.E0	luwliy	luwliy~Atuh	OK		
+NOM.MS.C.E0	>ajiyr	>ajiyruh	OK		
+NOM.MS.C.E0	>ajiyr	>ajiyrtuh	OK		
+NOM.MD.C.E0	>ajiyr	>ajiyrayonuh	OK		
+NOM.MD.C.E0	>ajiyr	>ajiyrtayonuh	OK		
+NOM.FS.C.E0	qanAp	qanAtuh	OK		
+NOM.FD.C.E0	qanAp	qanAtayonuh	OK		
+NOM.FP.C.E0	qanAp	qanawAtuh	OK		
+NOM.FS.D.P0	daEwaY	Ald~aEw	PROB	class (fixed)	
+NOM.FS.I	daEwaY	daEw	PROB	class (fixed)	
+NOM.FS.C	daEwaY	daEw	PROB	class (fixed)	
+NOM.FS.D.P0.E0	daEwaY		PROB	class (fixed)	
+NOM.FS.C.E0	daEwaY	daEwuh	PROB	class (fixed)	
+NOM.FD.D.P0	daEwaY	Ald~aEwitayon	PROB	class (fixed)	
+NOM.FD.I	daEwaY	daEwitayon	PROB	class (fixed)	
+NOM.FD.C	daEwaY	daEwitayon	PROB	class (fixed)	
+NOM.FD.D.P0.E0	daEwaY		PROB	class (fixed)	
+NOM.FD.C.E0	daEwaY	daEwitayonuh	PROB	class (fixed)	
+NOM.FP.C.E0	daEwaY	daEwAtuh	OK		
+NOM.FD.C.E0	faHwaY	faHwayonuh	OK		
+NOM.MS.D.P0	fawDaY	AlfawD	PROB	class (fixed)	
+NOM.MS.I	fawDaY	fawD	PROB	class (fixed)	
+NOM.MS.C	fawDaY	fawD	PROB	class (fixed)	
+NOM.MS.D.P0.E0	fawDaY		PROB	class (fixed)	
+NOM.MS.C.E0	fawDaY	fawDuh	PROB	class (fixed)	
+NOM.MD.D.P0	fawDaY	AlfawDayon	PROB	class (fixed)	
+NOM.MD.I	fawDaY	fawDayon	PROB	class (fixed)	
+NOM.MD.C	fawDaY	fawDayon	PROB	class (fixed)	
+NOM.MD.D.P0.E0	fawDaY		PROB	class (fixed)	
+NOM.MD.C.E0	fawDaY	fawDayonuh	PROB	class (fixed)	
+NOM.FD.D.P0	taqwaY	Alt~aqwAtayon	PROB	COND (FIXED)	
+NOM.FD.I	taqwaY	taqwAtayon	PROB	COND (FIXED)	
+NOM.FD.C	taqwaY	taqwAtayon	PROB	COND (FIXED)	
+NOM.FD.D.P0.E0	taqwaY		PROB	COND (FIXED)	
+NOM.FD.C.E0	taqwaY	taqwAtayonuh	PROB	COND (FIXED)	
+NOM.FP.D.P0	taqwaY	Alt~aqwayAt	PROB	COND (FIXED)	
+NOM.FP.I	taqwaY	taqwayAt	PROB	COND (FIXED)	
+NOM.FP.C	taqwaY	taqwayAt	PROB	COND (FIXED)	
+NOM.FP.D.P0.E0	taqwaY		PROB	COND (FIXED)	
+NOM.FP.C.E0	taqwaY	taqwayAtuh	PROB	COND (FIXED)	
+NOM.MS.C.E0	ladaY	ladaYuh	PROB	MOVE	
+NOM.MD.C.E0	ladaY	ladaYayonuh	PROB	MOVE	
+NOM.FS.C.E0	Sifap	Sifatuh	OK		
+NOM.FD.C.E0	Sifap	Sifatayonuh	OK		
+NOM.FP.C.E0	Sifap	SifAtuh	OK		
+NOM.MD.C.E0	musta$faY	musta$fAtayonuh	OK		
+NOM.MP.C.E0	$ay'	>a$yA'uh	OK		
+NOM.MS.C.E0	juz'	juz'uh	OK		
+NOM.MD.C.E0	juz'	juz>ayonuh	OK		
+NOM.MS.C.E0	suw'	suw'uh	OK		
+NOM.MD.C.E0	suw'	suw'ayonuh	OK		
+NOM.MS.C.E0	taqAwiy	taqAwiyh	OK		
+NOM.MD.C.E0	taqAwiy	taqAwiyayonuh	OK		
+NOM.MS.C.E0	AiftirA	AiftirA'uh	OK		
+NOM.MD.C.E0	AiftirA	AiftirA'ayonuh	OK		
+NOM.MP.C.E0	AiftirA	AiftirA'Atuh	OK		
+NOM.MP.C.E0	ban~A	ban~iynuh	PROB	ban~Ayiyn 	
+NOM.FS.C.E0	dawA	Adwiytuh	OK		

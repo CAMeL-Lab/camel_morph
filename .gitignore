@@ -356,7 +356,11 @@ MigrationBackup/
 
 data/
 databases/
-debugging_output/
+debugging_output/tables
+debugging_output/tables_docs
+debugging_output/docs_debugging
+debugging_output/paradigm_debugging
+debugging_output/repr_lemmas
 sandbox_files/
 camel_morph/db_maker.py
 *.zip

@@ -1,0 +1,619 @@
+SIGNATURE	LEMMA	DIAC	QC	COMMENTS	STATUS
+NOM.MS.D.P0	|liy	Al|liy	OK		
+NOM.MS.I	|liy	|liy	OK		
+NOM.MS.C	|liy	|liy	OK		
+NOM.MS.D.P0.E0	|liy		OK		
+NOM.MS.C.E0	|liy		OK		
+NOM.MD.D.P0	|liy	Al|liy~ayon	OK		
+NOM.MD.I	|liy	|liy~ayon	OK		
+NOM.MD.C	|liy	|liy~ayon	OK		
+NOM.MD.D.P0.E0	|liy		OK		
+NOM.MD.C.E0	|liy		OK		
+NOM.MP.D.P0	|liy	Al|liyn	PROB		
+NOM.MP.I	|liy	|liyn	PROB		
+NOM.MP.C	|liy	|liyn	PROB		
+NOM.MP.D.P0.E0	|liy		OK		
+NOM.MP.C.E0	|liy		OK		
+NOM.FS.D.P0	|liy	Al|liy~ap	OK		
+NOM.FS.I	|liy	|liy~ap	OK		
+NOM.FS.C	|liy	|liy~ip	OK		
+NOM.FS.D.P0.E0	|liy		OK		
+NOM.FS.C.E0	|liy		OK		
+NOM.FD.D.P0	|liy	Al|liy~tayon	OK		
+NOM.FD.I	|liy	|liy~tayon	OK		
+NOM.FD.C	|liy	|liy~tayon	OK		
+NOM.FD.D.P0.E0	|liy		OK		
+NOM.FD.C.E0	|liy		OK		
+NOM.FP.D.P0	|liy	Al|liy~At	OK		
+NOM.FP.I	|liy	|liy~At	OK		
+NOM.FP.C	|liy	|liy~At	OK		
+NOM.FP.D.P0.E0	|liy		OK		
+NOM.FP.C.E0	|liy		OK		
+NOM.MS.D.P0	muSir~	AlmuSir~	OK		
+NOM.MS.I	muSir~	muSir~	OK		
+NOM.MS.C	muSir~	muSir~	OK		
+NOM.MS.D.P0.E0	muSir~		OK		
+NOM.MS.C.E0	muSir~		OK		
+NOM.MD.D.P0	muSir~	AlmuSir~ayon	OK		
+NOM.MD.I	muSir~	muSir~ayon	OK		
+NOM.MD.C	muSir~	muSir~ayon	OK		
+NOM.MD.D.P0.E0	muSir~		OK		
+NOM.MD.C.E0	muSir~		OK		
+NOM.MP.D.P0	muSir~	AlmuSir~iyn	OK		
+NOM.MP.I	muSir~	muSir~iyn	OK		
+NOM.MP.C	muSir~	muSir~iyn	OK		
+NOM.MP.D.P0.E0	muSir~		OK		
+NOM.MP.C.E0	muSir~		OK		
+NOM.FS.D.P0	muSir~	AlmuSir~ap	OK		
+NOM.FS.I	muSir~	muSir~ap	OK		
+NOM.FS.C	muSir~	muSir~ip	OK		
+NOM.FS.D.P0.E0	muSir~		OK		
+NOM.FS.C.E0	muSir~		OK		
+NOM.FD.D.P0	muSir~	AlmuSir~itayon	OK		
+NOM.FD.I	muSir~	muSir~itayon	OK		
+NOM.FD.C	muSir~	muSir~itayon	OK		
+NOM.FD.D.P0.E0	muSir~		OK		
+NOM.FD.C.E0	muSir~		OK		
+NOM.FP.D.P0	muSir~	AlmuSir~At	OK		
+NOM.FP.I	muSir~	muSir~At	OK		
+NOM.FP.C	muSir~	muSir~At	OK		
+NOM.FP.D.P0.E0	muSir~		OK		
+NOM.FP.C.E0	muSir~		OK		
+NOM.MS.D.P0	bA*il	AlbA*il'	PROB	INSERTED HAMZA	
+NOM.MS.I	bA*il	bA*il'	PROB	INSERTED HAMZA	
+NOM.MS.C	bA*il	bA*il'	PROB	INSERTED HAMZA	
+NOM.MS.D.P0.E0	bA*il		OK		
+NOM.MS.C.E0	bA*il		OK		
+NOM.MD.D.P0	bA*il		OK		
+NOM.MD.I	bA*il		PROB		
+NOM.MD.C	bA*il		PROB		
+NOM.MD.D.P0.E0	bA*il		OK		
+NOM.MD.C.E0	bA*il		OK		
+NOM.MP.D.P0	bA*il	AlbA*il}iyn	PROB	wrong´cond-s 	
+NOM.MP.I	bA*il	bA*il}iyn	PROB	wrong´cond-s 	
+NOM.MP.C	bA*il	bA*il}iyn	PROB	wrong´cond-s 	
+NOM.MP.D.P0.E0	bA*il		OK		
+NOM.MP.C.E0	bA*il		OK		
+NOM.FS.D.P0	bA*il	AlbA*il'ap	PROB	wrong´cond-s 	
+NOM.FS.I	bA*il	bA*il'ap	PROB	wrong´cond-s 	
+NOM.FS.C	bA*il	bA*il'ip	PROB	wrong´cond-s 	
+NOM.FS.D.P0.E0	bA*il		OK		
+NOM.FS.C.E0	bA*il		OK		
+NOM.FD.D.P0	bA*il	AlbA*il'itayon	PROB	wrong´cond-s 	
+NOM.FD.I	bA*il	bA*il'itayon	PROB	wrong´cond-s 	
+NOM.FD.C	bA*il	bA*il'itayon	PROB	wrong´cond-s 	
+NOM.FD.D.P0.E0	bA*il		OK		
+NOM.FD.C.E0	bA*il		OK		
+NOM.FP.D.P0	bA*il	AlbA*il'At	PROB	wrong´cond-s 	
+NOM.FP.I	bA*il	bA*il'At	PROB	wrong´cond-s 	
+NOM.FP.C	bA*il	bA*il'At	PROB	wrong´cond-s 	
+NOM.FP.D.P0.E0	bA*il		OK		
+NOM.FP.C.E0	bA*il		OK		
+NOM.MS.D.P0	muEab~a>	AlmuEab~a>a>	PROB	WRONG STEM	
+NOM.MS.I	muEab~a>	muEab~a>a>	PROB	WRONG STEM	
+NOM.MS.C	muEab~a>	muEab~a>a>	PROB	WRONG STEM	
+NOM.MS.D.P0.E0	muEab~a>		OK		
+NOM.MS.C.E0	muEab~a>		OK		
+NOM.MD.D.P0	muEab~a>		OK		
+NOM.MD.I	muEab~a>		PROB		
+NOM.MD.C	muEab~a>		PROB		
+NOM.MD.D.P0.E0	muEab~a>		OK		
+NOM.MD.C.E0	muEab~a>		OK		
+NOM.MP.D.P0	muEab~a>	AlmuEab~a>}iyn	PROB	WRONG STEM	
+NOM.MP.I	muEab~a>	muEab~a>}iyn	PROB	WRONG STEM	
+NOM.MP.C	muEab~a>	muEab~a>}iyn	PROB	WRONG STEM	
+NOM.MP.D.P0.E0	muEab~a>		OK		
+NOM.MP.C.E0	muEab~a>		OK		
+NOM.FS.D.P0	muEab~a>	AlmuEab~a>a>ap	PROB	WRONG STEM	
+NOM.FS.I	muEab~a>	muEab~a>a>ap	PROB	WRONG STEM	
+NOM.FS.C	muEab~a>	muEab~a>a>ip	PROB	WRONG STEM	
+NOM.FS.D.P0.E0	muEab~a>		OK		
+NOM.FS.C.E0	muEab~a>		OK		
+NOM.FD.D.P0	muEab~a>	AlmuEab~a>}itayon	PROB	WRONG STEM	
+NOM.FD.I	muEab~a>	muEab~a>}itayon	PROB	WRONG STEM	
+NOM.FD.C	muEab~a>	muEab~a>}itayon	PROB	WRONG STEM	
+NOM.FD.D.P0.E0	muEab~a>		OK		
+NOM.FD.C.E0	muEab~a>		OK		
+NOM.FP.D.P0	muEab~a>	AlmuEab~a>|t	PROB	WRONG STEM	
+NOM.FP.I	muEab~a>	muEab~a>|t	PROB	WRONG STEM	
+NOM.FP.C	muEab~a>	muEab~a>|t	PROB	WRONG STEM	
+NOM.FP.D.P0.E0	muEab~a>		OK		
+NOM.FP.C.E0	muEab~a>		OK		
+NOM.MS.D.P0	|hil	Al|hil	OK		
+NOM.MS.I	|hil	|hil	OK		
+NOM.MS.C	|hil	|hil	OK		
+NOM.MS.D.P0.E0	|hil		OK		
+NOM.MS.C.E0	|hil		OK		
+NOM.MD.D.P0	|hil	Al|hlayon	OK		
+NOM.MD.I	|hil	|hlayon	OK		
+NOM.MD.C	|hil	|hlayon	OK		
+NOM.MD.D.P0.E0	|hil		OK		
+NOM.MD.C.E0	|hil		OK		
+NOM.MP.D.P0	|hil	Al|hliyn	OK		
+NOM.MP.I	|hil	|hliyn	OK		
+NOM.MP.C	|hil	|hliyn	OK		
+NOM.MP.D.P0.E0	|hil		OK		
+NOM.MP.C.E0	|hil		OK		
+NOM.FS.D.P0	|hil	Al|hlap	OK		
+NOM.FS.I	|hil	|hlap	OK		
+NOM.FS.C	|hil		PROB		
+NOM.FS.D.P0.E0	|hil		OK		
+NOM.FS.C.E0	|hil		OK		
+NOM.FD.D.P0	|hil	Al|hiltayon	OK		
+NOM.FD.I	|hil	|hiltayon	OK		
+NOM.FD.C	|hil	|hiltayon	OK		
+NOM.FD.D.P0.E0	|hil		OK		
+NOM.FD.C.E0	|hil		OK		
+NOM.FP.D.P0	|hil	Al|hlAt	OK		
+NOM.FP.I	|hil	|hlAt	OK		
+NOM.FP.C	|hil	|hlAt	OK		
+NOM.FP.D.P0.E0	|hil		OK		
+NOM.FP.C.E0	|hil		OK		
+NOM.MS.D.P0	nAwiy	Aln~Awiy	OK		
+NOM.MS.I	nAwiy	nAwiy	OK		
+NOM.MS.C	nAwiy	nAwiy	OK		
+NOM.MS.D.P0.E0	nAwiy		OK		
+NOM.MS.C.E0	nAwiy		OK		
+NOM.MD.D.P0	nAwiy	Aln~Awiyayon	OK		
+NOM.MD.I	nAwiy	nAwiyayon	OK		
+NOM.MD.C	nAwiy	nAwiyayon	OK		
+NOM.MD.D.P0.E0	nAwiy		OK		
+NOM.MD.C.E0	nAwiy		OK		
+NOM.MP.D.P0	nAwiy	Aln~Awiyiyn	PROB		
+NOM.MP.I	nAwiy	nAwiyiyn	PROB		
+NOM.MP.C	nAwiy	nAwiyiyn	PROB	???	
+NOM.MP.D.P0.E0	nAwiy		OK		
+NOM.MP.C.E0	nAwiy		OK		
+NOM.FS.D.P0	nAwiy	Aln~Awiyap	OK		
+NOM.FS.I	nAwiy	nAwiyap	OK		
+NOM.FS.C	nAwiy	nAwiyp	OK		
+NOM.FS.D.P0.E0	nAwiy		OK		
+NOM.FS.C.E0	nAwiy		OK		
+NOM.FD.D.P0	nAwiy	Aln~Awiytayon	OK		
+NOM.FD.I	nAwiy	nAwiytayon	OK		
+NOM.FD.C	nAwiy	nAwiytayon	OK		
+NOM.FD.D.P0.E0	nAwiy		OK		
+NOM.FD.C.E0	nAwiy		OK		
+NOM.FP.D.P0	nAwiy	Aln~AwiyAt	OK		
+NOM.FP.I	nAwiy	nAwiyAt	OK		
+NOM.FP.C	nAwiy	nAwiyAt	OK		
+NOM.FP.D.P0.E0	nAwiy		OK		
+NOM.FP.C.E0	nAwiy		OK		
+NOM.MS.D.P0	lAzim	All~Azim	OK		
+NOM.MS.I	lAzim	lAzim	OK		
+NOM.MS.C	lAzim	lAzim	OK		
+NOM.MS.D.P0.E0	lAzim		OK		
+NOM.MS.C.E0	lAzim		OK		
+NOM.MD.D.P0	lAzim	All~Azmayon	OK		
+NOM.MD.I	lAzim	lAzmayon	OK		
+NOM.MD.C	lAzim	lAzmayon	OK		
+NOM.MD.D.P0.E0	lAzim		OK		
+NOM.MD.C.E0	lAzim		OK		
+NOM.MP.D.P0	lAzim	All~Azmiyn	OK		
+NOM.MP.I	lAzim	lAzmiyn	OK		
+NOM.MP.C	lAzim	lAzmiyn	OK		
+NOM.MP.D.P0.E0	lAzim		OK		
+NOM.MP.C.E0	lAzim		OK		
+NOM.FS.D.P0	lAzim	All~Azmap	OK		
+NOM.FS.I	lAzim	lAzmap	OK		
+NOM.FS.C	lAzim	lAzmip	OK		
+NOM.FS.D.P0.E0	lAzim		OK		
+NOM.FS.C.E0	lAzim		OK		
+NOM.FD.D.P0	lAzim	All~Azimtayon	OK		
+NOM.FD.I	lAzim	lAzimtayon	OK		
+NOM.FD.C	lAzim	lAzimtayon	OK		
+NOM.FD.D.P0.E0	lAzim		OK		
+NOM.FD.C.E0	lAzim		OK		
+NOM.FP.D.P0	lAzim	All~AzmAt	OK		
+NOM.FP.I	lAzim	lAzmAt	OK		
+NOM.FP.C	lAzim	lAzmAt	OK		
+NOM.FP.D.P0.E0	lAzim		OK		
+NOM.FP.C.E0	lAzim		OK		
+NOM.MS.D.P0	>aw~al	Al>uwl~al	PROB	wrong strem 	
+NOM.MS.I	>aw~al	>uwl~al	PROB	wrong strem 	
+NOM.MS.C	>aw~al	>uwl~al	PROB	wrong strem 	
+NOM.MS.D.P0.E0	>aw~al		OK		
+NOM.MS.C.E0	>aw~al		OK		
+NOM.MD.D.P0	>aw~al	Al>uwl~alayon	PROB	wrong strem 	
+NOM.MD.I	>aw~al	>uwl~alayon	PROB	wrong strem 	
+NOM.MD.C	>aw~al	>uwl~alayon	PROB	wrong strem 	
+NOM.MD.D.P0.E0	>aw~al		OK		
+NOM.MD.C.E0	>aw~al		OK		
+NOM.MP.D.P0	mubar~ir	Almubar~iriyn	OK		
+NOM.MP.D.P0	mubar~ir	Almubar~irAt	PROB		
+NOM.MP.I	mubar~ir	mubar~iriyn	OK		
+NOM.MP.I	mubar~ir	mubar~irAt	PROB		
+NOM.MP.C	mubar~ir	mubar~iriyn	OK		
+NOM.MP.C	mubar~ir	mubar~irAt	PROB		
+NOM.MP.D.P0.E0	mubar~ir		OK		
+NOM.MP.C.E0	mubar~ir		OK		
+NOM.MP.D.P0	Hur~	Al>aHrAr	OK		
+NOM.MP.I	Hur~	>aHrAr	OK		
+NOM.MP.C	Hur~	>aHrAr	OK		
+NOM.MP.D.P0.E0	Hur~		OK		
+NOM.MP.C.E0	Hur~		OK		
+NOM.MS.D.P0	labaniy	All~abaniy	OK		
+NOM.MS.I	labaniy	labaniy	OK		
+NOM.MS.C	labaniy	labaniy	OK		
+NOM.MS.D.P0.E0	labaniy		OK		
+NOM.MS.C.E0	labaniy		OK		
+NOM.MD.D.P0	labaniy	All~abaniy~ayon	OK		
+NOM.MD.I	labaniy	labaniy~ayon	OK		
+NOM.MD.C	labaniy	labaniy~ayon	OK		
+NOM.MD.D.P0.E0	labaniy		OK		
+NOM.MD.C.E0	labaniy		OK		
+NOM.MP.D.P0	labaniy	All~abaniyn	PROB		
+NOM.MP.I	labaniy	labaniyn	PROB		
+NOM.MP.C	labaniy	labaniyn	PROB		
+NOM.MP.D.P0.E0	labaniy		OK		
+NOM.MP.C.E0	labaniy		OK		
+NOM.FS.D.P0	labaniy	All~abaniy~ap	OK		
+NOM.FS.I	labaniy	labaniy~ap	OK		
+NOM.FS.C	labaniy	labaniy~ip	OK		
+NOM.FS.D.P0.E0	labaniy		OK		
+NOM.FS.C.E0	labaniy		OK		
+NOM.FD.D.P0	labaniy	All~abaniy~tayon	OK		
+NOM.FD.I	labaniy	labaniy~tayon	OK		
+NOM.FD.C	labaniy	labaniy~tayon	OK		
+NOM.FD.D.P0.E0	labaniy		OK		
+NOM.FD.C.E0	labaniy		OK		
+NOM.FP.D.P0	labaniy	All~abaniy~At	OK		
+NOM.FP.I	labaniy	labaniy~At	OK		
+NOM.FP.C	labaniy	labaniy~At	OK		
+NOM.FP.D.P0.E0	labaniy		OK		
+NOM.FP.C.E0	labaniy		OK		
+NOM.MS.D.P0	Hat~aY	AlHat~aY	PROB	POS	
+NOM.MS.I	Hat~aY	Hat~aY	PROB	POS	
+NOM.MS.C	Hat~aY	Hat~aY	PROB	POS	
+NOM.MS.D.P0.E0	Hat~aY		OK		
+NOM.MS.C.E0	Hat~aY		OK		
+NOM.MD.D.P0	musam~aY	Almusam~ayayon	OK		
+NOM.MD.I	musam~aY	musam~ayayon	OK		
+NOM.MD.C	musam~aY	musam~ayayon	OK		
+NOM.MD.D.P0.E0	musam~aY		OK		
+NOM.MD.C.E0	musam~aY		OK		
+NOM.MP.D.P0	musam~aY	Almusam~iyn	OK		
+NOM.MP.I	musam~aY	musam~iyn	OK		
+NOM.MP.C	musam~aY	musam~iyn	OK		
+NOM.MP.D.P0.E0	musam~aY		OK		
+NOM.MP.C.E0	musam~aY		OK		
+NOM.FS.D.P0	musam~aY	Almusam~Ap	OK		
+NOM.FS.I	musam~aY	musam~Ap	OK		
+NOM.FS.C	musam~aY	musam~Ap	OK		
+NOM.FS.D.P0.E0	musam~aY		OK		
+NOM.FS.C.E0	musam~aY		OK		
+NOM.FD.D.P0	musam~aY		OK		
+NOM.FD.I	musam~aY		PROB		
+NOM.FD.C	musam~aY		PROB		
+NOM.FD.D.P0.E0	musam~aY		OK		
+NOM.FD.C.E0	musam~aY		OK		
+NOM.FP.D.P0	musam~aY	Almusam~ayAt	OK		
+NOM.FP.I	musam~aY	musam~ayAt	OK		
+NOM.FP.C	musam~aY	musam~ayAt	OK		
+NOM.FP.D.P0.E0	musam~aY		OK		
+NOM.FP.C.E0	musam~aY		OK		
+NOM.MS.D.P0	mubar~ir	Almubar~ir	OK		
+NOM.MS.D.P0	mubar~ir	Almubar~irap	PROB		
+NOM.MS.I	mubar~ir	mubar~ir	OK		
+NOM.MS.I	mubar~ir	mubar~irap	PROB		
+NOM.MS.C	mubar~ir	mubar~ir	OK		
+NOM.MS.C	mubar~ir	mubar~irip	PROB		
+NOM.MS.D.P0.E0	mubar~ir		OK		
+NOM.MS.C.E0	mubar~ir		OK		
+NOM.MD.D.P0	mubar~ir	Almubar~irayon	OK		
+NOM.MD.D.P0	mubar~ir	Almubar~irtayon	PROB		
+NOM.MD.I	mubar~ir	mubar~irayon	OK		
+NOM.MD.I	mubar~ir	mubar~irtayon	PROB		
+NOM.MD.C	mubar~ir	mubar~irayon	OK		
+NOM.MD.C	mubar~ir	mubar~irtayon	PROB		
+NOM.MD.D.P0.E0	mubar~ir		OK		
+NOM.MD.C.E0	mubar~ir		OK		
+NOM.MS.D.P0	AintixAbiy	AlAintixAbiy	OK		
+NOM.MS.I	AintixAbiy	AintixAbiy	OK		
+NOM.MS.C	AintixAbiy	AintixAbiy	OK		
+NOM.MS.D.P0.E0	AintixAbiy		OK		
+NOM.MS.C.E0	AintixAbiy		OK		
+NOM.MD.D.P0	AintixAbiy	AlAintixAbiy~ayon	OK		
+NOM.MD.I	AintixAbiy	AintixAbiy~ayon	OK		
+NOM.MD.C	AintixAbiy	AintixAbiy~ayon	OK		
+NOM.MD.D.P0.E0	AintixAbiy		OK		
+NOM.MD.C.E0	AintixAbiy		OK		
+NOM.MP.D.P0	AintixAbiy	AlAintixAbiy~At	OK		
+NOM.MP.I	AintixAbiy	AintixAbiy~At	OK		
+NOM.MP.C	AintixAbiy	AintixAbiy~At	OK		
+NOM.MP.D.P0.E0	AintixAbiy		OK		
+NOM.MP.C.E0	AintixAbiy		OK		
+NOM.MP.D.P0	kibiyr	AlkubAr	OK		
+NOM.MP.I	kibiyr	kubAr	OK		
+NOM.MP.C	kibiyr	kubAr	OK		
+NOM.MP.D.P0.E0	kibiyr		OK		
+NOM.MP.C.E0	kibiyr		OK		
+NOM.MP.D.P0	muhad~iy	Almuhad~iyn	OK		
+NOM.MP.D.P0	muhad~iy	Almuhad~iy~At	PROB		
+NOM.MP.I	muhad~iy	muhad~iyn	OK		
+NOM.MP.I	muhad~iy	muhad~iy~At	PROB		
+NOM.MP.C	muhad~iy	muhad~iyn	OK		
+NOM.MP.C	muhad~iy	muhad~iy~At	PROB		
+NOM.MP.D.P0.E0	muhad~iy		OK		
+NOM.MP.C.E0	muhad~iy		OK		
+NOM.MS.D.P0	muhad~iy	Almuhad~iy	OK		
+NOM.MS.D.P0	muhad~iy	Almuhad~iy~ap	PROB		
+NOM.MS.I	muhad~iy	muhad~iy	OK		
+NOM.MS.I	muhad~iy	muhad~iy~ap	PROB		
+NOM.MS.C	muhad~iy	muhad~iy	OK		
+NOM.MS.C	muhad~iy	muhad~iy~ip	PROB		
+NOM.MS.D.P0.E0	muhad~iy		OK		
+NOM.MS.C.E0	muhad~iy		OK		
+NOM.MD.D.P0	muhad~iy	Almuhad~iy~ayon	OK		
+NOM.MD.D.P0	muhad~iy	Almuhad~iy~tayon	PROB		
+NOM.MD.I	muhad~iy	muhad~iy~ayon	OK		
+NOM.MD.I	muhad~iy	muhad~iy~tayon	PROB		
+NOM.MD.C	muhad~iy	muhad~iy~ayon	OK		
+NOM.MD.C	muhad~iy	muhad~iy~tayon	PROB		
+NOM.MD.D.P0.E0	muhad~iy		OK		
+NOM.MD.C.E0	muhad~iy		OK		
+NOM.MP.D.P0	Hay~	Al>aHyA'	OK		
+NOM.MP.I	Hay~	>aHyA'	OK		
+NOM.MP.C	Hay~	>aHyA'	OK		
+NOM.MP.D.P0.E0	Hay~		OK		
+NOM.MP.C.E0	Hay~		OK		
+NOM.FS.D.P0	>axDar	AlxaDrA	OK		
+NOM.FS.I	>axDar	xaDrA	OK		
+NOM.FS.C	>axDar	xaDrA	OK		
+NOM.FS.D.P0.E0	>axDar		OK		
+NOM.FS.C.E0	>axDar		OK		
+NOM.FS.D.P0	SafrA		PROB	wrong Cond-s Cond-t	
+NOM.FS.I	SafrA		PROB	wrong Cond-s Cond-t	
+NOM.FS.C	SafrA		PROB	wrong Cond-s Cond-t	
+NOM.FS.D.P0.E0	SafrA		OK	wrong Cond-s Cond-t	
+NOM.FS.C.E0	SafrA		OK	wrong Cond-s Cond-t	
+NOM.FD.D.P0	SafrA		PROB	wrong Cond-s Cond-t	
+NOM.FD.I	SafrA		PROB	wrong Cond-s Cond-t	
+NOM.FD.C	SafrA		PROB	wrong Cond-s Cond-t	
+NOM.FD.D.P0.E0	SafrA		OK	wrong Cond-s Cond-t	
+NOM.FD.C.E0	SafrA		OK	wrong Cond-s Cond-t	
+NOM.MS.D.P0	bariy'	Albariy'	OK		
+NOM.MS.I	bariy'	bariy'	OK		
+NOM.MS.C	bariy'	bariy'	OK		
+NOM.MS.D.P0.E0	bariy'		OK		
+NOM.MS.C.E0	bariy'		OK		
+NOM.MD.D.P0	bariy'		OK		
+NOM.MD.I	bariy'		PROB		
+NOM.MD.C	bariy'		PROB		
+NOM.MD.D.P0.E0	bariy'		OK		
+NOM.MD.C.E0	bariy'		OK		
+NOM.MP.D.P0	bariy'	Albariy}iyn	OK		
+NOM.MP.I	bariy'	bariy}iyn	OK		
+NOM.MP.C	bariy'	bariy}iyn	OK		
+NOM.MP.D.P0.E0	bariy'		OK		
+NOM.MP.C.E0	bariy'		OK		
+NOM.FS.D.P0	bariy'	Albariy>ap	PROB	WRONG HAMZA	
+NOM.FS.I	bariy'	bariy>ap	PROB	WRONG HAMZA	
+NOM.FS.C	bariy'	bariy>ip	PROB	WRONG HAMZA	
+NOM.FS.D.P0.E0	bariy'		OK		
+NOM.FS.C.E0	bariy'		OK		
+NOM.FD.D.P0	bariy'		OK		
+NOM.FD.I	bariy'		PROB		
+NOM.FD.C	bariy'		PROB		
+NOM.FD.D.P0.E0	bariy'		OK		
+NOM.FD.C.E0	bariy'		OK		
+NOM.FP.D.P0	bariy'		OK		
+NOM.FP.I	bariy'		PROB		
+NOM.FP.C	bariy'		PROB		
+NOM.FP.D.P0.E0	bariy'		OK		
+NOM.FP.C.E0	bariy'		OK		
+NOM.FS.D.P0	>uxraY	Al>uxraY	OK		
+NOM.FS.I	>uxraY	>uxraY	OK		
+NOM.FS.C	>uxraY	>uxraY	OK		
+NOM.FS.D.P0.E0	>uxraY		OK		
+NOM.FS.C.E0	>uxraY		OK		
+NOM.FD.D.P0.E0	<iswid		OK		
+NOM.FD.C.E0	<iswid		OK		
+NOM.MS.D.P0	minsA'	AlminsA'	OK		
+NOM.MS.I	minsA'	minsA'	OK		
+NOM.MS.C	minsA'	minsA'	OK		
+NOM.MS.D.P0.E0	minsA'		OK		
+NOM.MS.C.E0	minsA'		OK		
+NOM.MD.D.P0	minsA'		OK		
+NOM.MD.I	minsA'		PROB		
+NOM.MD.C	minsA'		PROB		
+NOM.MD.D.P0.E0	minsA'		OK		
+NOM.MD.C.E0	minsA'		OK		
+NOM.MP.D.P0	minsA'	AlminsA'At	OK		
+NOM.MP.I	minsA'	minsA'At	OK		
+NOM.MP.C	minsA'	minsA'At	OK		
+NOM.MP.D.P0.E0	minsA'		OK		
+NOM.MP.C.E0	minsA'		OK		
+NOM.MS.D.P0	mitsA'	AlmitsA'	OK		
+NOM.MS.I	mitsA'	mitsA'	OK		
+NOM.MS.C	mitsA'	mitsA'	OK		
+NOM.MS.D.P0.E0	mitsA'		OK		
+NOM.MS.C.E0	mitsA'		OK		
+NOM.MD.D.P0	mitsA'		OK		
+NOM.MD.I	mitsA'		PROB		
+NOM.MD.C	mitsA'		PROB		
+NOM.MD.D.P0.E0	mitsA'		OK		
+NOM.MD.C.E0	mitsA'		OK		
+NOM.MP.D.P0	mitsA'	AlmitsA}iyn	OK		
+NOM.MP.I	mitsA'	mitsA}iyn	OK		
+NOM.MP.C	mitsA'	mitsA}iyn	OK		
+NOM.MP.D.P0.E0	mitsA'		OK		
+NOM.MP.C.E0	mitsA'		OK		
+NOM.FS.D.P0	mitsA'	AlmitsA'ap	OK		
+NOM.FS.I	mitsA'	mitsA'ap	OK		
+NOM.FS.C	mitsA'	mitsA'ip	OK		
+NOM.FS.D.P0.E0	mitsA'		OK		
+NOM.FS.C.E0	mitsA'		OK		
+NOM.FD.D.P0	mitsA'		OK		
+NOM.FD.I	mitsA'		PROB		
+NOM.FD.C	mitsA'		PROB		
+NOM.FD.D.P0.E0	mitsA'		OK		
+NOM.FD.C.E0	mitsA'		OK		
+NOM.FP.D.P0	mitsA'	AlmitsA'At	OK		
+NOM.FP.I	mitsA'	mitsA'At	OK		
+NOM.FP.C	mitsA'	mitsA'At	OK		
+NOM.FP.D.P0.E0	mitsA'		OK		
+NOM.FP.C.E0	mitsA'		OK		
+NOM.FD.D.P0	>uxraY		OK		
+NOM.FD.I	>uxraY		PROB		
+NOM.FD.C	>uxraY		PROB		
+NOM.FD.D.P0.E0	>uxraY		OK		
+NOM.FD.C.E0	>uxraY		OK		
+NOM.FP.D.P0	>uxraY	Al>uxrayAt	OK		
+NOM.FP.I	>uxraY	>uxrayAt	OK		
+NOM.FP.C	>uxraY	>uxrayAt	OK		
+NOM.FP.D.P0.E0	>uxraY		OK		
+NOM.FP.C.E0	>uxraY		OK		
+NOM.MS.D.P0	mistiqAyA	AlmistiqAyA	PROB	#aA	
+NOM.MS.I	mistiqAyA	mistiqAyA	PROB	#aA	
+NOM.MS.C	mistiqAyA	mistiqAyA	PROB	#aA	
+NOM.MS.D.P0.E0	mistiqAyA		OK		
+NOM.MS.C.E0	mistiqAyA		OK		
+NOM.MD.D.P0	mistiqAyA		OK		
+NOM.MD.I	mistiqAyA		PROB		
+NOM.MD.C	mistiqAyA		PROB		
+NOM.MD.D.P0.E0	mistiqAyA		OK		
+NOM.MD.C.E0	mistiqAyA		OK		
+NOM.MP.D.P0	mistiqAyA	AlmistiqAyA}iyn	PROB	#aA	
+NOM.MP.I	mistiqAyA	mistiqAyA}iyn	PROB	#aA	
+NOM.MP.C	mistiqAyA	mistiqAyA}iyn	PROB	#aA	
+NOM.MP.D.P0.E0	mistiqAyA		OK		
+NOM.MP.C.E0	mistiqAyA		OK		
+NOM.FP.D.P0	mistiqAyA	AlmistiqAyA'At	PROB	#aA	
+NOM.FP.I	mistiqAyA	mistiqAyA'At	PROB	#aA	
+NOM.FP.C	mistiqAyA	mistiqAyA'At	PROB	#aA	
+NOM.FP.D.P0.E0	mistiqAyA		OK		
+NOM.FP.C.E0	mistiqAyA		OK		
+NOM.MS.D.P0	>ay~uhA	Al>ay~uhA	PROB	POS	
+NOM.MS.I	>ay~uhA	>ay~uhA	PROB	POS	
+NOM.MS.C	>ay~uhA	>ay~uhA	PROB	POS	
+NOM.MS.D.P0.E0	>ay~uhA		PROB		
+NOM.MS.C.E0	>ay~uhA		OK		
+NOM.MS.D.P0	AistinjaliynA	AlAistinjaliynA	OK		
+NOM.MS.I	AistinjaliynA	AistinjaliynA	OK		
+NOM.MS.C	AistinjaliynA	AistinjaliynA	OK		
+NOM.MS.D.P0.E0	AistinjaliynA		OK		
+NOM.MS.C.E0	AistinjaliynA		OK		
+NOM.MD.D.P0	AistinjaliynA		OK		
+NOM.MD.I	AistinjaliynA		PROB		
+NOM.MD.C	AistinjaliynA		PROB		
+NOM.MD.D.P0.E0	AistinjaliynA		OK		
+NOM.MD.C.E0	AistinjaliynA		OK		
+NOM.MP.D.P0	AistinjaliynA	AlAistinjaliynA'At	PROB	INSERTED HAMYA	
+NOM.MP.I	AistinjaliynA	AistinjaliynA'At	PROB	INSERTED HAMYA	
+NOM.MP.C	AistinjaliynA	AistinjaliynA'At	PROB	INSERTED HAMYA	
+NOM.MP.D.P0.E0	AistinjaliynA		OK		
+NOM.MP.C.E0	AistinjaliynA		OK		
+NOM.MD.D.P0	nAwiy	Aln~Awyayon	OK		
+NOM.MD.I	nAwiy	nAwyayon	OK		
+NOM.MD.C	nAwiy	nAwyayon	OK		
+NOM.MP.D.P0	nAwiy	Aln~Awyiyn	OK		
+NOM.MP.I	nAwiy	nAwyiyn	OK		
+NOM.MP.C	nAwiy	nAwyiyn	OK		
+NOM.FS.D.P0	nAwiy	Aln~Awyap	OK		
+NOM.FS.I	nAwiy	nAwyap	OK		
+NOM.FS.C	nAwiy	nAwyip	OK		
+NOM.FP.D.P0	nAwiy	Aln~AwyAt	OK		
+NOM.FP.I	nAwiy	nAwyAt	OK		
+NOM.FP.C	nAwiy	nAwyAt	OK		
+NOM.MP.D.P0	|liy	Al|liy~iyn	OK		
+NOM.MP.I	|liy	|liy~iyn	OK		
+NOM.MP.C	|liy	|liy~iyn	OK		
+NOM.FS.C	|hil	|hlip	OK		
+NOM.MP.D.P0	$arqAwiy	Al$~araqwap	OK		
+NOM.MP.I	$arqAwiy	$araqwap	OK		
+NOM.MP.C	$arqAwiy	$araqwip	OK		
+NOM.MP.D.P0.E0	$arqAwiy		OK		
+NOM.MP.C.E0	$arqAwiy		OK		
+NOM.MP.D.P0	muhad~iy	Almuhad~iy~iyn	OK		
+NOM.MP.I	muhad~iy	muhad~iy~iyn	OK		
+NOM.MP.C	muhad~iy	muhad~iy~iyn	OK		
+NOM.MS.D.P0	musam~aY	Almusam~aY	OK		
+NOM.MS.I	musam~aY	musam~aY	OK		
+NOM.MS.C	musam~aY	musam~aY	OK		
+NOM.MS.D.P0.E0	musam~aY		OK		
+NOM.MS.C.E0	musam~aY		OK		
+NOM.MP.D.P0	labaniy	All~abaniy~iyn	OK		
+NOM.MP.I	labaniy	labaniy~iyn	OK		
+NOM.MP.C	labaniy	labaniy~iyn	OK		
+NOM.MS.D.P0	SafrA	AlS~afrA	OK		
+NOM.MS.I	SafrA	SafrA	OK		
+NOM.MS.C	SafrA	SafrA	OK		
+NOM.MS.D.P0.E0	SafrA		OK		
+NOM.MS.C.E0	SafrA		OK		
+NOM.MD.D.P0	SafrA	AlS~afrayon	PROB		
+NOM.MD.I	SafrA	Safrayon	PROB		
+NOM.MD.C	SafrA	Safrayon	PROB		
+NOM.MD.D.P0.E0	SafrA		OK		
+NOM.MD.C.E0	SafrA		OK		
+NOM.MD.D.P0	bariy'	Albariy}ayon	OK		
+NOM.MD.I	bariy'	bariy}ayon	OK		
+NOM.MD.C	bariy'	bariy}ayon	OK		
+NOM.FS.D.P0	bariy'	Albariy}ap	OK		
+NOM.FS.I	bariy'	bariy}ap	OK		
+NOM.FS.C	bariy'	bariy}ip	OK		
+NOM.FD.D.P0	bariy'	Albariy}tayon	OK		
+NOM.FD.I	bariy'	bariy}tayon	OK		
+NOM.FD.C	bariy'	bariy}tayon	OK		
+NOM.FP.D.P0	bariy'	Albariy}At	OK		
+NOM.FP.I	bariy'	bariy}At	OK		
+NOM.FP.C	bariy'	bariy}At	OK		
+NOM.FD.D.P0	musam~aY	Almusam~Atayon	OK		
+NOM.FD.I	musam~aY	musam~Atayon	OK		
+NOM.FD.C	musam~aY	musam~Atayon	OK		
+NOM.MD.D.P0	muEab~a>	AlmuEab~a>a>ayon	PROB	WRONG STEM	
+NOM.MD.I	muEab~a>	muEab~a>a>ayon	PROB	WRONG STEM	
+NOM.MD.C	muEab~a>	muEab~a>a>ayon	PROB	WRONG STEM	
+NOM.FD.D.P0	muEab~a>	AlmuEab~a>a>tayon	PROB	WRONG STEM	
+NOM.FD.I	muEab~a>	muEab~a>a>tayon	PROB	WRONG STEM	
+NOM.FD.C	muEab~a>	muEab~a>a>tayon	PROB	WRONG STEM	
+NOM.MS.D.P0	ban~A'	Alban~A'	OK		
+NOM.MS.I	ban~A'	ban~A'	OK		
+NOM.MS.C	ban~A'	ban~A'	OK		
+NOM.MS.D.P0.E0	ban~A'		OK		
+NOM.MS.C.E0	ban~A'		OK		
+NOM.MD.D.P0	ban~A'	Alban~A'ayon	OK		
+NOM.MD.I	ban~A'	ban~A'ayon	OK		
+NOM.MD.C	ban~A'	ban~A'ayon	OK		
+NOM.MD.D.P0.E0	ban~A'		OK		
+NOM.MD.C.E0	ban~A'		OK		
+NOM.MP.D.P0	ban~A'	Alban~A}iyn	OK		
+NOM.MP.I	ban~A'	ban~A}iyn	OK		
+NOM.MP.C	ban~A'	ban~A}iyn	OK		
+NOM.MP.D.P0.E0	ban~A'		OK		
+NOM.MP.C.E0	ban~A'		OK		
+NOM.FS.D.P0	ban~A'	Alban~A'ap	OK		
+NOM.FS.I	ban~A'	ban~A'ap	OK		
+NOM.FS.C	ban~A'	ban~A'ip	OK		
+NOM.FS.D.P0.E0	ban~A'		OK		
+NOM.FS.C.E0	ban~A'		OK		
+NOM.FD.D.P0	ban~A'	Alban~A'tayon	OK		
+NOM.FD.I	ban~A'	ban~A'tayon	OK		
+NOM.FD.C	ban~A'	ban~A'tayon	OK		
+NOM.FD.D.P0.E0	ban~A'		OK		
+NOM.FD.C.E0	ban~A'		OK		
+NOM.FP.D.P0	ban~A'	Alban~A'At	OK		
+NOM.FP.I	ban~A'	ban~A'At	OK		
+NOM.FP.C	ban~A'	ban~A'At	OK		
+NOM.FP.D.P0.E0	ban~A'		OK		
+NOM.FP.C.E0	ban~A'		OK		
+NOM.FD.D.P0	>uxraY	Al>uxrAtayon	PROB	INSERTED A	
+NOM.FD.I	>uxraY	>uxrAtayon	PROB	INSERTED A	
+NOM.FD.C	>uxraY	>uxrAtayon	PROB	INSERTED A	
+NOM.MP.D.P0	xAliy	AlxawAliy	OK		
+NOM.MP.I	xAliy	xawAliy	OK		
+NOM.MP.C	xAliy	xawAliy	OK		
+NOM.MP.D.P0.E0	xAliy		OK		
+NOM.MP.C.E0	xAliy		OK		
+NOM.MP.C.E0	say~i}		OK		
+NOM.FS.D.P0	SafrA	AlS~afrA	OK	wrong Cond-s Cond-t	
+NOM.FS.I	SafrA	SafrA	OK	wrong Cond-s Cond-t	
+NOM.FS.C	SafrA	SafrA	OK	wrong Cond-s Cond-t	
+NOM.FD.D.P0	SafrA	AlS~afritayon	OK	wrong Cond-s Cond-t	
+NOM.FD.I	SafrA	Safritayon	OK	wrong Cond-s Cond-t	
+NOM.FD.C	SafrA	Safritayon	OK	wrong Cond-s Cond-t	
+NOM.MP.D.P0	Aiks	AlAiksAt	OK	wrong Cond-s Cond-t	
+NOM.MP.I	Aiks	AiksAt	OK	wrong Cond-s Cond-t	
+NOM.MP.C	Aiks	AiksAt	OK	wrong Cond-s Cond-t	
+NOM.MP.D.P0.E0	Aiks		OK	wrong Cond-s Cond-t	
+NOM.MP.C.E0	Aiks		OK	wrong Cond-s Cond-t	
