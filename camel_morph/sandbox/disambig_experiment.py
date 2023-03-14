@@ -23,6 +23,8 @@ parser.add_argument("-n_part", default=10,
                     type=int, help="Number of partitions to split the Gumar files into.")
 parser.add_argument("-part", default=-1,
                     type=int, help="Number of partitions to split the Gumar files into.")
+parser.add_argument("-n_cpu", default=8,
+                    type=int, help="Number of CPUs to use for multiprocessing.")
 args = parser.parse_args([] if "__file__" not in globals() else None)
 
 if args.camel_tools:
@@ -32,7 +34,7 @@ from camel_tools.utils.charmap import CharMapper
 from camel_tools.disambig.bert import BERTUnfactoredDisambiguator
 from camel_tools.utils.charsets import AR_LETTERS_CHARSET
 
-PUNC_REGEX = re.compile(f"[:.;'\"!%&)(?،؟؛]")
+PUNC_REGEX = re.compile(r"([:.;'\"!%&)(?،؟؛])")
 REPEATED_LETTER = re.compile(r'(.+?)\1{3,}')
 
 DEFAULT_NORMALIZE_MAP = CharMapper({
@@ -51,11 +53,8 @@ bw2ar = CharMapper.builtin_mapper('bw2ar')
 unfactored = BERTUnfactoredDisambiguator.pretrained(
     'glf', batch_size=args.batch)
 
-# with open('sandbox_files/feat2lemma2lex.pkl', 'rb') as f:
-#    feat2lemma2lex = pickle.load(f)
-
 def token_preprocessing(token):
-    token = PUNC_REGEX.sub(' ', token)
+    token = PUNC_REGEX.sub(r'\1 ', token)
     tokens = []
     for token in token.split():
         # If letter is consecutively repeated more than 3 times, reduce it to 1.
@@ -107,12 +106,12 @@ if __name__ == "__main__":
         end = len(gumar_paths) * args.part // args.n_part
         gumar_paths_part = gumar_paths[start:end]
 
-    chunks = [gumar_paths_part[i:i + 5]
-              for i in range(0, len(gumar_paths_part), 5)]
+    chunks = [gumar_paths_part[i:i + args.n_cpu]
+              for i in range(0, len(gumar_paths_part), args.n_cpu)]
     if len(gumar_paths_part) == len(gumar_paths):
         feat2lemma2lex = dict()
         for chunk in tqdm(chunks):
-            with multiprocessing.Pool(5) as p:
+            with multiprocessing.Pool(args.n_cpu) as p:
                 results = list(tqdm(p.imap(disambig_file, chunk),
                                     total=len(chunk), smoothing=0.2))
             for feat2lemma2lex_ in results:
