@@ -4,22 +4,24 @@ import sys
 import pandas as pd
 from numpy import nan
 
-# COLUMNS = ['LINE', 'PATTERN', 'ROOT', 'DEFINE', 'CLASS', 'LEMMA', 'FORM',
-#                      'BW', 'GLOSS', 'FEAT', 'COND-T', 'COND-S']
-COLUMNS = ['ID', 'ROOT', 'RADICAL_NTWS', 'LEMMA', 'FORM', 'CAPHI++', 'ANALYSIS'
-           'GLOSS', 'GLOSS_MSA', 'EXAMPLE_USAGE', 'NOTES', 'SOURCE', 'ANNOTATOR']
-COLUMNS_ESSENTIAL = [col for col in COLUMNS if col != 'LINE']
-COLUMNS_OUTPUT = COLUMNS + ['OPERATION']
-
-line_index = COLUMNS.index('LINE')
-operation_index = COLUMNS_OUTPUT.index('OPERATION')
+COLUMNS_PROJECTS = dict(
+    camel_morph=dict(
+        columns=['LINE', 'PATTERN', 'ROOT', 'DEFINE', 'CLASS', 'LEMMA', 'FORM',
+                 'BW', 'GLOSS', 'FEAT', 'COND-T', 'COND-S'],
+        id='LINE'),
+    maknuune=dict(
+        columns=['ID', 'ROOT', 'ROOT_NTWS', 'LEMMA', 'FORM', 'CAPHI++',
+                 'ANALYSIS', 'GLOSS', 'GLOSS_MSA', 'EXAMPLE_USAGE',
+                 'NOTES', 'SOURCE', 'ANNOTATOR'],
+        id='ID')
+)
 
 def _get_index2row(df):
-    return {row[line_index]: tuple(row[:line_index] + row[line_index+1:])
+    return {row[ID_INDEX]: tuple(row[:ID_INDEX] + row[ID_INDEX+1:])
             for row in df[COLUMNS].values.tolist()}
 
 def _check_soundness_of_indexes(df):
-    df_indexes = df['LINE'].values.tolist()
+    df_indexes = df[ID_COL].values.tolist()
     assert len(set(df_indexes)) == len(df_indexes)
 
 def formatted_diff(select_for_compare, compare_with_selected):
@@ -44,23 +46,23 @@ def formatted_diff(select_for_compare, compare_with_selected):
     unused_rows = []
     for index_before in unused_indexes:
         row_ = list(before[index_before])
-        row_.insert(line_index, index_before)
-        row_.insert(operation_index, 'deleted')
+        row_.insert(ID_INDEX, index_before)
+        row_.insert(DIFF_INDEX, 'deleted')
         unused_rows.append(row_)
 
     output = []
-    for index_after, operations in sorted(after2before.items(), key=lambda row: row[line_index]):
-        if operations in ['no_edit', 'new']:
-            output_ = [index_after] + list(after[index_after]) + [operations]
+    for index_after, diffs in sorted(after2before.items(), key=lambda row: row[ID_INDEX]):
+        if diffs in ['no_edit', 'new']:
+            output_ = [index_after] + list(after[index_after]) + [diffs]
         else:
             output_ = [index_after]
             output_ += list(after[index_after])
             output_ += [' '.join(f'{COLUMNS_ESSENTIAL[i].lower()}:{col}'
-                        for i, col in enumerate(before[index_after]) if i in operations)]
+                        for i, col in enumerate(before[index_after]) if i in diffs)]
         output.append(output_)
     
     output += unused_rows
-    output = sorted(output, key=lambda row: row[line_index])
+    output = sorted(output, key=lambda row: row[ID_INDEX])
     output.insert(0, COLUMNS_OUTPUT)
 
     return output
@@ -74,6 +76,8 @@ if __name__ == "__main__":
                         type=str, help="Path of the file to compare with selected (right).")
     parser.add_argument("-output_path", default='',
                         type=str, help="Path of the files to output to.")
+    parser.add_argument("-project", required=True,
+                        type=str, help="Name of the project. Used to determine which columns to use.")
     parser.add_argument("-camel_tools", default='',
                         type=str, help="Path of the directory containing the camel_tools modules.")
     args = parser.parse_args([] if "__file__" not in globals() else None)
@@ -87,13 +91,20 @@ if __name__ == "__main__":
     ar2bw = CharMapper.builtin_mapper('ar2bw')
     bw2ar = CharMapper.builtin_mapper('bw2ar')
 
-    select_for_compare = pd.read_csv(args.select_for_compare)
+    COLUMNS = COLUMNS_PROJECTS[args.project]['columns']
+    ID_COL = COLUMNS_PROJECTS[args.project]['id']
+    COLUMNS_ESSENTIAL = [col for col in COLUMNS if col != ID_COL]
+    COLUMNS_OUTPUT = COLUMNS + ['DIFF']
+    ID_INDEX = COLUMNS.index(COLUMNS_PROJECTS[args.project]['id'])
+    DIFF_INDEX = COLUMNS_OUTPUT.index('DIFF')
+
+    select_for_compare = pd.read_csv(args.select_for_compare, sep='\t')
     select_for_compare = select_for_compare.replace(nan, '')
     compare_with_selected = pd.read_csv(args.compare_with_selected)
     compare_with_selected = compare_with_selected.replace(nan, '')
     for i, row in compare_with_selected.iterrows():
-        if not row['LINE']:
-            compare_with_selected.loc[i, 'LINE'] = compare_with_selected.loc[i - 1, 'LINE'] + 0.001
+        if not row[ID_COL]:
+            compare_with_selected.loc[i, ID_COL] = compare_with_selected.loc[i - 1, ID_COL] + 0.001
 
     _check_soundness_of_indexes(select_for_compare)
     _check_soundness_of_indexes(compare_with_selected)
@@ -102,7 +113,7 @@ if __name__ == "__main__":
     
     with open(args.output_path, 'w') as f:
         for i, row in enumerate(output):
-            if i and type(row[line_index]) is float and row[line_index].is_integer():
-                row[line_index] = int(row[line_index])
+            if i and type(row[ID_INDEX]) is float and row[ID_INDEX].is_integer():
+                row[ID_INDEX] = int(row[ID_INDEX])
             print(*row, sep='\t', file=f)
         
