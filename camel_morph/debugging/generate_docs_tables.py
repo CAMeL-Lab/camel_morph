@@ -266,8 +266,7 @@ def _get_pos2lemma2prob(db_lexprob, pos, cond_s2cond_t2feats2rows, pos2lemma2pro
     for pos_ in pos:
         pos2lemma2prob_[pos_] = get_lemma2prob(
             pos_, db_lexprob, {k: v for k, v in unique_lemma_classes.items() if k[2][2] == pos_},
-            pos2lemma2prob[pos_] if pos2lemma2prob else None,
-            strip_lex, bw2ar, DEFAULT_NORMALIZE_MAP)
+            pos2lemma2prob[pos_] if pos2lemma2prob else None)
     
     return pos2lemma2prob_
 
@@ -310,7 +309,6 @@ if __name__ == "__main__":
         camel_tools_dir = config_global['camel_tools']
         sys.path.insert(0, camel_tools_dir)
 
-    from camel_tools.morphology.analyzer import DEFAULT_NORMALIZE_MAP
     from camel_tools.morphology.database import MorphologyDB
     from camel_tools.morphology.generator import Generator
     from camel_tools.morphology.analyzer import Analyzer

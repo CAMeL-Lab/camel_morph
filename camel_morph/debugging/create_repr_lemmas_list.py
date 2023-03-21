@@ -39,25 +39,98 @@ except:
     from camel_morph import db_maker_utils
     from camel_morph.debugging.paradigm_debugging import AnnotationBank
 
-nominals = ["ABBREV", "ADJ", "ADJ_COMP", "ADJ_NUM", "ADV",
-            "ADV_INTERROG", "ADV_REL",
-            "FORIEGN", "INTERJ", "NOUN", "NOUN_NUM",
-            "NOUN_PROP", "NOUN_QUANT",
-            "PRON", "PRON_DEM", "PRON_EXCLAM", "PRON_INTERROG",
-            "PRON_REL", "VERB_NOM", "VERB_PSEUDO"]
+parser = argparse.ArgumentParser()
+parser.add_argument("-config_file", default='config_default.json',
+                    type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
+parser.add_argument("-config_name", default='default_config', nargs='+',
+                    type=str, help="Name of the configuration to load from the config file. If more than one is added, then lemma classes from those will not be counted in the current list.")
+parser.add_argument("-output_dir", default='',
+                    type=str, help="Path of the directory to output the lemmas to.")
+parser.add_argument("-output_name", default='',
+                    type=str, help="Name of the file to output the representative lemmas to. File will be placed in a directory called conjugation/repr_lemmas/")
+parser.add_argument("-pos_type", default='', choices=['verbal', 'nominal', ''],
+                    type=str, help="POS type of the lemmas.")
+parser.add_argument("-feats", default='',
+                    type=str, help="Features to generate the conjugation tables for.")
+parser.add_argument("-db", default='',
+                    type=str, help="Path of DB to use to get the lexical/POS probabilities.")
+parser.add_argument("-pos", default='',
+                    type=str, help="POS of the lemmas.")
+parser.add_argument("-banks_dir",  default='',
+                    type=str, help="Directory in which the annotation banks are.")
+parser.add_argument("-bank",  default='',
+                    type=str, help="Name of the annotation bank to use.")
+parser.add_argument("-lexprob",  default='',
+                    type=str, help="Custom lexical probabilities file which contains two columns (lemma, frequency).")
+parser.add_argument("-display_format", default='compact', choices=['compact', 'unique', 'expanded'],
+                    type=str, help="Display format of the debug info for each representative lemma.")
+parser.add_argument("-camel_tools", default='local', choices=['local', 'official'],
+                    type=str, help="Path of the directory containing the camel_tools modules.")
+args, _ = parser.parse_known_args([] if "__file__" not in globals() else None)
+
+with open(args.config_file) as f:
+    config = json.load(f)
+config_name = args.config_name[0]
+config_local = config['local'][config_name]
+config_global = config['global']
+
+if args.camel_tools == 'local':
+    camel_tools_dir = config_global['camel_tools']
+    sys.path.insert(0, camel_tools_dir)
+
+from camel_tools.utils.charmap import CharMapper
+from camel_tools.morphology.utils import strip_lex
+from camel_tools.morphology.database import MorphologyDB
+from camel_tools.morphology.analyzer import DEFAULT_NORMALIZE_MAP
+
+ar2bw = CharMapper.builtin_mapper('ar2bw')
+bw2ar = CharMapper.builtin_mapper('bw2ar')
+
+nominals = ['ABBREV', 'ADJ', 'ADJ_COMP', 'ADJ_NUM', 'ADV', 'ADV_INTERROG', 'ADV_REL',
+            'FORIEGN', 'INTERJ', 'NOUN', 'NOUN_NUM', 'NOUN_PROP', 'NOUN_QUANT',
+            'PRON', 'PRON_DEM', 'PRON_EXCLAM', 'PRON_INTERROG',
+            'PRON_REL', 'VERB_NOM', 'VERB_PSEUDO']
 nominals = [n.lower() for n in nominals]
 
 cond_t_sort_order = {'MS':0, 'MD':1, 'MP':2, 'FS':3, 'FD':4, 'FP':5}
 
-def create_repr_lemmas_list(lexicon,
-                            class_keys,
-                            extended_lemma_keys,
+def _sort_stems_nominals(stems):
+    if len(stems) == 2 and \
+        set(stem['cond_t'] for stem in stems) == {'MS', 'MS||MD||FP'}:
+        return stems.sort(key=lambda stem: len(stem['cond_t']), reverse=True)
+    else:
+        stems.sort(reverse=True,
+            key=lambda stem: (-100,) if stem['cond_t'] == 'MS||MD||FP' else
+                (len(stem['cond_t']), -cond_t_sort_order[stem['cond_t'][:2]]))
+                              
+
+def create_repr_lemmas_list(config,
+                            config_name,
                             pos,
+                            lexicon=None,
                             bank=None,
                             info_display_format='compact',
                             lemma2prob=None,
                             db=None):
-    lemmas_uniq, lemmas_stripped_uniq = get_extended_lemmas(lexicon, extended_lemma_keys)
+    SHEETS, _ = db_maker_utils.read_morph_specs(
+        config, config_name, lexicon_sheet=lexicon,
+        process_morph=False, lexicon_cond_f=False)
+    lexicon = SHEETS['lexicon']
+    lexicon = lexicon.replace('ditrans', 'trans')
+    if pos:
+        lexicon = lexicon[lexicon['FEAT'].str.contains(
+            f'pos:{pos}\\b', regex=True)]
+    
+    config_local = config['local'][config_name]
+    class_keys = config_local.get('class_keys')
+    extended_lemma_keys = config_local.get('extended_lemma_keys')
+    if class_keys == None:
+        class_keys = ['cond_t', 'cond_s']
+    if extended_lemma_keys == None:
+        extended_lemma_keys = ['lemma']
+
+    lemmas_uniq, lemmas_stripped_uniq = get_extended_lemmas(
+        lexicon, extended_lemma_keys)
     uniq_lemma_classes = {}
     for lemma, stems in lemmas_uniq.items():
         info = {}
@@ -67,42 +140,44 @@ def create_repr_lemmas_list(lexicon,
                     values = info.setdefault(k, {})
                     values.setdefault(stem[k], []).append(f'({i})')
             for k in stems[0]:
-                info[k] = ''.join([f"[{ct if ct else '-'}]{''.join(indexes)}"
-                                    for ct, indexes in sorted(info[k].items(), key=lambda x: x[0])])
+                info[k] = ''.join([
+                    f"[{ct if ct else '-'}]{''.join(indexes)}"
+                    for ct, indexes in sorted(info[k].items(), key=lambda x: x[0])])
         elif info_display_format == 'unique':
             for k in stems[0]:
                 if k in ['cond_t', 'cond_s']:
                     info[k] = ''.join(
                         sorted([f"[{stem[k]}]" if stem[k] else '[-]' for stem in stems]))
                 else:
-                    info[k] = ''.join(
-                        list(set(sorted([f"[{stem[k]}]" if stem[k] else '[-]' for stem in stems]))))
+                    info[k] = ''.join(list(set(
+                        sorted([f"[{stem[k]}]" if stem[k] else '[-]' for stem in stems]))))
             info['lemma'] = info['lemma'][1:-1]
         elif info_display_format == 'expanded':
-            stem_order_indexes = sorted(range(len(stems)), reverse=True,
-                                         key=lambda i: len(lcp([stems[i]['form'], stems[i]['lemma']])))
+            if pos in nominals:
+                _sort_stems_nominals(stems)
             for k in stems[0]:
                 if k in ['lemma', 'pos']:
                     info[k] = '-'.join(
-                        set([stems[i][k] if stems[i][k] else '[-]'
-                            for i in stem_order_indexes]))
+                        set([stem[k] if stem[k] else '[-]' for stem in stems]))
                 else:
-                    info[k] = '-'.join(f'[{stems[i][k]}]' if stems[i][k] else '[-]'
-                                    for i in stem_order_indexes)
+                    info[k] = '-'.join(
+                        f'[{stem[k]}]' if stem[k] else '[-]' for stem in stems)
             
             info['stem_count'] = len(stems)
             info['lemma_ar'] = bw2ar(info['lemma'])
             info['form_ar'] = bw2ar(info['form'])
 
-            stems_forms = [stems[i]['form'] for i in stem_order_indexes]
-            index2stem = sorted(
-                set([stem['form'] for stem in stems]), reverse=True,
-                key=lambda form: (len(lcp([form, stems[0]['lemma']])), -stems_forms.index(form)))
             lemma_p = ' lemma:#p' if 'p' in info['lemma'] else ''
+            form2index = {}
+            index = 0
             for stem in stems:
-                stem['meta_info'] = (str(index2stem.index(stem['form'])), lemma_p)
+                form = stem['form']
+                if form not in form2index:
+                    form2index[form] = str(index)
+                    index += 1
+                stem['meta_info'] = (form2index[form], lemma_p)
             info['meta_info'] = 'stem:' + '-'.join(
-                stems[i]['meta_info'][0] for i in stem_order_indexes)
+                stem['meta_info'][0] for stem in stems)
             info['meta_info'] += lemma_p
         
         lemmas_cond_sig = [{k: stem.get(k) for k in class_keys} for stem in stems]
@@ -129,10 +204,10 @@ def get_extended_lemmas(lexicon, extended_lemma_keys):
         feats = {feat.split(':')[0]: feat.split(':')[1]
                  for feat in row['FEAT'].split()}
         cond_t = ' '.join(sorted('||'.join(
-            sorted([part for part in cond.split('||')], key=lambda x: cond_t_sort_order[x]))
-                   for cond in row['COND-T'].split()))
+            sorted([part for part in cond.split('||')],
+                key=lambda x: cond_t_sort_order[x])) for cond in row['COND-T'].split()))
         cond_s = ' '.join(sorted('||'.join(sorted([part for part in cond.split('||')]))
-                                  for cond in row['COND-S'].split()))
+                                 for cond in row['COND-S'].split()))
         lemma = row['LEMMA'].split(':')[1]
         info = dict(lemma=lemma,
                     form=row['FORM'],
@@ -153,14 +228,14 @@ def get_extended_lemmas(lexicon, extended_lemma_keys):
     return lemmas_uniq, lemmas_stripped_uniq
 
 
-def get_lemma2prob(pos, db, uniq_lemma_classes, lemma2prob, strip_lex, bw2ar, normalize_map):
+def get_lemma2prob(pos, db, uniq_lemma_classes, lemma2prob):
     if lemma2prob is None:
         lemma2prob = {}
         for lemmas_cond_sig, lemmas_info in uniq_lemma_classes.items():
             for info in lemmas_info['lemmas']:
                 lemma_stripped = re.sub(r'[aiuo]', '', strip_lex(info['lemma']))
                 lemma_ar = bw2ar(lemma_stripped)
-                normalized_lemma_ar = normalize_map(lemma_ar)
+                normalized_lemma_ar = DEFAULT_NORMALIZE_MAP(lemma_ar)
                 matches = db.stem_hash.get(normalized_lemma_ar, [])
                 db_entries = [db_entry[1] for db_entry in matches]
                 entries_filtered = [e  for e in db_entries
@@ -193,7 +268,7 @@ def get_highest_prob_lemmas(pos,
                             bank=None,
                             lemma2prob=None,
                             db=None):
-    lemma2prob = get_lemma2prob(pos, db, uniq_lemma_classes, lemma2prob, strip_lex, bw2ar, DEFAULT_NORMALIZE_MAP)
+    lemma2prob = get_lemma2prob(pos, db, uniq_lemma_classes, lemma2prob)
     
     if bank is not None:
         old_lemmas = set([strip_lex(entry[1]) for entry in bank._bank])
@@ -247,61 +322,9 @@ def lcp(strings):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-config_file", default='config_default.json',
-                        type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
-    parser.add_argument("-config_name", default='default_config', nargs='+',
-                        type=str, help="Name of the configuration to load from the config file. If more than one is added, then lemma classes from those will not be counted in the current list.")
-    parser.add_argument("-output_dir", default='',
-                        type=str, help="Path of the directory to output the lemmas to.")
-    parser.add_argument("-output_name", default='',
-                        type=str, help="Name of the file to output the representative lemmas to. File will be placed in a directory called conjugation/repr_lemmas/")
-    parser.add_argument("-pos_type", default='', choices=['verbal', 'nominal', ''],
-                        type=str, help="POS type of the lemmas.")
-    parser.add_argument("-feats", default='',
-                        type=str, help="Features to generate the conjugation tables for.")
-    parser.add_argument("-db", default='',
-                        type=str, help="Path of DB to use to get the lexical/POS probabilities.")
-    parser.add_argument("-pos", default='',
-                        type=str, help="POS of the lemmas.")
-    parser.add_argument("-banks_dir",  default='',
-                        type=str, help="Directory in which the annotation banks are.")
-    parser.add_argument("-bank",  default='',
-                        type=str, help="Name of the annotation bank to use.")
-    parser.add_argument("-lexprob",  default='',
-                        type=str, help="Custom lexical probabilities file which contains two columns (lemma, frequency).")
-    parser.add_argument("-display_format", default='compact', choices=['compact', 'unique', 'expanded'],
-                        type=str, help="Display format of the debug info for each representative lemma.")
-    parser.add_argument("-camel_tools", default='local', choices=['local', 'official'],
-                        type=str, help="Path of the directory containing the camel_tools modules.")
-    args = parser.parse_args([] if "__file__" not in globals() else None)
-
-    with open(args.config_file) as f:
-        config = json.load(f)
-    config_name = args.config_name[0]
-    config_local = config['local'][config_name]
-    config_global = config['global']
-
-    if args.camel_tools == 'local':
-        camel_tools_dir = config_global['camel_tools']
-        sys.path.insert(0, camel_tools_dir)
-
-    from camel_tools.utils.charmap import CharMapper
-    from camel_tools.morphology.utils import strip_lex
-    from camel_tools.morphology.database import MorphologyDB
-    from camel_tools.morphology.analyzer import DEFAULT_NORMALIZE_MAP
-    from camel_tools.utils.dediac import dediac_ar, dediac_bw
-
-    ar2bw = CharMapper.builtin_mapper('ar2bw')
-    bw2ar = CharMapper.builtin_mapper('bw2ar')
-
     output_dir = args.output_dir if args.output_dir else os.path.join(config_global['debugging'], config_global['repr_lemmas_dir'])
     output_dir = os.path.join(output_dir, f"camel-morph-{config_local['dialect']}")
     os.makedirs(output_dir, exist_ok=True)
-
-    SHEETS, _ = db_maker_utils.read_morph_specs(config, config_name, process_morph=False, lexicon_cond_f=False)
-    lexicon = SHEETS['lexicon']
-    lexicon = lexicon.replace('ditrans', 'trans')
     
     pos_type = args.pos_type if args.pos_type else config_local['pos_type']
     if pos_type == 'verbal':
@@ -310,8 +333,6 @@ if __name__ == "__main__":
         pos = args.pos if args.pos else config_local.get('pos')
     elif pos_type == 'other':
         pos = args.pos
-    if pos:
-        lexicon = lexicon[lexicon['FEAT'].str.contains(f'pos:{pos}\\b', regex=True)]
 
     if 'exclusions' in config_local:
         with open(config_local['exclusions']) as f:
@@ -319,13 +340,6 @@ if __name__ == "__main__":
             exclusions = exclusions[pos] if pos in exclusions else []
     else:
         exclusions = []
-
-    class_keys = config_local.get('class_keys')
-    extended_lemma_keys = config_local.get('extended_lemma_keys')
-    if class_keys == None:
-        class_keys = ['cond_t', 'cond_s']
-    if extended_lemma_keys == None:
-        extended_lemma_keys = ['lemma']
 
     banks_dir = args.banks_dir if args.banks_dir else os.path.join(
         config_global['debugging'], config_global['banks_dir'], f"camel-morph-{config_local['dialect']}")
@@ -360,9 +374,8 @@ if __name__ == "__main__":
     else:
         db = MorphologyDB.builtin_db()
 
-    uniq_lemma_classes = create_repr_lemmas_list(lexicon=lexicon,
-                                                 class_keys=class_keys,
-                                                 extended_lemma_keys=extended_lemma_keys,
+    uniq_lemma_classes = create_repr_lemmas_list(config=config,
+                                                 config_name=config_name,
                                                  pos=pos,
                                                  bank=bank,
                                                  info_display_format=args.display_format,

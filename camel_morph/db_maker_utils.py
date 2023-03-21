@@ -42,6 +42,7 @@ except:
 
 def read_morph_specs(config:Dict,
                      config_name:str,
+                     lexicon_sheet:Optional[pd.DataFrame]=None,
                      process_morph:bool=True,
                      lexicon_cond_f:bool=True) -> Tuple[Dict[str, pd.DataFrame], Dict[str, Tuple[str, int]]]:
     """
@@ -54,6 +55,8 @@ def read_morph_specs(config:Dict,
         the `db` file.
         config_name (str): key of the specific ("local") configuration to get information 
         from in the config file.
+        lexicon_sheet (pd.DataFrame): if this is specified, then the passed dataframe will be
+        processed instead of the path that is specified in the config. Defaults to None.
         process_morph (bool): whether or not to process MORPH specs. Defaults to True.
         lexicon_cond_f (bool): whether or not to convert COND-T conditions to COND-F when necessary. Defaults to True.
 
@@ -86,7 +89,11 @@ def read_morph_specs(config:Dict,
     morph_filename = f"{local_specs['specs']['sheets']['morph']}.csv"
     MORPH = pd.read_csv(os.path.join(data_dir, morph_filename))
     
-    lexicon_sheets: List[str] = local_specs['lexicon']['sheets']
+    lexicon_sheets: List[Union[str, pd.DataFrame]] = None
+    if lexicon_sheet is not None:
+        lexicon_sheets = [lexicon_sheet]
+    else:
+        lexicon_sheets = local_specs['lexicon']['sheets']
     # `passive_patterns_sheets` contain regex transformation rules that specify a passive verb form
     # for each active form. This option is used when the passive verb entries are not included (frozen)
     # into the verb lexicon sheets. Therefore, if the verb lexicon only contains active forms, and
@@ -103,8 +110,13 @@ def read_morph_specs(config:Dict,
     # Loop over the specified lexicon (and backoff lexicon if present) sheets to concatenate those into
     # a unified dataframe.
     LEXICON = {'concrete': None, 'backoff': None, 'smart_backoff': None}
-    for lexicon_sheet_name in lexicon_sheets:
-        LEXICON_ = pd.read_csv(os.path.join(data_dir, f"{lexicon_sheet_name}.csv"))
+    for lexicon_sheet in lexicon_sheets:
+        if type(lexicon_sheet) is str:
+            lexicon_sheet_name = lexicon_sheet
+            LEXICON_ = pd.read_csv(os.path.join(data_dir, f"{lexicon_sheet_name}.csv"))
+        else:
+            lexicon_sheet_name = None
+            LEXICON_ = lexicon_sheet
         # Only use entries in which the `DEFINE` has 'LEXICON' specified.
         BACKOFF_ = LEXICON_[LEXICON_.DEFINE == 'BACKOFF']
         BACKOFF_ = BACKOFF_.replace(nan, '', regex=True)
@@ -259,8 +271,10 @@ def read_morph_specs(config:Dict,
                 LEXICON[lex_type].at[i, 'COND-F'] = ' '.join(cond_f_)
     
     #FIXME: temporary; should be done by the clean condisitons code
-    LEXICON['concrete']['COND-S'] = LEXICON['concrete']['COND-S'].replace(r'hollow|defective', '', regex=True)
-    LEXICON['concrete']['COND-S'] = LEXICON['concrete']['COND-S'].replace(r' +', ' ', regex=True)
+    LEXICON['concrete']['COND-S'] = LEXICON['concrete']['COND-S'].replace(
+        r'hollow|defective', '', regex=True)
+    LEXICON['concrete']['COND-S'] = LEXICON['concrete']['COND-S'].replace(
+        r' +', ' ', regex=True)
     
     # Get rid of unused conditions, i.e., use only the conditions which are in the intersection
     # of the collective (concatenated across morph and lexicon sheets) COND-T and COND-S columns

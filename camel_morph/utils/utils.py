@@ -365,7 +365,7 @@ def analyze_pattern_egy(root, stem):
 
 def add_check_mark_online(rows,
                           spreadsheet,
-                          sheet,
+                          worksheet,
                           error_cases=None,
                           indexes=None,
                           messages=None,
@@ -382,7 +382,8 @@ def add_check_mark_online(rows,
         sa = gspread.service_account(service_account)
         spreadsheet = sa.open(spreadsheet)
 
-    worksheet = spreadsheet.worksheet(title=sheet)
+    if type(worksheet) is str:
+        worksheet = spreadsheet.worksheet(title=worksheet)
     header = worksheet.row_values(1)
     header_count = header.count(status_col_name)
     if header_count == 0:

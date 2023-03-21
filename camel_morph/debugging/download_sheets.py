@@ -34,9 +34,6 @@ def download_sheets(lex=None, specs=None, save_dir=None, config=None, config_nam
     else:
         sa = service_account
 
-    if not os.path.exists(save_dir):
-        os.mkdir(save_dir)
-
     if lex or specs:
         lex = {'spreadsheets': [ss[0] for ss in lex],
                'sheets': [ss[1:] for ss in lex]}
@@ -45,6 +42,7 @@ def download_sheets(lex=None, specs=None, save_dir=None, config=None, config_nam
     else:
         config_local = config['local'][config_name]
         config_global = config['global']
+        save_dir = config_global['data_dir']
         specs_local = []
         sheets_groups = config_local['specs']['sheets'].values()
         for sheets in sheets_groups:
@@ -63,6 +61,9 @@ def download_sheets(lex=None, specs=None, save_dir=None, config=None, config_nam
             'spreadsheets': [config_local['lexicon']['spreadsheet']],
             'sheets': [config_local['lexicon']['sheets']]
         }
+    
+    if not os.path.exists(save_dir):
+        os.mkdir(save_dir)
 
     for spreadsheets in [lex, specs]:
         for i, spreadsheet_name in enumerate(spreadsheets['spreadsheets']):
@@ -88,6 +89,8 @@ def download_sheets(lex=None, specs=None, save_dir=None, config=None, config_nam
                 os.makedirs(output_dir, exist_ok=True)
                 output_path = os.path.join(output_dir, f'{sheet_name}.csv')
                 sheet.to_csv(output_path)
+    
+    print(f'Files saved to: {output_dir}')
 
 
 if __name__ == "__main__":
@@ -114,7 +117,7 @@ if __name__ == "__main__":
             config = json.load(f)
         config_local = config['local'][args.config_name]
         config_global = config['global']
-        save_dir = config_global['data_dir']
+        save_dir = None
         service_account = config_global['service_account']
 
     download_sheets(args.lex, args.specs, save_dir,
