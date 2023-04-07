@@ -1,0 +1,110 @@
+{
+    "global": {
+        "data_dir": "data",
+        "specs": {
+            "spreadsheet": "camel-morph-common",
+            "sheets": [
+                "About",
+                "Header"
+            ]
+        },
+        "db_dir": "databases",
+        "debugging": "debugging_output",
+        "repr_lemmas_dir": "repr_lemmas",
+        "tables_dir": "tables",
+        "paradigm_debugging_dir": "paradigm_debugging",
+        "banks_dir": "banks",
+        "camel_tools": "/Users/chriscay/Library/Mobile Documents/com~apple~CloudDocs/NYUAD/camel_tools",
+        "service_account": "/Users/chriscay/.config/gspread/service_account.json",
+        "paradigms_config": "configs/config_paradigms.json",
+        "banks_spreadsheet": "Paradigm-Banks"
+    },
+    "local": {
+        "noun_msa_lemma_paradigms": {
+            "split_or": false,
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": {
+                    "order": "MSA-Nom-ORDER",
+                    "morph": "MSA-Nom-MORPH"
+                },
+                "exclude": [
+                    "RED"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": [
+                    "MSA-Nom-LEX"
+                ]
+            },
+            "lexprob": "return_all",
+            "dialect": "msa",
+            "db": "XYZ_msa_noun_lemma_paradigms_v1.0.db",
+            "pos_type": "nominal",
+            "pos": "noun",
+            "exclusions": "misc_files/repr_lemma_exclusions.json",
+            "debugging": {
+                "debugging_spreadsheet": "Nominals-Sandbox",
+                "sheets": [
+                    "Lemma-Paradigm-Debugging-Noun-v2-Reham",
+                    "Lemma-Paradigm-Debugging-Noun-v2-Chris",
+                    "Lemma-Paradigm-Debugging-Noun-v2-Chris-1"
+                ]
+            },
+            "class_keys": [
+                "cond_t",
+                "gen",
+                "num",
+                "cas",
+                "meta_info"
+            ],
+            "extended_lemma_keys": [
+                "lemma"
+            ]
+        },
+        "adj_msa_lemma_paradigms": {
+            "split_or": false,
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": {
+                    "order": "MSA-Nom-ORDER",
+                    "morph": "MSA-Nom-MORPH"
+                },
+                "exclude": [
+                    "RED"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": [
+                    "MSA-Nom-LEX"
+                ]
+            },
+            "lexprob": "return_all",
+            "dialect": "msa",
+            "db": "XYZ_msa_adj_lemma_paradigms_v1.0.db",
+            "pos_type": "nominal",
+            "pos": "adj",
+            "exclusions": "misc_files/repr_lemma_exclusions.json",
+            "debugging": {
+                "debugging_spreadsheet": "Nominals-Sandbox",
+                "sheets": [
+                    "Lemma-Paradigm-Debugging-Adj-v2"
+                ]
+            },
+            "class_keys": [
+                "cond_t",
+                "gen",
+                "num",
+                "cas",
+                "meta_info"
+            ],
+            "extended_lemma_keys": [
+                "lemma"
+            ]
+        }
+    }
+}

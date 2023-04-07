@@ -39,8 +39,11 @@ except:
     from camel_morph import db_maker_utils
     from camel_morph.debugging.paradigm_debugging import AnnotationBank
 
+file_path = os.path.abspath(__file__).split('/')
+package_path = '/'.join(file_path[:len(file_path) - 1 - file_path[::-1].index('camel_morph')])
+
 parser = argparse.ArgumentParser()
-parser.add_argument("-config_file", default='config_default.json',
+parser.add_argument("-config_file", default=os.path.join(package_path, 'configs/config_default.json'),
                     type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
 parser.add_argument("-config_name", default='default_config', nargs='+',
                     type=str, help="Name of the configuration to load from the config file. If more than one is added, then lemma classes from those will not be counted in the current list.")
@@ -70,7 +73,7 @@ args, _ = parser.parse_known_args([] if "__file__" not in globals() else None)
 
 with open(args.config_file) as f:
     config = json.load(f)
-config_name = args.config_name[0]
+config_name = args.config_name[0] if type(args.config_name) is list else args.config_name
 config_local = config['local'][config_name]
 config_global = config['global']
 
@@ -95,9 +98,11 @@ nominals = [n.lower() for n in nominals]
 cond_t_sort_order = {'MS':0, 'MD':1, 'MP':2, 'FS':3, 'FD':4, 'FP':5}
 
 def _sort_stems_nominals(stems):
-    if len(stems) == 2 and \
-        set(stem['cond_t'] for stem in stems) == {'MS', 'MS||MD||FP'}:
+    if (len(stems) in [2, 3] and
+        set(stem['cond_t'] for stem in stems) <= {'MS', 'FS', 'MS||MD||FP'}):
         return stems.sort(key=lambda stem: len(stem['cond_t']), reverse=True)
+    elif set(stem['cond_t'] for stem in stems) == {'MS', 'MD||FP'}:
+        return stems.sort(key=lambda stem: -len(stem['cond_t']), reverse=True)
     else:
         stems.sort(reverse=True,
             key=lambda stem: (-100,) if stem['cond_t'] == 'MS||MD||FP' else
@@ -382,7 +387,7 @@ if __name__ == "__main__":
                                                  lemma2prob=lemma2prob,
                                                  db=db)
     excluded_classes = set()
-    if len(args.config_name) > 1:
+    if type(args.config_name) is list and len(args.config_name) > 1:
         for config_name_ in args.config_name[1:]:
             with open(os.path.join(output_dir, f'repr_lemmas_{config_name_}.pkl'), 'rb') as f:
                 excluded_classes.update(pickle.load(f).keys())

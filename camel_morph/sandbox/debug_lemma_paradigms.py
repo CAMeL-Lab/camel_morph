@@ -23,11 +23,11 @@ parser.add_argument("-download", default=False,
                     action='store_true', help="Whether or not to download the data before doing anything. This should be done in case data was changed in Google Sheets since last time this script was ran.")
 parser.add_argument("-well_formedness", default=False,
                     action='store_true', help="Whether or not to perform some well-formedness checks before generating.")
-parser.add_argument("-spreadsheet", required=True,
+parser.add_argument("-spreadsheet", default='',
                     type=str, help="Google Sheets spreadsheet name to output to.")
-parser.add_argument("-sheet", required=True,
+parser.add_argument("-sheet", default='',
                     type=str, help="Google Sheets sheet name to output to.")
-args = parser.parse_args([] if "__file__" not in globals() else None)
+args, _ = parser.parse_known_args([] if "__file__" not in globals() else None)
 
 FIELDS_MAP = dict(
     lemma='LEMMA',
@@ -142,12 +142,15 @@ def generate_lex_rows(repr_lemmas):
     return rows
 
 
-def regenerate_signature_lex_rows(sheet):
+def regenerate_signature_lex_rows(sheet, sh, config, config_name):
     sheet_df = pd.DataFrame(sheet.get_all_records())
     sheet_df['DEFINE'], sheet_df['BW'] = 'LEXICON', ''
     sheet_df['FEAT'] = ('pos:' + sheet_df['POS'] + ' gen:' + sheet_df['GEN'] +
                         ' num:' + sheet_df['NUM'] + ' rat:' + sheet_df['RAT'] +
                         ' cas:' + sheet_df['CAS'])
+    
+    config_local = config['local'][config_name]
+    pos = config_local['pos']
     repr_lemmas = create_repr_lemmas_list(config=config,
                                           config_name=config_name,
                                           pos=pos,
@@ -226,4 +229,4 @@ if __name__ == "__main__":
     
     elif args.mode == 'regenerate_sig':
         sheet = [sheet for sheet in sheets if args.sheet == sheet.title][0]
-        regenerate_signature_lex_rows(sheet)
+        regenerate_signature_lex_rows(sheet, sh, config, config_name)

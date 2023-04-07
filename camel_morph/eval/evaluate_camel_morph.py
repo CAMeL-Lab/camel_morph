@@ -60,11 +60,11 @@ parser.add_argument("-spreadsheet", default='',
 parser.add_argument("-compare_stats_cell", default='',
                     type=str, help="Cell at which to start printing the compare results in the sheet.")
 
-parser.add_argument("-pos_or_type", required=True, choices=['verbal', 'nominal', 'other',
+parser.add_argument("-pos_or_type", default='', choices=['verbal', 'nominal', 'other',
                                                             'noun', 'noun_num', 'noun_quant', 'noun_prop',
                                                             'adj', 'adj_num', 'adj_comp'],
                     type=str, help="POS or POS type to evaluate.")
-parser.add_argument("-eval_mode", required=True,
+parser.add_argument("-eval_mode", default='',
                     choices=['recall_msa_magold_raw', 'recall_msa_magold_ldc_dediac',
                              'recall_egy_magold_raw', 'recall_egy_magold_ldc_dediac',
                              'recall_egy_union_msa_magold_raw', 'recall_egy_union_msa_magold_ldc_dediac', 'recall_egy_union_msa_magold_calima_dediac',
@@ -79,7 +79,7 @@ parser.add_argument("-camel_tools", default='local', choices=['local', 'official
 
 random.seed(42)
 
-args = parser.parse_args()
+args, _ = parser.parse_known_args()
 
 with open(args.config_file) as f:
     config = json.load(f)
@@ -109,7 +109,7 @@ essential_keys = ['source', 'diac', 'lex', 'pos', 'asp', 'mod',
                   'enc0', 'enc1', 'enc2', 'stem_seg']
 
 
-def _preprocess_magold_data(gold_data):
+def _preprocess_magold_data(gold_data, ATB_POS=None):
     gold_data = gold_data.split(
         '--------------\nSENTENCE BREAK\n--------------\n')[:-1]
     gold_data = [sentence.split('\n--------------\n')
@@ -140,10 +140,12 @@ def _preprocess_magold_data(gold_data):
                 }
                 return word_info
 
-            intersect = ldc_BW_components & ATB_POS
-            if bool(intersect):
-                word_info = get_word_info()
-                gold_data_.append(word_info)
+            if ATB_POS is not None:
+                intersect = ldc_BW_components & ATB_POS
+                if not bool(intersect):
+                    continue
+            word_info = get_word_info()
+            gold_data_.append(word_info)
 
     return gold_data_
 
@@ -758,7 +760,7 @@ if __name__ == "__main__":
     print('Preprocessing data...', end=' ')
     if 'magold' in args.eval_mode:
         print('using dataset:', 'MAGOLD')
-        data = _preprocess_magold_data(data)
+        data = _preprocess_magold_data(data, ATB_POS)
     elif 'camel_tb' in args.eval_mode:
         print('using dataset:', 'CAMeL TB')
         data = _preprocess_camel_tb_data(data)
