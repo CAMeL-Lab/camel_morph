@@ -9,7 +9,7 @@
             ]
         },
         "db_dir": "databases",
-        "camel_tools": "../camel_tools"
+        "camel_tools": "./camel_tools"
     },
     "local": {
         "default_config": {

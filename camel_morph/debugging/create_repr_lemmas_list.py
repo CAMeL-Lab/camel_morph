@@ -32,6 +32,7 @@ from itertools import takewhile
 
 try:
     from .. import db_maker_utils
+    from ..utils import utils
 except:
     file_path = os.path.abspath(__file__).split('/')
     package_path = '/'.join(file_path[:len(file_path) - 1 - file_path[::-1].index('camel_morph')])
@@ -39,11 +40,10 @@ except:
     from camel_morph import db_maker_utils
     from camel_morph.debugging.paradigm_debugging import AnnotationBank
 
-file_path = os.path.abspath(__file__).split('/')
-package_path = '/'.join(file_path[:len(file_path) - 1 - file_path[::-1].index('camel_morph')])
+configs_dir = os.path.join('/'.join(os.path.dirname(__file__).split('/')[:-1]), 'configs')
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-config_file", default=os.path.join(package_path, 'configs/config_default.json'),
+parser.add_argument("-config_file", default=os.path.join(configs_dir, 'config_default.json'),
                     type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
 parser.add_argument("-config_name", default='default_config', nargs='+',
                     type=str, help="Name of the configuration to load from the config file. If more than one is added, then lemma classes from those will not be counted in the current list.")
@@ -71,14 +71,14 @@ parser.add_argument("-camel_tools", default='local', choices=['local', 'official
                     type=str, help="Path of the directory containing the camel_tools modules.")
 args, _ = parser.parse_known_args([] if "__file__" not in globals() else None)
 
-with open(args.config_file) as f:
-    config = json.load(f)
+config = utils.get_config_file(args.config_file)
 config_name = args.config_name[0] if type(args.config_name) is list else args.config_name
 config_local = config['local'][config_name]
 config_global = config['global']
 
 if args.camel_tools == 'local':
-    camel_tools_dir = config_global['camel_tools']
+    camel_tools_dir = configs_dir = os.path.join(
+        '/'.join(os.path.dirname(__file__).split('/')[:-1]), 'camel_tools')
     sys.path.insert(0, camel_tools_dir)
 
 from camel_tools.utils.charmap import CharMapper

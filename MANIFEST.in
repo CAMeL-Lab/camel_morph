@@ -1,0 +1,3 @@
+include camel_morph/VERSION
+include camel_morph/configs/*.json
+include camel_morph/camel_tools/camel_tools/utils/charmaps/*.json

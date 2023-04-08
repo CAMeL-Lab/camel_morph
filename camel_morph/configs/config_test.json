@@ -14,7 +14,7 @@
         "tables_dir": "tables",
         "paradigm_debugging_dir": "paradigm_debugging",
         "banks_dir": "banks",
-        "camel_tools": "/Users/chriscay/Library/Mobile Documents/com~apple~CloudDocs/NYUAD/camel_tools",
+        "camel_tools": "./camel_tools",
         "service_account": "/Users/chriscay/.config/gspread/service_account.json",
         "paradigms_config": "configs/config_paradigms.json",
         "banks_spreadsheet": "Paradigm-Banks"

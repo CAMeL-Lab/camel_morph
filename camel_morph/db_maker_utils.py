@@ -77,17 +77,20 @@ def read_morph_specs(config:Dict,
     # Directory where all the specification sheets are present
     data_dir: str = os.path.join(config['global']['data_dir'], f"camel-morph-{local_specs['dialect']}", config_name)
     
-    ABOUT = pd.read_csv(os.path.join(data_dir, 'About.csv'))
-    HEADER = pd.read_csv(os.path.join(data_dir, 'Header.csv'))
+    if process_morph:
+        ABOUT = pd.read_csv(os.path.join(data_dir, 'About.csv'))
+        HEADER = pd.read_csv(os.path.join(data_dir, 'Header.csv'))
     
-    # If statement to deal with the case when there is no spreadsheet specified in the local
-    # configuration to get the sheets from. If a `spreadsheet` key is present in the local `specs`
-    # in the local configuration, then ORDER/MORPH are present in a dict under the key `sheets`,
-    # otherwise, they are just sitting in the `specs` dict.
-    order_filename = f"{local_specs['specs']['sheets']['order']}.csv"
-    ORDER = pd.read_csv(os.path.join(data_dir, order_filename))
-    morph_filename = f"{local_specs['specs']['sheets']['morph']}.csv"
-    MORPH = pd.read_csv(os.path.join(data_dir, morph_filename))
+        # If statement to deal with the case when there is no spreadsheet specified in the local
+        # configuration to get the sheets from. If a `spreadsheet` key is present in the local `specs`
+        # in the local configuration, then ORDER/MORPH are present in a dict under the key `sheets`,
+        # otherwise, they are just sitting in the `specs` dict.
+        order_filename = f"{local_specs['specs']['sheets']['order']}.csv"
+        ORDER = pd.read_csv(os.path.join(data_dir, order_filename))
+        morph_filename = f"{local_specs['specs']['sheets']['morph']}.csv"
+        MORPH = pd.read_csv(os.path.join(data_dir, morph_filename))
+    else:
+        ABOUT, HEADER, MORPH, ORDER = [None] * 4
     
     lexicon_sheets: List[Union[str, pd.DataFrame]] = None
     if lexicon_sheet is not None:
@@ -204,51 +207,54 @@ def read_morph_specs(config:Dict,
     exclusions: List[str] = local_specs['specs'].get('exclude', [])
     
     # Process ORDER sheet
-    ORDER = ORDER[ORDER.DEFINE == 'ORDER']  # skip comments & empty lines
-    ORDER = ORDER.replace(nan, '', regex=True)
-    for exclusion in exclusions:
-        ORDER = ORDER[~ORDER.EXCLUDE.str.contains(exclusion)]
+    if ORDER is not None:
+        ORDER = ORDER[ORDER.DEFINE == 'ORDER']  # skip comments & empty lines
+        ORDER = ORDER.replace(nan, '', regex=True)
+        for exclusion in exclusions:
+            ORDER = ORDER[~ORDER.EXCLUDE.str.contains(exclusion)]
 
-    # Dictionary which groups conditions into classes (used later to
-    # do partial compatibility which is useful from pruning out incoherent
-    # suffix/prefix/stem combinations before performing full compatibility
-    # in which (prefix, stem, suffix) instances are tried out individually).
-    class2cond = MORPH[MORPH.DEFINE == 'CONDITIONS']
-    class2cond: Dict[str, List[str]] = {
-        cond_class["CLASS"]: [cond for cond in cond_class["FUNC"].split() if cond]
-        for _, cond_class in class2cond.iterrows()}
-    # Reverses the dictionary (k -> v and v -> k) so that individual conditions
-    # which belonged to a class are now keys with that class as a value. In addition,
-    # each condition gets its corresponding one-hot vector (actually stored as an int
-    # because bitwise operations can only be performed on ints) computed based on the
-    # other conditions within the same class (useful for pruning later).
-    #NOTE: all conditions appearing in the lexicon and morph file must be included
-    # in the condition defitions in the Morph sheet if the pruning option is set to true
-    # or else KeyError exceptions will be thrown in the DB making process.
-    cond2class = {
-        cond: (cond_class, 
-               int(''.join(['1' if i == index else '0' for index in range (len(cond_s))]), 2)
-        )
-        for cond_class, cond_s in class2cond.items()
-            for i, cond in enumerate(cond_s)}
-    
-    # Process MORPH sheet
-    MORPH = MORPH[MORPH.DEFINE == 'MORPH']
-    MORPH = MORPH.replace(nan, '', regex=True)
-    MORPH = MORPH.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
-    MORPH = MORPH.replace('\s+', ' ', regex=True)
+    cond2class = None
+    if MORPH is not None:
+        # Dictionary which groups conditions into classes (used later to
+        # do partial compatibility which is useful from pruning out incoherent
+        # suffix/prefix/stem combinations before performing full compatibility
+        # in which (prefix, stem, suffix) instances are tried out individually).
+        class2cond = MORPH[MORPH.DEFINE == 'CONDITIONS']
+        class2cond: Dict[str, List[str]] = {
+            cond_class["CLASS"]: [cond for cond in cond_class["FUNC"].split() if cond]
+            for _, cond_class in class2cond.iterrows()}
+        # Reverses the dictionary (k -> v and v -> k) so that individual conditions
+        # which belonged to a class are now keys with that class as a value. In addition,
+        # each condition gets its corresponding one-hot vector (actually stored as an int
+        # because bitwise operations can only be performed on ints) computed based on the
+        # other conditions within the same class (useful for pruning later).
+        #NOTE: all conditions appearing in the lexicon and morph file must be included
+        # in the condition defitions in the Morph sheet if the pruning option is set to true
+        # or else KeyError exceptions will be thrown in the DB making process.
+        cond2class = {
+            cond: (cond_class, 
+                int(''.join(['1' if i == index else '0' for index in range (len(cond_s))]), 2)
+            )
+            for cond_class, cond_s in class2cond.items()
+                for i, cond in enumerate(cond_s)}
+        
+        # Process MORPH sheet
+        MORPH = MORPH[MORPH.DEFINE == 'MORPH']
+        MORPH = MORPH.replace(nan, '', regex=True)
+        MORPH = MORPH.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
+        MORPH = MORPH.replace('\s+', ' ', regex=True)
 
-    MORPH['COND-S'] = MORPH['COND-S'].replace('[\[\]]', '', regex=True)
-    MORPH.loc[MORPH['COND-S'] == '', 'COND-S'] = '_'
-    MORPH.loc[MORPH['COND-T'] == '', 'COND-T'] = '_'
-    # Replace spaces in BW and GLOSS with '#'
-    MORPH['BW'] = MORPH['BW'].replace('\s+', '#', regex=True)
-    MORPH.loc[MORPH['BW'] == '', 'BW'] = '_'
-    MORPH.loc[MORPH['FORM'] == '', 'FORM'] = '_'
-    MORPH['GLOSS'] = MORPH['GLOSS'].replace('\s+', '#', regex=True)
-    if 'COND-F' not in MORPH.columns:
-        MORPH['COND-F'] = ''
-    MORPH = process_morph_specs(MORPH, exclusions) if process_morph else MORPH
+        MORPH['COND-S'] = MORPH['COND-S'].replace('[\[\]]', '', regex=True)
+        MORPH.loc[MORPH['COND-S'] == '', 'COND-S'] = '_'
+        MORPH.loc[MORPH['COND-T'] == '', 'COND-T'] = '_'
+        # Replace spaces in BW and GLOSS with '#'
+        MORPH['BW'] = MORPH['BW'].replace('\s+', '#', regex=True)
+        MORPH.loc[MORPH['BW'] == '', 'BW'] = '_'
+        MORPH.loc[MORPH['FORM'] == '', 'FORM'] = '_'
+        MORPH['GLOSS'] = MORPH['GLOSS'].replace('\s+', '#', regex=True)
+        if 'COND-F' not in MORPH.columns:
+            MORPH['COND-F'] = ''
+        MORPH = process_morph_specs(MORPH, exclusions) if process_morph else MORPH
 
     # cont'd: Process LEXICON sheet
     for lex_type in ['concrete', 'backoff']:

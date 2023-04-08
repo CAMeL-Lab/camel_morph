@@ -23,6 +23,8 @@
 
 import re
 import gspread
+import os
+import json
 
 consonants_bw = "['|>&<}bptvjHxd*rzs$SDTZEgfqklmnhwy]"
 double_cons = re.compile('{}{}'.format(consonants_bw, consonants_bw))
@@ -431,3 +433,11 @@ def _strip_brackets(info):
     if info[0] == '[' and info[-1] == ']':
         info = info[1:-1]
     return info
+
+
+def get_config_file(config_file):
+    configs_dir = os.path.join(
+        '/'.join(os.path.dirname(__file__).split('/')[:-1]), 'configs')
+    with open(os.path.join(configs_dir, config_file)) as f:
+        config = json.load(f)
+    return config

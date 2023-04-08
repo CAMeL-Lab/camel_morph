@@ -1,7 +1,6 @@
 import os
 import argparse
 import gspread
-import pickle
 import re
 import json
 
@@ -11,6 +10,7 @@ import pandas as pd
 from camel_morph.utils.utils import add_check_mark_online
 from camel_morph.debugging.create_repr_lemmas_list import create_repr_lemmas_list
 from camel_morph.debugging.download_sheets import download_sheets
+from camel_morph.utils.utils import get_config_file
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-config_file", default='config_default.json',
@@ -188,8 +188,7 @@ def regenerate_signature_lex_rows(sheet, sh, config, config_name):
 
 
 if __name__ == "__main__":
-    with open(args.config_file) as f:
-        config = json.load(f)
+    config = get_config_file(args.config_file)
     config_name = args.config_name
     config_local = config['local'][config_name]
     config_global = config['global']
