@@ -17,7 +17,7 @@
         "docs_debugging_dir": "docs_debugging",
         "docs_banks_dir": "banks_docs",
         "docs_tables_dir": "tables_docs",
-        "camel_tools": "./camel_tools",
+        "camel_tools": "./camel_morph/camel_tools",
         "service_account": "/Users/chriscay/.config/gspread/service_account.json",
         "paradigms_config": "configs/config_paradigms.json",
         "banks_spreadsheet": "Paradigm-Banks"

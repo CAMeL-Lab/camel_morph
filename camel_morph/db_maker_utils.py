@@ -277,10 +277,11 @@ def read_morph_specs(config:Dict,
                 LEXICON[lex_type].at[i, 'COND-F'] = ' '.join(cond_f_)
     
     #FIXME: temporary; should be done by the clean condisitons code
-    LEXICON['concrete']['COND-S'] = LEXICON['concrete']['COND-S'].replace(
-        r'hollow|defective', '', regex=True)
-    LEXICON['concrete']['COND-S'] = LEXICON['concrete']['COND-S'].replace(
-        r' +', ' ', regex=True)
+    if LEXICON['concrete'] is not None:
+        LEXICON['concrete']['COND-S'] = LEXICON['concrete']['COND-S'].replace(
+            r'hollow|defective', '', regex=True)
+        LEXICON['concrete']['COND-S'] = LEXICON['concrete']['COND-S'].replace(
+            r' +', ' ', regex=True)
     
     # Get rid of unused conditions, i.e., use only the conditions which are in the intersection
     # of the collective (concatenated across morph and lexicon sheets) COND-T and COND-S columns

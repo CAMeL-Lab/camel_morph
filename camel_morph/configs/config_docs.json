@@ -9,7 +9,7 @@
             ]
         },
         "db_dir": "databases",
-        "camel_tools": "./camel_tools",
+        "camel_tools": "./camel_morph/camel_tools",
         "service_account": "/Users/chriscay/.config/gspread/service_account.json",
         "debugging": "debugging_output",
         "docs_debugging_dir": "docs_debugging",

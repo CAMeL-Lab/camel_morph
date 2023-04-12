@@ -45,7 +45,7 @@ parser.add_argument("-camel_tb_path", default='eval_files/camel_tb_uniq_types.tx
                     type=str, help="Path of the file containing the MSA CAMeLTB data to evaluate on.")
 parser.add_argument("-output_dir", default='eval_files',
                     type=str, help="Path of the directory to output evaluation results.")
-parser.add_argument("-config_file", default='configs/config_default.json',
+parser.add_argument("-config_file", default='camel_morph/configs/config_default.json',
                     type=str, help="Config file specifying which sheets to use.")
 parser.add_argument("-egy_config_name", default='all_aspects_egy',
                     type=str, help="Config name which specifies the path of the EGY Camel DB.")
@@ -64,13 +64,13 @@ parser.add_argument("-pos_or_type", default='', choices=['verbal', 'nominal', 'o
                                                             'noun', 'noun_num', 'noun_quant', 'noun_prop',
                                                             'adj', 'adj_num', 'adj_comp'],
                     type=str, help="POS or POS type to evaluate.")
+"""['recall_msa_magold_raw', 'recall_msa_magold_ldc_dediac',
+'recall_egy_magold_raw', 'recall_egy_magold_ldc_dediac',
+'recall_egy_union_msa_magold_raw', 'recall_egy_union_msa_magold_ldc_dediac', 'recall_egy_union_msa_magold_calima_dediac',
+'recall_egy_magold_raw_no_lex', 'recall_egy_magold_ldc_dediac_no_lex',
+'recall_msa_magold_ldc_dediac_backoff', 'recall_egy_magold_ldc_dediac_backoff',
+'compare_camel_tb_msa_raw', 'compare_camel_tb_egy_raw']"""
 parser.add_argument("-eval_mode", default='',
-                    choices=['recall_msa_magold_raw', 'recall_msa_magold_ldc_dediac',
-                             'recall_egy_magold_raw', 'recall_egy_magold_ldc_dediac',
-                             'recall_egy_union_msa_magold_raw', 'recall_egy_union_msa_magold_ldc_dediac', 'recall_egy_union_msa_magold_calima_dediac',
-                             'recall_egy_magold_raw_no_lex', 'recall_egy_magold_ldc_dediac_no_lex',
-                             'recall_msa_magold_ldc_dediac_backoff', 'recall_egy_magold_ldc_dediac_backoff',
-                             'compare_camel_tb_msa_raw', 'compare_camel_tb_egy_raw'],
                     type=str, help="What evaluation to perform.")
 parser.add_argument("-n", default=1000000000,
                     type=int, help="Number of instances to evaluate.")
