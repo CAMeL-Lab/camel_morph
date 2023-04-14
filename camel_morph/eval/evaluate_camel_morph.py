@@ -159,11 +159,15 @@ def _preprocess_magold_data(gold_data, POS=None,
                     if analysis['pos'] not in POS:
                         continue
             
+            magold = OrderedDict(
+                (f, info[i]) for f, i in field2info_index.items()
+                if f in ['ldc', 'source_comment', 'ranking', 'starline'])
+            
             word_info = {
                 'info': {
                     'sentence': sentence_str,
                     'word': info[0][len(';;WORD '):],
-                    'magold': info[1:4]
+                    'magold': magold
                 },
                 'analysis': analysis
             }
@@ -223,10 +227,9 @@ def _preprocess_analysis(analysis, essential_keys=ESSENTIAL_KEYS, optional_keys=
 
 
 def recall_print(errors, correct_cases, drop_cases, results_path,
-                 best_analysis=True, essential_keys=ESSENTIAL_KEYS):
+                 essential_keys=ESSENTIAL_KEYS):
     errors_ = []
     i = 1
-    source_index = essential_keys.index('source')
     for label, cases in [('correct', correct_cases), ('wrong', errors), ('drop', drop_cases)]:
         for case in cases:
             e_gold = case['gold']
@@ -234,52 +237,51 @@ def recall_print(errors, correct_cases, drop_cases, results_path,
                 pred = pd.DataFrame([('-',)*len(essential_keys)])
                 label_ = 'noan'
             else:
+                pred = pd.DataFrame(case['pred'])
                 label_ = label
-                analyses_pred, index2similarity = [], {}
-                for analysis_index, analysis in enumerate(case['pred']):
-                    analysis_ = []
-                    for index, f in enumerate(analysis):
-                        if f == e_gold[index]:
-                            analysis_.append(f)
-                            index2similarity.setdefault(analysis_index, 0)
-                            index2similarity[analysis_index] += (
-                                1.01 if analysis[source_index] == 'main' else 1)
-                        else:
-                            analysis_.append(f'[{f}]')
-                    analyses_pred.append(tuple(analysis_))
-                sorted_indexes = sorted(
-                    index2similarity.items(), key=lambda x: x[1], reverse=True)
-                analyses_pred = [analyses_pred[analysis_index]
-                                 for analysis_index, _ in sorted_indexes]
-                if best_analysis:
-                    analyses_pred = analyses_pred[0:1]
-                else:
-                    analyses_pred = [analysis for analysis in analyses_pred
-                                     if all(analysis[i] == e_gold[i] for i, k in enumerate(essential_keys)
-                                            if k not in ['source', 'lex', 'diac', 'stem_seg'])]
-
-                pred = pd.DataFrame(analyses_pred)
 
             gold = pd.DataFrame([e_gold])
             example = pd.concat([gold, pred], axis=1)
             ex_col = pd.DataFrame(
                 [(f"{i} {case['word']['info']['word']}", label_)]*len(example.index))
             extra_info = pd.DataFrame(
-                [(bw2ar(case['word']['info']['sentence']), *case['word']['info']['magold'], case['count'])])
+                [(bw2ar(case['word']['info']['sentence']),
+                  *case['word']['info']['magold'].values(), case['count'])])
             example = pd.concat([ex_col, extra_info, example], axis=1)
+            example.columns = range(example.columns.size)
             errors_.append(example)
             i += 1
 
     errors = pd.concat(errors_)
     errors = errors.replace(nan, '', regex=True)
-    errors.columns = ['filter', 'label', 'sentence', 'ldc',
-                      'rank', 'starline', 'freq'] + essential_keys + essential_keys
+    errors.columns = ['filter', 'label', 'sentence',
+        *case['word']['info']['magold'], 'freq'] + essential_keys * 2
     errors.to_csv(results_path, index=False, sep='\t')
+
+
+def filter_and_rank_analyses(analyses_pred, analysis_gold, source_index):
+    analyses_pred_, index2similarity = [], {}
+    for analysis_index, analysis in enumerate(analyses_pred):
+        analysis_ = []
+        for index, f in enumerate(analysis):
+            if f == analysis_gold[index]:
+                analysis_.append(f)
+                index2similarity.setdefault(analysis_index, 0)
+                index2similarity[analysis_index] += (
+                    1.01 if analysis[source_index] == 'main' else 1)
+            else:
+                analysis_.append(f'[{f}]')
+        analyses_pred_.append(tuple(analysis_))
+    sorted_indexes = sorted(
+        index2similarity.items(), key=lambda x: x[1], reverse=True)
+    analyses_pred_ = [analyses_pred_[analysis_index]
+                        for analysis_index, _ in sorted_indexes]
+    
+    return analyses_pred_
 
 
 def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
                     msa_camel_analyzer=None, best_analysis=True,
-                    field2info_index=FIELD2INFO_INDEX,
                     print_recall=True,
                     essential_keys=ESSENTIAL_KEYS):
     source_index = essential_keys.index('source')
@@ -305,11 +307,10 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
     elif 'calima_dediac' in eval_mode:
         print('Analyzer input: CALIMA DEDIAC')
 
-    ldc_tag_exists = field2info_index is not None and 'ldc' in field2info_index.values()
     data_, counts = OrderedDict(), {}
     for word_info in data:
-        if ldc_tag_exists:
-            diac_lemma_bw = word_info['info']['magold'][FIELD2INFO_INDEX['ldc']].split(' # ')[1:4]
+        if 'ldc' in word_info['info']['magold']:
+            diac_lemma_bw = word_info['info']['magold']['ldc'].split(' # ')[1:4]
         else:
             diac_lemma_bw = ('', '', '')
         key = (word_info['info']['word'], diac_lemma_bw)
@@ -359,6 +360,15 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
                 for analysis in analyses_pred])
         analysis_gold_no_source = tuple(
             [f for i, f in enumerate(analysis_gold) if i not in excluded_indexes])
+        
+        analyses_pred = filter_and_rank_analyses(analyses_pred, analysis_gold, source_index)
+        if best_analysis:
+            analyses_pred = analyses_pred[0:1]
+        else:
+            analyses_pred = [
+                analysis for analysis in analyses_pred
+                if all(analysis[i] == analysis_gold[i] for i, k in enumerate(essential_keys)
+                        if k not in ['source', 'lex', 'diac', 'stem_seg'])]
 
         is_error = False
         if analysis_gold_no_source in analyses_pred_no_source:
@@ -396,6 +406,7 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
                                   'pred': analyses_pred,
                                   'gold': analysis_gold,
                                   'count': counts[(word, ldc_bw)]})
+        
         pbar.set_description(f'{len(correct_cases)/total:.1%} (recall)')
         pbar.update(1)
 
@@ -407,7 +418,7 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
     print(f"Token space recall: {recall_token_space:.2%}")
 
     if print_recall:
-        recall_print(errors, correct_cases, drop_cases, output_path, best_analysis,
+        recall_print(errors, correct_cases, drop_cases, output_path,
                      essential_keys=essential_keys)
     
     return correct_cases

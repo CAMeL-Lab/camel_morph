@@ -199,8 +199,6 @@ if __name__ == "__main__":
                         type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
     parser.add_argument("-config_name_glf", default='default_config', nargs='+',
                         type=str, help="Name of the configuration to load from the config file. If more than one is added, then lemma classes from those will not be counted in the current list.")
-    parser.add_argument("-output_dir", default='sandbox_files',
-                        type=str, help="Path of the directory to output evaluation results.")
     parser.add_argument("-backoff_stems", default='',
                         type=str, help="Specified how to get the backoff stems (either computed automatically from the EGY lexicon, or loaded from a sheet).")
     parser.add_argument("-gumar_inspect_path", default='',
@@ -274,16 +272,13 @@ if __name__ == "__main__":
                                                         field2info_index=FIELD2INFO_INDEX,
                                                         field2ldc_index=None)
     
-    output_path = os.path.join(args.output_dir, args.eval_mode)
     possible_analyses = evaluate_camel_morph.evaluate_recall(data,
                                                              args.n,
                                                              args.eval_mode,
-                                                             output_path,
+                                                             args.possible_analyses_filtered_path,
                                                              analyzer,
                                                              msa_camel_analyzer=None,
                                                              best_analysis=False,
-                                                             field2info_index=FIELD2INFO_INDEX,
-                                                             print_recall=False,
                                                              essential_keys=ESSENTIAL_KEYS)
     filtered_possible_analyses = filter_analyses(possible_analyses)
     
@@ -291,6 +286,11 @@ if __name__ == "__main__":
         answer = input((f'Do you want to load the previous file {args.possible_analyses_filtered_path} (l) '
                         'file or overwrite the previous one (o)? '))
         if answer == 'o':
+            with open(args.possible_analyses_filtered_path, 'w') as f:
+                print(*HEADER_SHEET, sep='\t', file=f)
+                for i, row in enumerate(lexicon, start=1):
+                    row['FORM'], row['LEMMA'] = f'stem{i}', f'lemma{i}'
+                    print(*[row.get(h, '') for h in HEADER_SHEET], sep='\t', file=f)
             with open(args.possible_analyses_filtered_path, 'wb') as f:
                 pickle.dump(filtered_possible_analyses, f)
         elif answer == 'l':
