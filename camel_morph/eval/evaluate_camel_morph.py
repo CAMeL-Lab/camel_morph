@@ -103,48 +103,70 @@ ar2bw = CharMapper.builtin_mapper('ar2bw')
 sukun_regex = re.compile('o')
 aA_regex = re.compile(r'(?<!^[wf])aA')
 
-essential_keys = ['source', 'diac', 'lex', 'pos', 'asp', 'mod',
+ESSENTIAL_KEYS = ['source', 'diac', 'lex', 'pos', 'asp', 'mod',
                   'vox', 'per', 'num', 'gen', 'stt', 'cas',
                   'prc0', 'prc1', 'prc1.5', 'prc2', 'prc3',
                   'enc0', 'enc1', 'enc2', 'stem_seg']
 
+FIELD2SENTENCE_INDEX = {f: i
+    for i, f in enumerate(['sentence'])}
+FIELD2INFO_INDEX = {f: i
+    for i, f in enumerate(['word', 'ldc', 'source_comment', 'ranking', 'starline', 'calima'])}
+FIELD2LDC_INDEX = {f: i
+    for i, f in enumerate(['word', 'diac_degmented', 'lemma', 'bw', 'gloss'])}
 
-def _preprocess_magold_data(gold_data, ATB_POS=None):
+
+def _load_analysis(analysis):
+    analysis_ = {}
+    for field in analysis:
+        field = field.split(':')
+        analysis_[field[0]] = ''.join(field[1:])
+    return analysis_
+
+
+def _preprocess_magold_data(gold_data, POS=None,
+                            load_analysis_fn=_load_analysis,
+                            field2sentence_index=FIELD2SENTENCE_INDEX,
+                            field2info_index=FIELD2INFO_INDEX,
+                            field2ldc_index=FIELD2LDC_INDEX):
+    ldc_tag_exists = field2info_index is not None and 'ldc' in field2info_index.values()
+    if ldc_tag_exists:
+        print('WARNING: Using POS from analysis and not BW tag choose which words to analyze.')
     gold_data = gold_data.split(
         '--------------\nSENTENCE BREAK\n--------------\n')[:-1]
     gold_data = [sentence.split('\n--------------\n')
                  for sentence in gold_data]
-    gold_data = [{'sentence': ex[0].split('\n')[0], 'words': [ex[0].split(
-        '\n')[1:]] + [x.split('\n') for x in ex[1:]]} for ex in gold_data]
+
+    words_start_index = max(field2sentence_index.values()) + 1
     gold_data_ = []
-    word_start, sentence_start = len(";;WORD "), len(";;; SENTENCE ")
     for example in tqdm(gold_data):
-        for info in example['words']:
-            word = info[0][word_start:]
-            ldc = info[1]
-            ldc_BW_components = set(ldc.split(' # ')[3].split('+'))
-                    
-            def get_word_info():
-                analysis_ = {}
-                for field in info[4].split()[1:]:
-                    field = field.split(':')
-                    analysis_[field[0]] = ''.join(field[1:])
-
-                word_info = {
-                    'info': {
-                        'sentence': example['sentence'][sentence_start:],
-                        'word': word,
-                        'magold': info[1:4]
-                    },
-                    'analysis': analysis_
-                }
-                return word_info
-
-            if ATB_POS is not None:
-                intersect = ldc_BW_components & ATB_POS
-                if not bool(intersect):
-                    continue
-            word_info = get_word_info()
+        example_info_list = example[0].split('\n')
+        sentence_str = example_info_list[field2sentence_index['sentence']][len(';;; SENTENCE '):]
+        words_info = [example_info_list[words_start_index:]] + [x.split('\n') for x in example[words_start_index:]]
+        for info in words_info:
+            analysis = load_analysis_fn(
+                info[field2info_index['starline']].split()[1:])
+            if POS is not None:
+                if ldc_tag_exists:
+                    ldc = info[field2info_index['ldc']]
+                    ldc_split = ldc.split(' # ')
+                    ldc_BW_components = set(
+                        ldc_split[field2ldc_index['bw']].split('+'))
+                    intersect = ldc_BW_components & ATB_POS
+                    if bool(intersect):
+                        continue
+                else:
+                    if analysis['pos'] not in POS:
+                        continue
+            
+            word_info = {
+                'info': {
+                    'sentence': sentence_str,
+                    'word': info[0][len(';;WORD '):],
+                    'magold': info[1:4]
+                },
+                'analysis': analysis
+            }
             gold_data_.append(word_info)
 
     return gold_data_
@@ -170,7 +192,7 @@ def _preprocess_ldc_dediac(ldc_diac):
     return analyzer_input
 
 
-def _preprocess_analysis(analysis, optional_keys=[]):
+def _preprocess_analysis(analysis, essential_keys=ESSENTIAL_KEYS, optional_keys=[]):
     if analysis['prc0'] in ['mA_neg', 'lA_neg']:
         analysis['prc1.5'] = analysis['prc0']
         analysis['prc0'] = '0'
@@ -200,7 +222,8 @@ def _preprocess_analysis(analysis, optional_keys=[]):
     return tuple(pred)
 
 
-def recall_print(errors, correct_cases, drop_cases, results_path, bw2ar, best_analysis=True):
+def recall_print(errors, correct_cases, drop_cases, results_path,
+                 best_analysis=True, essential_keys=ESSENTIAL_KEYS):
     errors_ = []
     i = 1
     source_index = essential_keys.index('source')
@@ -255,7 +278,10 @@ def recall_print(errors, correct_cases, drop_cases, results_path, bw2ar, best_an
 
 
 def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
-                    msa_camel_analyzer=None, best_analysis=True):
+                    msa_camel_analyzer=None, best_analysis=True,
+                    field2info_index=FIELD2INFO_INDEX,
+                    print_recall=True,
+                    essential_keys=ESSENTIAL_KEYS):
     source_index = essential_keys.index('source')
     lex_index = essential_keys.index('lex')
     diac_index = essential_keys.index('diac')
@@ -279,10 +305,14 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
     elif 'calima_dediac' in eval_mode:
         print('Analyzer input: CALIMA DEDIAC')
 
+    ldc_tag_exists = field2info_index is not None and 'ldc' in field2info_index.values()
     data_, counts = OrderedDict(), {}
     for word_info in data:
-        key = (word_info['info']['word'], tuple(
-            word_info['info']['magold'][0].split(' # ')[1:4]))
+        if ldc_tag_exists:
+            diac_lemma_bw = word_info['info']['magold'][FIELD2INFO_INDEX['ldc']].split(' # ')[1:4]
+        else:
+            diac_lemma_bw = ('', '', '')
+        key = (word_info['info']['word'], diac_lemma_bw)
         counts.setdefault(key, 0)
         counts[key] += 1
         data_[key] = word_info
@@ -293,7 +323,8 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
     pbar = tqdm(total=len(data_))
     for (word, ldc_bw), word_info in data_:
         total += 1
-        analysis_gold = _preprocess_analysis(word_info['analysis'])
+        analysis_gold = _preprocess_analysis(word_info['analysis'],
+                                             essential_keys)
 
         if 'raw' in eval_mode:
             analyzer_input = word
@@ -307,7 +338,7 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
         analyses_pred_ = analyzer_camel.analyze(analyzer_input)
         for analysis in analyses_pred_:
             analysis['source'] = 'main'
-        analyses_pred = set([_preprocess_analysis(analysis)
+        analyses_pred = set([_preprocess_analysis(analysis, essential_keys)
                              for analysis in analyses_pred_])
 
         match = re.search(r'ADAM|CALIMA|SAMA', word_info['analysis']['gloss'])
@@ -319,7 +350,7 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
             analyses_msa_pred = msa_camel_analyzer.analyze(analyzer_input)
             for analysis in analyses_msa_pred:
                 analysis['source'] = 'msa'
-            analyses_msa_pred = set([_preprocess_analysis(analysis)
+            analyses_msa_pred = set([_preprocess_analysis(analysis, essential_keys)
                                      for analysis in analyses_msa_pred])
             analyses_pred = analyses_pred | analyses_msa_pred
 
@@ -375,12 +406,15 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
                           sum(case['count'] for case in errors))
     print(f"Token space recall: {recall_token_space:.2%}")
 
-    recall_print(errors, correct_cases, drop_cases, output_path, bw2ar, best_analysis)
+    if print_recall:
+        recall_print(errors, correct_cases, drop_cases, output_path, best_analysis,
+                     essential_keys=essential_keys)
     
     return correct_cases
 
 
-def compare_print(words, analyses_words, status, results_path, bw=False):
+def compare_print(words, analyses_words, status, results_path,
+                  bw=False, essential_keys=ESSENTIAL_KEYS):
     assert len(analyses_words) == len(status) == len(words)
 
     def qc_automatic(camel):
@@ -520,7 +554,8 @@ def compare_print(words, analyses_words, status, results_path, bw=False):
 
 
 def evaluate_verbs_analyzer_comparison(data, n, output_path,
-                                       analyzer_camel, analyzer_baseline):
+                                       analyzer_camel, analyzer_baseline,
+                                       essential_keys=ESSENTIAL_KEYS):
     words, analyses, status = [], [], []
     pbar = tqdm(total=min(n, len(data)))
     random.shuffle(data)
@@ -537,11 +572,11 @@ def evaluate_verbs_analyzer_comparison(data, n, output_path,
             match = re.search(r'ADAM|CALIMA|SAMA', analysis['gloss'])
             analysis['source'] = match.group().lower() if match else 'na'
         analyses_camel = {
-            tuple([f for i, f in enumerate(_preprocess_analysis(analysis))
+            tuple([f for i, f in enumerate(_preprocess_analysis(analysis, essential_keys))
                    if i != source_index]): analysis
             for analysis in analyses_camel if analysis['pos'] in CAMEL_POS}
         analyses_baseline = {
-            tuple([f for i, f in enumerate(_preprocess_analysis(analysis))
+            tuple([f for i, f in enumerate(_preprocess_analysis(analysis, essential_keys))
                    if i != source_index]): analysis
             for analysis in analyses_baseline if analysis['pos'] in CAMEL_POS}
         analyses_camel_set, analyses_baseline_set = set(
@@ -588,7 +623,8 @@ def evaluate_verbs_analyzer_comparison(data, n, output_path,
         pbar.update(1)
     pbar.close()
 
-    compare_print(words, analyses, status, output_path, bw=True)
+    compare_print(words, analyses, status, output_path, bw=True,
+                  essential_keys=essential_keys)
 
     return status
 
@@ -676,13 +712,7 @@ def compare_stats(compare_results):
     return stats
 
 
-if __name__ == "__main__":
-    if args.spreadsheet:
-        sa = gspread.service_account(config['global']['service_account'])
-        sh = sa.open(args.spreadsheet)
-    else:
-        sh = None
-
+def load_required_pos(required_pos_or_type):
     with open('misc_files/atb2camel_pos.json') as f:
         pos_type2atb2camel_pos = json.load(f)
     
@@ -692,16 +722,28 @@ if __name__ == "__main__":
             atb_pos2camel_pos = {
                 atb: set(camel) if type(camel) is list else set([camel])
                 for atb, camel in atb_pos2camel_pos.items()}
-            if args.pos_or_type in ['verbal', 'nominal', 'other']:
-                if pos_type == args.pos_or_type:
+            if required_pos_or_type in ['verbal', 'nominal', 'other']:
+                if pos_type == required_pos_or_type:
                     ATB_POS.update(atb_pos2camel_pos.keys())
                     CAMEL_POS.update(*[map(str.lower, camel_pos)
                                        for camel_pos in atb_pos2camel_pos.values()])
             else:
                 ATB_POS.update([atb
                                 for atb, camel in atb_pos2camel_pos.items()
-                                if args.pos_or_type.upper() in camel])
-                CAMEL_POS.update([args.pos_or_type])
+                                if required_pos_or_type.upper() in camel])
+                CAMEL_POS.update([required_pos_or_type])
+    
+    return ATB_POS, CAMEL_POS
+
+
+if __name__ == "__main__":
+    if args.spreadsheet:
+        sa = gspread.service_account(config['global']['service_account'])
+        sh = sa.open(args.spreadsheet)
+    else:
+        sh = None
+
+    ATB_POS, CAMEL_POS = load_required_pos(args.pos_or_type)
 
     output_dir = os.path.join(args.output_dir, args.pos_or_type)
     os.makedirs(output_dir, exist_ok=True)

@@ -441,3 +441,16 @@ def get_config_file(config_file):
     with open(os.path.join(configs_dir, config_file)) as f:
         config = json.load(f)
     return config
+
+
+def get_lex_paths(config, config_name):
+    config_local = config['local'][config_name]
+    dialect = config_local['dialect']
+    lex_paths = []
+    for sheet_name in config_local['lexicon']['sheets']:
+        lex_path = os.path.join('data',
+                                f'camel-morph-{dialect}',
+                                config_name,
+                                f'{sheet_name}.csv')
+        lex_paths.append(lex_path) 
+    return lex_paths                       
