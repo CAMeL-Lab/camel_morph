@@ -6,24 +6,25 @@ import xml.etree.ElementTree as ET
 from tqdm import tqdm
 import re
 import pickle
-from collections import Counter
 
 import pandas as pd
 from numpy import nan
 
 try:
-    from .. import db_maker_utils
+    from .. import db_maker, db_maker_utils
     from ..debugging.generate_docs_tables import _get_structured_lexicon_classes
     from ..eval import evaluate_camel_morph
     from ..utils import utils
+    from ..debugging.download_sheets import download_sheets
 except:
     file_path = os.path.abspath(__file__).split('/')
     package_path = '/'.join(file_path[:len(file_path) - 1 - file_path[::-1].index('camel_morph')])
     sys.path.insert(0, package_path)
-    from camel_morph import db_maker_utils
+    from camel_morph import db_maker, db_maker_utils
     from camel_morph.debugging.generate_docs_tables import _get_structured_lexicon_classes
     from camel_morph.eval import evaluate_camel_morph
     from camel_morph.utils import utils
+    from camel_morph.debugging.download_sheets import download_sheets
 
 from glf_pilot_utils import POS_NOM, DEFAULT_NORMALIZE_MAP
 
@@ -63,6 +64,41 @@ def _load_analysis(analysis):
     return analysis_
 
 
+def _get_id2info(stem_classes):
+    id2info = {}
+    for (cond_s, cond_t, _), info in stem_classes.items():
+        id2info[info['LEMMA']] = {
+            'cond_s': cond_s, 'cond_t': cond_t, 'freq': info['FREQ']}
+    return id2info
+
+
+def _filter_and_process_abstract_entries(lexicon):
+    SHEETS, _ = db_maker_utils.read_morph_specs(config_glf,
+                                                config_name_glf,
+                                                lexicon_cond_f=False)
+    morph = SHEETS['morph']
+    valid_conditions = set(cond_
+                           for conds in morph['COND-T'].values.tolist()
+                           for cond in conds.split()
+                           for cond_ in cond.split('||'))
+    
+    deleted_conditions = set()
+    for i, row in lexicon.iterrows():
+        cond_s = row['COND-S']
+        cond_s_ = []
+        for cond in cond_s.split():
+            if cond in valid_conditions:
+                cond_s_.append(cond)
+            else:
+                deleted_conditions.add(cond)
+        cond_s_ = ' '.join(cond_s_)
+        lexicon.loc[i, 'COND-S'] = cond_s_
+
+    print(f"Conditions not being used and discarded: {' '.join(deleted_conditions)}")
+    
+    return lexicon
+
+
 def get_backoff_stems_from_egy(processing_mode='automatic'):
     if processing_mode == 'automatic':
         SHEETS, _ = db_maker_utils.read_morph_specs(config_egy,
@@ -72,13 +108,6 @@ def get_backoff_stems_from_egy(processing_mode='automatic'):
         lexicon = SHEETS['lexicon']
         lexicon['LEMMA'] = lexicon.apply(
             lambda row: re.sub('lex:', '', row['LEMMA']), axis=1)
-        with open(args.output_backoff_lex, 'w') as f:
-            print(*HEADER_SHEET, sep='\t', file=f)
-            lexicon = sorted(
-                lexicon.values(), key=lambda row: row['FREQ'], reverse=True)
-            for i, row in enumerate(lexicon, start=1):
-                row['FORM'], row['LEMMA'] = f'stem{i}', f'lemma{i}'
-                print(*[row.get(h, '') for h in HEADER_SHEET], sep='\t', file=f)
     
     elif processing_mode == 'manual':
         lex_path = utils.get_lex_paths(config_glf, config_name_glf)[0]
@@ -88,7 +117,9 @@ def get_backoff_stems_from_egy(processing_mode='automatic'):
     else:
         raise NotImplementedError
     
-    cond_s2cond_t2feats2rows = _get_structured_lexicon_classes(lexicon)
+    lexicon_processed = _filter_and_process_abstract_entries(lexicon)
+    
+    cond_s2cond_t2feats2rows = _get_structured_lexicon_classes(lexicon_processed)
     stem_classes = {}
     for cond_s, cond_t2feats2rows in cond_s2cond_t2feats2rows.items():
         for cond_t, feats2rows in cond_t2feats2rows.items():
@@ -103,42 +134,25 @@ def get_backoff_stems_from_egy(processing_mode='automatic'):
                 row_['DEFINE'] = 'BACKOFF'
                 row_['CLASS'] = '[STEM]'
                 row_['GLOSS'] = 'no'
-                row_['FREQ'] = len(rows)
+                if processing_mode == 'automatic':
+                    freq = len(rows)
+                elif processing_mode == 'manual':
+                    freq = int(lexicon[lexicon['LEMMA'] == rows[0]['LEMMA']]['FREQ'])
+                row_['FREQ'] = freq
                 stem_classes[(cond_s, cond_t, feats)] = row_
 
-    return stem_classes
-
-
-def filter_analyses(examples):
-    source_index = ESSENTIAL_KEYS.index('source')
-    processed = []
-    for example in examples:
-        e_gold = example['gold']
-        analyses_pred, index2similarity = [], {}
-        for analysis_index, analysis in enumerate(example['pred']):
-            analysis_ = []
-            for index, f in enumerate(analysis):
-                if f == e_gold[index]:
-                    analysis_.append(f)
-                    index2similarity.setdefault(analysis_index, 0)
-                    index2similarity[analysis_index] += (
-                        1.01 if analysis[source_index] == 'main' else 1)
-                else:
-                    analysis_.append(f'[{f}]')
-            analyses_pred.append(tuple(analysis_))
-        sorted_indexes = sorted(
-            index2similarity.items(), key=lambda x: x[1], reverse=True)
-        analyses_pred = [analyses_pred[analysis_index]
-                            for analysis_index, _ in sorted_indexes]
-        analyses_pred = [analysis for analysis in analyses_pred
-                            if all(analysis[i] == e_gold[i]
-                                   for i, k in enumerate(ESSENTIAL_KEYS)
-                                if k not in ['source', 'lex', 'diac', 'stem_seg'])]
-        processed.append({'word': example['word']['info']['word'],
-                          'gold': e_gold,
-                          'pred': analyses_pred})
+    lexicon_processed = pd.DataFrame(stem_classes.values())
     
-    return processed
+    with open(args.output_backoff_lex, 'w') as f:
+            print(*HEADER_SHEET, sep='\t', file=f)
+            stem_classes_ = sorted(
+                stem_classes.values(), key=lambda row: row['FREQ'], reverse=True)
+            for i, row in enumerate(stem_classes_, start=1):
+                if processing_mode == 'automatic':
+                    row['FORM'], row['LEMMA'] = f'stem{i}', f'lemma{i}'
+                print(*[row.get(h, '') for h in HEADER_SHEET], sep='\t', file=f)
+
+    return lexicon_processed, stem_classes
 
 
 def reverse_processing(analysis):
@@ -153,14 +167,24 @@ def _strip_brackets(info):
         info = info[1:-1]
     return info
 
+
+def add_information_to_rows(outputs, stem_classes):
+    id2info = _get_id2info(stem_classes)
+    outputs['Lexicon Freq'], outputs['COND-T'], outputs['COND-S'] = '', '', ''
+    for i, row in outputs.iterrows():
+        info = id2info[_strip_brackets(row['lex'])]
+        outputs.loc[i, 'Lexicon Freq'] = info['freq']
+        outputs.loc[i, 'COND-T'] = info['cond_t']
+        outputs.loc[i, 'COND-S'] = info['cond_s']
+    
+    return outputs
+
+
 def get_generated_form_counts_from_gumar(stem_classes, possible_analyses):
     with open(args.gumar_pkl, 'rb') as f:
         gumar = pickle.load(f)
 
-    id2info = {}
-    for (cond_s, cond_t, _), info in stem_classes.items():
-        id2info[info['LEMMA']] = {
-            'cond_s': cond_s, 'cond_t': cond_t, 'freq': info['FREQ']}
+    id2info = _get_id2info(stem_classes)
 
     form_counts = []
     for example in tqdm(possible_analyses):
@@ -217,6 +241,10 @@ if __name__ == "__main__":
                         type=str, help="Path to output the possible analyses generated by the backoff analyzer, filtered based on the gold analysis.")
     parser.add_argument("-db_dir", default='',
                         type=str, help="Path of the directory to load the DB from.")
+    parser.add_argument("-build_glf_db", default=False, action='store_true',
+                        help="Whether or not to build the GLF DB before starting the process.")
+    parser.add_argument("-download_glf_sheets", default=False, action='store_true',
+                        help="Whether or not to download sheets for the GLF DB before starting the process.")
     parser.add_argument("-eval_mode", required=True,
                         choices=['recall_glf_magold_raw_no_lex'],
                         type=str, help="What evaluation to perform.")
@@ -251,27 +279,46 @@ if __name__ == "__main__":
     ar2bw = CharMapper.builtin_mapper('ar2bw')
     bw2ar = CharMapper.builtin_mapper('bw2ar')
 
+    if args.download_glf_sheets:
+        print()
+        data_dir = utils.get_data_dir_path(config_glf, config_name_glf)
+        download_sheets(save_dir=data_dir,
+                        config=config_glf,
+                        config_name=config_name_glf,
+                        service_account=config_global_glf['service_account'])
+
+    print('Fetching (or computing) backoff stems... ')
+    lexicon_processed, stem_classes = get_backoff_stems_from_egy(
+        processing_mode=args.backoff_stems)
+    print('Done.')
+
+    if args.build_glf_db:
+        print()
+        lex_path = utils.get_lex_paths(config_glf, config_name_glf)[0]
+        lexicon_processed.to_csv(lex_path)
+        db_maker.make_db(config_glf, config_name_glf)
+
     db_name = config_local_glf['db']
-    db_dir = config_global_glf['db_dir']
-    db_dir = os.path.join(db_dir, f"camel-morph-{config_local_glf['dialect']}")
+    db_dir = utils.get_db_dir_path(config_glf, config_name_glf)
     db = MorphologyDB(os.path.join(db_dir, db_name), flags='a')
     db_gen = MorphologyDB(os.path.join(db_dir, db_name), flags='gd')
     generator = Generator(db_gen)
     analyzer = Analyzer(db, backoff='NOAN-ONLY_ALL')
-
-    stem_classes = get_backoff_stems_from_egy(processing_mode=args.backoff_stems)
     
     with open(args.magold_path) as f:
         ma_gold = f.read()
 
     POS = set(map(str.lower, POS_NOM))
+    print('\nLoading MAGOLD data... ')
     data = evaluate_camel_morph._preprocess_magold_data(ma_gold,
                                                         POS,
                                                         _load_analysis,
                                                         field2sentence_index=FIELD2SENTENCE_INDEX,
                                                         field2info_index=FIELD2INFO_INDEX,
                                                         field2ldc_index=None)
+    print('Done.\n')
     
+    print('Computing all possible analyses...')
     possible_analyses = evaluate_camel_morph.evaluate_recall(data,
                                                              args.n,
                                                              args.eval_mode,
@@ -279,26 +326,22 @@ if __name__ == "__main__":
                                                              analyzer,
                                                              msa_camel_analyzer=None,
                                                              best_analysis=False,
+                                                             print_recall=False,
                                                              essential_keys=ESSENTIAL_KEYS)
-    filtered_possible_analyses = filter_analyses(possible_analyses)
+    print('Done.\n')
     
-    if os.path.exists(args.possible_analyses_filtered_path):
-        answer = input((f'Do you want to load the previous file {args.possible_analyses_filtered_path} (l) '
-                        'file or overwrite the previous one (o)? '))
-        if answer == 'o':
-            with open(args.possible_analyses_filtered_path, 'w') as f:
-                print(*HEADER_SHEET, sep='\t', file=f)
-                for i, row in enumerate(lexicon, start=1):
-                    row['FORM'], row['LEMMA'] = f'stem{i}', f'lemma{i}'
-                    print(*[row.get(h, '') for h in HEADER_SHEET], sep='\t', file=f)
-            with open(args.possible_analyses_filtered_path, 'wb') as f:
-                pickle.dump(filtered_possible_analyses, f)
-        elif answer == 'l':
-            with open(args.possible_analyses_filtered_path, 'rb') as f:
-                filtered_possible_analyses = pickle.load(f)
-        else:
-            raise NotImplementedError
+    print(f'Printing possible analyses to {args.possible_analyses_filtered_path}... ', end='')
+    outputs = evaluate_camel_morph.recall_print(errors=[],
+                                                correct_cases=possible_analyses,
+                                                drop_cases=[],
+                                                results_path=args.possible_analyses_filtered_path,
+                                                essential_keys=ESSENTIAL_KEYS)
+    outputs = add_information_to_rows(outputs, stem_classes)
+    outputs.to_csv(args.possible_analyses_filtered_path, sep='\t', index=False)
+    print('Done.\n')
     
+    print('Getting form counts from generated words accrding to valid backoff analyses... ', end='')
     form_counts = get_generated_form_counts_from_gumar(
-        stem_classes, filtered_possible_analyses)
+        stem_classes, possible_analyses)
+    print('Done.\n')
     pass

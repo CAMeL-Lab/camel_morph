@@ -35,7 +35,49 @@ from typing import Dict, Tuple, List, Optional
 
 import pandas as pd
 
-import db_maker_utils
+try:
+    # Needed for when db_maker() needs to be imported by another script
+    from . import db_maker_utils
+except:
+    # Needed for when db_maker() is ran from within this script
+    import db_maker_utils
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-config_file", default='camel_morph/configs/config_default.json',
+                    type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
+parser.add_argument("-config_name", default='default_config',
+                    type=str, help="Name of the configuration to load from the config file.")
+parser.add_argument("-output_dir", default='',
+                    type=str, help="Path of the directory to output the DBs to.")
+parser.add_argument("-run_profiling", default=False,
+                    action='store_true', help="Run execution time profiling for the make_db().")
+parser.add_argument("-camel_tools", default='local', choices=['local', 'official'],
+                    type=str, help="Path of the directory containing the camel_tools modules.")
+args, _ = parser.parse_known_args()
+
+with open(args.config_file) as f:
+    config = json.load(f)
+config_local =  config['local'][args.config_name]
+config_global =  config['global']
+
+if args.camel_tools == 'local':
+    camel_tools_dir = config_global['camel_tools']
+    sys.path.insert(0, camel_tools_dir)
+
+from camel_tools.utils.normalize import normalize_alef_bw, normalize_alef_maksura_bw, normalize_teh_marbuta_bw
+from camel_tools.utils.charmap import CharMapper
+from camel_tools.utils.dediac import dediac_bw
+
+normalize_map = CharMapper({
+    '<': 'A',
+    '>': 'A',
+    '|': 'A',
+    '{': 'A',
+    'Y': 'y'
+})
+
+bw2ar = CharMapper.builtin_mapper('bw2ar')
+ar2bw = CharMapper.builtin_mapper('ar2bw')
 
 _required_verb_stem_feats = ['pos', 'asp', 'per', 'gen', 'num', 'vox', 'mod']
 _required_nom_stem_feats = ['pos', 'form_gen', 'form_num', 'gen', 'num', 'stt', 'cas']
@@ -69,7 +111,7 @@ Useful terms to know for a better understanding of the comments:
     with other complex morphemes
 """
 
-def make_db(config:Dict, config_name:str, output_dir:str):
+def make_db(config:Dict, config_name:str, output_dir:Optional[str]=None):
     """
     Main function which takes in a set of specifications from `csv` files (downloadable
     from Google Sheets) and which, from the latter, prints out a `db` file in the ALMOR format,
@@ -78,8 +120,9 @@ def make_db(config:Dict, config_name:str, output_dir:str):
     Args:
         config (Dict): dictionary containing all the necessary information to build the `db` file.
         config_name (str): key of the specific ("local") configuration to get information from in the config file.
-        output_dir (str): path of the directory to output the `db` file to.
+        output_dir (str, optional): path of the directory to output the `db` file to.
     """
+    config_global = config['global']
     config_local = config['local'][config_name]
     c0 = process_time()
     
@@ -91,6 +134,8 @@ def make_db(config:Dict, config_name:str, output_dir:str):
     db = construct_almor_db(SHEETS, config_local['pruning'], cond2class, cat2id)
     
     print("\nGenerating DB file... [3/3]")
+    if output_dir is None:
+        output_dir = config_global['db_dir']
     output_dir = os.path.join(output_dir, f"camel-morph-{config_local['dialect']}")
     os.makedirs(output_dir, exist_ok=True)
     print_almor_db(os.path.join(output_dir, config_local['db']), db)
@@ -889,43 +934,6 @@ def _choose_required_feats(pos_type):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-config_file", default='config_default.json',
-                        type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
-    parser.add_argument("-config_name", default='default_config',
-                        type=str, help="Name of the configuration to load from the config file.")
-    parser.add_argument("-output_dir", default='',
-                        type=str, help="Path of the directory to output the DBs to.")
-    parser.add_argument("-run_profiling", default=False,
-                        action='store_true', help="Run execution time profiling for the make_db().")
-    parser.add_argument("-camel_tools", default='local', choices=['local', 'official'],
-                        type=str, help="Path of the directory containing the camel_tools modules.")
-    args = parser.parse_args()
-
-    with open(args.config_file) as f:
-        config = json.load(f)
-    config_local =  config['local'][args.config_name]
-    config_global =  config['global']
-
-    if args.camel_tools == 'local':
-        camel_tools_dir = config_global['camel_tools']
-        sys.path.insert(0, camel_tools_dir)
-
-    from camel_tools.utils.normalize import normalize_alef_bw, normalize_alef_maksura_bw, normalize_teh_marbuta_bw
-    from camel_tools.utils.charmap import CharMapper
-    from camel_tools.utils.dediac import dediac_bw
-
-    normalize_map = CharMapper({
-        '<': 'A',
-        '>': 'A',
-        '|': 'A',
-        '{': 'A',
-        'Y': 'y'
-    })
-
-    bw2ar = CharMapper.builtin_mapper('bw2ar')
-    ar2bw = CharMapper.builtin_mapper('ar2bw')
-
     if args.run_profiling:
         profiler = cProfile.Profile()
         profiler.enable()

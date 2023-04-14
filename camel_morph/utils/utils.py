@@ -443,14 +443,25 @@ def get_config_file(config_file):
     return config
 
 
+def get_db_dir_path(config, config_name):
+    dialect = config['local'][config_name]['dialect']
+    return os.path.join('databases',
+                        f'camel-morph-{dialect}')
+
+
+def get_data_dir_path(config, config_name):
+    dialect = config['local'][config_name]['dialect']
+    return os.path.join('data',
+                        f'camel-morph-{dialect}',
+                        config_name)
+
+
 def get_lex_paths(config, config_name):
     config_local = config['local'][config_name]
     dialect = config_local['dialect']
     lex_paths = []
     for sheet_name in config_local['lexicon']['sheets']:
-        lex_path = os.path.join('data',
-                                f'camel-morph-{dialect}',
-                                config_name,
-                                f'{sheet_name}.csv')
+        lex_dir = get_data_dir_path(config, config_name)
+        lex_path = os.path.join(lex_dir, f'{sheet_name}.csv')
         lex_paths.append(lex_path) 
     return lex_paths                       

@@ -32,20 +32,9 @@ if args.camel_tools:
 
 from camel_tools.utils.charmap import CharMapper
 from camel_tools.disambig.bert import BERTUnfactoredDisambiguator
-from camel_tools.utils.charsets import AR_LETTERS_CHARSET
 
 PUNC_REGEX = re.compile(r"([:.;'\"!%&)(?،؟؛])")
 REPEATED_LETTER = re.compile(r'(.+?)\1{3,}')
-
-DEFAULT_NORMALIZE_MAP = CharMapper({
-    u'\u0625': u'\u0627',
-    u'\u0623': u'\u0627',
-    u'\u0622': u'\u0627',
-    u'\u0671': u'\u0627',
-    u'\u0649': u'\u064a',
-    u'\u0629': u'\u0647',
-    u'\u0640': u''
-})
 
 ar2bw = CharMapper.builtin_mapper('ar2bw')
 bw2ar = CharMapper.builtin_mapper('bw2ar')

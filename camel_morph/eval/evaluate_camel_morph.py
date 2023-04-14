@@ -228,7 +228,7 @@ def _preprocess_analysis(analysis, essential_keys=ESSENTIAL_KEYS, optional_keys=
 
 def recall_print(errors, correct_cases, drop_cases, results_path,
                  essential_keys=ESSENTIAL_KEYS):
-    errors_ = []
+    outputs_ = []
     i = 1
     for label, cases in [('correct', correct_cases), ('wrong', errors), ('drop', drop_cases)]:
         for case in cases:
@@ -249,14 +249,15 @@ def recall_print(errors, correct_cases, drop_cases, results_path,
                   *case['word']['info']['magold'].values(), case['count'])])
             example = pd.concat([ex_col, extra_info, example], axis=1)
             example.columns = range(example.columns.size)
-            errors_.append(example)
+            outputs_.append(example)
             i += 1
 
-    errors = pd.concat(errors_)
-    errors = errors.replace(nan, '', regex=True)
-    errors.columns = ['filter', 'label', 'sentence',
-        *case['word']['info']['magold'], 'freq'] + essential_keys * 2
-    errors.to_csv(results_path, index=False, sep='\t')
+    outputs = pd.concat(outputs_)
+    outputs = outputs.replace(nan, '', regex=True)
+    outputs.columns = ['filter', 'label', 'sentence',
+        *case['word']['info']['magold'], 'freq'] + [f'{k}_g' for k in essential_keys] + essential_keys
+    outputs.to_csv(results_path, index=False, sep='\t')
+    return outputs
 
 
 def filter_and_rank_analyses(analyses_pred, analysis_gold, source_index):
