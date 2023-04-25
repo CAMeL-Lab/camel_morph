@@ -225,8 +225,6 @@ if __name__ == "__main__":
                         type=str, help="Name of the configuration to load from the config file. If more than one is added, then lemma classes from those will not be counted in the current list.")
     parser.add_argument("-backoff_stems", default='',
                         type=str, help="Specified how to get the backoff stems (either computed automatically from the EGY lexicon, or loaded from a sheet).")
-    parser.add_argument("-gumar_inspect_path", default='',
-                        type=str, help="Path to the Gumar dataset to inspect.")
     parser.add_argument("-gumar_dir", default='',
                         type=str, help="Path to the (big) unannotated Gumar dataset.")
     parser.add_argument("-db", default='',

@@ -113,7 +113,7 @@ FIELD2SENTENCE_INDEX = {f: i
 FIELD2INFO_INDEX = {f: i
     for i, f in enumerate(['word', 'ldc', 'source_comment', 'ranking', 'starline', 'calima'])}
 FIELD2LDC_INDEX = {f: i
-    for i, f in enumerate(['word', 'diac_degmented', 'lemma', 'bw', 'gloss'])}
+    for i, f in enumerate(['word', 'diac', 'lex', 'bw', 'gloss'])}
 
 
 def _load_analysis(analysis):
@@ -256,6 +256,7 @@ def recall_print(errors, correct_cases, drop_cases, results_path,
     outputs = outputs.replace(nan, '', regex=True)
     outputs.columns = ['filter', 'label', 'sentence',
         *case['word']['info']['magold'], 'freq'] + [f'{k}_g' for k in essential_keys] + essential_keys
+    outputs.reset_index(drop=True, inplace=True)
     outputs.to_csv(results_path, index=False, sep='\t')
     return outputs
 
@@ -284,7 +285,8 @@ def filter_and_rank_analyses(analyses_pred, analysis_gold, source_index):
 def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
                     msa_camel_analyzer=None, best_analysis=True,
                     print_recall=True,
-                    essential_keys=ESSENTIAL_KEYS):
+                    essential_keys=ESSENTIAL_KEYS,
+                    field2ldc_index=FIELD2LDC_INDEX):
     source_index = essential_keys.index('source')
     lex_index = essential_keys.index('lex')
     diac_index = essential_keys.index('diac')
@@ -308,22 +310,27 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
     elif 'calima_dediac' in eval_mode:
         print('Analyzer input: CALIMA DEDIAC')
 
-    data_, counts = OrderedDict(), {}
+    ldc_index2field = {ldc_index: field
+                       for field, ldc_index in field2ldc_index.items()}
+    data_unique, counts = OrderedDict(), {}
     for word_info in data:
         if 'ldc' in word_info['info']['magold']:
-            diac_lemma_bw = word_info['info']['magold']['ldc'].split(' # ')[1:4]
+            ldc = word_info['info']['magold']['ldc'].split(' # ')
+            ldc = {ldc_index2field[i]: comp for i, comp in enumerate(ldc)}
+            diac_lemma_bw = tuple(ldc[f] for f in ['diac', 'lex', 'bw'])
         else:
-            diac_lemma_bw = ('', '', '')
+            diac_lemma_bw = tuple(word_info['analysis'][f]
+                                  for f in ['diac', 'lex', 'bw'])
         key = (word_info['info']['word'], diac_lemma_bw)
         counts.setdefault(key, 0)
         counts[key] += 1
-        data_[key] = word_info
+        data_unique[key] = word_info
 
     correct, total = 0, 0
     errors, correct_cases, drop_cases = [], [], []
-    data_ = list(data_.items())[:n]
-    pbar = tqdm(total=len(data_))
-    for (word, ldc_bw), word_info in data_:
+    data_unique = list(data_unique.items())[:n]
+    pbar = tqdm(total=len(data_unique))
+    for (word, ldc_bw), word_info in data_unique:
         total += 1
         analysis_gold = _preprocess_analysis(word_info['analysis'],
                                              essential_keys)
