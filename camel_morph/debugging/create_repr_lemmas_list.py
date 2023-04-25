@@ -57,7 +57,7 @@ parser.add_argument("-feats", default='',
                     type=str, help="Features to generate the conjugation tables for.")
 parser.add_argument("-db", default='',
                     type=str, help="Path of DB to use to get the lexical/POS probabilities.")
-parser.add_argument("-pos", default='',
+parser.add_argument("-pos", default=[], nargs='+',
                     type=str, help="POS of the lemmas.")
 parser.add_argument("-banks_dir",  default='',
                     type=str, help="Directory in which the annotation banks are.")
@@ -98,9 +98,10 @@ nominals = [n.lower() for n in nominals]
 cond_t_sort_order = {'MS':0, 'MD':1, 'MP':2, 'FS':3, 'FD':4, 'FP':5}
 
 def _sort_stems_nominals(stems):
-    if (len(stems) in [2, 3] and
-        set(stem['cond_t'] for stem in stems) <= {'MS', 'FS', 'MS||MD||FP'}):
-        return stems.sort(key=lambda stem: len(stem['cond_t']), reverse=True)
+    if set(stem['cond_t'] for stem in stems) <= {'MS', 'FS', 'FP', 'MS||MD||FP'}:
+        return stems.sort(reverse=True,
+            key=lambda stem: (len(stem['cond_t']),
+                              -cond_t_sort_order[stem['cond_t'][:2]]))
     elif set(stem['cond_t'] for stem in stems) == {'MS', 'MD||FP'}:
         return stems.sort(key=lambda stem: -len(stem['cond_t']), reverse=True)
     else:
@@ -111,7 +112,7 @@ def _sort_stems_nominals(stems):
 
 def create_repr_lemmas_list(config,
                             config_name,
-                            pos,
+                            POS,
                             lexicon=None,
                             bank=None,
                             info_display_format='compact',
@@ -122,9 +123,8 @@ def create_repr_lemmas_list(config,
         process_morph=False, lexicon_cond_f=False)
     lexicon = SHEETS['lexicon']
     lexicon = lexicon.replace('ditrans', 'trans')
-    if pos:
-        lexicon = lexicon[lexicon['FEAT'].str.contains(
-            f'pos:{pos}\\b', regex=True)]
+    if POS:
+        lexicon = lexicon[lexicon['FEAT'].str.extract(r'pos:(\S+)').isin(POS)[0]]
     
     config_local = config['local'][config_name]
     class_keys = config_local.get('class_keys')
@@ -158,7 +158,7 @@ def create_repr_lemmas_list(config,
                         sorted([f"[{stem[k]}]" if stem[k] else '[-]' for stem in stems]))))
             info['lemma'] = info['lemma'][1:-1]
         elif info_display_format == 'expanded':
-            if pos in nominals:
+            if stems[0]['pos'] in nominals:
                 _sort_stems_nominals(stems)
             for k in stems[0]:
                 if k in ['lemma', 'pos']:
@@ -196,7 +196,7 @@ def create_repr_lemmas_list(config,
         return uniq_lemma_classes
     
     uniq_lemma_classes = get_highest_prob_lemmas(
-        pos, uniq_lemma_classes, lemmas_stripped_uniq, bank, lemma2prob, db)
+        POS, uniq_lemma_classes, lemmas_stripped_uniq, bank, lemma2prob, db)
     
     return uniq_lemma_classes
 
@@ -333,16 +333,17 @@ if __name__ == "__main__":
     
     pos_type = args.pos_type if args.pos_type else config_local['pos_type']
     if pos_type == 'verbal':
-        pos = 'verb'
+        POS = ['verb']
     elif pos_type == 'nominal':
         pos = args.pos if args.pos else config_local.get('pos')
+        POS = pos if type(pos) is list else [pos]
     elif pos_type == 'other':
-        pos = args.pos
+        POS = args.pos
 
     if 'exclusions' in config_local:
         with open(config_local['exclusions']) as f:
             exclusions = json.load(f)
-            exclusions = exclusions[pos] if pos in exclusions else []
+            exclusions = sum([exclusions.get(pos, []) for pos in POS], [])
     else:
         exclusions = []
 
@@ -372,8 +373,10 @@ if __name__ == "__main__":
                 else:
                     raise NotImplementedError
                 pos2lemma2prob[''] = {'': 1}
-                total = sum(pos2lemma2prob[pos].values())
-                lemma2prob = {lemma: freq / total for lemma, freq in pos2lemma2prob[pos].items()}
+                total = sum(pos2lemma2prob[pos].values() for pos in POS)
+                lemma2prob = {lemma: freq / total
+                              for pos in POS
+                              for lemma, freq in pos2lemma2prob[pos].items()}
     elif args.db:
         db = MorphologyDB(args.db)
     else:
@@ -381,7 +384,7 @@ if __name__ == "__main__":
 
     uniq_lemma_classes = create_repr_lemmas_list(config=config,
                                                  config_name=config_name,
-                                                 pos=pos,
+                                                 POS=POS,
                                                  bank=bank,
                                                  info_display_format=args.display_format,
                                                  lemma2prob=lemma2prob,

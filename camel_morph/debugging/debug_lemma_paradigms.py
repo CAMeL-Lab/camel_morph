@@ -27,6 +27,8 @@ parser.add_argument("-spreadsheet", default='',
                     type=str, help="Google Sheets spreadsheet name to output to.")
 parser.add_argument("-sheet", default='',
                     type=str, help="Google Sheets sheet name to output to.")
+parser.add_argument("-pos", default=[], nargs='+',
+                    type=str, help="POS of the lemmas.")
 args, _ = parser.parse_known_args([] if "__file__" not in globals() else None)
 
 FIELDS_MAP = dict(
@@ -150,10 +152,9 @@ def regenerate_signature_lex_rows(sheet, sh, config, config_name):
                         ' cas:' + sheet_df['CAS'])
     
     config_local = config['local'][config_name]
-    pos = config_local['pos']
     repr_lemmas = create_repr_lemmas_list(config=config,
                                           config_name=config_name,
-                                          pos=pos,
+                                          POS=POS,
                                           lexicon=sheet_df,
                                           info_display_format='expanded',
                                           lemma2prob=config_local['lexprob'])
@@ -174,7 +175,7 @@ def regenerate_signature_lex_rows(sheet, sh, config, config_name):
 
     signatures = []
     for _, row in sheet_df.iterrows():
-        if row['POS'] == pos:
+        if row['POS'] in POS:
             signatures.append(lemma2signature[row['LEMMA']])
         else:
             signatures.append('')
@@ -193,7 +194,8 @@ if __name__ == "__main__":
     config_local = config['local'][config_name]
     config_global = config['global']
 
-    pos = config_local['pos']
+    pos = args.pos if args.pos else config_local['pos']
+    POS = pos if type(pos) is list else [pos]
 
     sa = gspread.service_account(config_global['service_account'])
 
@@ -211,7 +213,7 @@ if __name__ == "__main__":
     if args.mode == 'generate_lex':
         repr_lemmas = create_repr_lemmas_list(config=config,
                                               config_name=config_name,
-                                              pos=config_local['pos'],
+                                              POS=POS,
                                               info_display_format='expanded',
                                               lemma2prob=config_local['lexprob'])
         rows = generate_lex_rows(repr_lemmas)
