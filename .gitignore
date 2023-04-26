@@ -367,5 +367,4 @@ camel_morph/db_maker.py
 *.code-workspace
 camel_morph.egg-info
 build
-camel_morph/camel_tools
 dist

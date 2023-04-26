@@ -6,6 +6,7 @@ import xml.etree.ElementTree as ET
 from tqdm import tqdm
 import re
 import pickle
+from copy import deepcopy
 
 import pandas as pd
 from numpy import nan
@@ -72,7 +73,7 @@ def _get_id2info(stem_classes):
     return id2info
 
 
-def _filter_and_process_abstract_entries(lexicon):
+def _filter_and_process_abstract_entries(lexicon, config_glf, config_name_glf):
     SHEETS, _ = db_maker_utils.read_morph_specs(config_glf,
                                                 config_name_glf,
                                                 lexicon_cond_f=False)
@@ -99,7 +100,9 @@ def _filter_and_process_abstract_entries(lexicon):
     return lexicon
 
 
-def get_backoff_stems_from_egy(processing_mode='automatic'):
+def get_backoff_stems_from_egy(config_glf,
+                               config_name_glf,
+                               processing_mode='automatic'):
     if processing_mode == 'automatic':
         SHEETS, _ = db_maker_utils.read_morph_specs(config_egy,
                                                     config_name_egy,
@@ -117,7 +120,8 @@ def get_backoff_stems_from_egy(processing_mode='automatic'):
     else:
         raise NotImplementedError
     
-    lexicon_processed = _filter_and_process_abstract_entries(lexicon)
+    lexicon_processed = _filter_and_process_abstract_entries(
+        lexicon, config_glf, config_name_glf)
     
     cond_s2cond_t2feats2rows = _get_structured_lexicon_classes(lexicon_processed)
     stem_classes = {}
@@ -137,11 +141,14 @@ def get_backoff_stems_from_egy(processing_mode='automatic'):
                 if processing_mode == 'automatic':
                     freq = len(rows)
                 elif processing_mode == 'manual':
-                    freq = int(lexicon[lexicon['LEMMA'] == rows[0]['LEMMA']]['FREQ'])
+                    freq = int(lexicon_processed[lexicon_processed['LEMMA'] == rows[0]['LEMMA']]['FREQ'])
                 row_['FREQ'] = freq
                 stem_classes[(cond_s, cond_t, feats)] = row_
 
     lexicon_processed = pd.DataFrame(stem_classes.values())
+    lex_path_name, lex_path_ext = os.path.splitext(lex_path)
+    lex_path_modif = lex_path_name + '_modif' + lex_path_ext
+    lexicon_processed.to_csv(lex_path_modif)
     
     with open(args.output_backoff_lex, 'w') as f:
             print(*HEADER_SHEET, sep='\t', file=f)
@@ -152,7 +159,7 @@ def get_backoff_stems_from_egy(processing_mode='automatic'):
                     row['FORM'], row['LEMMA'] = f'stem{i}', f'lemma{i}'
                 print(*[row.get(h, '') for h in HEADER_SHEET], sep='\t', file=f)
 
-    return lexicon_processed, stem_classes
+    return stem_classes
 
 
 def reverse_processing(analysis):
@@ -285,16 +292,18 @@ if __name__ == "__main__":
                         config_name=config_name_glf,
                         service_account=config_global_glf['service_account'])
 
-    print('Fetching (or computing) backoff stems... ')
-    lexicon_processed, stem_classes = get_backoff_stems_from_egy(
-        processing_mode=args.backoff_stems)
+    print('\nFetching (or computing) backoff stems... ')
+    stem_classes = get_backoff_stems_from_egy(
+        config_glf, config_name_glf, processing_mode=args.backoff_stems)
     print('Done.')
 
     if args.build_glf_db:
+        sheet_name = config_glf['local'][config_name_glf]['lexicon']['sheets'][0]
+        config_glf_modif = deepcopy(config_glf)
+        config_glf_modif_local = config_glf_modif['local'][config_name_glf]
+        config_glf_modif_local['lexicon']['sheets'][0] = sheet_name + '_modif'
+        db_maker.make_db(config_glf_modif, config_name_glf)
         print()
-        lex_path = utils.get_lex_paths(config_glf, config_name_glf)[0]
-        lexicon_processed.to_csv(lex_path)
-        db_maker.make_db(config_glf, config_name_glf)
 
     db_name = config_local_glf['db']
     db_dir = utils.get_db_dir_path(config_glf, config_name_glf)
@@ -307,7 +316,7 @@ if __name__ == "__main__":
         ma_gold = f.read()
 
     POS = set(map(str.lower, POS_NOM))
-    print('\nLoading MAGOLD data... ')
+    print('Loading MAGOLD data... ')
     data = evaluate_camel_morph._preprocess_magold_data(ma_gold,
                                                         POS,
                                                         _load_analysis,
