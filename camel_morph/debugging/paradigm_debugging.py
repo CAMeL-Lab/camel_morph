@@ -33,7 +33,54 @@ import gspread
 import pandas as pd
 from numpy import nan
 
-header = ["line", "status", "count", "signature", "lemma", "diac_ar", "diac", "freq",
+try:
+    from ..utils.utils import get_config_file
+except:
+    file_path = os.path.abspath(__file__).split('/')
+    package_path = '/'.join(file_path[:len(file_path) - 1 - file_path[::-1].index('camel_morph')])
+    sys.path.insert(0, package_path)
+    from camel_morph.utils.utils import get_config_file
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-config_file", default='camel_morph/configs/config_default.json',
+                    type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
+parser.add_argument("-config_name", default='default_config',
+                    type=str, help="Name of the configuration to load from the config file.")
+parser.add_argument("-feats", default='',
+                    type=str, help="Features to generate the conjugation tables for.")
+parser.add_argument("-gsheet", default='',
+                    type=str, help="Name of the manually annotated paradigms gsheet, the annotations of which will go in the bank.")
+parser.add_argument("-spreadsheet", default='',
+                    type=str, help="Name of the spreadsheet in which that sheet is.")
+parser.add_argument("-new_conj",  default='',
+                    type=str, help="Path of the conjugation tables file generated after fixes were made to the specification sheets. This file will be automatically annotated using the information in the bank.")
+parser.add_argument("-bank_dir",  default='',
+                    type=str, help="Directory in which the annotation banks are.")
+parser.add_argument("-bank_name",  default='',
+                    type=str, help="Name of the annotation bank to use.")
+parser.add_argument("-bank_spreadsheet", default='Paradigm-Banks',
+                    type=str, help="Name of the spreadsheet in which that sheet is.")
+parser.add_argument("-output_name",
+                    type=str, help="Name of the file to output the automatically bank-annotated paradigm tables to.")
+parser.add_argument("-output_dir", default='',
+                    type=str, help="Path of the directory to output the paradigm tables to.")
+parser.add_argument("-mode", default='debugging',
+                    type=str, help="Path of the directory to output the paradigm tables to.")
+parser.add_argument("-process_key", default='', choices=['', 'extra_energetic'],
+                    type=str, help="Flag used to process the key before cross-checking it with bank entries while performing automatic bank annotation. Useful in cases like energetic and extra energetic when same diacs are shared by multiple paradigm slots.")
+parser.add_argument("-camel_tools", default='local', choices=['local', 'official'],
+                    type=str, help="Path of the directory containing the camel_tools modules.")
+parser.add_argument("-service_account", default='',
+                    type=str, help="Path of the JSON file containing the information about the service account used for the Google API.")
+args, _ = parser.parse_known_args()
+
+if args.camel_tools == 'local':
+    camel_tools_dir = 'camel_morph/camel_tools'
+    sys.path.insert(0, camel_tools_dir)
+
+from camel_tools.morphology.utils import strip_lex
+
+HEADER = ["line", "status", "count", "signature", "lemma", "diac_ar", "diac", "freq",
           "qc", "warnings", "comments", "pattern", "stem", "bw", "gloss", "cond-s",
           "cond-t", "pref-cat", "stem-cat", "suff-cat", "feats", "debug", "color"]
 
@@ -46,7 +93,12 @@ class AnnotationBank:
     HEADER_INFO = ['QC', 'COMMENTS', 'STATUS']
     HEADER = HEADER_KEY + HEADER_INFO
 
-    def __init__(self, bank_path, annotated_paradigms=None, gsheet_info=None, download_bank=False):
+    def __init__(self,
+                 bank_path,
+                 annotated_paradigms=None,
+                 gsheet_info=None,
+                 download_bank=False,
+                 sa=None):
         self._bank_path = bank_path
         if gsheet_info is not None:
             self._gsheet_name = gsheet_info['gsheet_name']
@@ -149,8 +201,19 @@ def _process_key(key, mode):
     
     return key
 
-def automatic_bank_annotation(bank_path, annotated_paradigms, new_conj_tables, process_key):
-    bank = AnnotationBank(bank_path, annotated_paradigms)
+def automatic_bank_annotation(config,
+                              config_name,
+                              feats,
+                              new_conj_table,
+                              sa,
+                              process_key=None):
+    config_local = config['local'][config_name]
+    config_global = config['global']
+    bank_path, annotated_paradigms = setup(
+        config_local, config_global, feats, sa)
+    if annotated_paradigms is None:
+        annotated_paradigms = new_conj_table
+    bank = AnnotationBank(bank_path, annotated_paradigms, sa=sa)
     lemmas = [entry[1] for entry in bank._bank]
     strip = True if not any(['-' in lemma for lemma in lemmas]) else False
     partial_keys = {}
@@ -158,10 +221,10 @@ def automatic_bank_annotation(bank_path, annotated_paradigms, new_conj_tables, p
         partial_keys.setdefault(k[:-1], []).append({**info, **{'DIAC': k[-1]}})
 
     outputs = []
-    for _, row in new_conj_tables.iterrows():
+    for _, row in new_conj_table.iterrows():
         lemma = row['LEMMA'] if not strip else strip_lex(row['LEMMA'])
         key = (row['SIGNATURE'], lemma, row['DIAC'])
-        if process_key:
+        if process_key is not None:
             key = _process_key(key, process_key)
         row = row.to_dict()
         info = bank.get(key)
@@ -190,12 +253,12 @@ def automatic_bank_annotation(bank_path, annotated_paradigms, new_conj_tables, p
         row['COMMENTS'] = comment
 
         output_ordered = OrderedDict()
-        for k in header:
+        for k in HEADER:
             output_ordered[k.upper()] = row.get(k.upper(), '')
         
         outputs.append(output_ordered)
 
-    outputs.insert(0, OrderedDict((i, x) for i, x in enumerate(map(str.upper, header))))
+    outputs.insert(0, OrderedDict((i, x) for i, x in enumerate(map(str.upper, HEADER))))
     return outputs
 
 def bank_cleanup_checker(bank_path, gsheet_info):
@@ -257,95 +320,78 @@ def _add_check_mark_online(bank, error_cases):
     bank._upload_gsheet(bank_df)
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-config_file", default='config_default.json',
-                        type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
-    parser.add_argument("-config_name", default='default_config',
-                        type=str, help="Name of the configuration to load from the config file.")
-    parser.add_argument("-feats", default='',
-                        type=str, help="Features to generate the conjugation tables for.")
-    parser.add_argument("-gsheet", default='',
-                        type=str, help="Name of the manually annotated paradigms gsheet, the annotations of which will go in the bank.")
-    parser.add_argument("-spreadsheet", default='',
-                        type=str, help="Name of the spreadsheet in which that sheet is.")
-    parser.add_argument("-new_conj",  default='',
-                        type=str, help="Path of the conjugation tables file generated after fixes were made to the specification sheets. This file will be automatically annotated using the information in the bank.")
-    parser.add_argument("-bank_dir",  default='',
-                        type=str, help="Directory in which the annotation banks are.")
-    parser.add_argument("-bank_name",  default='',
-                        type=str, help="Name of the annotation bank to use.")
-    parser.add_argument("-bank_spreadsheet", default='Paradigm-Banks',
-                        type=str, help="Name of the spreadsheet in which that sheet is.")
-    parser.add_argument("-output_name",
-                        type=str, help="Name of the file to output the automatically bank-annotated paradigm tables to.")
-    parser.add_argument("-output_dir", default='',
-                        type=str, help="Path of the directory to output the paradigm tables to.")
-    parser.add_argument("-mode", default='debugging', choices=['debugging', 'bank_cleanup'],
-                        type=str, help="Path of the directory to output the paradigm tables to.")
-    parser.add_argument("-process_key", default='', choices=['', 'extra_energetic'],
-                        type=str, help="Flag used to process the key before cross-checking it with bank entries while performing automatic bank annotation. Useful in cases like energetic and extra energetic when same diacs are shared by multiple paradigm slots.")
-    parser.add_argument("-camel_tools", default='local', choices=['local', 'official'],
-                        type=str, help="Path of the directory containing the camel_tools modules.")
-    parser.add_argument("-service_account", default='',
-                        type=str, help="Path of the JSON file containing the information about the service account used for the Google API.")
-    args = parser.parse_args()
-
-    with open(args.config_file) as f:
-        config = json.load(f)
-    config_local = config['local'][args.config_name]
-    config_global = config['global']
-
-    if args.camel_tools == 'local':
-        camel_tools_dir = config_global['camel_tools']
-        sys.path.insert(0, camel_tools_dir)
-        
-    from camel_tools.morphology.utils import strip_lex
-    
+def setup(config_local, config_global, feats, sa):
     bank_dir = args.bank_dir if args.bank_dir else os.path.join(
-        config_global['debugging'], config_global['banks_dir'], f"camel-morph-{config_local['dialect']}")
+        config_global['debugging'], config_global['banks_dir'],
+        f"camel-morph-{config_local['dialect']}")
     os.makedirs(bank_dir, exist_ok=True)
-    bank_name = args.bank_name if args.bank_name else config_local['debugging']['feats'][args.feats]['bank']
+    bank_name = args.bank_name if args.bank_name \
+        else config_local['debugging']['feats'][feats]['bank']
     bank_path = os.path.join(bank_dir, bank_name)
 
     if args.mode == 'bank_cleanup':
-        bank_spreadsheet = args.bank_spreadsheet if args.bank_spreadsheet else config_global['banks_spreadsheet']
+        bank_spreadsheet = args.bank_spreadsheet if args.bank_spreadsheet \
+            else config_global['banks_spreadsheet']
         gsheet_info = {
             'gsheet_name': bank_path.split('/')[-1].split('.')[0],
             'spreadsheet': bank_spreadsheet}
         bank_cleanup_checker(bank_path, gsheet_info)
         sys.exit()
-
-    output_dir = args.output_dir if args.output_dir else os.path.join(
-        config_global['debugging'], config_global['paradigm_debugging_dir'], f"camel-morph-{config_local['dialect']}")
-    os.makedirs(output_dir, exist_ok=True)
-    output_name = args.output_name if args.output_name else config_local['debugging']['feats'][args.feats]['paradigm_debugging']
-    output_path = os.path.join(output_dir, output_name)
-
-    service_account = args.service_account if args.service_account else config_global['service_account']
-    sa = gspread.service_account(service_account)
-    spreadsheet = args.spreadsheet if args.spreadsheet else config_local['debugging']['debugging_spreadsheet']
+    
+    spreadsheet = args.spreadsheet if args.spreadsheet \
+        else config_local['debugging']['debugging_spreadsheet']
     sh = sa.open(spreadsheet)
 
-    gsheet = args.gsheet if args.gsheet else config_local['debugging']['feats'][args.feats]['debugging_sheet']
-    worksheet = sh.worksheet(title=gsheet)
-    annotated_paradigms = pd.DataFrame(worksheet.get_all_records())
-    annotated_paradigms.to_csv(output_path)
+    gsheet = args.gsheet if args.gsheet \
+        else config_local['debugging']['feats'][feats]['debugging_sheet']
+    worksheets = sh.worksheets()
+    worksheet = [sheet for sheet in worksheets if sheet.title == gsheet]
+    annotated_paradigms = None
+    if worksheet:
+        annotated_paradigms = pd.DataFrame(worksheet[0].get_all_records())
+
+    return bank_path, annotated_paradigms
+
+
+if __name__ == "__main__":
+    config = get_config_file(args.config_file)
+    config_name = args.config_name
+    config_global = config['global']
+    config_local = config['local'][config_name]
+
+    output_dir = args.output_dir if args.output_dir else os.path.join(
+        config_global['debugging'], config_global['paradigm_debugging_dir'],
+        f"camel-morph-{config_local['dialect']}")
+    os.makedirs(output_dir, exist_ok=True)
+
+    output_name = args.output_name if args.output_name \
+        else config_local['debugging']['feats'][args.feats]['paradigm_debugging']
+    output_path = os.path.join(output_dir, output_name)
+
+    service_account = args.service_account if args.service_account \
+            else config_global['service_account']
+    sa = gspread.service_account(service_account)
 
     if args.new_conj:
         new_conj_path = args.new_conj
     else:
-        new_conj_path = os.path.join(config_global['debugging'], config_global['tables_dir'],
-                                     f"camel-morph-{config_local['dialect']}")
-        new_conj_path = os.path.join(new_conj_path, config_local['debugging']['feats'][args.feats]['conj_tables'])
-    
-    new_conj_tables = pd.read_csv(new_conj_path, delimiter='\t')
-    new_conj_tables = new_conj_tables.replace(nan, '', regex=True)
+        new_conj_path = os.path.join(
+            config_global['debugging'], config_global['tables_dir'],
+            f"camel-morph-{config_local['dialect']}")
+        new_conj_path = os.path.join(
+            new_conj_path, config_local['debugging']['feats'][args.feats]['conj_tables'])
 
-    outputs = automatic_bank_annotation(bank_path=bank_path,
-                                        annotated_paradigms=annotated_paradigms,
-                                        new_conj_tables=new_conj_tables,
-                                        process_key=args.process_key)
+        new_conj_table = pd.read_csv(new_conj_path, delimiter='\t')
+        new_conj_table = new_conj_table.replace(nan, '', regex=True)
+
+    #FIXME: do something about process_key (which is used from debugging
+    # command energetic and extra energetic)
+    outputs = automatic_bank_annotation(config=config,
+                                        config_name=config_name,
+                                        process_key=args.process_key,
+                                        feats=args.feats,
+                                        new_conj_table=new_conj_table,
+                                        sa=sa)
 
     with open(output_path, 'w') as f:
         for output in outputs:

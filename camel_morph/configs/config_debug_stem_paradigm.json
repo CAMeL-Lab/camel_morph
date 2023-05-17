@@ -1,0 +1,219 @@
+{
+    "global": {
+        "data_dir": "data",
+        "specs": {
+            "spreadsheet": "camel-morph-common",
+            "sheets": [
+                "About",
+                "Header"
+            ]
+        },
+        "db_dir": "databases",
+        "debugging": "debugging_output",
+        "repr_lemmas_dir": "repr_lemmas",
+        "tables_dir": "tables",
+        "paradigm_debugging_dir": "paradigm_debugging",
+        "banks_dir": "banks",
+        "camel_tools": "./camel_morph/camel_tools",
+        "service_account": "/Users/chriscay/.config/gspread/service_account.json",
+        "paradigms_config": "configs/config_paradigms.json",
+        "banks_spreadsheet": "Paradigm-Banks"
+    },
+    "local": {
+        "noun_msa_split_red": {
+            "split_or": true,
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": {
+                    "order": "MSA-Nom-ORDER",
+                    "morph": "MSA-Nom-MORPH"
+                },
+                "exclude": [
+                    "RED"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": [
+                    "MSA-Nom-LEX"
+                ]
+            },
+            "dialect": "msa",
+            "db": "XYZ_msa_nom_v1.0_red.db",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Nominals",
+                "feats": {
+                    "": {
+                        "debugging_sheet": "MSA-Noun",
+                        "conj_tables": "conj_noun_msa_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_noun_msa_v1.0.tsv",
+                        "bank": "MSA-Noun-Bank.tsv"
+                    }
+                }
+            },
+            "pos_type": "nominal",
+            "pos": "noun",
+            "class_keys": [
+                "cond_t",
+                "cond_s",
+                "gen",
+                "num",
+                "cas"
+            ],
+            "extended_lemma_keys": [
+                "lemma",
+                "form",
+                "pos",
+                "rat",
+                "cond_t",
+                "index"
+            ]
+        },
+        "noun_prop_msa_split_red": {
+            "split_or": true,
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": {
+                    "order": "MSA-Nom-ORDER",
+                    "morph": "MSA-Nom-MORPH"
+                },
+                "exclude": [
+                    "RED"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": [
+                    "MSA-Nom-Prop-LEX"
+                ]
+            },
+            "dialect": "msa",
+            "db": "XYZ_msa_nom_v1.0_red.db",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Nominals",
+                "feats": {
+                    "": {
+                        "debugging_sheet": "MSA-Noun-Prop",
+                        "conj_tables": "conj_noun_prop_msa_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_noun_prop_msa_v1.0.tsv",
+                        "bank": "MSA-Noun-Prop-Bank.tsv"
+                    }
+                }
+            },
+            "pos_type": "nominal",
+            "pos": "noun_prop",
+            "class_keys": [
+                "cond_t",
+                "cond_s",
+                "gen",
+                "num",
+                "cas"
+            ],
+            "extended_lemma_keys": [
+                "lemma",
+                "form",
+                "pos",
+                "rat",
+                "cond_t",
+                "index"
+            ]
+        },
+        "adj_msa_split_red": {
+            "split_or": true,
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": {
+                    "order": "MSA-Nom-ORDER",
+                    "morph": "MSA-Nom-MORPH"
+                },
+                "exclude": [
+                    "RED"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": [
+                    "MSA-Nom-LEX"
+                ]
+            },
+            "dialect": "msa",
+            "db": "XYZ_msa_nom_v1.0_red.db",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Nominals",
+                "feats": {
+                    "": {
+                        "debugging_sheet": "MSA-Adj",
+                        "conj_tables": "conj_adj_msa_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_adj_msa_v1.0.tsv",
+                        "bank": "MSA-Adj-Bank.tsv"
+                    }
+                }
+            },
+            "pos_type": "nominal",
+            "pos": "adj",
+            "class_keys": [
+                "cond_t",
+                "cond_s",
+                "gen",
+                "num",
+                "cas"
+            ],
+            "extended_lemma_keys": [
+                "lemma",
+                "form",
+                "pos",
+                "rat",
+                "cond_t",
+                "index"
+            ]
+        },
+        "other_msa_split_red": {
+            "split_or": true,
+            "pruning": false,
+            "clean_conditions": false,
+            "specs": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": {
+                    "order": "MSA-Other-ORDER",
+                    "morph": "MSA-Other-MORPH"
+                },
+                "exclude": [
+                    "RED"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": [
+                    "MSA-Other-LEX"
+                ]
+            },
+            "dialect": "msa",
+            "db": "XYZ_msa_other_v1.0_red.db",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Nominals",
+                "feats": {
+                    "": {
+                        "debugging_sheet": "MSA-Other",
+                        "conj_tables": "conj_other_msa_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_other_msa_v1.0.tsv",
+                        "bank": "MSA-Other-Bank.tsv"
+                    }
+                }
+            },
+            "pos_type": "other",
+            "class_keys": [
+                "cond_t",
+                "cond_s",
+                "pos"
+            ],
+            "extended_lemma_keys": [
+                "lemma",
+                "form",
+                "index"
+            ]
+        }
+    }
+}

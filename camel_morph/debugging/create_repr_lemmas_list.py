@@ -28,10 +28,10 @@ import pickle
 import numpy as np
 import re
 import sys
-from itertools import takewhile
 
 try:
     from .. import db_maker_utils
+    from ..debugging.paradigm_debugging import AnnotationBank
     from ..utils import utils
 except:
     file_path = os.path.abspath(__file__).split('/')
@@ -39,14 +39,13 @@ except:
     sys.path.insert(0, package_path)
     from camel_morph import db_maker_utils
     from camel_morph.debugging.paradigm_debugging import AnnotationBank
-
-configs_dir = os.path.join('/'.join(os.path.dirname(__file__).split('/')[:-1]), 'configs')
+    from camel_morph.utils import utils
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-config_file", default=os.path.join(configs_dir, 'config_default.json'),
+parser.add_argument("-config_file", default='camel_morph/configs/config_default.json',
                     type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
-parser.add_argument("-config_name", default='default_config', nargs='+',
-                    type=str, help="Name of the configuration to load from the config file. If more than one is added, then lemma classes from those will not be counted in the current list.")
+parser.add_argument("-config_name", default='default_config',
+                    type=str, help="Name of the configuration to load from the config file.")
 parser.add_argument("-output_dir", default='',
                     type=str, help="Path of the directory to output the lemmas to.")
 parser.add_argument("-output_name", default='',
@@ -71,14 +70,8 @@ parser.add_argument("-camel_tools", default='local', choices=['local', 'official
                     type=str, help="Path of the directory containing the camel_tools modules.")
 args, _ = parser.parse_known_args([] if "__file__" not in globals() else None)
 
-config = utils.get_config_file(args.config_file)
-config_name = args.config_name[0] if type(args.config_name) is list else args.config_name
-config_local = config['local'][config_name]
-config_global = config['global']
-
 if args.camel_tools == 'local':
-    camel_tools_dir = configs_dir = os.path.join(
-        '/'.join(os.path.dirname(__file__).split('/')[:-1]), 'camel_tools')
+    camel_tools_dir = 'camel_morph/camel_tools'
     sys.path.insert(0, camel_tools_dir)
 
 from camel_tools.utils.charmap import CharMapper
@@ -89,11 +82,7 @@ from camel_tools.morphology.analyzer import DEFAULT_NORMALIZE_MAP
 ar2bw = CharMapper.builtin_mapper('ar2bw')
 bw2ar = CharMapper.builtin_mapper('bw2ar')
 
-nominals = ['ABBREV', 'ADJ', 'ADJ_COMP', 'ADJ_NUM', 'ADV', 'ADV_INTERROG', 'ADV_REL',
-            'FORIEGN', 'INTERJ', 'NOUN', 'NOUN_NUM', 'NOUN_PROP', 'NOUN_QUANT',
-            'PRON', 'PRON_DEM', 'PRON_EXCLAM', 'PRON_INTERROG',
-            'PRON_REL', 'VERB_NOM', 'VERB_PSEUDO']
-nominals = [n.lower() for n in nominals]
+POS_NOMINAL = utils.POS_NOMINAL
 
 cond_t_sort_order = {'MS':0, 'MD':1, 'MP':2, 'FS':3, 'FD':4, 'FP':5}
 
@@ -112,12 +101,14 @@ def _sort_stems_nominals(stems):
 
 def create_repr_lemmas_list(config,
                             config_name,
-                            POS,
+                            feats_bank=None,
                             lexicon=None,
-                            bank=None,
-                            info_display_format='compact',
-                            lemma2prob=None,
-                            db=None):
+                            lemma2prob=None):
+    config_local = config['local'][config_name]
+    config_global = config['global']
+    POS, info_display_format, bank, lexprob_db, exclusions, lemma2prob = setup(
+        config_local, config_global, feats_bank, lemma2prob)
+
     SHEETS, _ = db_maker_utils.read_morph_specs(
         config, config_name, lexicon_sheet=lexicon,
         process_morph=False, lexicon_cond_f=False)
@@ -158,7 +149,7 @@ def create_repr_lemmas_list(config,
                         sorted([f"[{stem[k]}]" if stem[k] else '[-]' for stem in stems]))))
             info['lemma'] = info['lemma'][1:-1]
         elif info_display_format == 'expanded':
-            if stems[0]['pos'] in nominals:
+            if stems[0]['pos'] in POS_NOMINAL:
                 _sort_stems_nominals(stems)
             for k in stems[0]:
                 if k in ['lemma', 'pos']:
@@ -196,12 +187,23 @@ def create_repr_lemmas_list(config,
         return uniq_lemma_classes
     
     uniq_lemma_classes = get_highest_prob_lemmas(
-        POS, uniq_lemma_classes, lemmas_stripped_uniq, bank, lemma2prob, db)
+        POS, uniq_lemma_classes, lemmas_stripped_uniq, bank,
+        lemma2prob, lexprob_db, exclusions)
     
     return uniq_lemma_classes
 
 
 def get_extended_lemmas(lexicon, extended_lemma_keys):
+    """Method that uniques lemmas, not only based on the lemma, but
+    also with some extensions that would be seen as part of the lemma.
+    For example, if we want to unique lemmas, but also take POS into
+    account (e.g., كاتِب as noun and كاتِب as noun_act), and not have them
+    confused due to ambiguity, the concept of extended lemma is used. These extensions
+    are specified in the form of features which are appended to the actual lemma
+    and which will thus be considered in the uniquing process.
+    This does not affect the the number or nature of classes which the lemmas
+    will be divided into (`classe_keys`), but will affect how the lemmas will
+    be distributed into those."""
     lemmas_uniq = {}
     lemmas_stripped_uniq = {}
 
@@ -233,7 +235,7 @@ def get_extended_lemmas(lexicon, extended_lemma_keys):
     return lemmas_uniq, lemmas_stripped_uniq
 
 
-def get_lemma2prob(pos, db, uniq_lemma_classes, lemma2prob):
+def get_lemma2prob(POS, db, uniq_lemma_classes, lemma2prob):
     if lemma2prob is None:
         lemma2prob = {}
         for lemmas_cond_sig, lemmas_info in uniq_lemma_classes.items():
@@ -244,7 +246,7 @@ def get_lemma2prob(pos, db, uniq_lemma_classes, lemma2prob):
                 matches = db.stem_hash.get(normalized_lemma_ar, [])
                 db_entries = [db_entry[1] for db_entry in matches]
                 entries_filtered = [e  for e in db_entries
-                    if strip_lex(re.sub(r'[َُِْ]', '', e['lex'])) == lemma_ar and e['pos'] == pos]
+                    if strip_lex(re.sub(r'[َُِْ]', '', e['lex'])) == lemma_ar and e['pos'] in POS]
                 if len(entries_filtered) >= 1:
                     lemma2prob[lemma_stripped] = max([float(a['pos_lex_logprob']) for a in db_entries])
                 else:
@@ -267,13 +269,14 @@ def get_lemma2prob(pos, db, uniq_lemma_classes, lemma2prob):
     
     return lemma2prob
 
-def get_highest_prob_lemmas(pos,
+def get_highest_prob_lemmas(POS,
                             uniq_lemma_classes,
                             lemmas_stripped_uniq=None,
                             bank=None,
                             lemma2prob=None,
-                            db=None):
-    lemma2prob = get_lemma2prob(pos, db, uniq_lemma_classes, lemma2prob)
+                            db=None,
+                            exclusions=[]):
+    lemma2prob = get_lemma2prob(POS, db, uniq_lemma_classes, lemma2prob)
     
     if bank is not None:
         old_lemmas = set([strip_lex(entry[1]) for entry in bank._bank])
@@ -318,27 +321,18 @@ def get_highest_prob_lemmas(pos,
     return uniq_lemma_classes_
 
 
-def lcp(strings):
-    "Longest common prefix"
-    def allsame(strings_):
-        return len(set(strings_)) == 1
-    
-    return ''.join(i[0] for i in takewhile(allsame, zip(*strings)))
-
-
-if __name__ == "__main__":
-    output_dir = args.output_dir if args.output_dir else os.path.join(config_global['debugging'], config_global['repr_lemmas_dir'])
-    output_dir = os.path.join(output_dir, f"camel-morph-{config_local['dialect']}")
-    os.makedirs(output_dir, exist_ok=True)
-    
+def setup(config_local, config_global, feats, lemma2prob):
     pos_type = args.pos_type if args.pos_type else config_local['pos_type']
     if pos_type == 'verbal':
         POS = ['verb']
     elif pos_type == 'nominal':
         pos = args.pos if args.pos else config_local.get('pos')
-        POS = pos if type(pos) is list else [pos]
+        pos = pos if pos is not None else POS_NOMINAL
     elif pos_type == 'other':
         POS = args.pos
+    else:
+        pos = config_local['pos']
+    POS = pos if type(pos) is list else [pos]
 
     if 'exclusions' in config_local:
         with open(config_local['exclusions']) as f:
@@ -347,13 +341,18 @@ if __name__ == "__main__":
     else:
         exclusions = []
 
-    banks_dir = args.banks_dir if args.banks_dir else os.path.join(
-        config_global['debugging'], config_global['banks_dir'], f"camel-morph-{config_local['dialect']}")
-    bank = args.bank if args.bank else (config_local['debugging']['feats'][args.feats]['bank'] if 'debugging' in config_local else None)
+    bank = None
+    if 'feats' in config_local['debugging']:
+        banks_dir = args.banks_dir if args.banks_dir else os.path.join(
+            config_global['debugging'], config_global['banks_dir'],
+            f"camel-morph-{config_local['dialect']}")
+        bank = args.bank if args.bank else (
+            config_local['debugging']['feats'][feats]['bank']
+            if 'debugging' in config_local else None)
+    lexprob_db = args.db if args.db else config_local['debugging'].get('lexprob_db')
     if bank:
         bank = AnnotationBank(bank_path=os.path.join(banks_dir, bank))
 
-    lemma2prob, db = None, None
     if config_local.get('lexprob'):
         if config_local['lexprob'] == 'return_all':
             lemma2prob = 'return_all'
@@ -377,24 +376,31 @@ if __name__ == "__main__":
                 lemma2prob = {lemma: freq / total
                               for pos in POS
                               for lemma, freq in pos2lemma2prob[pos].items()}
-    elif args.db:
-        db = MorphologyDB(args.db)
+    elif lexprob_db is not None:
+        lexprob_db = MorphologyDB(lexprob_db)
     else:
-        db = MorphologyDB.builtin_db()
+        lexprob_db = MorphologyDB.builtin_db()
+
+    display_format = (config_local['debugging']['display_format']
+                      if 'display_format' in config_local['debugging']
+                      else args.display_format)
+
+    return POS, display_format, bank, lexprob_db, exclusions, lemma2prob
+
+
+if __name__ == "__main__":
+    config = utils.get_config_file(args.config_file)
+    config_name = args.config_name
+    config_global = config['global']
+    config_local = config['local'][config_name]
+    
+    output_dir = args.output_dir if args.output_dir else os.path.join(config_global['debugging'], config_global['repr_lemmas_dir'])
+    output_dir = os.path.join(output_dir, f"camel-morph-{config_local['dialect']}")
+    os.makedirs(output_dir, exist_ok=True)
 
     uniq_lemma_classes = create_repr_lemmas_list(config=config,
                                                  config_name=config_name,
-                                                 POS=POS,
-                                                 bank=bank,
-                                                 info_display_format=args.display_format,
-                                                 lemma2prob=lemma2prob,
-                                                 db=db)
-    excluded_classes = set()
-    if type(args.config_name) is list and len(args.config_name) > 1:
-        for config_name_ in args.config_name[1:]:
-            with open(os.path.join(output_dir, f'repr_lemmas_{config_name_}.pkl'), 'rb') as f:
-                excluded_classes.update(pickle.load(f).keys())
-    uniq_lemma_classes = {k: v for k, v in uniq_lemma_classes.items() if k not in excluded_classes}
+                                                 feats_bank=args.feats)
 
     output_name = args.output_name if args.output_name else f'repr_lemmas_{config_name}.pkl'
     output_path = os.path.join(output_dir, output_name)

@@ -336,18 +336,18 @@ if __name__ == "__main__":
 
     pos_type = args.pos_type if args.pos_type else config_local['pos_type']
     if pos_type == 'verbal':
-        pos = 'verb'
+        POS = 'verb'
     elif pos_type == 'nominal':
-        pos = args.pos if args.pos else config_local.get('pos')
+        POS = args.pos if args.pos else config_local.get('pos')
     elif pos_type == 'other':
-        pos = args.pos
+        POS = args.pos
     
     assert all(lexicon['FEAT'].str.contains(r'pos:\S+', regex=True))
-    if pos:
-        lexicon = lexicon[lexicon['FEAT'].str.contains(f'pos:{pos}\\b', regex=True)]
-        pos = [pos]
+    if POS:
+        lexicon = lexicon[lexicon['FEAT'].str.contains(f'pos:{POS}\\b', regex=True)]
+        POS = [POS]
     else:
-        pos = list(set([x[0].split(':')[1] for x in lexicon['FEAT'].str.extract(r'(pos:\S+)').values.tolist()]))
+        POS = list(set([x[0].split(':')[1] for x in lexicon['FEAT'].str.extract(r'(pos:\S+)').values.tolist()]))
 
     pos2lemma2prob, db_lexprob = None, None
     if args.most_prob_lemma:
@@ -367,7 +367,7 @@ if __name__ == "__main__":
                 else:
                     raise NotImplementedError
             
-            for pos_ in pos:
+            for pos_ in POS:
                 total = sum(pos2lemma2prob[pos_].values())
                 pos2lemma2prob[pos_] = {lemma: freq / total for lemma, freq in pos2lemma2prob[pos_].items()}
         elif args.db:
@@ -375,7 +375,7 @@ if __name__ == "__main__":
         else:
             db_lexprob = MorphologyDB.builtin_db()
 
-    outputs = generate_table(lexicon, pos, config_local['dialect'].upper(), pos2lemma2prob, db_lexprob)
+    outputs = generate_table(lexicon, POS, config_local['dialect'].upper(), pos2lemma2prob, db_lexprob)
 
     output_name = args.output_name if args.output_name else config_local['docs_debugging']['docs_tables']
     output_path = os.path.join(output_dir, output_name)
