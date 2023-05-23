@@ -7,10 +7,12 @@ from tqdm import tqdm
 import re
 import pickle
 from copy import deepcopy
+from collections import Counter
 
 import pandas as pd
 from numpy import nan
 
+from glf_pilot_utils import FEATS_INFLECT
 try:
     from .. import db_maker, db_maker_utils
     from ..debugging.generate_docs_tables import _get_structured_lexicon_classes
@@ -187,37 +189,64 @@ def add_information_to_rows(outputs, stem_classes):
     return outputs
 
 
-def get_generated_form_counts_from_gumar(stem_classes, possible_analyses):
+def get_generated_form_counts_from_gumar(stem_classes, possible_analyses, outputs):
     with open(args.gumar_pkl, 'rb') as f:
         gumar = pickle.load(f)
+    
+    gumar_ = {}
+    for analysis, lemma2diac_stem2count in tqdm(gumar.items()):
+        if analysis[0].upper() not in POS_NOM:
+            continue
+        for lemma, diac_stem2count in lemma2diac_stem2count.items():
+            analysis_ = tuple(k for i, k in enumerate(analysis) if i in [0, 5, 6])
+            gumar_.setdefault(analysis_, {}).setdefault(
+                lemma, Counter()).update(diac_stem2count)
 
     id2info = _get_id2info(stem_classes)
 
     form_counts = []
     for example in tqdm(possible_analyses):
         e_gold = reverse_processing(example['gold'])
+        lemma = bw2ar(e_gold[lex_index])
         stemid2form2count = {}
         for pred in example['pred']:
-            pred = reverse_processing(pred)
-            lemma = _strip_brackets(pred[lex_index])
+            pred = tuple(p if p != 'no' else 'na' for p in pred)
+            pred_inflect = tuple(pred[i] for i, f in enumerate(ESSENTIAL_KEYS)
+                                 if f in ['pos', 'num', 'gen'])
+            stem_class = _strip_brackets(pred[lex_index])
+            stem_id = 'stem' + re.search(r'(\d+)$', stem_class).group()
+            stem = _strip_brackets(pred[stem_seg_index])
+            stemid2form2count.setdefault(stem_id, ['', {}])
+            stemid2form2count[stem_id][0] = stem
             feats = {k: e_gold[ESSENTIAL_KEYS.index(k)] for k in gen_feat_keys}
-            for form_gen_num in id2info[lemma]['cond_t'].split('||'):
+            for form_gen_num in id2info[stem_class]['cond_t'].split('||'):
                 form_gen, form_num = list(form_gen_num.lower())
                 feats['form_gen'], feats['form_num'] = form_gen, form_num
-                analyses, messages = generator.generate(lemma, feats, debug=True)
-                stem_id = 'stem' + re.search(r'(\d+)$', lemma).group()
-                stem = _strip_brackets(pred[stem_seg_index])
-                stemid2form2count.setdefault(stem_id, ['', {}])
-                stemid2form2count[stem_id][0] = stem
+                analyses, messages = generator.generate(stem_class, feats, debug=True)
                 stemid2form2count[stem_id][1].setdefault(form_gen_num, 0)
                 if analyses:
                     analysis = analyses[0][0]
                     diac = re.sub(stem_id, stem, analysis['diac'])
-                    diac = dediac_ar(DEFAULT_NORMALIZE_MAP.map_string(diac))
-                    stemid2form2count[stem_id][1][form_gen_num] += gumar[diac]
+                    diac = dediac_ar(diac)
+                    count_gumar = 0
+                    pred_inflect = (pred_inflect[0], form_num, form_gen)
+                    if gumar.get(pred_inflect) is not None:
+                        if gumar[pred_inflect].get(lemma) is not None:
+                            if gumar[pred_inflect][lemma].get((diac, stem)) is not None:
+                                count_gumar = gumar[pred_inflect][lemma][(diac, stem)]
+                    stemid2form2count[stem_id][1][form_gen_num] += count_gumar
         form_counts.append(stemid2form2count)
+
+    form_counts_lu = {(str(i + 1), f'[lemma{stem_abstract[4:]}]'): info
+                      for i, example in enumerate(form_counts)
+                      for stem_abstract, info in example.items()}
+    outputs['COND-T_counts'] = outputs.apply(
+        lambda row: '||'.join(f'{cond_t}:{count}'
+            for cond_t, count in form_counts_lu[(row['filter'].split()[0], row['lex'])][1].items()), axis=1)
                       
-    return form_counts
+    return outputs, form_counts
+
+
 
 
 if __name__ == "__main__":
@@ -344,11 +373,11 @@ if __name__ == "__main__":
                                                 results_path=args.possible_analyses_filtered_path,
                                                 essential_keys=ESSENTIAL_KEYS)
     outputs = add_information_to_rows(outputs, stem_classes)
-    outputs.to_csv(args.possible_analyses_filtered_path, sep='\t', index=False)
     print('Done.\n')
     
     print('Getting form counts from generated words accrding to valid backoff analyses... ', end='')
-    form_counts = get_generated_form_counts_from_gumar(
-        stem_classes, possible_analyses)
+    outputs, form_counts = get_generated_form_counts_from_gumar(
+        stem_classes, possible_analyses, outputs)
     print('Done.\n')
-    pass
+
+    outputs.to_csv(args.possible_analyses_filtered_path, sep='\t', index=False)

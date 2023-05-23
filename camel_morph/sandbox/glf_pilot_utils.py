@@ -34,6 +34,10 @@ POS_NOM = {'ADJ', 'ADJ_COMP', 'ADV', 'NOUN'}
 # POS_NOM = {'ADJ', 'ADJ_COMP', 'ADJ_NUM', 'ADV', 'NOUN',
 #            'NOUN_NUM', 'NOUN_QUANT', 'ADV_REL', 'VERB_NOM'}
 
+FEATS_INFLECT = ['pos', 'asp', 'mod', 'vox', 'per', 'num', 'gen',
+                 'form_num', 'form_gen', 'prc0', 'prc1', 'prc2',
+                 'prc3', 'enc0', 'enc1', 'enc2']
+
 DEFAULT_NORMALIZE_MAP = CharMapper({
         u'\u0625': u'\u0627',
         u'\u0623': u'\u0627',

@@ -7,8 +7,7 @@ import pickle
 import multiprocessing
 from collections import Counter
 
-inflectional_feat_keys = ['pos', 'asp', 'mod', 'vox', 'per', 'num', 'gen', 'form_num', 'form_gen'
-                          'prc0', 'prc1', 'prc2', 'prc3', 'enc0', 'enc1', 'enc2']
+from glf_pilot_utils import FEATS_INFLECT
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-gumar_dir", required=True,
@@ -65,8 +64,7 @@ def disambig_file(gumar_path):
     for disambig in disambigs:
         for token_analyses in disambig:
             analysis = token_analyses.analyses[0].analysis
-            feat = tuple([analysis.get(k, '')
-                        for k in inflectional_feat_keys])
+            feat = tuple([analysis.get(k, '') for k in FEATS_INFLECT])
             lemma, diac, stem = '', '', ''
             if 'lex' in analysis:
                 lemma, diac = analysis['lex'], analysis['diac']
