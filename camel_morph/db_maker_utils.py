@@ -116,7 +116,9 @@ def read_morph_specs(config:Dict,
     for lexicon_sheet in lexicon_sheets:
         if type(lexicon_sheet) is str:
             lexicon_sheet_name = lexicon_sheet
-            LEXICON_ = pd.read_csv(os.path.join(data_dir, f"{lexicon_sheet_name}.csv"))
+            # Setting dtype to silence warning of mixed types
+            LEXICON_ = pd.read_csv(
+                os.path.join(data_dir, f"{lexicon_sheet_name}.csv"), dtype=object)
         else:
             lexicon_sheet_name = None
             LEXICON_ = lexicon_sheet

@@ -116,7 +116,8 @@
                 "output_name": "docs_debug_glf_v1.0.tsv",
                 "debugging_spreadsheet": "camel-morph-glf-nom-other-pilot",
                 "debugging_sheet": "GLF-Documentation-Nom-Auto",
-                "docs_tables": "docs_tables_glf_v1.0.tsv"
+                "docs_tables": "docs_tables_glf_v1.0.tsv",
+                "insert_index": true
             },
             "db": "XYZ_glf_nom_docs_red.db",
             "lexprob": "misc_files/glf_lexprob.tsv",

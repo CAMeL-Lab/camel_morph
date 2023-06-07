@@ -32,12 +32,60 @@ import sys
 from itertools import product
 
 try:
-    from ..utils.utils import _strip_brackets
+    from ..utils.utils import _strip_brackets, get_config_file, POS_NOMINAL
 except:
     file_path = os.path.abspath(__file__).split('/')
     package_path = '/'.join(file_path[:len(file_path) - 1 - file_path[::-1].index('camel_morph')])
     sys.path.insert(0, package_path)
-    from camel_morph.utils.utils import _strip_brackets
+    from camel_morph.utils.utils import _strip_brackets, get_config_file, POS_NOMINAL
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-paradigms", default='',
+                    type=str, help="Configuration file containing the sets of paradigms from which we generate conjugation tables.")
+parser.add_argument("-config_file", default='camel_morph/configs/config_default.json',
+                    type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
+parser.add_argument("-config_name", default='default_config',
+                    type=str, help="Name of the configuration to load from the config file.")
+parser.add_argument("-db", default='',
+                    type=str, help="Name of the DB file which will be used with the generation module.")
+parser.add_argument("-pos_type", default='', choices=['verbal', 'nominal', ''],
+                    type=str, help="POS type of the lemmas for which we want to generate a representative sample.")
+parser.add_argument("-pos", default='',
+                    type=str, help="POS of the lemmas for which we want to generate a representative sample.")
+parser.add_argument("-feats", default='',
+                    type=str, help="Features to generate the conjugation tables for.")
+parser.add_argument("-dialect", default='', choices=['msa', 'glf', 'egy', ''],
+                    type=str, help="Aspect to generate the conjugation tables for.")
+parser.add_argument("-repr_lemmas", default='',
+                    type=str, help="Name of the file in conjugation/repr_lemmas/ from which to load the representative lemmas from.")
+parser.add_argument("-output_name", default='',
+                    type=str, help="Name of the file to output the conjugation tables to in conjugation/tables/ directory.")
+parser.add_argument("-output_dir", default='',
+                    type=str, help="Path of the directory to output the tables to.")
+parser.add_argument("-lemmas_dir", default='',
+                    type=str, help="Path of the directory to output the tables to.")
+parser.add_argument("-db_dir", default='',
+                    type=str, help="Path of the directory to load the DB from.")
+parser.add_argument("-lemma_debug", default=[], action='append',
+                    type=str, help="Lemma (without _1) to debug. Use the following format after the flag: lemma pos:val gen:val num:val")
+parser.add_argument("-camel_tools", default='local', choices=['local', 'official'],
+                    type=str, help="Path of the directory containing the camel_tools modules.")
+args, _ = parser.parse_known_args([] if "__file__" not in globals() else None)
+
+if args.camel_tools == 'local':
+    camel_tools_dir = 'camel_morph/camel_tools'
+    sys.path.insert(0, camel_tools_dir)
+
+from camel_tools.morphology.database import MorphologyDB
+from camel_tools.morphology.generator import Generator
+from camel_tools.utils.charmap import CharMapper
+from camel_tools.morphology.utils import strip_lex
+
+from camel_morph.utils.utils import assign_pattern
+
+bw2ar = CharMapper.builtin_mapper('bw2ar')
+ar2bw = CharMapper.builtin_mapper('ar2bw')
 
 _test_features = ['pos', 'asp', 'vox', 'per', 'gen', 'num',
                  'mod', 'cas', 'enc0', 'prc0', 'prc1', 'prc2', 'prc3']
@@ -204,13 +252,17 @@ def _strip_brackets(info):
         info = info[1:-1]
     return info
 
-def create_conjugation_tables(lemmas,
-                              pos_type,
+def create_conjugation_tables(config,
+                              config_name,
                               paradigm_key,
-                              paradigms,
-                              generator):
+                              repr_lemmas=None):
+    config_local = config['local'][config_name]
+    config_global = config['global']
+    pos_type, paradigms, generator, repr_lemmas = setup(
+        config_local, config_global, paradigm_key, repr_lemmas)
+
     lemmas_conj = []
-    for info in tqdm(lemmas):
+    for info in tqdm(repr_lemmas):
         lemma, form, gloss = info['lemma'], info['form'], info.get('gloss', '_')
         pos, gen, num = info['pos'], info.get('gen', '-'), info.get('num', '-')
         cond_s, cond_t = info['cond_s'], info['cond_t']
@@ -277,8 +329,10 @@ def create_conjugation_tables(lemmas,
                 outputs[f"{signature}{f'_{features_[diff]}' if len(features) > 1 else ''}"] = debug_info
 
         lemmas_conj.append(outputs)
+
+    outputs = process_outputs(lemmas_conj, pos_type)
     
-    return lemmas_conj
+    return outputs
 
 def process_nom_gen_num_(feat, form_feat,
                          form=None, cond_t=None, cond_s=None, gloss=None,
@@ -406,64 +460,7 @@ def process_outputs(lemmas_conj, pos_type):
     return conjugations
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-paradigms", default='',
-                        type=str, help="Configuration file containing the sets of paradigms from which we generate conjugation tables.")
-    parser.add_argument("-config_file", default='config_default.json',
-                        type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
-    parser.add_argument("-config_name", default='default_config',
-                        type=str, help="Name of the configuration to load from the config file.")
-    parser.add_argument("-db", default='',
-                        type=str, help="Name of the DB file which will be used with the generation module.")
-    parser.add_argument("-pos_type", default='', choices=['verbal', 'nominal', ''],
-                        type=str, help="POS type of the lemmas for which we want to generate a representative sample.")
-    parser.add_argument("-pos", default='',
-                        type=str, help="POS of the lemmas for which we want to generate a representative sample.")
-    parser.add_argument("-feats", default='',
-                        type=str, help="Features to generate the conjugation tables for.")
-    parser.add_argument("-dialect", default='', choices=['msa', 'glf', 'egy', ''],
-                        type=str, help="Aspect to generate the conjugation tables for.")
-    parser.add_argument("-repr_lemmas", default='',
-                        type=str, help="Name of the file in conjugation/repr_lemmas/ from which to load the representative lemmas from.")
-    parser.add_argument("-output_name", default='',
-                        type=str, help="Name of the file to output the conjugation tables to in conjugation/tables/ directory.")
-    parser.add_argument("-output_dir", default='',
-                        type=str, help="Path of the directory to output the tables to.")
-    parser.add_argument("-lemmas_dir", default='',
-                        type=str, help="Path of the directory to output the tables to.")
-    parser.add_argument("-db_dir", default='',
-                        type=str, help="Path of the directory to load the DB from.")
-    parser.add_argument("-lemma_debug", default=[], action='append',
-                        type=str, help="Lemma (without _1) to debug. Use the following format after the flag: lemma pos:val gen:val num:val")
-    parser.add_argument("-camel_tools", default='local', choices=['local', 'official'],
-                        type=str, help="Path of the directory containing the camel_tools modules.")
-    args = parser.parse_args([] if "__file__" not in globals() else None)
-
-    with open(args.config_file) as f:
-        config = json.load(f)
-    config_local = config['local'][args.config_name]
-    config_global = config['global']
-
-    if args.camel_tools == 'local':
-        camel_tools_dir = config_global['camel_tools']
-        sys.path.insert(0, camel_tools_dir)
-
-    from camel_tools.morphology.database import MorphologyDB
-    from camel_tools.morphology.generator import Generator
-    from camel_tools.utils.charmap import CharMapper
-    from camel_tools.morphology.utils import strip_lex
-
-    from camel_morph.utils.utils import assign_pattern
-
-    bw2ar = CharMapper.builtin_mapper('bw2ar')
-    ar2bw = CharMapper.builtin_mapper('ar2bw')
-
-    output_dir = args.output_dir if args.output_dir \
-                    else os.path.join(config_global['debugging'], config_global['tables_dir'])
-    output_dir = os.path.join(output_dir, f"camel-morph-{config_local['dialect']}")
-    os.makedirs(output_dir, exist_ok=True)
-
+def setup(config_local, config_global, feats, repr_lemmas):
     db_name = args.db if args.db else config_local['db']
     db_dir = args.db_dir if args.db_dir else config_global['db_dir']
     db_dir = os.path.join(db_dir, f"camel-morph-{config_local['dialect']}")
@@ -476,46 +473,62 @@ if __name__ == "__main__":
         paradigms = json.load(f)[dialect]
     
     pos_type = args.pos_type if args.pos_type else config_local['pos_type']
+    if pos_type == 'verbal':
+        POS = ['verb']
+    elif pos_type == 'nominal':
+        pos = args.pos if args.pos else config_local.get('pos')
+        pos = pos if pos is not None else POS_NOMINAL
+    elif pos_type == 'other':
+        POS = args.pos
+    else:
+        pos = config_local['pos']
+    POS = pos if type(pos) is list else [pos]
 
     if args.lemma_debug:
         lemma_debug = args.lemma_debug[0].split()
         lemma = lemma_debug[0]
         feats = {feat.split(':')[0]: feat.split(':')[1] for feat in lemma_debug[1:]}
-        lemmas = [dict(form='',
+        repr_lemmas = [dict(form='',
                        lemma=lemma.replace('\\', ''),
                        cond_t='',
                        cond_s='',
                        pos=feats['pos'],
                        gen=feats['gen'],
                        num=feats['num'])]
-    else:
+    elif repr_lemmas is None:
         lemmas_dir = args.lemmas_dir if args.lemmas_dir else os.path.join(
-            config_global['debugging'], config_global['repr_lemmas_dir'], f"camel-morph-{config_local['dialect']}")
-        repr_lemmas = args.repr_lemmas if args.repr_lemmas else f'repr_lemmas_{args.config_name}.pkl'
+            config_global['debugging'], config_global['repr_lemmas_dir'],
+            f"camel-morph-{config_local['dialect']}")
+        repr_lemmas = args.repr_lemmas if args.repr_lemmas \
+            else f'repr_lemmas_{args.config_name}.pkl'
         lemmas_path = os.path.join(lemmas_dir, repr_lemmas)
         with open(lemmas_path, 'rb') as f:
-            lemmas = pickle.load(f)
-            lemmas = list(lemmas.values())
+            repr_lemmas = pickle.load(f)
+            repr_lemmas = list(repr_lemmas.values())
 
-    if pos_type == 'verbal':
-        pos = 'verb'
-    elif pos_type == 'nominal':
-        pos = args.pos if args.pos else config_local.get('pos')
-    elif pos_type == 'other':
-        pos = args.pos
+    repr_lemmas = [info for info in list(repr_lemmas.values())
+                   if _strip_brackets(info['pos']) in POS]
+    return pos_type, paradigms, generator, repr_lemmas
 
-    if pos:
-        lemmas = [info for info in lemmas if _strip_brackets(info['pos']) == pos]
+
+if __name__ == "__main__":
+    config = get_config_file(args.config_file)
+    config_name = args.config_name
+    config_global = config['global']
+    config_local = config['local'][config_name]
+    
+    output_dir = args.output_dir if args.output_dir \
+        else os.path.join(config_global['debugging'], config_global['tables_dir'])
+    output_dir = os.path.join(output_dir, f"camel-morph-{config_local['dialect']}")
+    os.makedirs(output_dir, exist_ok=True)
         
-    lemmas_conj = create_conjugation_tables(lemmas=lemmas,
-                                            pos_type=pos_type,
-                                            paradigm_key=args.feats,
-                                            paradigms=paradigms,
-                                            generator=generator)
-    outputs = process_outputs(lemmas_conj, pos_type)
+    outputs = create_conjugation_tables(config=config,
+                                        config_name=config_name,
+                                        paradigm_key=args.feats)
     
     if not args.lemma_debug:
-        output_name = args.output_name if args.output_name else config_local['debugging']['feats'][args.feats]['conj_tables']
+        output_name = args.output_name if args.output_name \
+            else config_local['debugging']['feats'][args.feats]['conj_tables']
         output_path = os.path.join(output_dir, output_name)
         with open(output_path, 'w') as f:
             for output in outputs:

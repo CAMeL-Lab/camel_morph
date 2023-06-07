@@ -45,7 +45,8 @@
                 "output_name": "docs_debug_egy_v1.0.tsv",
                 "debugging_spreadsheet": "camel-morph-common",
                 "debugging_sheet": "EGY-Documentation-Nom-Auto",
-                "docs_tables": "docs_tables_egy_v1.0.tsv"
+                "docs_tables": "docs_tables_egy_v1.0.tsv",
+                "insert_index": true
             },
             "db": "XYZ_egy_nom_docs_red.db",
             "lexprob": "misc_files/egy_lexprob.tsv",

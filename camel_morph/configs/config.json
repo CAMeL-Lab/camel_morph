@@ -16,7 +16,7 @@
         "banks_dir": "banks",
         "camel_tools": "./camel_morph/camel_tools",
         "service_account": "/Users/chriscay/.config/gspread/service_account.json",
-        "paradigms_config": "configs/config_paradigms.json",
+        "paradigms_config": "camel_morph/configs/config_paradigms.json",
         "banks_spreadsheet": "Paradigm-Banks"
     },
     "local": {
@@ -118,6 +118,8 @@
             "db": "XYZ_msa_pv_v1.0.db",
             "debugging": {
                 "debugging_spreadsheet": "Paradigm-Debugging",
+                "display_format": "unique",
+                "lexprob_db": "eval_files/calima-msa-s31_0.4.2.utf8.db",
                 "feats": {
                     "asp:p mod:i": {
                         "conj_tables": "conj_pv_msa_v1.0.tsv",
@@ -255,6 +257,8 @@
             "db": "XYZ_msa_iv_v1.0.db",
             "debugging": {
                 "debugging_spreadsheet": "Paradigm-Debugging",
+                "display_format": "unique",
+                "lexprob_db": "eval_files/calima-msa-s31_0.4.2.utf8.db",
                 "feats": {
                     "asp:i mod:i": {
                         "conj_tables": "conj_iv-i_msa_v1.0.tsv",
@@ -354,6 +358,8 @@
             "db": "XYZ_msa_cv_v1.0.db",
             "debugging": {
                 "debugging_spreadsheet": "Paradigm-Debugging",
+                "display_format": "unique",
+                "lexprob_db": "eval_files/calima-msa-s31_0.4.2.utf8.db",
                 "feats": {
                     "asp:c mod:i": {
                         "conj_tables": "conj_cv-i_msa_v1.0.tsv",
@@ -437,6 +443,7 @@
             "db": "XYZ_glf_pv_v1.0_red.db",
             "debugging": {
                 "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
+                "display_format": "unique",
                 "feats": {
                     "asp:p mod:i": {
                         "conj_tables": "conj_pv_glf_v1.0.tsv",
@@ -478,6 +485,7 @@
             "db": "XYZ_glf_iv_v1.0_red.db",
             "debugging": {
                 "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
+                "display_format": "unique",
                 "feats": {
                     "asp:i mod:i": {
                         "conj_tables": "conj_iv_glf_v1.0.tsv",
@@ -519,6 +527,7 @@
             "db": "XYZ_glf_cv_v1.0_red.db",
             "debugging": {
                 "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
+                "display_format": "unique",
                 "feats": {
                     "asp:c mod:i": {
                         "conj_tables": "conj_cv_glf_v1.0.tsv",
@@ -593,6 +602,7 @@
             "db": "XYZ_egy_pv_v1.0.db",
             "debugging": {
                 "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
+                "display_format": "unique",
                 "feats": {
                     "asp:p mod:i": {
                         "conj_tables": "conj_pv_egy_v1.0.tsv",
@@ -667,6 +677,7 @@
             "db": "XYZ_egy_iv_v1.0.db",
             "debugging": {
                 "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
+                "display_format": "unique",
                 "feats": {
                     "asp:i mod:i": {
                         "conj_tables": "conj_iv_egy_v1.0.tsv",
@@ -741,6 +752,7 @@
             "db": "XYZ_egy_cv_v1.0.db",
             "debugging": {
                 "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
+                "display_format": "unique",
                 "feats": {
                     "asp:c mod:i": {
                         "conj_tables": "conj_cv_egy_v1.0.tsv",
@@ -791,6 +803,56 @@
                 "gloss"
             ]
         },
+        "nom_msa_split_red": {
+            "split_or": true,
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": {
+                    "order": "MSA-Nom-ORDER",
+                    "morph": "MSA-Nom-MORPH"
+                },
+                "exclude": [
+                    "RED"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": [
+                    "MSA-Nom-LEX"
+                ]
+            },
+            "dialect": "msa",
+            "db": "XYZ_msa_nom_v1.0_red.db",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Nominals",
+                "display_format": "unique",
+                "lexprob_db": "eval_files/calima-msa-s31_0.4.2.utf8.db",
+                "feats": {
+                    "": {
+                        "debugging_sheet": "MSA-Nom",
+                        "conj_tables": "conj_nom_msa_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_nom_msa_v1.0.tsv",
+                        "bank": "MSA-Nom-Bank.tsv"
+                    }
+                }
+            },
+            "pos_type": "nominal",
+            "class_keys": [
+                "cond_t",
+                "cond_s",
+                "gen",
+                "num",
+                "cas"
+            ],
+            "extended_lemma_keys": [
+                "lemma",
+                "form",
+                "rat",
+                "cond_t",
+                "index"
+            ]
+        },
         "noun_msa_split_red": {
             "split_or": true,
             "pruning": true,
@@ -814,6 +876,8 @@
             "db": "XYZ_msa_nom_v1.0_red.db",
             "debugging": {
                 "debugging_spreadsheet": "Paradigm-Debugging-Nominals",
+                "display_format": "unique",
+                "lexprob_db": "eval_files/calima-msa-s31_0.4.2.utf8.db",
                 "feats": {
                     "": {
                         "debugging_sheet": "MSA-Noun",
@@ -864,6 +928,8 @@
             "db": "XYZ_msa_nom_v1.0_red.db",
             "debugging": {
                 "debugging_spreadsheet": "Paradigm-Debugging-Nominals",
+                "display_format": "unique",
+                "lexprob_db": "eval_files/calima-msa-s31_0.4.2.utf8.db",
                 "feats": {
                     "": {
                         "debugging_sheet": "MSA-Noun-Prop",
@@ -914,6 +980,8 @@
             "db": "XYZ_msa_nom_v1.0_red.db",
             "debugging": {
                 "debugging_spreadsheet": "Paradigm-Debugging-Nominals",
+                "display_format": "unique",
+                "lexprob_db": "eval_files/calima-msa-s31_0.4.2.utf8.db",
                 "feats": {
                     "": {
                         "debugging_sheet": "MSA-Adj",
@@ -965,6 +1033,8 @@
             "db": "XYZ_msa_other_v1.0_red.db",
             "debugging": {
                 "debugging_spreadsheet": "Paradigm-Debugging-Nominals",
+                "display_format": "unique",
+                "lexprob_db": "eval_files/calima-msa-s31_0.4.2.utf8.db",
                 "feats": {
                     "": {
                         "debugging_sheet": "MSA-Other",
@@ -1011,6 +1081,7 @@
             "db": "XYZ_egy_nom_v1.0_red.db",
             "debugging": {
                 "debugging_spreadsheet": "Paradigm-Debugging-Nominals-Dialects",
+                "display_format": "unique",
                 "feats": {
                     "": {
                         "debugging_sheet": "EGY-Adj",
@@ -1063,6 +1134,7 @@
             "db": "XYZ_egy_nom_v1.0_red.db",
             "debugging": {
                 "debugging_spreadsheet": "Paradigm-Debugging-Nominals-Dialects",
+                "display_format": "unique",
                 "feats": {
                     "": {
                         "debugging_sheet": "EGY-Noun",
@@ -1115,6 +1187,7 @@
             "db": "XYZ_egy_nom_v1.0_red.db",
             "debugging": {
                 "debugging_spreadsheet": "Paradigm-Debugging-Nominals-Dialects",
+                "display_format": "unique",
                 "feats": {
                     "": {
                         "debugging_sheet": "EGY-Noun-Prop",
@@ -1167,6 +1240,7 @@
             "db": "XYZ_egy_other_v1.0_red.db",
             "debugging": {
                 "debugging_spreadsheet": "Paradigm-Debugging-Nominals-Dialects",
+                "display_format": "unique",
                 "feats": {
                     "": {
                         "debugging_sheet": "EGY-Other",

@@ -17,7 +17,7 @@ parser.add_argument("-config_file", default='config_default.json',
                         type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
 parser.add_argument("-config_name", default='default_config',
                     type=str, help="Name of the configuration to load from the config file.")
-parser.add_argument("-mode", default='generate_lex', choices=['generate_lex', 'regenerate_sig'],
+parser.add_argument("-mode", default='generate_lex',
                     type=str, help="Task that the script should execute.")
 parser.add_argument("-download", default=False,
                     action='store_true', help="Whether or not to download the data before doing anything. This should be done in case data was changed in Google Sheets since last time this script was ran.")
@@ -151,13 +151,9 @@ def regenerate_signature_lex_rows(sheet, sh, config, config_name):
                         ' num:' + sheet_df['NUM'] + ' rat:' + sheet_df['RAT'] +
                         ' cas:' + sheet_df['CAS'])
     
-    config_local = config['local'][config_name]
     repr_lemmas = create_repr_lemmas_list(config=config,
                                           config_name=config_name,
-                                          POS=POS,
-                                          lexicon=sheet_df,
-                                          info_display_format='expanded',
-                                          lemma2prob=config_local['lexprob'])
+                                          lexicon=sheet_df)
     lemma2signature = {}
     for lemmas_info in repr_lemmas.values():
         for lemma_info in lemmas_info['lemmas']:
@@ -194,12 +190,18 @@ if __name__ == "__main__":
     config_local = config['local'][config_name]
     config_global = config['global']
 
-    pos = args.pos if args.pos else config_local['pos']
-    POS = pos if type(pos) is list else [pos]
+    POS = args.pos if args.pos else config_local['pos']
+    POS = POS if type(POS) is list else [POS]
+    sheet_name = args.sheet if args.sheet else config_local['debugging']['sheets'][0]
+    spreadsheet = args.spreadsheet if args.spreadsheet else config_local['debugging']['debugging_spreadsheet']
+
+    data_dir = os.path.join(config_global['data_dir'],
+                            f"camel-morph-{config_local['dialect']}",
+                            config_name)
 
     sa = gspread.service_account(config_global['service_account'])
 
-    if args.download:
+    if args.download or not os.path.exists(data_dir):
         download_sheets(config=config,
                         config_name=config_name,
                         service_account=sa)
@@ -207,27 +209,24 @@ if __name__ == "__main__":
     if args.well_formedness:
         well_formedness_check(config_local)
 
-    sh = sa.open(args.spreadsheet)
+    sh = sa.open(spreadsheet)
     sheets = sh.worksheets()
 
     if args.mode == 'generate_lex':
         repr_lemmas = create_repr_lemmas_list(config=config,
-                                              config_name=config_name,
-                                              POS=POS,
-                                              info_display_format='expanded',
-                                              lemma2prob=config_local['lexprob'])
+                                              config_name=config_name)
         rows = generate_lex_rows(repr_lemmas)
         repr_lemmas = pd.DataFrame(rows)
         repr_lemmas = repr_lemmas.replace(nan, '', regex=True)
         repr_lemmas = repr_lemmas[COLUMNS_OUTPUT]
-        if args.sheet in [sheet.title for sheet in sheets]:
-            sheet = [sheet for sheet in sheets if args.sheet == sheet.title][0]
+        if sheet_name in [sheet.title for sheet in sheets]:
+            sheet = [sheet for sheet in sheets if sheet.title == sheet_name][0]
         else:
-            sheet = sh.add_worksheet(title=args.sheet, rows="100", cols="20")
+            sheet = sh.add_worksheet(title=sheet_name, rows="100", cols="20")
         sheet.clear()
         sheet.update(
             [repr_lemmas.columns.values.tolist()] + repr_lemmas.values.tolist())
     
     elif args.mode == 'regenerate_sig':
-        sheet = [sheet for sheet in sheets if args.sheet == sheet.title][0]
+        sheet = [sheet for sheet in sheets if sheet.title == sheet_name][0]
         regenerate_signature_lex_rows(sheet, sh, config, config_name)

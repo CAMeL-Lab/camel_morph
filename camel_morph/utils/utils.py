@@ -25,10 +25,17 @@ import re
 import gspread
 import os
 import json
+from itertools import takewhile
 
 consonants_bw = "['|>&<}bptvjHxd*rzs$SDTZEgfqklmnhwy]"
 double_cons = re.compile('{}{}'.format(consonants_bw, consonants_bw))
 CONS_CLUSTER_IMPLEM = False
+
+POS_NOMINAL = [
+    'abbrev', 'adj', 'adj_comp', 'adj_num', 'adv', 'adv_interrog',
+    'adv_rel', 'foriegn', 'interj', 'noun', 'noun_num', 'noun_prop',
+    'noun_quant', 'pron', 'pron_dem', 'pron_exclam', 'pron_interrog',
+    'pron_rel', 'verb_nom', 'verb_pseudo']
 
 def patternize_root(root, dc=None, surface_form=False):
     """Will patternize denuded roots (except patterns which are inherently
@@ -395,8 +402,9 @@ def add_check_mark_online(rows,
         raise NotImplementedError
 
     status_column_index = header.index(status_col_name)
-    column_letter = (chr(ord('A') + status_column_index // 27) if status_column_index >= 26 else '') + \
-        chr(ord('A') + status_column_index % 26)
+    column_letter = (chr(ord('A') - 1 + status_column_index // 26)
+                     if status_column_index >= 26 else '')
+    column_letter += chr(ord('A') + status_column_index % 26)
 
     status_old = worksheet.col_values(status_column_index + 1)[1:]
     lemmas = worksheet.col_values(header.index('LEMMA') + 1)[1:]
@@ -464,4 +472,12 @@ def get_lex_paths(config, config_name):
         lex_dir = get_data_dir_path(config, config_name)
         lex_path = os.path.join(lex_dir, f'{sheet_name}.csv')
         lex_paths.append(lex_path) 
-    return lex_paths                       
+    return lex_paths
+
+
+def lcp(strings):
+    "Longest common prefix"
+    def allsame(strings_):
+        return len(set(strings_)) == 1
+    
+    return ''.join(i[0] for i in takewhile(allsame, zip(*strings)))
