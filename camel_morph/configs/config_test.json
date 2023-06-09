@@ -268,6 +268,53 @@
             },
             "db": "XYZ_msa_verb_v1.0.db",
             "pos_type": "verbal"
+        },
+        "noun_eval_test": {
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": {
+                    "order": "MSA-Nom-ORDER",
+                    "morph": "MSA-Nom-MORPH"
+                },
+                "exclude": []
+            },
+            "lexicon": {
+                "spreadsheet": "Nominals-Sandbox",
+                "sheets": [
+                    "Lemma-Paradigm-Debugging-Noun-v2"
+                ]
+            },
+            "dialect": "msa",
+            "db": "XYZ_msa_noun_v1.0_test.db",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Nominals",
+                "feats": {
+                    "": {
+                        "debugging_sheet": "MSA-Adj",
+                        "conj_tables": "conj_adj_msa_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_adj_msa_v1.0.tsv",
+                        "bank": "MSA-Adj-Bank.tsv"
+                    }
+                }
+            },
+            "pos_type": "nominal",
+            "pos": "adj",
+            "class_keys": [
+                "cond_t",
+                "cond_s",
+                "gen",
+                "num",
+                "cas"
+            ],
+            "extended_lemma_keys": [
+                "lemma",
+                "form",
+                "pos",
+                "rat",
+                "cond_t",
+                "index"
+            ]
         }
     }
 }

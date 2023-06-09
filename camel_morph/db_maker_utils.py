@@ -160,10 +160,11 @@ def read_morph_specs(config:Dict,
         if LEXICON[lex_type] is None:
             continue
         LEXICON[lex_type] = LEXICON[lex_type].apply(lambda x: x.str.strip() if x.dtype == "object" else x)
+        if 'BW' not in LEXICON[lex_type].columns:
+            LEXICON[lex_type]['BW'] = ''
         LEXICON[lex_type]['BW'] = LEXICON[lex_type]['BW'].replace('\s+', '#', regex=True)
-        LEXICON[lex_type].loc[LEXICON[lex_type]['BW'] == '', 'BW'] = '_'
-        LEXICON[lex_type].loc[LEXICON[lex_type]['BW'].str.contains('/'), 'BW'] = LEXICON[lex_type]['BW']
-        LEXICON[lex_type].loc[~LEXICON[lex_type]['BW'].str.contains('/'), 'BW'] = LEXICON[lex_type]['FORM'] + '/' + LEXICON[lex_type]['BW']
+        LEXICON[lex_type].loc[LEXICON[lex_type]['BW'].str.contains('\+'), 'BW'] = LEXICON[lex_type]['BW']
+        LEXICON[lex_type].loc[~LEXICON[lex_type]['BW'].str.contains('\+'), 'BW'] = LEXICON[lex_type]['FORM'] + '/' + LEXICON[lex_type]['BW']
         LEXICON[lex_type]['LEMMA'] = 'lex:' + LEXICON[lex_type]['LEMMA']
         LEXICON[lex_type] = LEXICON[lex_type] if len(LEXICON[lex_type].index) != 0 else None
 

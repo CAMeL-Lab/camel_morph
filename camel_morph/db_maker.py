@@ -642,7 +642,8 @@ def _read_stem(stem: List[Dict]) -> Tuple[str, Dict]:
     stem_lex = '+'.join([s['LEMMA'].split(':')[1] for s in stem if 'LEMMA' in s])
     stem_feat = {feat.split(':')[0]: feat.split(':')[1]
                 for s in stem for feat in s['FEAT'].split()}
-    root = [s['ROOT'] for s in stem if s.get('ROOT')][0]
+    root = [s['ROOT'] for s in stem if s.get('ROOT')]
+    root = root[0] if root else 'PLACEHOLDER'
     
     smart_backoff = False
     if not any([s['DEFINE'] == 'SMARTBACKOFF' for s in stem]):

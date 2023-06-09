@@ -80,9 +80,11 @@ if args.camel_tools == 'local':
 
 from camel_tools.morphology.utils import strip_lex
 
-HEADER = ["line", "status", "count", "signature", "lemma", "diac_ar", "diac", "freq",
-          "qc", "warnings", "comments", "pattern", "stem", "bw", "gloss", "cond-s",
-          "cond-t", "pref-cat", "stem-cat", "suff-cat", "feats", "debug", "color"]
+HEADER = [
+    'line', 'status', 'count', 'signature', 'lemma', 'diac_ar', 'diac', 'freq',
+    'qc', 'comments', 'pattern', 'stem', 'bw', 'gloss', 'cond-s', 'cond-t',
+    'pref-cat', 'stem-cat', 'suff-cat', 'feats', 'debug', 'color'
+]
 
 class AnnotationBank:
     UNKOWN = 'UNK'
@@ -206,7 +208,8 @@ def automatic_bank_annotation(config,
                               feats,
                               new_conj_table,
                               sa,
-                              process_key=None):
+                              process_key=None,
+                              HEADER=HEADER):
     config_local = config['local'][config_name]
     config_global = config['global']
     bank_path, annotated_paradigms = setup(

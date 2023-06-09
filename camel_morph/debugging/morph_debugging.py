@@ -73,11 +73,18 @@ if __name__ == "__main__":
         db_maker.make_db(config, config_name)
         print()
 
+    HEADER = [
+        'line', 'status', 'count', 'signature', 'lemma', 'diac_ar', 'diac', 'freq',
+        'qc', 'comments', 'pattern', 'stem', 'bw', 'gloss', 'pos', 'cond-s', 'cond-t',
+        'pref-cat', 'stem-cat', 'suff-cat', 'feats', 'debug', 'color'
+    ]
+
     print('Building inflection table...', end=' ')
     conj_table = create_conjugation_tables(config=config,
                                            config_name=config_name,
                                            paradigm_key=args.feats,
-                                           repr_lemmas=repr_lemmas)
+                                           repr_lemmas=repr_lemmas,
+                                           HEADER=HEADER)
     conj_table = _get_df(conj_table)
     print('Done.\n')
     
@@ -86,7 +93,8 @@ if __name__ == "__main__":
                                         config_name=config_name,
                                         feats=args.feats,
                                         new_conj_table=conj_table,
-                                        sa=sa)
+                                        sa=sa,
+                                        HEADER=HEADER)
     outputs = _get_df(outputs)
     print('Done.\n')
     

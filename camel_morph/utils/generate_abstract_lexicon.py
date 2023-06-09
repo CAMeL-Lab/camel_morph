@@ -32,11 +32,16 @@ import sys
 import gspread
 import pandas as pd
 
-from camel_morph.utils.utils import add_check_mark_online, consonants_bw
 try:
     from ..debugging.download_sheets import download_sheets
+    from utils import add_check_mark_online, consonants_bw, get_config_file
 except:
+    file_path = os.path.abspath(__file__).split('/')
+    package_path = '/'.join(file_path[:len(file_path) -
+                                      1 - file_path[::-1].index('camel_morph')])
+    sys.path.insert(0, package_path)
     from camel_morph.debugging.download_sheets import download_sheets
+    from camel_morph.utils.utils import add_check_mark_online, consonants_bw, get_config_file
 
 header = ['PATTERN_ABSTRACT', 'PATTERN_DEF', 'ROOT', 'ROOT_SUB', 'DEFINE', 'CLASS', 'PATTERN',
           'LEMMA', 'LEMMA_SUB', 'FORM', 'FORM_SUB', 'BW', 'BW_SUB', 'GLOSS', 'FEAT', 'COND-T', 'COND-F', 'COND-S',
@@ -138,14 +143,14 @@ def generate_abstract_stem(row,
 
     Args:
         row (pd.Series): pandas row
-        global_exclusions (dict): computed automatically from explicit radicals in root class. Defaults to ''.
-        local_exclusions (dict): computed from explicit radicals following `-` in root class. Defaults to ''.
+        global_exclusions (dict): computed automatically from explicit radicals in root class.
+        local_exclusions (dict): computed from explicit radicals following `-` in root class.
         local_additions (dict): computed from explicit radicals following `+` in root class.
         form_preprocessed (str, optional): form used to provide as input for testing correctness of match/sub regexes. For Arabic will usually be the normalized, dediacritized pattern. Defaults to ''.
         form_pattern_preprocessed (str, optional): form pattern used to generate the match_regex. For Arabic, will usually be the normalized, dediacritized pattern. Defaults to ''.
         root_class_preprocessed (list, optional): preprocessed root class used to generate the match_regex. For Arabic, will usually be the normalized, dediacritized version. Defaults to ''.
         cond_s (str, optional): preprocessed COND-S to use for abstract stem. Defaults to ''.
-        cond_t (str, optional): preprocessed COND-T to use for abstract stem.. Defaults to ''.
+        cond_t (str, optional): preprocessed COND-T to use for abstract stem. Defaults to ''.
 
     Returns:
         dict: dictionary containaining the new columns of the abstract entry
@@ -333,7 +338,7 @@ def generate_abstract_lexicon(lexicon, spreadsheet=None, sheet=None):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-config_file", default='',
+    parser.add_argument("-config_file", default='camel_morph/configs/config.json',
                         type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
     parser.add_argument("-config_name", default='default_config',
                         type=str, help="Name of the configuration to load from the config file.")
@@ -343,19 +348,13 @@ if __name__ == "__main__":
                         action='store_true', help="Get patterns from sheet instead of generating them on the fly.")
     parser.add_argument("-output_name", default='',
                         type=str, help="Name of the file to output the abstract lexicon to.")
-    parser.add_argument("-camel_tools", default='',
-                        type=str, help="Path of the directory containing the camel_tools modules.")
     parser.add_argument("-service_account", default='',
                         type=str, help="Path of the JSON file containing the information about the service account used for the Google API.")
     args = parser.parse_args()
-    if args.camel_tools:
-        sys.path.insert(0, args.camel_tools)
-        from camel_tools.utils.charmap import CharMapper
-        from camel_tools.morphology.utils import strip_lex
+
     import camel_morph.db_maker_utils as db_maker_utils
 
-    with open(args.config_file) as f:
-        config = json.load(f)
+    config = get_config_file(args.config_file)
     config_local = config['local'][args.config_name]
     config_global = config['global']
 

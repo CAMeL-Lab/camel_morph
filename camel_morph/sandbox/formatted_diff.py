@@ -98,9 +98,9 @@ if __name__ == "__main__":
     ID_INDEX = COLUMNS.index(COLUMNS_PROJECTS[args.project]['id'])
     DIFF_INDEX = COLUMNS_OUTPUT.index('DIFF')
 
-    select_for_compare = pd.read_csv(args.select_for_compare, sep='\t')
+    select_for_compare = pd.read_csv(args.select_for_compare, sep=None)
     select_for_compare = select_for_compare.replace(nan, '')
-    compare_with_selected = pd.read_csv(args.compare_with_selected)
+    compare_with_selected = pd.read_csv(args.compare_with_selected, sep=None)
     compare_with_selected = compare_with_selected.replace(nan, '')
     for i, row in compare_with_selected.iterrows():
         if not row[ID_COL]:

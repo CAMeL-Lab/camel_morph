@@ -51,7 +51,7 @@ parser.add_argument("-db", default='',
                     type=str, help="Name of the DB file which will be used with the generation module.")
 parser.add_argument("-pos_type", default='', choices=['verbal', 'nominal', ''],
                     type=str, help="POS type of the lemmas for which we want to generate a representative sample.")
-parser.add_argument("-pos", default='',
+parser.add_argument("-pos", default=[], nargs='+',
                     type=str, help="POS of the lemmas for which we want to generate a representative sample.")
 parser.add_argument("-feats", default='',
                     type=str, help="Features to generate the conjugation tables for.")
@@ -87,8 +87,14 @@ from camel_morph.utils.utils import assign_pattern
 bw2ar = CharMapper.builtin_mapper('bw2ar')
 ar2bw = CharMapper.builtin_mapper('ar2bw')
 
-_test_features = ['pos', 'asp', 'vox', 'per', 'gen', 'num',
-                 'mod', 'cas', 'enc0', 'prc0', 'prc1', 'prc2', 'prc3']
+TEST_FEATS_VERB = ['pos', 'asp', 'vox', 'per', 'gen', 'num', 'mod',
+                   'enc0', 'enc1', 'prc0', 'prc1', 'prc1.5', 'prc2', 'prc3']
+TEST_FEATS_NOM = ['pos', 'gen', 'num', 'stt', 'cas',
+                  'enc0', 'enc1', 'prc0', 'prc1', 'prc1.5', 'prc2', 'prc3']
+TEST_FEATS_OTHER = ['pos', 'asp', 'vox', 'per', 'gen', 'num', 'mod', 'stt', 'cas',
+                    'enc0', 'enc1', 'prc0', 'prc1', 'prc1.5', 'prc2', 'prc3']
+
+
 # <POS>.<A><P><G><N>.<S><C><V><M>
 SIGNATURE_PATTERN = re.compile(
     r'([^\.]+)\.([^\.]{,4})\.?([^\.]{,4})\.?P?(\d{,2})?\.?E?(\d{,2})?')
@@ -146,9 +152,11 @@ sig2feat = {
     }
 }
 
-header = ["line", "status", "count", "signature", "lemma", "diac_ar", "diac", "freq",
-          "qc", "comments", "pattern", "stem", "bw", "gloss", "cond-s", "cond-t", "pref-cat",
-          "stem-cat", "suff-cat", "feats", "debug", "color"]
+HEADER = [
+    'line', 'status', 'count', 'signature', 'lemma', 'diac_ar', 'diac', 'freq',
+    'qc', 'comments', 'pattern', 'stem', 'bw', 'gloss', 'cond-s', 'cond-t',
+    'pref-cat', 'stem-cat', 'suff-cat', 'feats', 'debug', 'color'
+]
 
 def parse_signature(signature, pos):
     match = SIGNATURE_PATTERN.search(signature)
@@ -255,7 +263,8 @@ def _strip_brackets(info):
 def create_conjugation_tables(config,
                               config_name,
                               paradigm_key,
-                              repr_lemmas=None):
+                              repr_lemmas=None,
+                              HEADER=HEADER):
     config_local = config['local'][config_name]
     config_global = config['global']
     pos_type, paradigms, generator, repr_lemmas = setup(
@@ -263,7 +272,8 @@ def create_conjugation_tables(config,
 
     lemmas_conj = []
     for info in tqdm(repr_lemmas):
-        lemma, form, gloss = info['lemma'], info['form'], info.get('gloss', '_')
+        lemma, form = info['lemma'], info['form']
+        gloss, bw = info.get('gloss', '_'), info.get('bw', '_')
         pos, gen, num = info['pos'], info.get('gen', '-'), info.get('num', '-')
         cond_s, cond_t = info['cond_s'], info['cond_t']
         lemma_raw = lemma[:]
@@ -312,6 +322,7 @@ def create_conjugation_tables(config,
                 analyses = [a[0] for a in analyses]
                 debug_info = dict(analyses=analyses,
                                   gloss=gloss,
+                                  bw=bw,
                                   form=form,
                                   gen=gen,
                                   num=num,
@@ -330,13 +341,14 @@ def create_conjugation_tables(config,
 
         lemmas_conj.append(outputs)
 
-    outputs = process_outputs(lemmas_conj, pos_type)
+    outputs = process_outputs(lemmas_conj, pos_type, HEADER)
     
     return outputs
 
 def process_nom_gen_num_(feat, form_feat,
                          form=None, cond_t=None, cond_s=None, gloss=None,
-                         lemma=None, pattern=None, pos=None, freq=None):
+                         bw=None, lemma=None, pattern=None, pos=None,
+                         freq=None):
     feat_ = _strip_brackets(feat)
     if feat_ == '-':
         if form_feat:
@@ -344,6 +356,7 @@ def process_nom_gen_num_(feat, form_feat,
         else:
             debug_info = dict(analyses=[],
                               gloss=gloss,
+                              bw=bw,
                               form=form,
                               cond_s=cond_s,
                               cond_t=cond_t,
@@ -360,7 +373,7 @@ def process_nom_gen_num_(feat, form_feat,
     return feat_
 
 
-def process_outputs(lemmas_conj, pos_type):
+def process_outputs(lemmas_conj, pos_type, HEADER):
     conjugations = []
     color, line = 0, 1
     for paradigm in lemmas_conj:
@@ -374,6 +387,9 @@ def process_outputs(lemmas_conj, pos_type):
             output['stem'] = info['form']
             output['lemma'] = info['lemma']
             output['pattern'] = info['pattern']
+            output['gloss'] = info['gloss']
+            output['bw'] = info['bw']
+            output['pos'] = info['pos']
             output['cond-s'] = info['cond_s']
             output['cond-t'] = info['cond_t']
             output['color'] = color
@@ -386,13 +402,19 @@ def process_outputs(lemmas_conj, pos_type):
                 for i, analysis in enumerate(info['analyses']):
                     if pos_type == 'nominal':
                         stem_bw = f"{bw2ar(form)}/{pos}"
-                        if stem_bw not in analysis['bw'] or _strip_brackets(info['gloss']) != analysis['stemgloss']:
+                        test_feats = TEST_FEATS_NOM
+                        if stem_bw not in analysis['bw'] or \
+                            _strip_brackets(info['gloss']) != analysis['stemgloss']:
                             continue
                     elif pos_type == 'verbal':
-                        if info['lemma'] != ar2bw(analysis['lex']) or _strip_brackets(info['gloss']) != analysis['stemgloss']:
+                        test_feats = TEST_FEATS_VERB
+                        if info['lemma'] != ar2bw(analysis['lex']) or \
+                            _strip_brackets(info['gloss']) != analysis['stemgloss']:
                             continue
                     elif pos_type == 'other':
-                        if analysis['stem'] not in bw2ar(form) or _strip_brackets(info['gloss']) != analysis['stemgloss']:
+                        test_feats = TEST_FEATS_OTHER
+                        if analysis['stem'] not in bw2ar(form) or \
+                            _strip_brackets(info['gloss']) != analysis['stemgloss']:
                             continue
                     valid_analyses = True
                     output_ = output.copy()
@@ -403,7 +425,7 @@ def process_outputs(lemmas_conj, pos_type):
                     output_['stem-cat'] = info['stem_cats'][i]
                     output_['suff-cat'] = info['suffix_cats'][i]
                     output_['feats'] = ' '.join(
-                        [f"{feat}:{analysis[feat]}" for feat in _test_features if feat in analysis])
+                        [f"{feat}:{analysis[feat]}" for feat in test_feats if feat in analysis])
                     output_duplicates = outputs.setdefault(tuple(output_.values()), [])
                     output_['gloss'] = analysis['stemgloss']
                     output_duplicates.append(output_)
@@ -415,7 +437,7 @@ def process_outputs(lemmas_conj, pos_type):
                         output['status'] = 'CHECK-E0-PASS'
                 for i, output in enumerate(outputs_filtered):
                     output_ = OrderedDict()
-                    for h in header:
+                    for h in HEADER:
                         output_[h.upper()] = output.get(h, '')
                     outputs_filtered[i] = output_
                 conjugations += outputs_filtered
@@ -451,12 +473,12 @@ def process_outputs(lemmas_conj, pos_type):
                 output_['line'] = line
                 line += 1
                 output_ordered = OrderedDict()
-                for h in header:
+                for h in HEADER:
                     output_ordered[h.upper()] = output_.get(h, '')
                 conjugations.append(output_ordered)
             color = abs(color - 1)
     
-    conjugations.insert(0, OrderedDict((i, x) for i, x in enumerate(map(str.upper, header))))
+    conjugations.insert(0, OrderedDict((i, x) for i, x in enumerate(map(str.upper, HEADER))))
     return conjugations
 
 
@@ -474,12 +496,12 @@ def setup(config_local, config_global, feats, repr_lemmas):
     
     pos_type = args.pos_type if args.pos_type else config_local['pos_type']
     if pos_type == 'verbal':
-        POS = ['verb']
+        pos = ['verb']
     elif pos_type == 'nominal':
         pos = args.pos if args.pos else config_local.get('pos')
         pos = pos if pos is not None else POS_NOMINAL
     elif pos_type == 'other':
-        POS = args.pos
+        pos = args.pos
     else:
         pos = config_local['pos']
     POS = pos if type(pos) is list else [pos]
@@ -488,13 +510,17 @@ def setup(config_local, config_global, feats, repr_lemmas):
         lemma_debug = args.lemma_debug[0].split()
         lemma = lemma_debug[0]
         feats = {feat.split(':')[0]: feat.split(':')[1] for feat in lemma_debug[1:]}
-        repr_lemmas = [dict(form='',
-                       lemma=lemma.replace('\\', ''),
-                       cond_t='',
-                       cond_s='',
-                       pos=feats['pos'],
-                       gen=feats['gen'],
-                       num=feats['num'])]
+        repr_lemmas = {
+            '': dict(
+                form='-',
+                lemma=lemma.replace('\\', ''),
+                cond_t='-',
+                cond_s='-',
+                pos=feats['pos'],
+                gen=feats['gen'],
+                num=feats['num']
+            )
+        }
     elif repr_lemmas is None:
         lemmas_dir = args.lemmas_dir if args.lemmas_dir else os.path.join(
             config_global['debugging'], config_global['repr_lemmas_dir'],
@@ -507,7 +533,7 @@ def setup(config_local, config_global, feats, repr_lemmas):
             repr_lemmas = list(repr_lemmas.values())
 
     repr_lemmas = [info for info in list(repr_lemmas.values())
-                   if _strip_brackets(info['pos']) in POS]
+                   if not POS or _strip_brackets(info['pos']) in POS]
     return pos_type, paradigms, generator, repr_lemmas
 
 

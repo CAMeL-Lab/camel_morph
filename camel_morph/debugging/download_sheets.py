@@ -54,9 +54,21 @@ def download_sheets(lex=None, specs=None, save_dir=None, config=None, config_nam
         
         specs = {
             'spreadsheets': [config['specs']['spreadsheet'] for config in [config_local, config_global]],
-            'sheets': [config['specs']['sheets'].values() if type(config['specs']['sheets']) is dict else config['specs']['sheets']
-                        for config in [config_local, config_global]]
         }
+        specs['sheets'] = []
+        for config in [config_local, config_global]:
+            specs['sheets'].append([])
+            sheets = config['specs']['sheets']
+            sheets = sheets.values() if type(sheets) is dict else sheets
+            for v in sheets:
+                if type(v) is str:
+                    specs['sheets'][-1].append(v)
+                elif type(v) is dict:
+                    for vv in v.values():
+                        specs['sheets'][-1].append(vv)
+                else:
+                    raise NotImplementedError
+
         lex = {
             'spreadsheets': [config_local['lexicon']['spreadsheet']],
             'sheets': [config_local['lexicon']['sheets']]

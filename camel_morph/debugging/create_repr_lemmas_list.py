@@ -128,36 +128,42 @@ def create_repr_lemmas_list(config,
     lemmas_uniq, lemmas_stripped_uniq = get_extended_lemmas(
         lexicon, extended_lemma_keys)
     uniq_lemma_classes = {}
+    #FIXME: should not be looping over the unique extended lemmas here.
+    # Currently, extending lemmas WILL have an effect on the number of 
+    # classes (contrary to what is stated in the method documentation
+    # of extended lemmas). To avoid this, we should be looping on a uniqued
+    # list of entries based on `class_keys`.
     for lemma, stems in lemmas_uniq.items():
         info = {}
+        info_union_feats = {f for stem in stems for f in stem}
         if info_display_format == 'compact':
             for i, stem in enumerate(stems):
                 for k in stem:
                     values = info.setdefault(k, {})
                     values.setdefault(stem[k], []).append(f'({i})')
-            for k in stems[0]:
+            for k in info_union_feats:
                 info[k] = ''.join([
                     f"[{ct if ct else '-'}]{''.join(indexes)}"
                     for ct, indexes in sorted(info[k].items(), key=lambda x: x[0])])
         elif info_display_format == 'unique':
-            for k in stems[0]:
+            for k in info_union_feats:
                 if k in ['cond_t', 'cond_s']:
                     info[k] = ''.join(
-                        sorted([f"[{stem[k]}]" if stem[k] else '[-]' for stem in stems]))
+                        sorted([f"[{stem[k]}]" if stem.get(k) else '[-]' for stem in stems]))
                 else:
                     info[k] = ''.join(list(set(
-                        sorted([f"[{stem[k]}]" if stem[k] else '[-]' for stem in stems]))))
+                        sorted([f"[{stem[k]}]" if stem.get(k) else '[-]' for stem in stems]))))
             info['lemma'] = info['lemma'][1:-1]
         elif info_display_format == 'expanded':
             if stems[0]['pos'] in POS_NOMINAL:
                 _sort_stems_nominals(stems)
-            for k in stems[0]:
+            for k in info_union_feats:
                 if k in ['lemma', 'pos']:
                     info[k] = '-'.join(
-                        set([stem[k] if stem[k] else '[-]' for stem in stems]))
+                        set([stem[k] if stem.get(k) else '[-]' for stem in stems]))
                 else:
                     info[k] = '-'.join(
-                        f'[{stem[k]}]' if stem[k] else '[-]' for stem in stems)
+                        f'[{stem[k]}]' if stem.get(k) else '[-]' for stem in stems)
             
             info['stem_count'] = len(stems)
             info['lemma_ar'] = bw2ar(info['lemma'])
@@ -176,7 +182,7 @@ def create_repr_lemmas_list(config,
                 stem['meta_info'][0] for stem in stems)
             info['meta_info'] += lemma_p
         
-        lemmas_cond_sig = [{k: stem.get(k) for k in class_keys} for stem in stems]
+        lemmas_cond_sig = [{k: stem.get(k, '') for k in class_keys} for stem in stems]
         lemmas_cond_sig = tuple(
             sorted([tuple(stem.values()) for stem in lemmas_cond_sig]))
         uniq_lemma_classes.setdefault(lemmas_cond_sig, {'freq': 0, 'lemmas': []})
@@ -212,7 +218,7 @@ def get_extended_lemmas(lexicon, extended_lemma_keys):
                  for feat in row['FEAT'].split()}
         cond_t = ' '.join(sorted('||'.join(
             sorted([part for part in cond.split('||')],
-                key=lambda x: cond_t_sort_order[x])) for cond in row['COND-T'].split()))
+                key=lambda x: cond_t_sort_order.get(x, 0))) for cond in row['COND-T'].split()))
         cond_s = ' '.join(sorted('||'.join(sorted([part for part in cond.split('||')]))
                                  for cond in row['COND-S'].split()))
         lemma = row['LEMMA'].split(':')[1]
@@ -221,10 +227,11 @@ def get_extended_lemmas(lexicon, extended_lemma_keys):
                     cond_t=cond_t,
                     cond_s=cond_s,
                     gloss=row['GLOSS'],
+                    bw=row['BW'],
                     index=row['index'],
                     line=row.get('LINE'))
         info.update(feats)
-        extended_lemma = tuple([lemma] + [info[k]
+        extended_lemma = tuple([lemma] + [info.get(k, '')
                                           for k in extended_lemma_keys[1:]])
         lemmas_uniq.setdefault(extended_lemma, []).append(info)
         lemmas_stripped_uniq.setdefault(strip_lex(lemma), []).append(info)
@@ -324,12 +331,12 @@ def get_highest_prob_lemmas(POS,
 def setup(config_local, config_global, feats, lemma2prob):
     pos_type = args.pos_type if args.pos_type else config_local['pos_type']
     if pos_type == 'verbal':
-        POS = ['verb']
+        pos = ['verb']
     elif pos_type == 'nominal':
         pos = args.pos if args.pos else config_local.get('pos')
         pos = pos if pos is not None else POS_NOMINAL
     elif pos_type == 'other':
-        POS = args.pos
+        pos = args.pos
     else:
         pos = config_local['pos']
     POS = pos if type(pos) is list else [pos]
