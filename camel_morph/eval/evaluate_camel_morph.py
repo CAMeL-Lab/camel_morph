@@ -129,8 +129,8 @@ def _preprocess_magold_data(gold_data, POS=None,
                             field2sentence_index=FIELD2SENTENCE_INDEX,
                             field2info_index=FIELD2INFO_INDEX,
                             field2ldc_index=FIELD2LDC_INDEX):
-    ldc_tag_exists = field2info_index is not None and 'ldc' in field2info_index.values()
-    if ldc_tag_exists:
+    ldc_tag_exists = field2info_index is not None and 'ldc' in field2info_index
+    if not ldc_tag_exists:
         print('WARNING: Using POS from analysis and not BW tag choose which words to analyze.')
     gold_data = gold_data.split(
         '--------------\nSENTENCE BREAK\n--------------\n')[:-1]
@@ -153,7 +153,7 @@ def _preprocess_magold_data(gold_data, POS=None,
                     ldc_BW_components = set(
                         ldc_split[field2ldc_index['bw']].split('+'))
                     intersect = ldc_BW_components & ATB_POS
-                    if bool(intersect):
+                    if not bool(intersect):
                         continue
                 else:
                     if analysis['pos'] not in POS:
@@ -258,6 +258,12 @@ def recall_print(errors, correct_cases, drop_cases, results_path,
         *case['word']['info']['magold'], 'freq'] + [f'{k}_g' for k in essential_keys] + essential_keys
     outputs.reset_index(drop=True, inplace=True)
     outputs.to_csv(results_path, index=False, sep='\t')
+
+    if sh is not None:
+        upload(df=outputs,
+               sheet_name=f"{DIALECT}-Recall-{args.pos_or_type}",
+               template_sheet_name='Recall-template')
+
     return outputs
 
 
@@ -381,6 +387,7 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
         is_error = False
         if analysis_gold_no_source in analyses_pred_no_source:
             correct += 1
+        #FIXME: filter out based on following regex: 'None|DEFAULT|TBupdate|no_rule'
         elif ldc_bw[0] == '[NONE]' or ldc_bw[1] == '[NONE]':
             drop_cases.append({'word': word_info,
                                'pred': analyses_pred,
@@ -548,28 +555,9 @@ def compare_print(words, analyses_words, status, results_path,
     analysis_results.to_csv(results_path, index=False, sep='\t')
 
     if sh is not None:
-        sheets = sh.worksheets()
-        sheet_name = f"{DIALECT}-Compare-{args.pos_or_type}"
-        new_sheet = False
-        if sheet_name in [sheet.title for sheet in sheets]:
-            sheet = sh.worksheet(title=sheet_name)
-        else:
-            sheet_default_id = [(sheet.id, sheet.index)
-                                for sheet in sheets if sheet.title == 'Compare-template'][0]
-            sheet = sh.duplicate_sheet(sheet_default_id[0], sheet_default_id[1] + 1,
-                                       new_sheet_name=sheet_name)
-            new_sheet = True
-        sheet_df = pd.DataFrame(sheet.get_all_records())
-        assert list(sheet_df.columns[:len(columns_all)]) == columns_all
-        if not new_sheet:
-            sheet.batch_clear(['A:AA'])
-        sheet.update('A:AA', [analysis_results.columns.values.tolist()] +
-                            analysis_results.values.tolist())
-        if len(sheet_df.index) > len(analysis_results.index) and not new_sheet:
-            sheet.delete_rows(len(analysis_results.index) + 2,
-                              len(sheet_df.index) + 1)
-        else:
-            sheet.set_basic_filter('A:AA')
+        upload(df=analysis_results,
+               sheet_name=f"{DIALECT}-Compare-{args.pos_or_type}",
+               template_sheet_name='Compare-template')
 
 
 def evaluate_verbs_analyzer_comparison(data, n, output_path,
@@ -755,6 +743,28 @@ def load_required_pos(required_pos_or_type):
     return ATB_POS, CAMEL_POS
 
 
+def upload(df, sheet_name, template_sheet_name):
+    sheets = sh.worksheets()
+    new_sheet = False
+    if sheet_name in [sheet.title for sheet in sheets]:
+        sheet = sh.worksheet(title=sheet_name)
+    else:
+        sheet_default_id = [(sheet.id, sheet.index)
+                            for sheet in sheets if sheet.title == template_sheet_name][0]
+        sheet = sh.duplicate_sheet(sheet_default_id[0], sheet_default_id[1] + 1,
+                                    new_sheet_name=sheet_name)
+        new_sheet = True
+    sheet_df = pd.DataFrame(sheet.get_all_records())
+    assert list(sheet_df.columns[:len(df.columns)]) == list(df.columns)
+    if not new_sheet:
+        sheet.batch_clear(['A:AX'])
+    sheet.update('A:AX', [df.columns.values.tolist()] + df.values.tolist())
+    if len(sheet_df.index) > len(df.index) and not new_sheet:
+        sheet.delete_rows(len(df.index) + 2, len(sheet_df.index) + 1)
+    else:
+        sheet.set_basic_filter('A:AZ')
+
+
 if __name__ == "__main__":
     if args.spreadsheet:
         sa = gspread.service_account(config['global']['service_account'])
@@ -821,7 +831,7 @@ if __name__ == "__main__":
     print('Preprocessing data...', end=' ')
     if 'magold' in args.eval_mode:
         print('using dataset:', 'MAGOLD')
-        data = _preprocess_magold_data(data, ATB_POS)
+        data = _preprocess_magold_data(data, CAMEL_POS)
     elif 'camel_tb' in args.eval_mode:
         print('using dataset:', 'CAMeL TB')
         data = _preprocess_camel_tb_data(data)
