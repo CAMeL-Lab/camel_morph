@@ -282,24 +282,320 @@
             "lexicon": {
                 "spreadsheet": "Nominals-Sandbox",
                 "sheets": [
-                    "Lemma-Paradigm-Debugging-Noun-v2"
+                    "Lemma-Paradigm-Debugging-Noun-v2",
+                    "Lemma-Paradigm-Debugging-Adj-v2",
+                    "Lemma-Paradigm-Debugging-Noun_num",
+                    "Lemma-Paradigm-Debugging-Noun_quant",
+                    "Lemma-Paradigm-Debugging-Adj_num",
+                    "Lemma-Paradigm-Debugging-Adj_comp",
+                    "MSA-Other-LEX",
+                    "MSA-Nom-Prop-LEX"
                 ]
             },
             "dialect": "msa",
-            "db": "XYZ_msa_noun_v1.0_test.db",
-            "debugging": {
-                "debugging_spreadsheet": "Paradigm-Debugging-Nominals",
-                "feats": {
-                    "": {
-                        "debugging_sheet": "MSA-Adj",
-                        "conj_tables": "conj_adj_msa_v1.0.tsv",
-                        "paradigm_debugging": "paradigm_debug_adj_msa_v1.0.tsv",
-                        "bank": "MSA-Adj-Bank.tsv"
-                    }
-                }
+            "db": "XYZ_msa_nom_v1.0_test.db",
+            "pos_type": "nominal",
+            "pos": "noun",
+            "class_keys": [
+                "cond_t",
+                "cond_s",
+                "gen",
+                "num",
+                "cas"
+            ],
+            "extended_lemma_keys": [
+                "lemma",
+                "form",
+                "pos",
+                "rat",
+                "cond_t",
+                "index"
+            ]
+        },
+        "noun_num_eval_test": {
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": {
+                    "order": "MSA-Nom-ORDER",
+                    "morph": "MSA-Nom-MORPH"
+                },
+                "exclude": []
             },
+            "lexicon": {
+                "spreadsheet": "Nominals-Sandbox",
+                "sheets": [
+                    "Lemma-Paradigm-Debugging-Noun-v2",
+                    "Lemma-Paradigm-Debugging-Adj-v2",
+                    "Lemma-Paradigm-Debugging-Noun_num",
+                    "Lemma-Paradigm-Debugging-Noun_quant",
+                    "Lemma-Paradigm-Debugging-Adj_num",
+                    "Lemma-Paradigm-Debugging-Adj_comp",
+                    "MSA-Other-LEX",
+                    "MSA-Nom-Prop-LEX"
+                ]
+            },
+            "dialect": "msa",
+            "db": "XYZ_msa_nom_v1.0_test.db",
+            "pos_type": "nominal",
+            "pos": "noun_num",
+            "class_keys": [
+                "cond_t",
+                "cond_s",
+                "gen",
+                "num",
+                "cas"
+            ],
+            "extended_lemma_keys": [
+                "lemma",
+                "form",
+                "pos",
+                "rat",
+                "cond_t",
+                "index"
+            ]
+        },
+        "noun_quant_eval_test": {
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": {
+                    "order": "MSA-Nom-ORDER",
+                    "morph": "MSA-Nom-MORPH"
+                },
+                "exclude": []
+            },
+            "lexicon": {
+                "spreadsheet": "Nominals-Sandbox",
+                "sheets": [
+                    "Lemma-Paradigm-Debugging-Noun-v2",
+                    "Lemma-Paradigm-Debugging-Adj-v2",
+                    "Lemma-Paradigm-Debugging-Noun_num",
+                    "Lemma-Paradigm-Debugging-Noun_quant",
+                    "Lemma-Paradigm-Debugging-Adj_num",
+                    "Lemma-Paradigm-Debugging-Adj_comp",
+                    "MSA-Other-LEX",
+                    "MSA-Nom-Prop-LEX"
+                ]
+            },
+            "dialect": "msa",
+            "db": "XYZ_msa_nom_v1.0_test.db",
+            "pos_type": "nominal",
+            "pos": "noun_quant",
+            "class_keys": [
+                "cond_t",
+                "cond_s",
+                "gen",
+                "num",
+                "cas"
+            ],
+            "extended_lemma_keys": [
+                "lemma",
+                "form",
+                "pos",
+                "rat",
+                "cond_t",
+                "index"
+            ]
+        },
+        "noun_prop_eval_test": {
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": {
+                    "order": "MSA-Nom-ORDER",
+                    "morph": "MSA-Nom-MORPH"
+                },
+                "exclude": []
+            },
+            "lexicon": {
+                "spreadsheet": "Nominals-Sandbox",
+                "sheets": [
+                    "Lemma-Paradigm-Debugging-Noun-v2",
+                    "Lemma-Paradigm-Debugging-Adj-v2",
+                    "Lemma-Paradigm-Debugging-Noun_num",
+                    "Lemma-Paradigm-Debugging-Noun_quant",
+                    "Lemma-Paradigm-Debugging-Adj_num",
+                    "Lemma-Paradigm-Debugging-Adj_comp",
+                    "MSA-Other-LEX",
+                    "MSA-Nom-Prop-LEX"
+                ]
+            },
+            "dialect": "msa",
+            "db": "XYZ_msa_nom_v1.0_test.db",
+            "pos_type": "nominal",
+            "pos": "noun_prop",
+            "class_keys": [
+                "cond_t",
+                "cond_s",
+                "gen",
+                "num",
+                "cas"
+            ],
+            "extended_lemma_keys": [
+                "lemma",
+                "form",
+                "pos",
+                "rat",
+                "cond_t",
+                "index"
+            ]
+        },
+        "adj_eval_test": {
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": {
+                    "order": "MSA-Nom-ORDER",
+                    "morph": "MSA-Nom-MORPH"
+                },
+                "exclude": []
+            },
+            "lexicon": {
+                "spreadsheet": "Nominals-Sandbox",
+                "sheets": [
+                    "Lemma-Paradigm-Debugging-Noun-v2",
+                    "Lemma-Paradigm-Debugging-Adj-v2",
+                    "Lemma-Paradigm-Debugging-Noun_num",
+                    "Lemma-Paradigm-Debugging-Noun_quant",
+                    "Lemma-Paradigm-Debugging-Adj_num",
+                    "Lemma-Paradigm-Debugging-Adj_comp",
+                    "MSA-Other-LEX",
+                    "MSA-Nom-Prop-LEX"
+                ]
+            },
+            "dialect": "msa",
+            "db": "XYZ_msa_nom_v1.0_test.db",
             "pos_type": "nominal",
             "pos": "adj",
+            "class_keys": [
+                "cond_t",
+                "cond_s",
+                "gen",
+                "num",
+                "cas"
+            ],
+            "extended_lemma_keys": [
+                "lemma",
+                "form",
+                "pos",
+                "rat",
+                "cond_t",
+                "index"
+            ]
+        },
+        "adj_num_eval_test": {
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": {
+                    "order": "MSA-Nom-ORDER",
+                    "morph": "MSA-Nom-MORPH"
+                },
+                "exclude": []
+            },
+            "lexicon": {
+                "spreadsheet": "Nominals-Sandbox",
+                "sheets": [
+                    "Lemma-Paradigm-Debugging-Noun-v2",
+                    "Lemma-Paradigm-Debugging-Adj-v2",
+                    "Lemma-Paradigm-Debugging-Noun_num",
+                    "Lemma-Paradigm-Debugging-Noun_quant",
+                    "Lemma-Paradigm-Debugging-Adj_num",
+                    "Lemma-Paradigm-Debugging-Adj_comp",
+                    "MSA-Other-LEX",
+                    "MSA-Nom-Prop-LEX"
+                ]
+            },
+            "dialect": "msa",
+            "db": "XYZ_msa_nom_v1.0_test.db",
+            "pos_type": "nominal",
+            "pos": "adj_num",
+            "class_keys": [
+                "cond_t",
+                "cond_s",
+                "gen",
+                "num",
+                "cas"
+            ],
+            "extended_lemma_keys": [
+                "lemma",
+                "form",
+                "pos",
+                "rat",
+                "cond_t",
+                "index"
+            ]
+        },
+        "adj_comp_eval_test": {
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": {
+                    "order": "MSA-Nom-ORDER",
+                    "morph": "MSA-Nom-MORPH"
+                },
+                "exclude": []
+            },
+            "lexicon": {
+                "spreadsheet": "Nominals-Sandbox",
+                "sheets": [
+                    "Lemma-Paradigm-Debugging-Noun-v2",
+                    "Lemma-Paradigm-Debugging-Adj-v2",
+                    "Lemma-Paradigm-Debugging-Noun_num",
+                    "Lemma-Paradigm-Debugging-Noun_quant",
+                    "Lemma-Paradigm-Debugging-Adj_num",
+                    "Lemma-Paradigm-Debugging-Adj_comp",
+                    "MSA-Other-LEX",
+                    "MSA-Nom-Prop-LEX"
+                ]
+            },
+            "dialect": "msa",
+            "db": "XYZ_msa_nom_v1.0_test.db",
+            "pos_type": "nominal",
+            "pos": "adj_comp",
+            "class_keys": [
+                "cond_t",
+                "cond_s",
+                "gen",
+                "num",
+                "cas"
+            ],
+            "extended_lemma_keys": [
+                "lemma",
+                "form",
+                "pos",
+                "rat",
+                "cond_t",
+                "index"
+            ]
+        },
+        "other_eval_test": {
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": {
+                    "order": "MSA-Nom-ORDER",
+                    "morph": "MSA-Nom-MORPH"
+                },
+                "exclude": []
+            },
+            "lexicon": {
+                "spreadsheet": "Nominals-Sandbox",
+                "sheets": [
+                    "Lemma-Paradigm-Debugging-Noun-v2",
+                    "Lemma-Paradigm-Debugging-Adj-v2",
+                    "Lemma-Paradigm-Debugging-Noun_num",
+                    "Lemma-Paradigm-Debugging-Noun_quant",
+                    "Lemma-Paradigm-Debugging-Adj_num",
+                    "Lemma-Paradigm-Debugging-Adj_comp",
+                    "MSA-Other-LEX",
+                    "MSA-Nom-Prop-LEX"
+                ]
+            },
+            "dialect": "msa",
+            "db": "XYZ_msa_nom_v1.0_test.db",
+            "pos_type": "other",
             "class_keys": [
                 "cond_t",
                 "cond_s",

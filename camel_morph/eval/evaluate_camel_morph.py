@@ -83,10 +83,10 @@ args, _ = parser.parse_known_args()
 
 with open(args.config_file) as f:
     config = json.load(f)
-    config_local = config['local']
+    configs = config['local']
 
-    config_egy = config_local.get(args.egy_config_name)
-    config_msa = config_local.get(args.msa_config_name)
+    config_local_egy = configs.get(args.egy_config_name)
+    config_local_msa = configs.get(args.msa_config_name)
 
 if args.camel_tools == 'local':
     camel_tools_dir = config['global']['camel_tools']
@@ -103,6 +103,8 @@ ar2bw = CharMapper.builtin_mapper('ar2bw')
 sukun_regex = re.compile('o')
 aA_regex = re.compile(r'(?<!^[wf])aA')
 
+GOLD_DROP_RE = re.compile(r'None|DEFAULT|TBupdate|no_rule')
+
 ESSENTIAL_KEYS = ['source', 'diac', 'lex', 'pos', 'asp', 'mod',
                   'vox', 'per', 'num', 'gen', 'stt', 'cas',
                   'prc0', 'prc1', 'prc1.5', 'prc2', 'prc3',
@@ -111,9 +113,12 @@ ESSENTIAL_KEYS = ['source', 'diac', 'lex', 'pos', 'asp', 'mod',
 FIELD2SENTENCE_INDEX = {f: i
     for i, f in enumerate(['sentence'])}
 FIELD2INFO_INDEX = {f: i
-    for i, f in enumerate(['word', 'ldc', 'source_comment', 'ranking', 'starline', 'calima'])}
+    for i, f in enumerate(['word', 'ldc', 'ranking', 'starline', 'calima'])}
 FIELD2LDC_INDEX = {f: i
     for i, f in enumerate(['word', 'diac', 'lex', 'bw', 'gloss'])}
+
+POS_TYPE, POS_OR_TYPE = '', ''
+ATB_POS_ALL, CAMEL_POS_ALL = {}, {}
 
 
 def _load_analysis(analysis):
@@ -126,9 +131,12 @@ def _load_analysis(analysis):
 
 def _preprocess_magold_data(gold_data, POS=None,
                             load_analysis_fn=_load_analysis,
+                            pos_type=None,
                             field2sentence_index=FIELD2SENTENCE_INDEX,
                             field2info_index=FIELD2INFO_INDEX,
                             field2ldc_index=FIELD2LDC_INDEX):
+    global POS_TYPE
+    pos_type = POS_TYPE
     ldc_tag_exists = field2info_index is not None and 'ldc' in field2info_index
     if not ldc_tag_exists:
         print('WARNING: Using POS from analysis and not BW tag choose which words to analyze.')
@@ -145,7 +153,7 @@ def _preprocess_magold_data(gold_data, POS=None,
         words_info = [example_info_list[words_start_index:]] + [x.split('\n') for x in example[words_start_index:]]
         for info in words_info:
             analysis = load_analysis_fn(
-                info[field2info_index['starline']].split()[1:])
+                info[field2info_index['calima']].split()[1:])
             if POS is not None:
                 if ldc_tag_exists:
                     ldc = info[field2info_index['ldc']]
@@ -153,15 +161,21 @@ def _preprocess_magold_data(gold_data, POS=None,
                     ldc_BW_components = set(
                         ldc_split[field2ldc_index['bw']].split('+'))
                     intersect = ldc_BW_components & ATB_POS
-                    if not bool(intersect):
-                        continue
+                    if pos_type == 'other':
+                        if not bool(intersect) or \
+                           bool(ldc_BW_components & ATB_POS_ALL['nominal']) or \
+                           bool(ldc_BW_components & ATB_POS_ALL['verbal']):
+                            continue
+                    else:
+                        if not bool(intersect):
+                            continue
                 else:
                     if analysis['pos'] not in POS:
                         continue
             
             magold = OrderedDict(
                 (f, info[i]) for f, i in field2info_index.items()
-                if f in ['ldc', 'source_comment', 'ranking', 'starline'])
+                if f in ['ldc', 'ranking', 'starline', 'calima'])
             
             word_info = {
                 'info': {
@@ -196,6 +210,21 @@ def _preprocess_ldc_dediac(ldc_diac):
     return analyzer_input
 
 
+def _preprocess_ldc_bw(bw):
+    bw = '+'.join(comp.split('.')[0] for comp in bw.split('+'))
+    return bw
+
+
+def _preprocess_lex_features(lex_feat, f=None):
+    lex_feat = ar2bw(lex_feat)
+    if f == 'lex':
+        lex_feat = re.sub(r'(-[uia]{1,3})?(_\d)?|[][]|-', '', lex_feat)
+    lex_feat = lex_feat.replace('_', '')
+    lex_feat = sukun_regex.sub('', lex_feat)
+    lex_feat = aA_regex.sub('A', lex_feat)
+    return lex_feat
+
+
 def _preprocess_analysis(analysis, essential_keys=ESSENTIAL_KEYS, optional_keys=[]):
     if analysis['prc0'] in ['mA_neg', 'lA_neg']:
         analysis['prc1.5'] = analysis['prc0']
@@ -204,13 +233,7 @@ def _preprocess_analysis(analysis, essential_keys=ESSENTIAL_KEYS, optional_keys=
     pred = []
     for k in essential_keys + optional_keys:
         if k in ['lex', 'diac']:
-            stripped = ar2bw(analysis[k])
-            if k == 'lex':
-                stripped = re.sub(r'(-[uia]{1,3})?(_\d)?$', '', stripped)
-            stripped = stripped.replace('_', '')
-            pred.append(stripped)
-            pred[-1] = sukun_regex.sub('', pred[-1])
-            pred[-1] = aA_regex.sub('A', pred[-1])
+            pred.append(_preprocess_lex_features(analysis[k], k))
         elif k == 'gen':
             pred.append('m' if analysis[k] == 'u' else analysis[k])
         elif k == 'prc2':
@@ -221,53 +244,64 @@ def _preprocess_analysis(analysis, essential_keys=ESSENTIAL_KEYS, optional_keys=
             pred.append(x)
         elif re.match(r'prc\d|enc\d', k):
             pred.append(analysis.get(k, '0'))
+        elif k == 'bw':
+            bw = '+'.join(x.split('/')[1]
+                for x in ar2bw(analysis['bw']).split('+') if x and 'STEM' not in x)
+            pred.append(bw)
         else:
             pred.append(analysis.get(k, 'na'))
     return tuple(pred)
 
 
-def recall_print(errors, correct_cases, drop_cases, results_path,
+def recall_print(examples, results_path,
                  essential_keys=ESSENTIAL_KEYS):
+    essential_keys_no_bw_source = [
+        k for k in essential_keys if k not in ['bw', 'source']]
     outputs_ = []
     i = 1
-    for label, cases in [('correct', correct_cases), ('wrong', errors), ('drop', drop_cases)]:
-        for case in cases:
-            e_gold = case['gold']
-            if not case['pred']:
-                pred = pd.DataFrame([('-',)*len(essential_keys)])
-                label_ = 'noan'
-            else:
-                pred = pd.DataFrame(case['pred'])
-                label_ = label
-
-            gold = pd.DataFrame([e_gold])
-            example = pd.concat([gold, pred], axis=1)
+    for label, examples_ in examples.items():
+        for example in examples_:
+            pred = pd.DataFrame(example['pred'])
+            gold = pd.DataFrame([example['gold']])
+            row = pd.concat([gold, pred], axis=1)
             ex_col = pd.DataFrame(
-                [(f"{i} {case['word']['info']['word']}", label_)]*len(example.index))
+                [(f"{i} {example['word']['info']['word']}", label,
+                  example['match'])]*len(row.index))
             extra_info = pd.DataFrame(
-                [(bw2ar(case['word']['info']['sentence']),
-                  *case['word']['info']['magold'].values(), case['count'])])
-            example = pd.concat([ex_col, extra_info, example], axis=1)
-            example.columns = range(example.columns.size)
-            outputs_.append(example)
+                [(bw2ar(example['word']['info']['sentence']),
+                  *example['word']['info']['magold'].values(), example['count'])])
+            row = pd.concat([ex_col, extra_info, row], axis=1)
+            # Avoids duplicate indexes issue (generates errors)
+            row.columns = range(row.columns.size)
+            outputs_.append(row)
             i += 1
 
     outputs = pd.concat(outputs_)
     outputs = outputs.replace(nan, '', regex=True)
-    outputs.columns = ['filter', 'label', 'sentence',
-        *case['word']['info']['magold'], 'freq'] + [f'{k}_g' for k in essential_keys] + essential_keys
+    outputs.columns = ['filter', 'label', 'match', 'sentence',
+        *example['word']['info']['magold'], 'freq'] + \
+        [f'{k}_g' for k in essential_keys] + essential_keys
+    outputs['calima_mismatches'] = outputs[essential_keys_no_bw_source].apply(
+        lambda row: row.str.contains(']')).sum(axis=1)
     outputs.reset_index(drop=True, inplace=True)
     outputs.to_csv(results_path, index=False, sep='\t')
 
     if sh is not None:
-        upload(df=outputs,
-               sheet_name=f"{DIALECT}-Recall-{args.pos_or_type}",
-               template_sheet_name='Recall-template')
+        sheet_name = f'{DIALECT}-Recall-{POS_OR_TYPE}'
+        print(f'Uploading outputs to sheet {sheet_name} in spreadsheet {sh.title}... ', end='')
+        upload(df=outputs, sheet_name=sheet_name, template_sheet_name='Recall-template')
+        print('Done.')
 
     return outputs
 
 
-def filter_and_rank_analyses(analyses_pred, analysis_gold, source_index):
+def filter_and_rank_analyses(analyses_pred, analysis_gold, analysis_gold_ldc,
+                             essential_keys,
+                             mode='sama'):
+    source_index = essential_keys.index('source')
+    lex_index = essential_keys.index('lex')
+    diac_index = essential_keys.index('diac')
+    bw_index = essential_keys.index('bw')
     analyses_pred_, index2similarity = [], {}
     for analysis_index, analysis in enumerate(analyses_pred):
         analysis_ = []
@@ -275,10 +309,31 @@ def filter_and_rank_analyses(analyses_pred, analysis_gold, source_index):
             if f == analysis_gold[index]:
                 analysis_.append(f)
                 index2similarity.setdefault(analysis_index, 0)
-                index2similarity[analysis_index] += (
-                    1.01 if analysis[source_index] == 'main' else 1)
+                if index == bw_index:
+                    index2similarity[analysis_index] += len(analysis) \
+                        if mode == 'bw' else 1
+                else:
+                    index2similarity[analysis_index] += (
+                        1.01 if analysis[source_index] == 'main' else 1)
             else:
                 analysis_.append(f'[{f}]')
+
+            if index == diac_index and f != analysis_gold_ldc[0] or \
+                index == lex_index and f != analysis_gold_ldc[1]:
+                analysis_[-1] = f'({analysis_[-1]})'
+            elif index == bw_index and f != analysis_gold_ldc[2]:
+                ldc_gold_set = set(analysis_gold_ldc[2].split('+'))
+                bw_pred_comp_ = []
+                for bw_pred_comp in f.split('+'):
+                    if bw_pred_comp not in ldc_gold_set:
+                        bw_pred_comp = f'({bw_pred_comp})'
+                    bw_pred_comp_.append(bw_pred_comp)
+                bw_pred_comp = '+'.join(bw_pred_comp_)
+                if '[' in analysis_[-1]:
+                    analysis_[-1] = f'[{bw_pred_comp}]'
+                else:
+                    analysis_[-1] = bw_pred_comp
+
         analyses_pred_.append(tuple(analysis_))
     sorted_indexes = sorted(
         index2similarity.items(), key=lambda x: x[1], reverse=True)
@@ -288,17 +343,40 @@ def filter_and_rank_analyses(analyses_pred, analysis_gold, source_index):
     return analyses_pred_
 
 
+def replace_values_with_empty(obj):
+    if isinstance(obj, dict):
+        for key, value in obj.items():
+            if isinstance(value, str):
+                if key not in ['match', 'ldc', 'ranking', 'gold']:
+                    obj[key] = ''
+            elif isinstance(value, tuple):
+                obj[key] = ('',) * len(obj[key])
+            else:
+                replace_values_with_empty(value)
+    elif isinstance(obj, list):
+        for i, item in enumerate(obj):
+            if isinstance(item, str):
+                obj[i] = ''
+            elif isinstance(item, tuple):
+                obj[i] = ('',) * len(obj[i])
+            else:
+                replace_values_with_empty(item)
+
+
 def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
                     msa_camel_analyzer=None, best_analysis=True,
+                    pos_type=None,
                     print_recall=True,
                     essential_keys=ESSENTIAL_KEYS,
                     field2ldc_index=FIELD2LDC_INDEX):
+    essential_keys.insert(0, 'bw')
+    bw_index = essential_keys.index('bw')
     source_index = essential_keys.index('source')
     lex_index = essential_keys.index('lex')
     diac_index = essential_keys.index('diac')
     stem_seg_index = essential_keys.index('stem_seg')
-    essential_keys_ = [k for k in essential_keys if k != 'source']
-    excluded_indexes = [source_index]
+    essential_keys_ = [k for k in essential_keys if k not in ['bw', 'source']]
+    excluded_indexes = [source_index, bw_index]
     if 'no_lex' in eval_mode:
         print('Excluding lexical features from evaluation.')
         essential_keys_ = [
@@ -333,10 +411,11 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
         data_unique[key] = word_info
 
     correct, total = 0, 0
-    errors, correct_cases, drop_cases = [], [], []
+    examples = OrderedDict()
     data_unique = list(data_unique.items())[:n]
     pbar = tqdm(total=len(data_unique))
-    for (word, ldc_bw), word_info in data_unique:
+    for (word, ldc), word_info in data_unique:
+        diac_ldc, lex_ldc, bw_ldc = ldc
         total += 1
         analysis_gold = _preprocess_analysis(word_info['analysis'],
                                              essential_keys)
@@ -344,7 +423,7 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
         if 'raw' in eval_mode:
             analyzer_input = word
         elif 'ldc_dediac' in eval_mode:
-            analyzer_input = _preprocess_ldc_dediac(ldc_bw[0])
+            analyzer_input = _preprocess_ldc_dediac(diac_ldc)
         elif 'calima_dediac' in eval_mode:
             analyzer_input = _preprocess_ldc_dediac(analysis_gold[diac_index])
 
@@ -375,25 +454,41 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
         analysis_gold_no_source = tuple(
             [f for i, f in enumerate(analysis_gold) if i not in excluded_indexes])
         
-        analyses_pred = filter_and_rank_analyses(analyses_pred, analysis_gold, source_index)
+        analysis_gold_ldc = (_preprocess_lex_features(diac_ldc),
+                             _preprocess_lex_features(lex_ldc, f='lex'),
+                             _preprocess_ldc_bw(bw_ldc))
+        analyses_pred_ldc = {(a[diac_index], a[lex_index], a[bw_index])
+                             for a in analyses_pred}
+
+        mode = 'bw' if 'ldc_dediac_match' in eval_mode else 'sama'
+        analyses_pred = filter_and_rank_analyses(
+            analyses_pred, analysis_gold, analysis_gold_ldc, essential_keys, mode)
         if best_analysis:
             analyses_pred = analyses_pred[0:1]
         else:
+            #FIXME: might need fixing; why are we excluding source, lex, etc.?
             analyses_pred = [
                 analysis for analysis in analyses_pred
                 if all(analysis[i] == analysis_gold[i] for i, k in enumerate(essential_keys)
                         if k not in ['source', 'lex', 'diac', 'stem_seg'])]
-
-        is_error = False
-        if analysis_gold_no_source in analyses_pred_no_source:
-            correct += 1
-        #FIXME: filter out based on following regex: 'None|DEFAULT|TBupdate|no_rule'
-        elif ldc_bw[0] == '[NONE]' or ldc_bw[1] == '[NONE]':
-            drop_cases.append({'word': word_info,
-                               'pred': analyses_pred,
-                               'gold': analysis_gold,
-                               'count': counts[(word, ldc_bw)]})
+        match = ''
+        if analysis_gold_ldc in analyses_pred_ldc:
+            match = 'ldc'
         else:
+            for i, f in enumerate(['diac', 'lex', 'bw']):
+                if analysis_gold_ldc[i] in [a[i] for a in analyses_pred_ldc]:
+                    match += (' ' if match else '') + f'ldc:{f}'
+        
+        if analysis_gold_no_source in analyses_pred_no_source:
+            match += ' feats' if match else 'feats'
+        
+        is_error = False
+        if 'ldc_dediac_match' not in eval_mode and \
+                analysis_gold_no_source in analyses_pred_no_source or \
+            'ldc_dediac_match' in eval_mode and \
+                analysis_gold_ldc in analyses_pred_ldc:
+            correct += 1
+        elif pos_type == 'verbal':
             for pred, gold in itertools.product(analyses_pred_no_source, [analysis_gold_no_source]):
                 if any(pred[i] != gold[i] for i in range(len(essential_keys_))
                         if i not in [mod_index, gen_index]):
@@ -411,31 +506,41 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
                     break
             else:
                 is_error = True
-                errors.append({'word': word_info,
-                               'pred': analyses_pred,
-                               'gold': analysis_gold,
-                               'count': counts[(word, ldc_bw)]})
+        else:
+            is_error = True
 
-        if not is_error:
-            correct_cases.append({'word': word_info,
-                                  'pred': analyses_pred,
-                                  'gold': analysis_gold,
-                                  'count': counts[(word, ldc_bw)]})
+        is_drop = bool(GOLD_DROP_RE.search(' '.join([diac_ldc, lex_ldc])))
+        label = ('wrong' if is_error else 'correct') if len(analyses_pred) else 'noan'
+        if is_drop:
+            label = 'drop-' + label
+        examples.setdefault(label, []).append(
+            {'word': word_info,
+             'match': match,
+             'pred': analyses_pred,
+             'gold': analysis_gold,
+             'count': counts[(word, ldc)]})
         
-        pbar.set_description(f'{len(correct_cases)/total:.1%} (recall)')
+        correct = len(examples.get('correct', []))
+        wrong = len(examples.get('wrong', []))
+        total = correct + wrong
+        recall_type = (correct / total) if total else 0
+        pbar.set_description(f'{recall_type:.1%} (recall)')
         pbar.update(1)
 
     pbar.close()
+    correct = sum(e['count'] for e in examples.get('correct', []))
+    wrong = sum(e['count'] for e in examples.get('wrong', []))
+    total = correct + wrong
+    recall_token = (correct / total) if total else 0
+    print(f"Token space recall: {recall_token:.2%}")
 
-    recall_token_space = sum(case['count'] for case in correct_cases)
-    recall_token_space /= (sum(case['count'] for case in correct_cases) +
-                          sum(case['count'] for case in errors))
-    print(f"Token space recall: {recall_token_space:.2%}")
-
+    no_print_cases = [e for l, examples_ in examples.items() for e in examples_
+                      if l == 'correct' or 'drop' in l]
     if print_recall:
-        recall_print(errors, correct_cases, drop_cases, output_path,
-                     essential_keys=essential_keys)
-    
+        replace_values_with_empty(no_print_cases)
+        recall_print(examples, output_path, essential_keys=essential_keys)
+
+    correct_cases = examples['correct']
     return correct_cases
 
 
@@ -556,7 +661,7 @@ def compare_print(words, analyses_words, status, results_path,
 
     if sh is not None:
         upload(df=analysis_results,
-               sheet_name=f"{DIALECT}-Compare-{args.pos_or_type}",
+               sheet_name=f"{DIALECT}-Compare-{POS_OR_TYPE}",
                template_sheet_name='Compare-template')
 
 
@@ -695,8 +800,8 @@ def compare_stats(compare_results):
                   'overlap', 'camel_superset', 'baseline_superset']
     table = []
     with open(os.path.join(output_dir, 'stats_compare_results_1.tsv'), 'w') as f:
-        table.append([args.pos_or_type, *header_col])
-        print(args.pos_or_type, *header_col, sep='\t', file=f)
+        table.append([POS_OR_TYPE, *header_col])
+        print(POS_OR_TYPE, *header_col, sep='\t', file=f)
         for row in header_row:
             table.append([])
             row_ = stats.get(row)
@@ -706,7 +811,7 @@ def compare_stats(compare_results):
             print(*table[-1], sep='\t', file=f)
 
     if sh is not None:
-        sheet = sh.worksheet(title='Stats')
+        sheet = sh.worksheet(title='Stats-Compare')
         start_col, start_row = args.compare_stats_cell[0], args.compare_stats_cell[1:]
         start_number = ord(start_col) - ord('A')
         end_number = start_number + len(header_col)
@@ -757,12 +862,12 @@ def upload(df, sheet_name, template_sheet_name):
     sheet_df = pd.DataFrame(sheet.get_all_records())
     assert list(sheet_df.columns[:len(df.columns)]) == list(df.columns)
     if not new_sheet:
-        sheet.batch_clear(['A:AX'])
-    sheet.update('A:AX', [df.columns.values.tolist()] + df.values.tolist())
+        sheet.batch_clear(['A:BB'])
+    sheet.update('A:BB', [df.columns.values.tolist()] + df.values.tolist())
     if len(sheet_df.index) > len(df.index) and not new_sheet:
         sheet.delete_rows(len(df.index) + 2, len(sheet_df.index) + 1)
     else:
-        sheet.set_basic_filter('A:AZ')
+        sheet.set_basic_filter('A:BB')
 
 
 if __name__ == "__main__":
@@ -772,20 +877,36 @@ if __name__ == "__main__":
     else:
         sh = None
 
-    ATB_POS, CAMEL_POS = load_required_pos(args.pos_or_type)
-
-    output_dir = os.path.join(args.output_dir, args.pos_or_type)
-    os.makedirs(output_dir, exist_ok=True)
     print()
     print('Eval mode:', args.eval_mode)
     if 'msa' in args.eval_mode and 'egy' not in args.eval_mode:
         DIALECT = 'MSA'
-        camel_db_path = os.path.join('databases/camel-morph-msa', config_msa['db'])
+        config_local = config_local_msa
+        camel_db_path = os.path.join('databases/camel-morph-msa', config_local['db'])
+
     elif 'egy' in args.eval_mode:
         DIALECT = 'EGY'
-        camel_db_path = os.path.join('databases/camel-morph-egy', config_egy['db'])
+        config_local = config_local_egy
+        camel_db_path = os.path.join('databases/camel-morph-egy', config_local_egy['db'])
     else:
         raise NotImplementedError
+    
+    POS_TYPE = config_local.get('pos_type')
+    if config_local.get('pos'):
+        POS_OR_TYPE = config_local['pos']
+    else:
+        if POS_TYPE:
+            POS_OR_TYPE = config_local['pos_type']
+        else:
+            POS_OR_TYPE = args.pos_or_type
+
+    ATB_POS, CAMEL_POS = load_required_pos(POS_OR_TYPE)
+    for pos_type in ['nominal', 'verbal', 'other']:
+        atb_pos_, camel_pos_ = load_required_pos(pos_type)
+        ATB_POS_ALL[pos_type], CAMEL_POS_ALL[pos_type] = atb_pos_, camel_pos_
+
+    output_dir = os.path.join(args.output_dir, POS_OR_TYPE)
+    os.makedirs(output_dir, exist_ok=True)
 
     db_camel = MorphologyDB(camel_db_path)
     print('CAMeL DB path:', camel_db_path)
@@ -826,7 +947,7 @@ if __name__ == "__main__":
     with open(data_path) as f:
         data = f.read()
 
-    print(f'POS (type): {args.pos_or_type}')
+    print(f'POS (type): {POS_OR_TYPE}')
 
     print('Preprocessing data...', end=' ')
     if 'magold' in args.eval_mode:
@@ -845,11 +966,12 @@ if __name__ == "__main__":
         if 'egy_union_msa' in args.eval_mode and args.msa_config_name:
             print('Using union of EGY and MSA analyses.')
             msa_camel_db = MorphologyDB(os.path.join(
-                'databases/camel-morph-msa', config_msa['db']))
+                'databases/camel-morph-msa', config_local_msa['db']))
             msa_camel_analyzer = Analyzer(msa_camel_db)
 
         evaluate_recall(data, args.n, args.eval_mode, output_path,
-                        analyzer_camel, msa_camel_analyzer)
+                        analyzer_camel, msa_camel_analyzer,
+                        pos_type=POS_TYPE)
 
     elif 'compare' in args.eval_mode:
         print('Eval mode:', 'COMPARE')

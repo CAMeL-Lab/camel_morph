@@ -8,7 +8,7 @@
     },
     "nominal": {
         "NOUN": "NOUN",
-        "NOUN.VN": "ADJ",
+        "NOUN.VN": "NOUN",
         "NOUN_NUM": [
             "NOUN_NUM",
             "DIGIT"
