@@ -75,8 +75,8 @@ if __name__ == "__main__":
 
     HEADER = [
         'line', 'status', 'count', 'signature', 'lemma', 'diac_ar', 'diac', 'freq',
-        'qc', 'comments', 'pattern', 'stem', 'bw', 'gloss', 'pos', 'cond-s', 'cond-t',
-        'pref-cat', 'stem-cat', 'suff-cat', 'feats', 'debug', 'color'
+        'qc', 'warnings', 'comments', 'pattern', 'stem', 'bw', 'gloss', 'pos',
+        'cond-s', 'cond-t', 'pref-cat', 'stem-cat', 'suff-cat', 'feats', 'debug', 'color'
     ]
 
     print('Building inflection table...', end=' ')

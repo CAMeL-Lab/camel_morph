@@ -16,7 +16,7 @@
         "banks_dir": "banks",
         "camel_tools": "./camel_morph/camel_tools",
         "service_account": "/Users/chriscay/.config/gspread/service_account.json",
-        "paradigms_config": "configs/config_paradigms.json",
+        "paradigms_config": "camel_morph/configs/config_paradigms.json",
         "banks_spreadsheet": "Paradigm-Banks"
     },
     "local": {
@@ -280,16 +280,20 @@
                 "exclude": []
             },
             "lexicon": {
-                "spreadsheet": "Nominals-Sandbox",
+                "spreadsheet": ["camel-morph-msa-nom", "Nominals-Sandbox"],
                 "sheets": [
-                    "Lemma-Paradigm-Debugging-Noun-v2",
-                    "Lemma-Paradigm-Debugging-Adj-v2",
-                    "Lemma-Paradigm-Debugging-Noun_num",
-                    "Lemma-Paradigm-Debugging-Noun_quant",
-                    "Lemma-Paradigm-Debugging-Adj_num",
-                    "Lemma-Paradigm-Debugging-Adj_comp",
-                    "MSA-Other-LEX",
-                    "MSA-Nom-Prop-LEX"
+                    [
+                        "Lemma-Paradigm-Debugging-Noun-v2",
+                        "Lemma-Paradigm-Debugging-Adj-v2",
+                        "Lemma-Paradigm-Debugging-Adj_comp"
+                    ],
+                    [
+                        "Lemma-Paradigm-Debugging-Noun_num",
+                        "Lemma-Paradigm-Debugging-Noun_quant",
+                        "Lemma-Paradigm-Debugging-Adj_num",
+                        "MSA-Other-LEX",
+                        "MSA-Nom-Prop-LEX"
+                    ]
                 ]
             },
             "dialect": "msa",
@@ -311,6 +315,40 @@
                 "cond_t",
                 "index"
             ]
+        },
+        "nom_eval_test": {
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": {
+                    "order": "MSA-Nom-ORDER",
+                    "morph": "MSA-Nom-MORPH"
+                },
+                "exclude": []
+            },
+            "lexicon": {
+                "spreadsheet": [
+                    "camel-morph-msa-nom",
+                    "Nominals-Sandbox"
+                ],
+                "sheets": [
+                    [
+                        "Lemma-Paradigm-Debugging-Noun-v2",
+                        "Lemma-Paradigm-Debugging-Adj-v2",
+                        "Lemma-Paradigm-Debugging-Adj_comp"
+                    ],
+                    [
+                        "Lemma-Paradigm-Debugging-Noun_num",
+                        "Lemma-Paradigm-Debugging-Noun_quant",
+                        "Lemma-Paradigm-Debugging-Adj_num",
+                        "MSA-Other-LEX",
+                        "MSA-Nom-Prop-LEX"
+                    ]
+                ]
+            },
+            "dialect": "msa",
+            "db": "XYZ_msa_nom_v1.0_test.db",
+            "pos_type": "nominal"
         },
         "noun_num_eval_test": {
             "pruning": true,

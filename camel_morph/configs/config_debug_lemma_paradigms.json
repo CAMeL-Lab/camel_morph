@@ -34,54 +34,11 @@
                 ]
             },
             "lexicon": {
-                "spreadsheet": "camel-morph-msa-nom-other",
-                "sheets": [
-                    "MSA-Nom-LEX"
-                ]
-            },
-            "lexprob": "return_all",
-            "dialect": "msa",
-            "db": "",
-            "pos_type": "nominal",
-            "pos": "noun",
-            "exclusions": "misc_files/repr_lemma_exclusions.json",
-            "debugging": {
-                "display_format": "expanded",
-                "debugging_spreadsheet": "Nominals-Sandbox",
+                "spreadsheet": "camel-morph-msa-nom",
                 "sheets": [
                     "Lemma-Paradigm-Debugging-Noun-v2"
                 ]
             },
-            "class_keys": [
-                "cond_t",
-                "gen",
-                "num",
-                "cas",
-                "meta_info"
-            ],
-            "extended_lemma_keys": [
-                "lemma"
-            ]
-        },
-        "noun_split_msa_lemma_paradigms": {
-            "split_or": false,
-            "pruning": true,
-            "specs": {
-                "spreadsheet": "camel-morph-msa-nom-other",
-                "sheets": {
-                    "order": "MSA-Nom-ORDER",
-                    "morph": "MSA-Nom-MORPH"
-                },
-                "exclude": [
-                    "RED"
-                ]
-            },
-            "lexicon": {
-                "spreadsheet": "camel-morph-msa-nom-other",
-                "sheets": [
-                    "MSA-Nom-LEX"
-                ]
-            },
             "lexprob": "return_all",
             "dialect": "msa",
             "db": "",
@@ -90,11 +47,9 @@
             "exclusions": "misc_files/repr_lemma_exclusions.json",
             "debugging": {
                 "display_format": "expanded",
-                "debugging_spreadsheet": "Nominals-Sandbox",
+                "debugging_spreadsheet": "camel-morph-msa-nom",
                 "sheets": [
-                    "Lemma-Paradigm-Debugging-Noun-v2-Reham",
-                    "Lemma-Paradigm-Debugging-Noun-v2-Chris",
-                    "Lemma-Paradigm-Debugging-Noun-v2-Chris-1"
+                    "Lemma-Paradigm-Debugging-Noun-v2"
                 ]
             },
             "class_keys": [
@@ -122,9 +77,9 @@
                 ]
             },
             "lexicon": {
-                "spreadsheet": "camel-morph-msa-nom-other",
+                "spreadsheet": "camel-morph-msa-nom",
                 "sheets": [
-                    "MSA-Nom-LEX"
+                    "Lemma-Paradigm-Debugging-Adj-v2"
                 ]
             },
             "lexprob": "return_all",
@@ -135,7 +90,7 @@
             "exclusions": "misc_files/repr_lemma_exclusions.json",
             "debugging": {
                 "display_format": "expanded",
-                "debugging_spreadsheet": "Nominals-Sandbox",
+                "debugging_spreadsheet": "camel-morph-msa-nom",
                 "sheets": [
                     "Lemma-Paradigm-Debugging-Adj-v2"
                 ]
@@ -294,9 +249,9 @@
                 ]
             },
             "lexicon": {
-                "spreadsheet": "camel-morph-msa-nom-other",
+                "spreadsheet": "camel-morph-msa-nom",
                 "sheets": [
-                    "MSA-Nom-LEX"
+                    "Lemma-Paradigm-Debugging-Adj_comp"
                 ]
             },
             "lexprob": "return_all",
@@ -307,9 +262,94 @@
             "exclusions": "misc_files/repr_lemma_exclusions.json",
             "debugging": {
                 "display_format": "expanded",
-                "debugging_spreadsheet": "Nominals-Sandbox",
+                "debugging_spreadsheet": "camel-morph-msa-nom",
                 "sheets": [
                     "Lemma-Paradigm-Debugging-Adj_comp"
+                ]
+            },
+            "class_keys": [
+                "cond_t",
+                "gen",
+                "num",
+                "cas",
+                "meta_info"
+            ],
+            "extended_lemma_keys": [
+                "lemma"
+            ]
+        },
+        "noun_prop_msa_lemma_paradigms": {
+            "split_or": false,
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": {
+                    "order": "MSA-Nom-ORDER",
+                    "morph": "MSA-Nom-MORPH"
+                },
+                "exclude": [
+                    "RED"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "Nominals-Sandbox",
+                "sheets": [
+                    "MSA-Nom-Prop-LEX"
+                ]
+            },
+            "lexprob": "return_all",
+            "dialect": "msa",
+            "db": "",
+            "pos_type": "nominal",
+            "pos": "noun_prop",
+            "exclusions": "misc_files/repr_lemma_exclusions.json",
+            "debugging": {
+                "display_format": "expanded",
+                "debugging_spreadsheet": "Nominals-Sandbox",
+                "sheets": [
+                    "MSA-Nom-Prop-LEX"
+                ]
+            },
+            "class_keys": [
+                "cond_t",
+                "gen",
+                "num",
+                "cas",
+                "meta_info"
+            ],
+            "extended_lemma_keys": [
+                "lemma"
+            ]
+        },
+        "noun_egy_lemma_paradigms": {
+            "split_or": false,
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-egy-nom-other",
+                "sheets": {
+                    "order": "EGY-Nom-ORDER",
+                    "morph": "EGY-Nom-MORPH"
+                },
+                "exclude": [
+                    "RED"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-egy-nom-other",
+                "sheets": [
+                    "EGY-Nom-LEX"
+                ]
+            },
+            "lexprob": "return_all",
+            "dialect": "egy",
+            "db": "",
+            "pos_type": "nominal",
+            "pos": "noun",
+            "debugging": {
+                "display_format": "expanded",
+                "debugging_spreadsheet": "camel-morph-egy-nom",
+                "sheets": [
+                    "Lemma-Paradigm-Debugging-EGY-Noun"
                 ]
             },
             "class_keys": [

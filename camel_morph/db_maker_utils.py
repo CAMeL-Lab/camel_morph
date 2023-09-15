@@ -40,6 +40,8 @@ except:
     from utils.generate_passive import generate_passive
     from utils.generate_abstract_lexicon import generate_abstract_lexicon
 
+EMPTY_ROW = dict(DEFINE=['MORPH'], CLASS=['[EMPTY]']) #, FEAT='prc0:0 prc1:0 prc1.5:0 prc2:0 prc3:0 enc0:0 enc1:0')
+
 def read_morph_specs(config:Dict,
                      config_name:str,
                      lexicon_sheet:Optional[pd.DataFrame]=None,
@@ -75,7 +77,8 @@ def read_morph_specs(config:Dict,
     # Specific configuration from the list of configurations in config['local']
     local_specs: Dict = config['local'][config_name]
     # Directory where all the specification sheets are present
-    data_dir: str = os.path.join(config['global']['data_dir'], f"camel-morph-{local_specs['dialect']}", config_name)
+    data_dir: str = os.path.join(config['global']['data_dir'],
+                                 f"camel-morph-{local_specs['dialect']}", config_name)
     
     if process_morph:
         ABOUT = pd.read_csv(os.path.join(data_dir, 'About.csv'))
@@ -112,6 +115,9 @@ def read_morph_specs(config:Dict,
     # Process LEXICON sheet
     # Loop over the specified lexicon (and backoff lexicon if present) sheets to concatenate those into
     # a unified dataframe.
+    if type(lexicon_sheets[0]) is list:
+        lexicon_sheets = [sheet for sheets in lexicon_sheets for sheet in sheets]
+    
     LEXICON = {'concrete': None, 'backoff': None, 'smart_backoff': None}
     for lexicon_sheet in lexicon_sheets:
         if type(lexicon_sheet) is str:
@@ -149,22 +155,33 @@ def read_morph_specs(config:Dict,
                 backoff_filename = f"{backoff_sheets[lexicon_sheet_name]}.csv"
                 SMART_BACKOFF_ = pd.read_csv(os.path.join(data_dir, backoff_filename))
                 SMART_BACKOFF_ = SMART_BACKOFF_.replace(nan, '', regex=True)
-            LEXICON['smart_backoff'] = pd.concat([LEXICON['smart_backoff'], SMART_BACKOFF_]) if LEXICON['smart_backoff'] is not None else SMART_BACKOFF_
+            LEXICON['smart_backoff'] = pd.concat([LEXICON['smart_backoff'], SMART_BACKOFF_]) \
+                if LEXICON['smart_backoff'] is not None else SMART_BACKOFF_
 
         if len(LEXICON_.index):
-            LEXICON['concrete'] = pd.concat([LEXICON['concrete'], LEXICON_]) if LEXICON['concrete'] is not None else LEXICON_
+            LEXICON['concrete'] = pd.concat([LEXICON['concrete'], LEXICON_]) \
+                if LEXICON['concrete'] is not None else LEXICON_
         if len(BACKOFF_.index):
-            LEXICON['backoff'] = pd.concat([LEXICON['backoff'], BACKOFF_]) if LEXICON['backoff'] is not None else BACKOFF_
+            LEXICON['backoff'] = pd.concat([LEXICON['backoff'], BACKOFF_]) \
+                if LEXICON['backoff'] is not None else BACKOFF_
 
     for lex_type in ['concrete', 'backoff']:
         if LEXICON[lex_type] is None:
             continue
-        LEXICON[lex_type] = LEXICON[lex_type].apply(lambda x: x.str.strip() if x.dtype == "object" else x)
+        LEXICON[lex_type] = LEXICON[lex_type].replace(nan, '', regex=True)
+        LEXICON[lex_type].reset_index(drop=True, inplace=True)
+        LEXICON[lex_type] = LEXICON[lex_type].apply(
+            lambda x: x.str.strip() if x.dtype == "object" else x)
         if 'BW' not in LEXICON[lex_type].columns:
-            LEXICON[lex_type]['BW'] = ''
+            LEXICON[lex_type]['BW'] = LEXICON[lex_type]['FEAT'].str.extract(
+                r'pos:(\S+)')[0].apply(str.upper)
         LEXICON[lex_type]['BW'] = LEXICON[lex_type]['BW'].replace('\s+', '#', regex=True)
-        LEXICON[lex_type].loc[LEXICON[lex_type]['BW'].str.contains('\+'), 'BW'] = LEXICON[lex_type]['BW']
-        LEXICON[lex_type].loc[~LEXICON[lex_type]['BW'].str.contains('\+'), 'BW'] = LEXICON[lex_type]['FORM'] + '/' + LEXICON[lex_type]['BW']
+        LEXICON[lex_type].loc[LEXICON[lex_type]['BW'] == '', 'BW'] = \
+            LEXICON[lex_type]['FEAT'].str.extract(r'pos:(\S+)')[0].apply(str.upper)
+        LEXICON[lex_type].loc[LEXICON[lex_type]['BW'].str.contains('\+'), 'BW'] = \
+            LEXICON[lex_type]['BW']
+        LEXICON[lex_type].loc[~LEXICON[lex_type]['BW'].str.contains('\+|/', regex=True), 'BW'] = \
+            LEXICON[lex_type]['FORM'] + '/' + LEXICON[lex_type]['BW']
         LEXICON[lex_type]['LEMMA'] = 'lex:' + LEXICON[lex_type]['LEMMA']
         LEXICON[lex_type] = LEXICON[lex_type] if len(LEXICON[lex_type].index) != 0 else None
 
@@ -177,7 +194,8 @@ def read_morph_specs(config:Dict,
     postregex_path: Optional[str] = local_specs['specs']['sheets'].get('postregex')
     if postregex_path:
         POSTREGEX = pd.read_csv(os.path.join(data_dir, f'{postregex_path}.csv'))
-        POSTREGEX = POSTREGEX[(POSTREGEX.DEFINE == 'POSTREGEX') & (POSTREGEX.VARIANT == local_specs['dialect'].upper())]
+        POSTREGEX = POSTREGEX[(POSTREGEX.DEFINE == 'POSTREGEX') &
+                              (POSTREGEX.VARIANT == local_specs['dialect'].upper())]
         POSTREGEX = POSTREGEX.replace(nan, '', regex=True)
         for i, row in POSTREGEX.iterrows():
             POSTREGEX.at[i, 'MATCH'] = _bw2ar_regex(row['MATCH'], safebw2ar)
@@ -243,6 +261,7 @@ def read_morph_specs(config:Dict,
         
         # Process MORPH sheet
         MORPH = MORPH[MORPH.DEFINE == 'MORPH']
+        MORPH = pd.concat([MORPH, pd.DataFrame(EMPTY_ROW)], ignore_index=True)
         MORPH = MORPH.replace(nan, '', regex=True)
         MORPH = MORPH.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
         MORPH = MORPH.replace('\s+', ' ', regex=True)
@@ -310,8 +329,8 @@ def read_morph_specs(config:Dict,
                 if conditions_unused:
                     print(f'Deleting unused conditions: {conditions_unused}')
                     conditions_unused = '^(' + conditions_unused + ')$'
-                    df[f] = df.apply(
-                        lambda row: ' '.join(re.sub(conditions_unused, '', cond) for cond in row[f].split()), axis=1)
+                    df[f] = df.apply(lambda row: ' '.join(re.sub(conditions_unused, '', cond)
+                                                          for cond in row[f].split()), axis=1)
 
                 df[f] = df[f].replace(' +', ' ', regex=True)
                 df[f] = df[f].replace(' $', '', regex=True)

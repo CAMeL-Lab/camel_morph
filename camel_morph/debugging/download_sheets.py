@@ -69,9 +69,11 @@ def download_sheets(lex=None, specs=None, save_dir=None, config=None, config_nam
                 else:
                     raise NotImplementedError
 
+        spreadsheets = config_local['lexicon']['spreadsheet']
+        sheets = config_local['lexicon']['sheets']
         lex = {
-            'spreadsheets': [config_local['lexicon']['spreadsheet']],
-            'sheets': [config_local['lexicon']['sheets']]
+            'spreadsheets': [spreadsheets] if type(spreadsheets) is not list else spreadsheets,
+            'sheets': [sheets] if type(sheets[0]) is not list else sheets,
         }
     
     if not os.path.exists(save_dir):

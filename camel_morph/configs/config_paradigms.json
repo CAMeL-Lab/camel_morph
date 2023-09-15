@@ -190,18 +190,23 @@
                     "NOM.MS.DN.P0",
                     "NOM.MS.DG.P0",
                     "NOM.MS.DA.P0",
+                    "NOM.MS.DU.P0",
                     "NOM.MS.IN",
                     "NOM.MS.IG",
                     "NOM.MS.IA",
+                    "NOM.MS.IU",
                     "NOM.MS.CN",
                     "NOM.MS.CG",
                     "NOM.MS.CA",
+                    "NOM.MS.CU",
                     "NOM.MS.DN.P0.E0",
                     "NOM.MS.DG.P0.E0",
                     "NOM.MS.DA.P0.E0",
+                    "NOM.MS.DU.P0.E0",
                     "NOM.MS.CN.E0",
                     "NOM.MS.CG.E0",
-                    "NOM.MS.CA.E0"
+                    "NOM.MS.CA.E0",
+                    "NOM.MS.CU.E0"
                 ]
             },
             "gen:f num:s": {
@@ -211,18 +216,23 @@
                     "NOM.FS.DN.P0",
                     "NOM.FS.DG.P0",
                     "NOM.FS.DA.P0",
+                    "NOM.FS.DU.P0",
                     "NOM.FS.IN",
                     "NOM.FS.IG",
                     "NOM.FS.IA",
+                    "NOM.FS.IU",
                     "NOM.FS.CN",
                     "NOM.FS.CG",
                     "NOM.FS.CA",
+                    "NOM.FS.CU",
                     "NOM.FS.DN.P0.E0",
                     "NOM.FS.DG.P0.E0",
                     "NOM.FS.DA.P0.E0",
+                    "NOM.FS.DU.P0.E0",
                     "NOM.FS.CN.E0",
                     "NOM.FS.CG.E0",
-                    "NOM.FS.CA.E0"
+                    "NOM.FS.CA.E0",
+                    "NOM.FS.CU.E0"
                 ]
             },
             "gen:m num:d": {
@@ -232,18 +242,23 @@
                     "NOM.MD.DN.P0",
                     "NOM.MD.DG.P0",
                     "NOM.MD.DA.P0",
+                    "NOM.MD.DU.P0",
                     "NOM.MD.IN",
                     "NOM.MD.IG",
                     "NOM.MD.IA",
+                    "NOM.MD.IU",
                     "NOM.MD.CN",
                     "NOM.MD.CG",
                     "NOM.MD.CA",
+                    "NOM.MD.CU",
                     "NOM.MD.DN.P0.E0",
                     "NOM.MD.DG.P0.E0",
                     "NOM.MD.DA.P0.E0",
+                    "NOM.MD.DU.P0.E0",
                     "NOM.MD.CN.E0",
                     "NOM.MD.CG.E0",
-                    "NOM.MD.CA.E0"
+                    "NOM.MD.CA.E0",
+                    "NOM.MD.CU.E0"
                 ]
             },
             "gen:f num:d": {
@@ -253,18 +268,23 @@
                     "NOM.FD.DN.P0",
                     "NOM.FD.DG.P0",
                     "NOM.FD.DA.P0",
+                    "NOM.FD.DU.P0",
                     "NOM.FD.IN",
                     "NOM.FD.IG",
                     "NOM.FD.IA",
+                    "NOM.FD.IU",
                     "NOM.FD.CN",
                     "NOM.FD.CG",
                     "NOM.FD.CA",
+                    "NOM.FD.CU",
                     "NOM.FD.DN.P0.E0",
                     "NOM.FD.DG.P0.E0",
                     "NOM.FD.DA.P0.E0",
+                    "NOM.FD.DU.P0.E0",
                     "NOM.FD.CN.E0",
                     "NOM.FD.CG.E0",
-                    "NOM.FD.CA.E0"
+                    "NOM.FD.CA.E0",
+                    "NOM.FD.CU.E0"
                 ]
             },
             "gen:m num:p": {
@@ -274,18 +294,23 @@
                     "NOM.MQ.DN.P0",
                     "NOM.MQ.DG.P0",
                     "NOM.MQ.DA.P0",
+                    "NOM.MQ.DU.P0",
                     "NOM.MQ.IN",
                     "NOM.MQ.IG",
                     "NOM.MQ.IA",
+                    "NOM.MQ.IU",
                     "NOM.MQ.CN",
                     "NOM.MQ.CG",
                     "NOM.MQ.CA",
+                    "NOM.MQ.CU",
                     "NOM.MQ.DN.P0.E0",
                     "NOM.MQ.DG.P0.E0",
                     "NOM.MQ.DA.P0.E0",
+                    "NOM.MQ.DU.P0.E0",
                     "NOM.MQ.CN.E0",
                     "NOM.MQ.CG.E0",
-                    "NOM.MQ.CA.E0"
+                    "NOM.MQ.CA.E0",
+                    "NOM.MQ.CU.E0"
                 ]
             },
             "gen:f num:p": {
@@ -295,18 +320,23 @@
                     "NOM.FQ.DN.P0",
                     "NOM.FQ.DG.P0",
                     "NOM.FQ.DA.P0",
+                    "NOM.FQ.DU.P0",
                     "NOM.FQ.IN",
                     "NOM.FQ.IG",
                     "NOM.FQ.IA",
+                    "NOM.FQ.IU",
                     "NOM.FQ.CN",
                     "NOM.FQ.CG",
                     "NOM.FQ.CA",
+                    "NOM.FQ.CU",
                     "NOM.FQ.DN.P0.E0",
                     "NOM.FQ.DG.P0.E0",
                     "NOM.FQ.DA.P0.E0",
+                    "NOM.FQ.DU.P0.E0",
                     "NOM.FQ.CN.E0",
                     "NOM.FQ.CG.E0",
-                    "NOM.FQ.CA.E0"
+                    "NOM.FQ.CA.E0",
+                    "NOM.FQ.CU.E0"
                 ]
             },
             "gen:u num:s": {
@@ -316,18 +346,23 @@
                     "NOM.S.DN.P0",
                     "NOM.S.DG.P0",
                     "NOM.S.DA.P0",
+                    "NOM.S.DU.P0",
                     "NOM.S.IN",
                     "NOM.S.IG",
                     "NOM.S.IA",
+                    "NOM.S.IU",
                     "NOM.S.CN",
                     "NOM.S.CG",
                     "NOM.S.CA",
+                    "NOM.S.CU",
                     "NOM.S.DN.P0.E0",
                     "NOM.S.DG.P0.E0",
                     "NOM.S.DA.P0.E0",
+                    "NOM.S.DU.P0.E0",
                     "NOM.S.CN.E0",
                     "NOM.S.CG.E0",
-                    "NOM.S.CA.E0"
+                    "NOM.S.CA.E0",
+                    "NOM.S.CU.E0"
                 ]
             },
             "gen:u num:p": {
@@ -337,18 +372,23 @@
                     "NOM.Q.DN.P0",
                     "NOM.Q.DG.P0",
                     "NOM.Q.DA.P0",
+                    "NOM.Q.DU.P0",
                     "NOM.Q.IN",
                     "NOM.Q.IG",
                     "NOM.Q.IA",
+                    "NOM.Q.IU",
                     "NOM.Q.CN",
                     "NOM.Q.CG",
                     "NOM.Q.CA",
+                    "NOM.Q.CU",
                     "NOM.Q.DN.P0.E0",
                     "NOM.Q.DG.P0.E0",
                     "NOM.Q.DA.P0.E0",
+                    "NOM.Q.DU.P0.E0",
                     "NOM.Q.CN.E0",
                     "NOM.Q.CG.E0",
-                    "NOM.Q.CA.E0"
+                    "NOM.Q.CA.E0",
+                    "NOM.Q.CU.E0"
                 ]
             }
         },

@@ -119,6 +119,44 @@
                 "cond_t",
                 "index"
             ]
+        },
+        "nom_msa_stats": {
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": {
+                    "order": "MSA-Nom-ORDER",
+                    "morph": "MSA-Nom-MORPH"
+                },
+                "exclude": ["STATS"]
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-msa-nom",
+                "sheets": [
+                    "Lemma-Paradigm-Debugging-Noun-v2",
+                    "Lemma-Paradigm-Debugging-Adj-v2",
+                    "Lemma-Paradigm-Debugging-Adj_comp"
+                ]
+            },
+            "debugging": {
+                "display_format": "expanded"
+            },
+            "lexprob": "return_all",
+            "dialect": "msa",
+            "db": "XYZ_msa_nom_stats_v1.0.db",
+            "pos_type": "nominal",
+            "class_keys": [
+                "cond_t",
+                "gen",
+                "num",
+                "cas",
+                "meta_info",
+                "pos"
+            ],
+            "extended_lemma_keys": [
+                "lemma",
+                "pos"
+            ]
         }
     }
 }

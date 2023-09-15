@@ -87,11 +87,16 @@ POS_NOMINAL = utils.POS_NOMINAL
 cond_t_sort_order = {'MS':0, 'MD':1, 'MP':2, 'FS':3, 'FD':4, 'FP':5}
 
 def _sort_stems_nominals(stems):
-    if set(stem['cond_t'] for stem in stems) <= {'MS', 'FS', 'FP', 'MS||MD||FP'}:
+    stems_cond_t = set(stem['cond_t'] for stem in stems)
+    if {'MP', 'MS||MD'} <= stems_cond_t or {'FS', 'MS||MD'} <= stems_cond_t:
+        return stems.sort(reverse=True,
+            key=lambda stem: (len(stem['cond_t']),
+                              1 if stem['cond_t'] in {'FS', 'MP'} else -cond_t_sort_order[stem['cond_t'][:2]]))
+    elif stems_cond_t <= {'MS', 'FS', 'FP', 'MS||MD||FP'}:
         return stems.sort(reverse=True,
             key=lambda stem: (len(stem['cond_t']),
                               -cond_t_sort_order[stem['cond_t'][:2]]))
-    elif set(stem['cond_t'] for stem in stems) == {'MS', 'MD||FP'}:
+    elif stems_cond_t == {'MS', 'MD||FP'}:
         return stems.sort(key=lambda stem: -len(stem['cond_t']), reverse=True)
     else:
         stems.sort(reverse=True,
@@ -103,16 +108,19 @@ def create_repr_lemmas_list(config,
                             config_name,
                             feats_bank=None,
                             lexicon=None,
-                            lemma2prob=None):
+                            lemma2prob=None,
+                            lexicon_is_processed=False):
     config_local = config['local'][config_name]
     config_global = config['global']
     POS, info_display_format, bank, lexprob_db, exclusions, lemma2prob = setup(
         config_local, config_global, feats_bank, lemma2prob)
 
-    SHEETS, _ = db_maker_utils.read_morph_specs(
-        config, config_name, lexicon_sheet=lexicon,
-        process_morph=False, lexicon_cond_f=False)
-    lexicon = SHEETS['lexicon']
+    if not lexicon_is_processed:
+        SHEETS, _ = db_maker_utils.read_morph_specs(
+            config, config_name, lexicon_sheet=lexicon,
+            process_morph=False, lexicon_cond_f=False)
+        lexicon = SHEETS['lexicon']
+
     lexicon = lexicon.replace('ditrans', 'trans')
     if POS:
         lexicon = lexicon[lexicon['FEAT'].str.extract(r'pos:(\S+)').isin(POS)[0]]
@@ -225,6 +233,7 @@ def get_extended_lemmas(lexicon, extended_lemma_keys):
         info = dict(lemma=lemma,
                     form=row['FORM'],
                     cond_t=cond_t,
+                    morph_class=row['CLASS'],
                     cond_s=cond_s,
                     gloss=row['GLOSS'],
                     bw=row['BW'],

@@ -34,6 +34,7 @@ from collections import OrderedDict
 import gspread
 import pandas as pd
 from numpy import nan
+import numpy as np
 pd.options.mode.chained_assignment = None  # default='warn'
 
 parser = argparse.ArgumentParser()
@@ -78,6 +79,7 @@ parser.add_argument("-camel_tools", default='local', choices=['local', 'official
                     type=str, help="Path of the directory containing the camel_tools modules.")
 
 random.seed(42)
+np.random.seed(42)
 
 args, _ = parser.parse_known_args()
 
@@ -102,6 +104,7 @@ ar2bw = CharMapper.builtin_mapper('ar2bw')
 
 sukun_regex = re.compile('o')
 aA_regex = re.compile(r'(?<!^[wf])aA')
+poss_regex = re.compile(r'_POSS')
 
 GOLD_DROP_RE = re.compile(r'None|DEFAULT|TBupdate|no_rule')
 
@@ -211,6 +214,7 @@ def _preprocess_ldc_dediac(ldc_diac):
 
 
 def _preprocess_ldc_bw(bw):
+    """Filters out .VN in NOUN.VN and ADJ.VN"""
     bw = '+'.join(comp.split('.')[0] for comp in bw.split('+'))
     return bw
 
@@ -245,8 +249,10 @@ def _preprocess_analysis(analysis, essential_keys=ESSENTIAL_KEYS, optional_keys=
         elif re.match(r'prc\d|enc\d', k):
             pred.append(analysis.get(k, '0'))
         elif k == 'bw':
-            bw = '+'.join(x.split('/')[1]
-                for x in ar2bw(analysis['bw']).split('+') if x and 'STEM' not in x)
+            bw = [x.split('/')[1] for x in ar2bw(analysis['bw']).split('+')
+                  if x and 'STEM' not in x]
+            bw = '+'.join(x for x in bw if x not in ['CASE_DEF_U', 'CASE_INDEF_U'])
+            bw =poss_regex.sub('', bw)
             pred.append(bw)
         else:
             pred.append(analysis.get(k, 'na'))
@@ -283,6 +289,13 @@ def recall_print(examples, results_path,
         [f'{k}_g' for k in essential_keys] + essential_keys
     outputs['calima_mismatches'] = outputs[essential_keys_no_bw_source].apply(
         lambda row: row.str.contains(']')).sum(axis=1)
+    sample_pool_mask = outputs['label'].isin(['wrong', 'noan'])
+    sample_size = min(100, int(0.1*len(sample_pool_mask.index)))
+    sample_filter = set(outputs[sample_pool_mask].sample(
+        sample_size, weights='freq', random_state=42)['filter'].tolist())
+    outputs['sampled'] = 0
+    outputs.loc[outputs['filter'].isin(sample_filter), 'sampled'] = 1
+
     outputs.reset_index(drop=True, inplace=True)
     outputs.to_csv(results_path, index=False, sep='\t')
 
@@ -665,17 +678,18 @@ def compare_print(words, analyses_words, status, results_path,
                template_sheet_name='Compare-template')
 
 
-def evaluate_verbs_analyzer_comparison(data, n, output_path,
-                                       analyzer_camel, analyzer_baseline,
-                                       essential_keys=ESSENTIAL_KEYS):
+def evaluate_analyzer_comparison(data, n, output_path,
+                                 analyzer_camel, analyzer_baseline,
+                                 essential_keys=ESSENTIAL_KEYS):
     words, analyses, status = [], [], []
     pbar = tqdm(total=min(n, len(data)))
     random.shuffle(data)
     count = 0
     source_index = essential_keys.index('source')
-    for word_ar in data:
+    for word in data:
         if count == n:
             break
+        word_ar = bw2ar(word)
         analyses_camel = analyzer_camel.analyze(word_ar)
         for analysis in analyses_camel:
             analysis['source'] = 'camel'
@@ -862,12 +876,12 @@ def upload(df, sheet_name, template_sheet_name):
     sheet_df = pd.DataFrame(sheet.get_all_records())
     assert list(sheet_df.columns[:len(df.columns)]) == list(df.columns)
     if not new_sheet:
-        sheet.batch_clear(['A:BB'])
-    sheet.update('A:BB', [df.columns.values.tolist()] + df.values.tolist())
+        sheet.batch_clear(['A:BC'])
+    sheet.update('A:BC', [df.columns.values.tolist()] + df.values.tolist())
     if len(sheet_df.index) > len(df.index) and not new_sheet:
         sheet.delete_rows(len(df.index) + 2, len(sheet_df.index) + 1)
     else:
-        sheet.set_basic_filter('A:BB')
+        sheet.set_basic_filter('A:BC')
 
 
 if __name__ == "__main__":
@@ -982,7 +996,7 @@ if __name__ == "__main__":
         else:
             raise NotImplementedError
 
-        status = evaluate_verbs_analyzer_comparison(
+        status = evaluate_analyzer_comparison(
             data, args.n, output_path, analyzer_camel, analyzer_baseline)
 
         compare_stats(status)

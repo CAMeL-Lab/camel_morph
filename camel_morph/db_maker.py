@@ -142,6 +142,7 @@ def make_db(config:Dict, config_name:str, output_dir:Optional[str]=None):
     
     c1 = process_time()
     print(f"\nTotal time required: {strftime('%M:%S', gmtime(c1 - c0))}")
+    return SHEETS
 
 
 def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
@@ -206,9 +207,13 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
             cmplx_morph_memoize=cmplx_stem_memoize,
             pruning_cond_s_f=pruning, pruning_same_class_incompat=pruning)
         
+        if not cmplx_stem_classes or not cmplx_suffix_classes or not cmplx_prefix_classes:
+            print('Stem/prefix/suffix class is empty; proceeding to process next order line.')
+            return db
+        
         cmplx_morph_classes = dict(
-            cmplx_prefix_classes=(cmplx_prefix_classes, order['PREFIX']),
-            cmplx_suffix_classes=(cmplx_suffix_classes, order['SUFFIX']),
+            cmplx_prefix_classes=(cmplx_prefix_classes, order['PREFIX'] if order['PREFIX'] else '[EMPTY]'),
+            cmplx_suffix_classes=(cmplx_suffix_classes, order['SUFFIX'] if order['SUFFIX'] else '[EMPTY]'),
             cmplx_stem_classes=(cmplx_stem_classes, order['STEM']))
         
         # Complex morphemes validation or word generation (across the prefix/stem/suffix boundary)
@@ -307,6 +312,7 @@ def cross_cmplx_morph_validation(cmplx_morph_classes: Dict,
     cmplx_prefix_classes, cmplx_prefix_seq = cmplx_morph_classes['cmplx_prefix_classes']
     cmplx_suffix_classes, cmplx_suffix_seq = cmplx_morph_classes['cmplx_suffix_classes']
     cmplx_stem_classes, cmplx_stem_seq = cmplx_morph_classes['cmplx_stem_classes']
+    
     cat_memoize = {'stem': {}, 'suffix': {}, 'prefix': {}}
     compatibility_memoize = {}
     for cmplx_stem_cls, cmplx_stems in cmplx_stem_classes.items():
@@ -728,7 +734,11 @@ def _get_short_cat_name_maps(ORDER: pd.DataFrame) -> Dict:
     map_word = {}
     for _, row in ORDER.iterrows():
         p, x, s = row['PREFIX'], row['STEM'], row['SUFFIX']
+        p = '[EMPTY]' if p == '' else p
+        s = '[EMPTY]' if s == '' else s
         p_short, x_short, s_short = row['PREFIX-SHORT'], row['STEM-SHORT'], row['SUFFIX-SHORT']
+        p_short = '[EMPTY]' if p_short == '' else p_short
+        s_short = '[EMPTY]' if s_short == '' else s_short
         map_p[p], map_x[x], map_s[s] = p_short, x_short, s_short
         map_word.setdefault((p_short, x_short, s_short), 0)
         map_word[(p_short, x_short, s_short)] += 1
@@ -772,6 +782,9 @@ def gen_cmplx_morph_combs(cmplx_morph_seq: str,
     """
     if cmplx_morph_memoize:
         return cmplx_morph_memoize
+    
+    if not cmplx_morph_seq:
+        cmplx_morph_seq = '[EMPTY]'
 
     cmplx_morph_classes = []
     for cmplx_morph_cls in cmplx_morph_seq.split():
@@ -781,6 +794,8 @@ def gen_cmplx_morph_combs(cmplx_morph_seq: str,
             if 'STEM' in cmplx_morph_cls and (row['FORM'] == '' or row['FORM'] == "DROP"):
                 continue
             instances.append(row.to_dict())
+        if not instances:
+            return {}
         cmplx_morph_classes.append(instances)
     
     cmplx_morphs = [list(t) for t in itertools.product(*[mc for mc in cmplx_morph_classes if mc])]

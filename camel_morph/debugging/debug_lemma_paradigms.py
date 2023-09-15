@@ -3,6 +3,7 @@ import argparse
 import gspread
 import re
 import json
+from collections import Counter
 
 from numpy import nan
 import pandas as pd
@@ -74,11 +75,21 @@ def well_formedness_check(config_local):
     essential_columns = ['ROOT', 'LEMMA', 'FORM', 'GLOSS', 'FEAT', 'COND-T', 'COND-S']
     # Duplicate entries
     nom_lex_essential = [tuple(row) for row in nom_lex[essential_columns].values.tolist()]
+    counter = Counter(nom_lex_essential)
     nom_lex_essential_set = set(nom_lex_essential)
-    assert len(nom_lex_essential) == len(nom_lex_essential_set)
+    duplicates = Counter()
+    messages = []
+    if len(nom_lex_essential) != len(nom_lex_essential_set):
+        for i, row in nom_lex.iterrows():
+            row_ = tuple(row[essential_columns])
+            if counter[row_] > 1 and duplicates[row_] < counter[row_] - 1:
+                duplicates.update([row_])
+                messages.append('delete-duplicate')
+            else:
+                messages.append('')
+
     # Glosses should be merged
     essential_columns_no_gloss = [col for col in essential_columns if col != 'GLOSS']
-    messages = []
     key2indexes = {}
     for i, row in nom_lex.iterrows():
         key = tuple(row[essential_columns_no_gloss])
@@ -89,14 +100,14 @@ def well_formedness_check(config_local):
         for j, index in enumerate(indexes):
             if len(key2indexes[key]) > 1:
                 if j:
-                    index2message[index] = 'delete'
+                    index2message[index] = 'delete-merged-gloss'
                 else:
                     index2message[index] = '###'.join(nom_lex.loc[index, 'GLOSS']
                                                       for index in key2indexes[key])
-            else:
-                messages.append('')
 
-    messages = [index2message[i] if i in index2message else '' for i in range(len(nom_lex.index))]
+    messages = [(f'{messages[i]} ' if messages[i] else '') +
+                (index2message[i] if i in index2message else '')
+                for i in range(len(nom_lex.index))]
 
     if set(messages) != {''}:
         add_check_mark_online(rows=nom_lex,
@@ -144,35 +155,50 @@ def generate_lex_rows(repr_lemmas):
     return rows
 
 
-def regenerate_signature_lex_rows(sheet, sh, config, config_name):
-    sheet_df = pd.DataFrame(sheet.get_all_records())
-    sheet_df['DEFINE'], sheet_df['BW'] = 'LEXICON', ''
-    sheet_df['FEAT'] = ('pos:' + sheet_df['POS'] + ' gen:' + sheet_df['GEN'] +
-                        ' num:' + sheet_df['NUM'] + ' rat:' + sheet_df['RAT'] +
-                        ' cas:' + sheet_df['CAS'])
+def regenerate_signature_lex_rows(config, config_name,
+                                  sheet=None, sh=None,
+                                  lexicon_specs=None):
+    if sheet is not None:
+        sheet_df = pd.DataFrame(sheet.get_all_records())
+        sheet_df['DEFINE'], sheet_df['BW'] = 'LEXICON', ''
+        sheet_df['FEAT'] = ('pos:' + sheet_df['POS'] + ' gen:' + sheet_df['GEN'] +
+                            ' num:' + sheet_df['NUM'] + ' rat:' + sheet_df['RAT'] +
+                            ' cas:' + sheet_df['CAS'])
+        lexicon_is_processed = False
+    elif lexicon_specs is not None:
+        sheet_df = lexicon_specs
+        lexicon_is_processed = True
+    else:
+        raise NotImplementedError
     
     repr_lemmas = create_repr_lemmas_list(config=config,
                                           config_name=config_name,
-                                          lexicon=sheet_df)
-    lemma2signature = {}
+                                          lexicon=sheet_df,
+                                          lexicon_is_processed=lexicon_is_processed)
+
+    lemma_pos2signature = {}
     for lemmas_info in repr_lemmas.values():
         for lemma_info in lemmas_info['lemmas']:
-            lemma = lemma_info['lemma']
+            lemma_pos = (lemma_info['lemma'], lemma_info['pos'])
             stem_mask = [info for info in lemma_info['meta_info'].split()
                             if 'stem' in info][0]
             stem_mask_str = stem_mask
             stem_mask = stem_mask.split(':')[1].split('-')
-            if lemma in lemma2signature:
+            if lemma_pos in lemma_pos2signature:
                 continue
             for _ in range(len(stem_mask)):
                 signature = (f"{lemma_info['cond_t']} {lemma_info['gen']} "
                             f"{lemma_info['num']} {stem_mask_str}")
-                lemma2signature[lemma] = signature
+                lemma_pos2signature[lemma_pos] = signature
+
+    if sheet is None:
+        return lemma_pos2signature
 
     signatures = []
     for _, row in sheet_df.iterrows():
         if row['POS'] in POS:
-            signatures.append(lemma2signature[row['LEMMA']])
+            lemma_pos = (row['LEMMA'], row['POS'])
+            signatures.append(lemma_pos2signature[lemma_pos])
         else:
             signatures.append('')
 
@@ -229,4 +255,4 @@ if __name__ == "__main__":
     
     elif args.mode == 'regenerate_sig':
         sheet = [sheet for sheet in sheets if sheet.title == sheet_name][0]
-        regenerate_signature_lex_rows(sheet, sh, config, config_name)
+        regenerate_signature_lex_rows(config, config_name, sheet=sheet, sh=sh)

@@ -36,7 +36,7 @@ parser.add_argument("-camel_tools", default='local', choices=['local', 'official
                     type=str, help="Path of the directory containing the camel_tools modules.")
 args = parser.parse_args()
 
-with open('configs/config_default.json') as f:
+with open('camel_morph/configs/config_default.json') as f:
     config = json.load(f)
 
 if args.camel_tools == 'local':
