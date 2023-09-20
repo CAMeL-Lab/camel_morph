@@ -43,37 +43,48 @@ def download_sheets(lex=None, specs=None, save_dir=None, config=None, config_nam
         config_local = config['local'][config_name]
         config_global = config['global']
         save_dir = config_global['data_dir']
-        specs_local = []
-        sheets_groups = config_local['specs']['sheets'].values()
-        for sheets in sheets_groups:
-            if type(sheets) is str:
-                specs_local.append(sheets)
-            elif type(sheets) is dict:
-                for sheet in sheets.values():
-                    specs_local.append(sheet)
         
-        specs = {
-            'spreadsheets': [config['specs']['spreadsheet'] for config in [config_local, config_global]],
-        }
-        specs['sheets'] = []
-        for config in [config_local, config_global]:
-            specs['sheets'].append([])
-            sheets = config['specs']['sheets']
-            sheets = sheets.values() if type(sheets) is dict else sheets
-            for v in sheets:
-                if type(v) is str:
-                    specs['sheets'][-1].append(v)
-                elif type(v) is dict:
-                    for vv in v.values():
-                        specs['sheets'][-1].append(vv)
+        specs = {}
+        for config_x in [config_local, config_global]:
+            for hierarchy in ['spreadsheet', 'sheets']:
+                hierarchy_s = f'{hierarchy}s' if hierarchy == 'spreadsheet' else hierarchy
+                names_specs_ = specs.setdefault(hierarchy_s, [])
+                
+                names_config = config_x['specs'][hierarchy]
+                if type(names_config) is str:
+                    names_config = [names_config]
+                elif type(names_config) is dict:
+                    names_config = list(names_config.values())
+                elif type(names_config) is list:
+                    names_config = names_config
                 else:
                     raise NotImplementedError
+
+                if hierarchy == 'spreadsheet':
+                    names_specs_ += names_config
+                elif hierarchy == 'sheets':
+                    if type(names_config[0]) is str:
+                        names_specs_.append([])
+                        for name_config in names_config:
+                            specs[hierarchy_s][-1].append(name_config)
+                    elif type(names_config[0]) is list:
+                        for name_config in names_config:
+                            for i, name_config_ in enumerate(name_config):
+                                if len(names_specs_) < len(name_config):
+                                    names_specs_.append([])
+                                name_config_ = (list(name_config_) if type(name_config_) in [list, dict]
+                                                else [name_config_])
+                                for name_ in name_config_:
+                                    specs[hierarchy_s][i].append(name_)
+                    else:
+                        raise NotImplementedError
 
         spreadsheets = config_local['lexicon']['spreadsheet']
         sheets = config_local['lexicon']['sheets']
         lex = {
             'spreadsheets': [spreadsheets] if type(spreadsheets) is not list else spreadsheets,
-            'sheets': [sheets] if type(sheets[0]) is not list else sheets,
+            'sheets': [[sheet_ for sheet_ in sheet] for sheet in sheets]
+                       if type(sheets[0]) in [list, dict] else [sheets],
         }
     
     if not os.path.exists(save_dir):

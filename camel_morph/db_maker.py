@@ -942,7 +942,7 @@ def _choose_required_feats(pos_type):
         required_feats = _required_verb_stem_feats
     elif pos_type == 'nominal':
         required_feats = _required_nom_stem_feats
-    elif pos_type == 'other':
+    elif pos_type in ['other', 'any']:
         required_feats = list(set(_required_nom_stem_feats + _required_verb_stem_feats))
     else:
         raise NotImplementedError

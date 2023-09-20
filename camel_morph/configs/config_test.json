@@ -649,6 +649,64 @@
                 "cond_t",
                 "index"
             ]
+        },
+        "full_system": {
+            "pruning": true,
+            "cat2id": true,
+            "specs": {
+                "spreadsheet": [
+                    "camel-morph-msa-nom-other",
+                    "camel-morph-msa-verbs-cam-ready"
+                ],
+                "sheets": {
+                    "order": [
+                        {
+                            "MSA-Nom-ORDER": "N"
+                        },
+                        {
+                            "MSA-Verb-ORDER": "V"
+                        }
+                    ],
+                    "morph": [
+                        {
+                            "MSA-Nom-MORPH": "N"
+                        },
+                        {
+                            "MSA-Verb-MORPH": "V"
+                        }
+                ]
+                },
+                "exclude": []
+            },
+            "lexicon": {
+                "spreadsheet": [
+                    "camel-morph-msa-nom",
+                    "Nominals-Sandbox",
+                    "camel-morph-msa-verbs-cam-ready"
+                ],
+                "sheets": [
+                    {
+                        "Lemma-Paradigm-Debugging-Noun-v2": "N",
+                        "Lemma-Paradigm-Debugging-Adj-v2": "N",
+                        "Lemma-Paradigm-Debugging-Adj_comp": "N"
+                    },
+                    {
+                        "Lemma-Paradigm-Debugging-Noun_num": "N",
+                        "Lemma-Paradigm-Debugging-Noun_quant": "N",
+                        "Lemma-Paradigm-Debugging-Adj_num": "N",
+                        "MSA-Other-LEX": "N",
+                        "MSA-Nom-Prop-LEX": "N"
+                    },
+                    {
+                        "MSA-Verb-LEX-PV": "V",
+                        "MSA-Verb-LEX-IV": "V",
+                        "MSA-Verb-LEX-CV": "V"
+                    }
+                ]
+            },
+            "dialect": "msa",
+            "db": "XYZ_msa_full_v1.0.db",
+            "pos_type": "verb"
         }
     }
 }

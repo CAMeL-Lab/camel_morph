@@ -25,6 +25,7 @@ import os
 import sys
 from typing import Dict, List, Optional, Union, Set, Tuple
 from itertools import product
+from collections import Counter
 
 import pandas as pd
 from numpy import nan
@@ -41,6 +42,12 @@ except:
     from utils.generate_abstract_lexicon import generate_abstract_lexicon
 
 EMPTY_ROW = dict(DEFINE=['MORPH'], CLASS=['[EMPTY]']) #, FEAT='prc0:0 prc1:0 prc1.5:0 prc2:0 prc3:0 enc0:0 enc1:0')
+SPECS_HEADER_REQUIRED = dict(
+    order=['EXCLUDE', 'DEFINE', 'CLASS', 'PREFIX', 'STEM',
+           'SUFFIX', 'PREFIX-SHORT', 'STEM-SHORT', 'SUFFIX-SHORT'],
+    morph=['EXCLUDE', 'DEFINE', 'CLASS', 'FUNC', 'FORM',
+           'BW', 'GLOSS', 'FEAT', 'COND-T', 'COND-S']
+)
 
 def read_morph_specs(config:Dict,
                      config_name:str,
@@ -83,15 +90,50 @@ def read_morph_specs(config:Dict,
     if process_morph:
         ABOUT = pd.read_csv(os.path.join(data_dir, 'About.csv'))
         HEADER = pd.read_csv(os.path.join(data_dir, 'Header.csv'))
+
+        def _read_specs(specs_type):
+            """Currently, different morph/order pair files are treated as independent entities,
+            and their morpheme classes will be augmented with a different index that is unique to
+            that pair. This will prevent interactions from happening between
+            concatenated morph/order files. This may not be a desirable feature, as for example,
+            one would maybe like to recycle, say, the >a_ques morpheme between nominals and verbs.
+            This is impossible in the current setup, and we will have two different question morphemes,
+            one for verbs, and one for nominals. This method would have to be altered in
+            order to allow morpheme sharing between concatenated files.
+            """
+            specs_filenames = local_specs['specs']['sheets'][specs_type]
+            specs_filenames = specs_filenames if type(specs_filenames) is list else [specs_filenames]
+            specs = None
+            for specs_filename in specs_filenames:
+                if type(specs_filename) is list:
+                    specs_filename = {s: '' for s in specs_filename}
+                elif type(specs_filename) is str:
+                    specs_filename = {specs_filename: ''}
+
+                for specs_filename_, index  in specs_filename.items():
+                    specs_filename_ = f'{specs_filename_}.csv'
+                    specs_path = os.path.join(data_dir, specs_filename_)
+                    specs_ = pd.read_csv(specs_path).replace(nan, '', regex=True)
+                    assert set(SPECS_HEADER_REQUIRED[specs_type]) - set(specs_.columns) == set()
+                    if specs_type == 'order':
+                        unique_order_lines_ = Counter(map(tuple,
+                            [line for line in specs_[['PREFIX-SHORT', 'STEM-SHORT', 'SUFFIX-SHORT']].values.tolist()
+                            if line != ['', '', '']]))
+                        assert sum(unique_order_lines_.values()) == len(unique_order_lines_)
+                    if specs_type == 'order':
+                        columns = ['PREFIX', 'STEM', 'SUFFIX', 'PREFIX-SHORT', 'STEM-SHORT', 'SUFFIX-SHORT']
+                    elif specs_type == 'morph':
+                        columns = ['CLASS']
+                    for col in columns:
+                        specs_[col] = specs_.apply(lambda row: re.sub(r'\]', f'-{index}]', row[col]), axis=1)
+                    specs = pd.concat([specs, specs_]) if specs is not None else specs_
+                
+            specs = specs.replace(nan, '', regex=True)
+            specs.reset_index(drop=True, inplace=True)
+            specs = specs.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
+            return specs
     
-        # If statement to deal with the case when there is no spreadsheet specified in the local
-        # configuration to get the sheets from. If a `spreadsheet` key is present in the local `specs`
-        # in the local configuration, then ORDER/MORPH are present in a dict under the key `sheets`,
-        # otherwise, they are just sitting in the `specs` dict.
-        order_filename = f"{local_specs['specs']['sheets']['order']}.csv"
-        ORDER = pd.read_csv(os.path.join(data_dir, order_filename))
-        morph_filename = f"{local_specs['specs']['sheets']['morph']}.csv"
-        MORPH = pd.read_csv(os.path.join(data_dir, morph_filename))
+        ORDER, MORPH = _read_specs('order'), _read_specs('morph')
     else:
         ABOUT, HEADER, MORPH, ORDER = [None] * 4
     
@@ -116,15 +158,22 @@ def read_morph_specs(config:Dict,
     # Loop over the specified lexicon (and backoff lexicon if present) sheets to concatenate those into
     # a unified dataframe.
     if type(lexicon_sheets[0]) is list:
-        lexicon_sheets = [sheet for sheets in lexicon_sheets for sheet in sheets]
+        lexicon_sheets = {sheet: '' for sheets in lexicon_sheets for sheet in sheets}
+    elif type(lexicon_sheets[0]) is dict:
+        lexicon_sheets = {lexicon_sheet_: index
+            for lexicon_sheet in lexicon_sheets
+            for lexicon_sheet_, index in lexicon_sheet.items()}
     
     LEXICON = {'concrete': None, 'backoff': None, 'smart_backoff': None}
-    for lexicon_sheet in lexicon_sheets:
+    for lexicon_sheet, index in lexicon_sheets.items():
         if type(lexicon_sheet) is str:
             lexicon_sheet_name = lexicon_sheet
             # Setting dtype to silence warning of mixed types
             LEXICON_ = pd.read_csv(
-                os.path.join(data_dir, f"{lexicon_sheet_name}.csv"), dtype=object)
+                os.path.join(data_dir, f"{lexicon_sheet_name}.csv"), dtype=object).replace(
+                    nan, '', regex=True)
+            LEXICON_['CLASS'] = LEXICON_.apply(
+                lambda row: re.sub(r'\]', f'-{index}]', row['CLASS']), axis=1)
         else:
             lexicon_sheet_name = None
             LEXICON_ = lexicon_sheet

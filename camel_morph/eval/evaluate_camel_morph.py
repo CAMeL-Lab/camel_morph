@@ -216,6 +216,7 @@ def _preprocess_ldc_dediac(ldc_diac):
 def _preprocess_ldc_bw(bw):
     """Filters out .VN in NOUN.VN and ADJ.VN"""
     bw = '+'.join(comp.split('.')[0] for comp in bw.split('+'))
+    bw = poss_regex.sub('', bw)
     return bw
 
 
@@ -252,7 +253,7 @@ def _preprocess_analysis(analysis, essential_keys=ESSENTIAL_KEYS, optional_keys=
             bw = [x.split('/')[1] for x in ar2bw(analysis['bw']).split('+')
                   if x and 'STEM' not in x]
             bw = '+'.join(x for x in bw if x not in ['CASE_DEF_U', 'CASE_INDEF_U'])
-            bw =poss_regex.sub('', bw)
+            bw = poss_regex.sub('', bw)
             pred.append(bw)
         else:
             pred.append(analysis.get(k, 'na'))
@@ -290,7 +291,7 @@ def recall_print(examples, results_path,
     outputs['calima_mismatches'] = outputs[essential_keys_no_bw_source].apply(
         lambda row: row.str.contains(']')).sum(axis=1)
     sample_pool_mask = outputs['label'].isin(['wrong', 'noan'])
-    sample_size = min(100, int(0.1*len(sample_pool_mask.index)))
+    sample_size = min(100, int(0.1*sample_pool_mask.sum()))
     sample_filter = set(outputs[sample_pool_mask].sample(
         sample_size, weights='freq', random_state=42)['filter'].tolist())
     outputs['sampled'] = 0
@@ -414,6 +415,8 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
         if 'ldc' in word_info['info']['magold']:
             ldc = word_info['info']['magold']['ldc'].split(' # ')
             ldc = {ldc_index2field[i]: comp for i, comp in enumerate(ldc)}
+            # if ldc['lex'] != '[mumav~il_1]' or ldc['diac'] != 'mumav~iliy':
+            #     continue
             diac_lemma_bw = tuple(ldc[f] for f in ['diac', 'lex', 'bw'])
         else:
             diac_lemma_bw = tuple(word_info['analysis'][f]
@@ -841,6 +844,8 @@ def compare_stats(compare_results):
 def load_required_pos(required_pos_or_type):
     with open('misc_files/atb2camel_pos.json') as f:
         pos_type2atb2camel_pos = json.load(f)
+        pos_type2atb2camel_pos['any'] = {**pos_type2atb2camel_pos['verbal'],
+            **pos_type2atb2camel_pos['nominal'], **pos_type2atb2camel_pos['other']}
     
     ATB_POS, CAMEL_POS = set(), set()
     for pos_type, atb_pos2camel_pos in pos_type2atb2camel_pos.items():
@@ -848,7 +853,7 @@ def load_required_pos(required_pos_or_type):
             atb_pos2camel_pos = {
                 atb: set(camel) if type(camel) is list else set([camel])
                 for atb, camel in atb_pos2camel_pos.items()}
-            if required_pos_or_type in ['verbal', 'nominal', 'other']:
+            if required_pos_or_type in ['verbal', 'nominal', 'other', 'any']:
                 if pos_type == required_pos_or_type:
                     ATB_POS.update(atb_pos2camel_pos.keys())
                     CAMEL_POS.update(*[map(str.lower, camel_pos)
