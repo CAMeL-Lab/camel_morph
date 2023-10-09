@@ -26,6 +26,9 @@ import sys
 from typing import Dict, List, Optional, Union, Set, Tuple
 from itertools import product
 from collections import Counter
+from itertools import combinations
+import pickle
+from tqdm import tqdm
 
 import pandas as pd
 from numpy import nan
@@ -48,6 +51,8 @@ SPECS_HEADER_REQUIRED = dict(
     morph=['EXCLUDE', 'DEFINE', 'CLASS', 'FUNC', 'FORM',
            'BW', 'GLOSS', 'FEAT', 'COND-T', 'COND-S']
 )
+ORDER_FIELDS = ['PREFIX', 'STEM', 'SUFFIX']
+ORDER_FIELDS_SHORT = ['PREFIX-SHORT', 'STEM-SHORT', 'SUFFIX-SHORT']
 
 def read_morph_specs(config:Dict,
                      config_name:str,
@@ -58,6 +63,8 @@ def read_morph_specs(config:Dict,
     Method which loads and processes the `csv` sheets that are specified in the
     specific configuration of the config file. Outputs a dictionary which contains
     the 7 main dataframes which will be used throughout the DB making process.
+    It preprocesses all of the sheets, concatenates MORPH sheets together (same
+    for ORDER and LEXICON), computes the COND-F column for MORPH and LEXICON sheets.
 
     Args:
         config (Dict): dictionary containing all the necessary information to build 
@@ -77,7 +84,9 @@ def read_morph_specs(config:Dict,
 
     """
     # Imported here to avoid disturbing other files' camel_tools importing which
-    # should happen from the fork and not the pip installed version.
+    # should happen from the fork and not the pip installed version. If imported
+    # globally, then the official camel_tools will be loaded everywhere, even in
+    # other files.
     from camel_tools.utils.charmap import CharMapper
     safebw2ar = CharMapper.builtin_mapper('safebw2ar')
     
@@ -117,15 +126,17 @@ def read_morph_specs(config:Dict,
                     assert set(SPECS_HEADER_REQUIRED[specs_type]) - set(specs_.columns) == set()
                     if specs_type == 'order':
                         unique_order_lines_ = Counter(map(tuple,
-                            [line for line in specs_[['PREFIX-SHORT', 'STEM-SHORT', 'SUFFIX-SHORT']].values.tolist()
+                            [line for line in specs_[ORDER_FIELDS_SHORT].values.tolist()
                             if line != ['', '', '']]))
                         assert sum(unique_order_lines_.values()) == len(unique_order_lines_)
                     if specs_type == 'order':
-                        columns = ['PREFIX', 'STEM', 'SUFFIX', 'PREFIX-SHORT', 'STEM-SHORT', 'SUFFIX-SHORT']
+                        columns = ORDER_FIELDS + ORDER_FIELDS_SHORT
                     elif specs_type == 'morph':
                         columns = ['CLASS']
                     for col in columns:
-                        specs_[col] = specs_.apply(lambda row: re.sub(r'\]', f'-{index}]', row[col]), axis=1)
+                        if index:
+                            specs_[col] = specs_.apply(
+                                lambda row: re.sub(r'\]', f'-{index}]', row[col]), axis=1)
                     specs = pd.concat([specs, specs_]) if specs is not None else specs_
                 
             specs = specs.replace(nan, '', regex=True)
@@ -163,6 +174,8 @@ def read_morph_specs(config:Dict,
         lexicon_sheets = {lexicon_sheet_: index
             for lexicon_sheet in lexicon_sheets
             for lexicon_sheet_, index in lexicon_sheet.items()}
+    elif type(lexicon_sheets[0]) is str:
+        lexicon_sheets = {sheet: '' for sheet in lexicon_sheets}
     
     LEXICON = {'concrete': None, 'backoff': None, 'smart_backoff': None}
     for lexicon_sheet, index in lexicon_sheets.items():
@@ -172,8 +185,9 @@ def read_morph_specs(config:Dict,
             LEXICON_ = pd.read_csv(
                 os.path.join(data_dir, f"{lexicon_sheet_name}.csv"), dtype=object).replace(
                     nan, '', regex=True)
-            LEXICON_['CLASS'] = LEXICON_.apply(
-                lambda row: re.sub(r'\]', f'-{index}]', row['CLASS']), axis=1)
+            if index:
+                LEXICON_['CLASS'] = LEXICON_.apply(
+                    lambda row: re.sub(r'\]', f'-{index}]', row['CLASS']), axis=1)
         else:
             lexicon_sheet_name = None
             LEXICON_ = lexicon_sheet
@@ -235,7 +249,7 @@ def read_morph_specs(config:Dict,
         LEXICON[lex_type] = LEXICON[lex_type] if len(LEXICON[lex_type].index) != 0 else None
 
     # Process POSTREGEX sheet
-    #TODO: make sure that symbols being compiled into regex are not mistaken for special characters.
+    #FIXME: make sure that symbols being compiled into regex are not mistaken for special characters.
     # This was already done but does not cover unlikely cases.
     # Compiles the regex match expression from the sheet into a regex match expression that is
     # suitable for storing into the DB in Arabic script. Expects Safe BW transliteration in the sheet.
@@ -251,8 +265,12 @@ def read_morph_specs(config:Dict,
             POSTREGEX.at[i, 'REPLACE'] = _bw2ar_regex(
                 ''.join(re.sub(r'\$', r'\\', row['REPLACE'])), safebw2ar)
     
-    # Useful for debugging of nominals, since many entries are inconsistent in terms of their COND-T
-    # This splits rows with or-ed COND-T expressions into 
+    # This splits rows with or-ed COND-T expressions, i.e., expands the COND-T into
+    # mujltiple rows. A COND-T expression (cell) is always a conjunction of terms (one
+    # condition or a disjunction of conditions). For example, a row with COND-T `a1 b1||b2`
+    # would be expanded into two rows, each with COND-T `a1 b1` and `a1 b2` respectively.
+    # It is useful for debugging nominals, since we would like to debug at the
+    # form gender-number level.
     if local_specs.get('split_or') == True:
         assert LEXICON['smart_backoff'] is None
         for lex_type in ['concrete', 'backoff']:
@@ -347,16 +365,29 @@ def read_morph_specs(config:Dict,
                 LEXICON[lex_type].at[i, 'COND-T'] = ' '.join(cond_t_)
                 LEXICON[lex_type].at[i, 'COND-F'] = ' '.join(cond_f_)
     
-    #FIXME: temporary; should be done by the clean condisitons code
+    #NOTE: temporary fix to the next `if` statement; read below FIXME note to see
+    # what the problem is. Here we delete some unused conditions manually, but
+    # there might be others which we do not know of, which is why the next `if`
+    # statement is needed.
     if LEXICON['concrete'] is not None:
         LEXICON['concrete']['COND-S'] = LEXICON['concrete']['COND-S'].replace(
             r'hollow|defective', '', regex=True)
         LEXICON['concrete']['COND-S'] = LEXICON['concrete']['COND-S'].replace(
             r' +', ' ', regex=True)
     
-    # Get rid of unused conditions, i.e., use only the conditions which are in the intersection
-    # of the collective (concatenated across morph and lexicon sheets) COND-T and COND-S columns
-    # Replace space in gloss field by #, and get rid of excess spaces in the condition field.
+    #FIXME: below `if` statement currently not being used anywhere because behavior is
+    # still not completely correct. The way unused conditions are being deleted needs
+    # to be corrected. The correct behavior is: if a condition appears in COND-S of
+    # LEXICON, then it must necessarily appear in COND-T of MORPH, otherwise it will
+    # be unused and should therefore be deleted. Similarly, if a condition appears in
+    # COND-T of LEXICON, then it must appear in COND-S of MORPH, else it will be unused
+    # and should be deleted. Deletion of one condition in a cell should not affect the
+    # rest of the conditions in that cell. Take into account that there might be
+    # disjunctions in COND-T of either sheets while performing deletion.
+    
+    # Gets rid of unused conditions, i.e., use only the conditions which are in the
+    # intersection of the collective (concatenated across morph and lexicon sheets)
+    # COND-T and COND-S columns.
     #TODO: apply this to backoff too
     clean_conditions: Optional[str] = local_specs.get('clean_conditions')
     if clean_conditions:
@@ -459,7 +490,7 @@ def process_morph_specs(MORPH:pd.DataFrame, exclusions: List[str]) -> pd.DataFra
     MORPH_CLASSES = MORPH_CLASSES[MORPH_CLASSES != '_']
     MORPH_MORPHEMES = MORPH.FUNC.unique()
     MORPH_MORPHEMES = MORPH_MORPHEMES[MORPH_MORPHEMES != '_']
-    # TODO: inefficient, should go through only valid morphemes, it is not necessary
+    # TODO: refactor in a way to go through only valid morphemes, it is not necessary
     # to search for those, simply iterate over them as they are in MORPH sheet.
     for CLASS in MORPH_CLASSES:
         for MORPHEME in MORPH_MORPHEMES: 
@@ -483,7 +514,8 @@ def process_morph_specs(MORPH:pd.DataFrame, exclusions: List[str]) -> pd.DataFra
                 else:
                     # Create temp_T by merging the the condTrue for col 0-col, put it in 
                     # col[0] and remove 1:col. This is basically to group allomorph with 
-                    # similar general conditions. Take the unique of what is now col[0] and remove the fluff.
+                    # similar general conditions. Take the unique of what is now col[0] and
+                    # remove the fluff.
                     if col == 1:
                         cond_t_temp = cond_t.copy()
                     else:
@@ -528,7 +560,8 @@ def process_morph_specs(MORPH:pd.DataFrame, exclusions: List[str]) -> pd.DataFra
 
 
 def get_clean_set(cond_col: pd.Series) -> Set[str]:
-    """Cleans up the conjunction of terms in COND-T field, keeping only valid conditions (not else or empty)."""
+    """Cleans up the conjunction of terms in COND-T field, keeping only valid
+    conditions (not else or empty)."""
     morph_cond_t = cond_col.tolist()
     morph_cond_t = [
         y for y in morph_cond_t if y not in ['', '_', 'else', None]]
@@ -540,7 +573,8 @@ def get_clean_set(cond_col: pd.Series) -> Set[str]:
 def get_morph_cond_f(morph_cond_t: pd.Series,
                      cond_t_current: Set[str],
                      MORPH: pd.DataFrame) -> pd.DataFrame:
-    """Get COND-F based on the RoA (see defition in documentation of `process_morph_specs()`"""
+    """Get COND-F based on the RoA (see defition in documentation of
+    `process_morph_specs()`"""
     # Go through each allomorph
     for idx, entry in morph_cond_t.iteritems():
         # If we have no true condition for the allomorph (aka can take anything)
@@ -574,11 +608,136 @@ def _get_cond_false(cond_t_all, cond_t_almrph):
 
 
 def _bw2ar_regex(regex, bw2ar):
-    """ Converts regex expression from the sheet to Arabic while taking care not to convert characters
-    which are special regex characters in the process. This expects the input not to be ambiguous e.g.,
-    Safe BW"""
+    """ Converts regex expression from the sheet to Arabic while taking care not to
+    convert characters which are special regex characters in the process. This expects
+    the input not to be ambiguous e.g.,Safe BW.
+    """
     match_ = []
     for match in re.split(r'(\\.|[\|}{\*\$_])', regex):
         match = match if re.match(r'(\\.)|[\|}{\*\$_]', match) else bw2ar(match)
         match_.append(match)
     return ''.join(match_)
+
+
+def _reverse_compat_table(XY):
+    YX = {}
+    for X_cat, Y_cats in XY.items():
+        for Y_cat in Y_cats:
+            YX.setdefault(Y_cat, set()).add(X_cat)
+    return YX
+
+
+def factorize_categories(prefix_stem_compat,
+                         stem_suffix_compat,
+                         prefix_suffix_compat,
+                         test=''):
+    stem_prefix_compat = _reverse_compat_table(prefix_stem_compat)
+    suffix_stem_compat = _reverse_compat_table(stem_suffix_compat)
+    suffix_prefix_compat = _reverse_compat_table(prefix_suffix_compat)
+    assert len(prefix_stem_compat) == len(prefix_suffix_compat) and \
+           len(stem_prefix_compat) == len(stem_suffix_compat) and \
+           len(suffix_stem_compat) == len(suffix_prefix_compat)
+
+    combs = dict(
+        prefix=list(combinations(prefix_stem_compat, 2)),
+        stem=list(combinations(stem_suffix_compat, 2)),
+        suffix=list(combinations(suffix_stem_compat, 2))
+    )
+    
+    if not test:
+        equivalences = {}
+        for pcat_1, pcat_2 in tqdm(combs['prefix']):
+            if prefix_stem_compat[pcat_1] == prefix_stem_compat[pcat_2]:
+                if prefix_suffix_compat[pcat_1] == prefix_suffix_compat[pcat_2]:
+                    equivalences.setdefault(pcat_1, set()).add(pcat_2)
+        for xcat_1, xcat_2 in tqdm(combs['stem']):
+            if stem_suffix_compat[xcat_1] == stem_suffix_compat[xcat_2]:
+                if stem_prefix_compat[xcat_1] == stem_prefix_compat[xcat_2]:
+                    equivalences.setdefault(xcat_1, set()).add(xcat_2)
+        for scat_1, scat_2 in tqdm(combs['suffix']):
+            if suffix_stem_compat[scat_1] == suffix_stem_compat[scat_2]:
+                if suffix_prefix_compat[scat_1] == suffix_prefix_compat[scat_2]:
+                    equivalences.setdefault(scat_1, set()).add(scat_2)
+    else:
+        with open(test, 'rb') as f:
+            equivalences = pickle.load(f)
+    
+    assert equivalences
+    equivalences_ = {}
+    done = set()
+    while done != {True}:
+        done = set()
+        for cat, cats_eq in (equivalences_ if equivalences_ else equivalences).items():
+            cats_eq_ = set()
+            for cat_eq in cats_eq:
+                cats_eq_.update(equivalences.get(cat_eq, {cat_eq}))
+            if cats_eq != cats_eq_:
+                done.add(False)
+            else:
+                done.add(True)
+            equivalences_[cat] = cats_eq_
+
+    assert all(len(v) == 1 for v in equivalences_.values())
+    assert set.union(*equivalences_.values()) & set(equivalences_) == set()
+    equivalences_ = {k: next(iter(v)) for k, v in equivalences_.items()}
+
+    return equivalences_
+
+
+def factorize_compatibility_lines(prefix_stem_compat,
+                                  stem_suffix_compat,
+                                  prefix_suffix_compat,
+                                  equivalences):
+
+    def _rebuild_compat_reduced(X_Y_compat):
+        X_Y_compat_ = {}
+        for X_cat, Y in X_Y_compat.items():
+            X_cat_ = equivalences.get(X_cat, X_cat)
+            Y_ = set()
+            for Y_cat in Y:
+                Y_.add(equivalences.get(Y_cat, Y_cat))
+            X_Y_compat_[X_cat_] = Y_
+        return X_Y_compat_
+
+    prefix_stem_compat_ = _rebuild_compat_reduced(prefix_stem_compat)
+    stem_suffix_compat_ = _rebuild_compat_reduced(stem_suffix_compat)
+    prefix_suffix_compat_ = _rebuild_compat_reduced(prefix_suffix_compat)
+    
+    def _get_cats_map(X_Y_compat, X_type):
+        X_cats_sorted = sorted(set(X_Y_compat))
+        X_cat_map = {}
+        for i, X_cat in enumerate(X_cats_sorted):
+            X_cat_new = f'{X_type}{str(i + 1).zfill(5)}'
+            X_cat_map[X_cat] = X_cat_new
+        return X_cat_map
+
+    prefix_cat_map = _get_cats_map(prefix_stem_compat_, 'P')
+    stem_cat_map = _get_cats_map(stem_suffix_compat_, 'X')
+    suffix_stem_compat = _reverse_compat_table(stem_suffix_compat_)
+    suffix_cat_map = _get_cats_map(suffix_stem_compat, 'S')
+
+    def _reindex_compat_categories(X_Y_compat, X_cat_map, Y_cat_map):
+        X_Y_compat_ = {}
+        for X_cat, Y in X_Y_compat.items():
+            for Y_cat in Y:
+                X_Y_compat_.setdefault(X_cat_map[X_cat], set()).add(Y_cat_map[Y_cat])
+        return X_Y_compat_
+
+    prefix_stem_compat_ = _reindex_compat_categories(
+        prefix_stem_compat_, prefix_cat_map, stem_cat_map)
+    stem_suffix_compat_ = _reindex_compat_categories(
+        stem_suffix_compat_, stem_cat_map, suffix_cat_map)
+    prefix_suffix_compat_ = _reindex_compat_categories(
+        prefix_suffix_compat_, prefix_cat_map, suffix_cat_map)
+
+    return prefix_stem_compat_, stem_suffix_compat_, prefix_suffix_compat_, \
+           prefix_cat_map, stem_cat_map, suffix_cat_map
+           
+
+def reindex_morpheme_table_cats(X, X_cat_map, equivalences):
+    X_ = []
+    for X_entry in X:
+        X_cat = X_entry[1]
+        X_cat_new = X_cat_map[equivalences.get(X_cat, X_cat)]
+        X_.append((X_entry[0], X_cat_new, X_entry[2]))
+    return X_

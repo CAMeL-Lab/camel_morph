@@ -1,0 +1,140 @@
+{
+    "global": {
+        "data_dir": "data",
+        "specs": {
+            "spreadsheet": "camel-morph-common",
+            "sheets": [
+                "About",
+                "Header"
+            ]
+        },
+        "db_dir": "databases",
+        "debugging": "debugging_output",
+        "repr_lemmas_dir": "repr_lemmas",
+        "tables_dir": "tables",
+        "paradigm_debugging_dir": "paradigm_debugging",
+        "banks_dir": "banks",
+        "camel_tools": "./camel_morph/camel_tools",
+        "service_account": "/Users/chriscay/.config/gspread/service_account.json",
+        "paradigms_config": "misc_files/config_paradigms.json",
+        "banks_spreadsheet": "Paradigm-Banks"
+    },
+    "local": {
+        "full_system": {
+            "pruning": true,
+            "cat2id": true,
+            "specs": {
+                "spreadsheet": [
+                    "camel-morph-msa-nom-other",
+                    "camel-morph-msa-verbs-cam-ready"
+                ],
+                "sheets": {
+                    "order": [
+                        {
+                            "MSA-Nom-ORDER": "N"
+                        },
+                        {
+                            "MSA-Verb-ORDER": "V"
+                        }
+                    ],
+                    "morph": [
+                        {
+                            "MSA-Nom-MORPH": "N"
+                        },
+                        {
+                            "MSA-Verb-MORPH": "V"
+                        }
+                ]
+                },
+                "exclude": []
+            },
+            "lexicon": {
+                "spreadsheet": [
+                    "camel-morph-msa-nom",
+                    "Nominals-Sandbox",
+                    "camel-morph-msa-verbs-cam-ready"
+                ],
+                "sheets": [
+                    {
+                        "Lemma-Paradigm-Debugging-Noun-v2": "N",
+                        "Lemma-Paradigm-Debugging-Adj-v2": "N",
+                        "Lemma-Paradigm-Debugging-Adj_comp": "N"
+                    },
+                    {
+                        "Lemma-Paradigm-Debugging-Noun_num": "N",
+                        "Lemma-Paradigm-Debugging-Noun_quant": "N",
+                        "Lemma-Paradigm-Debugging-Adj_num": "N",
+                        "MSA-Other-LEX": "N",
+                        "MSA-Nom-Prop-LEX": "N"
+                    },
+                    {
+                        "MSA-Verb-LEX-PV": "V",
+                        "MSA-Verb-LEX-IV": "V",
+                        "MSA-Verb-LEX-CV": "V"
+                    }
+                ]
+            },
+            "dialect": "msa",
+            "db": "XYZ_msa_full_v1.0.db",
+            "pos_type": "any"
+        },
+        "full_system_factored": {
+            "pruning": true,
+            "reindex": true,
+            "specs": {
+                "spreadsheet": [
+                    "camel-morph-msa-nom-other",
+                    "camel-morph-msa-verbs-cam-ready"
+                ],
+                "sheets": {
+                    "order": [
+                        {
+                            "MSA-Nom-ORDER": "N"
+                        },
+                        {
+                            "MSA-Verb-ORDER": "V"
+                        }
+                    ],
+                    "morph": [
+                        {
+                            "MSA-Nom-MORPH": "N"
+                        },
+                        {
+                            "MSA-Verb-MORPH": "V"
+                        }
+                    ]
+                },
+                "exclude": []
+            },
+            "lexicon": {
+                "spreadsheet": [
+                    "camel-morph-msa-nom",
+                    "Nominals-Sandbox",
+                    "camel-morph-msa-verbs-cam-ready"
+                ],
+                "sheets": [
+                    {
+                        "Lemma-Paradigm-Debugging-Noun-v2": "N",
+                        "Lemma-Paradigm-Debugging-Adj-v2": "N",
+                        "Lemma-Paradigm-Debugging-Adj_comp": "N"
+                    },
+                    {
+                        "Lemma-Paradigm-Debugging-Noun_num": "N",
+                        "Lemma-Paradigm-Debugging-Noun_quant": "N",
+                        "Lemma-Paradigm-Debugging-Adj_num": "N",
+                        "MSA-Other-LEX": "N",
+                        "MSA-Nom-Prop-LEX": "N"
+                    },
+                    {
+                        "MSA-Verb-LEX-PV": "V",
+                        "MSA-Verb-LEX-IV": "V",
+                        "MSA-Verb-LEX-CV": "V"
+                    }
+                ]
+            },
+            "dialect": "msa",
+            "db": "XYZ_msa_full_factored_v1.0.db",
+            "pos_type": "any"
+        }
+    }
+}

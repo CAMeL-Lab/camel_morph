@@ -116,24 +116,35 @@ def make_db(config:Dict, config_name:str, output_dir:Optional[str]=None):
     Main function which takes in a set of specifications from `csv` files (downloadable
     from Google Sheets) and which, from the latter, prints out a `db` file in the ALMOR format,
     useable by the Camel Tools Analyzer and Generator engines to produce word analyses/generations.
+    The config file is any json object which at the highest level contains: (1) global
+    specifications, i.e., that apply no matter what the present local configuration contains;
+    (2) local specifications, from which we source all the details that are specific to the current
+    DB we are trying to build. The format of these two is dictated by the current code and how
+    it reads that information. Any changes to the format should be accompanied by changes to the code
+    and vice versa.
 
     Args:
         config (Dict): dictionary containing all the necessary information to build the `db` file.
         config_name (str): key of the specific ("local") configuration to get information from in the config file.
         output_dir (str, optional): path of the directory to output the `db` file to.
     """
-    config_global = config['global']
-    config_local = config['local'][config_name]
+    config_global: Dict = config['global']
+    config_local: Dict = config['local'][config_name]
     c0 = process_time()
     
-    print("\nLoading and processing sheets... [1/3]")
+    print("\nLoading and processing sheets... [1/4]")
     SHEETS, cond2class = db_maker_utils.read_morph_specs(config, config_name)
     
-    print("\nValidating combinations... [2/3]")
-    cat2id = config_local.get('cat2id', False)
+    print("\nValidating combinations... [2/4]")
+    cat2id: bool = config_local.get('cat2id', False)
     db = construct_almor_db(SHEETS, config_local['pruning'], cond2class, cat2id)
+
+    print("\nCollapsing categories and reindexing... [3/4]")
+    reindex: bool = config_local.get('reindex', False)
+    if reindex:
+        collapse_and_reindex_categories(db)
     
-    print("\nGenerating DB file... [3/3]")
+    print("\nGenerating DB file... [4/4]")
     if output_dir is None:
         output_dir = config_global['db_dir']
     output_dir = os.path.join(output_dir, f"camel-morph-{config_local['dialect']}")
@@ -151,7 +162,7 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
                        cat2id:bool=False) -> Dict:
     """
     Function which takes care of the condition validation process, i.e., deciding which
-    (complex) morphemes are compatible, and print them and their computed categories in
+    (complex) morphemes are compatible, and prints them and their computed categories in
     ALMOR format.
 
     Args:
@@ -162,6 +173,8 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
         of complex morphemes which will then in turn be validated.
         cond2class (Dict): inventory of condition definitions and their corresponding vectors which will
         be useful in the pruning process.
+        cat2id (bool): whether or not to convert the category names to IDs (makes them smaller,
+        and thus makes the DB file size smaller, but eliminates the debug info contained in them).
 
     Returns:
         Dict: Database which contains entries (values) for each section (keys).
@@ -170,6 +183,17 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
     ABOUT, HEADER, POSTREGEX = SHEETS['about'], SHEETS['header'], SHEETS['postregex']
     BACKOFF, SMART_BACKOFF = SHEETS['backoff'], SHEETS['smart_backoff']
 
+    #TODO: classes are compiled into the category name of each morpheme, hence, if the class
+    # names are long, then categories will be long and this will reduce readability of the 
+    # latter (for debugging purposes). Therefore we rely on short names, the mapping of which
+    # is currently provided manually from within the same order sheet. Should try to provide these
+    # short names automatically as adding them manually is problematic because currently, we need to 
+    # add a short name for each class field (PREIFX, STEM, SUFFIX columns). Also, we need to make sure
+    # that every cell in the class fields (in the order file) containaining a specific order of classes
+    # should have the same short name for that order. Hence, this needs to be done manually for the moment,
+    # which is why we should consider it being done automatically, as this is often the source of bugs,
+    # for example if some order is changed in the class fields and forgetting to change the associated
+    # short name.
     short_cat_maps = _get_short_cat_name_maps(ORDER) if 'PREFIX-SHORT' in ORDER.columns else None
 
     # One-time filling of the About, Header, and PostRegex sections of the DB
@@ -371,9 +395,9 @@ def cross_cmplx_morph_validation(cmplx_morph_classes: Dict,
                     prefix_cat = prefix_cat if prefix_cat else cat_memoize['prefix'][cmplx_prefix_cls]
                     suffix_cat = suffix_cat if suffix_cat else cat_memoize['suffix'][cmplx_suffix_cls]
 
-                    db['OUT:###TABLE AB###'][prefix_cat + " " + stem_cat] = 1
-                    db['OUT:###TABLE BC###'][stem_cat + " " + suffix_cat] = 1
-                    db['OUT:###TABLE AC###'][prefix_cat + " " + suffix_cat] = 1
+                    db['OUT:###TABLE AB###'][(prefix_cat, stem_cat)] = 1
+                    db['OUT:###TABLE BC###'][(stem_cat, suffix_cat)] = 1
+                    db['OUT:###TABLE AC###'][(prefix_cat, suffix_cat)] = 1
     # Turn this on to make sure that every entry is only set once (can also be used to catch
     # double entries in the lexicon sheets)
     # assert [1 for items in db.values() for item in items if item != 1] == []
@@ -452,8 +476,9 @@ def update_db(db: Dict,
                                     defaults_,
                                     cat2id,
                                     backoff)
-            db[db_section].setdefault('\t'.join(morph_entry.values()), 0)
-            db[db_section]['\t'.join(morph_entry.values())] += 1
+            morph_entry_ = tuple(morph_entry.values())
+            db[db_section].setdefault(morph_entry_, 0)
+            db[db_section][morph_entry_] += 1
         cat_memoize[cmplx_morph_type][cmplx_morph_cls] = morph_entry['cat']
 
 
@@ -667,58 +692,120 @@ def _read_stem(stem: List[Dict]) -> Tuple[str, Dict]:
                     stem_match.append(re.sub(r'^\^|\$$|[#@]', '', s['MATCH']))
                 else:
                     stem_match.append(normalize_alef_bw(normalize_alef_maksura_bw(
-                                      normalize_teh_marbuta_bw(dediac_bw(re.sub(r'[#@]', '', s['FORM']))))))
+                        normalize_teh_marbuta_bw(dediac_bw(re.sub(r'[#@]', '', s['FORM']))))))
         stem_match = f"^{''.join(stem_match)}$"
 
     return stem_match, stem_diac, stem_lex, stem_gloss, stem_feat, stem_bw, root, smart_backoff
 
+
+def _read_compatibility_tables(X_Y_compat):
+    X_Y_compat_ = {}
+    for X_cat, Y_cat in X_Y_compat:
+        X_Y_compat_.setdefault(X_cat, set()).add(Y_cat)
+    return X_Y_compat_
+
+
+def _write_compatibility_tables(X_Y_compat):
+    X_Y_compat_ = []
+    for X_cat, Y in X_Y_compat.items():
+        for Y_cat in Y:
+            X_Y_compat_.append((X_cat, Y_cat))
+    return X_Y_compat_
+
+
+def collapse_and_reindex_categories(db):
+    prefix_stem_compat = _read_compatibility_tables(db['OUT:###TABLE AB###'])
+    stem_suffix_compat = _read_compatibility_tables(db['OUT:###TABLE BC###'])
+    prefix_suffix_compat = _read_compatibility_tables(db['OUT:###TABLE AC###'])
+
+    equivalences = db_maker_utils.factorize_categories(
+        prefix_stem_compat, stem_suffix_compat, prefix_suffix_compat)
+    
+    prefix_stem_compat_, stem_suffix_compat_, prefix_suffix_compat_, \
+        prefix_cat_map, stem_cat_map, suffix_cat_map = \
+            db_maker_utils.factorize_compatibility_lines(
+                prefix_stem_compat, stem_suffix_compat, prefix_suffix_compat, equivalences)
+    
+    prefix_stem_compat_ = _write_compatibility_tables(prefix_stem_compat_)
+    stem_suffix_compat_ = _write_compatibility_tables(stem_suffix_compat_)
+    prefix_suffix_compat_ = _write_compatibility_tables(prefix_suffix_compat_)
+    
+    prefixes = db['OUT:###PREFIXES###']
+    stems = db['OUT:###STEMS###']
+    suffixes = db['OUT:###SUFFIXES###']
+
+    prefixes_ = db_maker_utils.reindex_morpheme_table_cats(
+        prefixes, prefix_cat_map, equivalences)
+    stems_ = db_maker_utils.reindex_morpheme_table_cats(
+        stems, stem_cat_map, equivalences)
+    suffixes_ = db_maker_utils.reindex_morpheme_table_cats(
+        suffixes, suffix_cat_map, equivalences)
+    
+    db['OUT:###PREFIXES###'] = prefixes_
+    db['OUT:###STEMS###'] = stems_
+    db['OUT:###SUFFIXES###'] = suffixes_
+    db['OUT:###TABLE AB###'] = prefix_stem_compat_
+    db['OUT:###TABLE BC###'] = stem_suffix_compat_
+    db['OUT:###TABLE AC###'] = prefix_suffix_compat_
+
+    collapse_and_reindex_debug = dict(
+        equivalences=equivalences,
+        prefix_cat_map=prefix_cat_map,
+        stem_cat_map=stem_cat_map,
+        suffix_cat_map=suffix_cat_map
+    )
+
+    return db
+
+
 def print_almor_db(output_path, db):
     """Create output file in ALMOR DB format"""
-    with open(output_path, "w") as f:
+
+    with open(output_path, 'w') as f:
         for x in db['OUT:###HEADER###']:
             print(x, file=f)
 
-        print("###POSTREGEX###", file=f)
+        print('###POSTREGEX###', file=f)
         postregex = db.get('OUT:###POSTREGEX###')
         if postregex:
             for x in postregex:
                 print(x, file=f)
 
-        print("###PREFIXES###", file=f)
+        print('###PREFIXES###', file=f)
         for x in db['OUT:###PREFIXES###']:
-            print(x, file=f)
+            print(*x, sep='\t', file=f)
             
-        print("###SUFFIXES###", file=f)
+        print('###SUFFIXES###', file=f)
         for x in db['OUT:###SUFFIXES###']:
-            print(x, file=f)
+            print(*x, sep='\t', file=f)
             
-        print("###STEMS###", file=f)
+        print('###STEMS###', file=f)
         for x in db['OUT:###STEMS###']:
             # Fixes weird underscore generated by bw2ar()
-            x = re.sub('ـ', '_', x)
-            print(x, file=f)
+            x = (*x[:2], re.sub('ـ', '_', x[2]))
+            print(*x, sep='\t', file=f)
 
-        print("###SMARTBACKOFF###", file=f)
+        print('###SMARTBACKOFF###', file=f)
         smart_backoff = db.get('OUT:###SMARTBACKOFF###')
         if smart_backoff:
             for x in db['OUT:###SMARTBACKOFF###']:
-                print(x, file=f)
+                print(*x, sep='\t', file=f)
             
-        print("###TABLE AB###", file=f)
+        print('###TABLE AB###', file=f)
         for x in db['OUT:###TABLE AB###']:
-            print(x, file=f)
+            print(*x, sep=' ', file=f)
             
-        print("###TABLE BC###", file=f)
+        print('###TABLE BC###', file=f)
         for x in db['OUT:###TABLE BC###']:
-            print(x, file=f)
+            print(*x, sep=' ', file=f)
             
-        print("###TABLE AC###", file=f)
+        print('###TABLE AC###', file=f)
         for x in db['OUT:###TABLE AC###']:
-            print(x, file=f)
+            print(*x, sep=' ', file=f)
 
 
 def _get_short_cat_name_maps(ORDER: pd.DataFrame) -> Dict:
-    """Because the categories are made out of the ORDER class names among other things,
+    """Because the categories are made up of the ORDER class names among other things,
     in order to reduce the visual length of these categories while maintaining meaning
     for debugging purposes, the following short names are used. There is a corresponding
     short name for each CLASS item across the ORDER rows.
@@ -754,11 +841,20 @@ def gen_cmplx_morph_combs(cmplx_morph_seq: str,
                           cmplx_morph_memoize: Optional[Dict]=None,
                           pruning_cond_s_f: bool=True,
                           pruning_same_class_incompat: bool=True) -> Dict[Tuple[Tuple[str]], List[List[pd.DataFrame]]]:
-    """Method which works within the scope of a prefix/stem/suffix, c.f., across the boundary.
-    It generates all combinations of complex morphemes by combining regular morphemes. It can do
-    so in a naive way by generating all possible combinations or by using conditions to reduce those
-    to a set of more plausible combinations in a postprocessing fashion after the initial cartesian
-    product has been generated.
+    """Method which works within the scope of a PREFIX/STEM/SUFFIX order field. BW for example
+    confounds prefixes (suffixes) and proclitics (enclitics) within the PREFIX (SUFFIX) field.
+    [Side note]: In our case, we have an additional [Buffer] class which could be considered as
+    part of any of the three, giving exactly the same result (different DB, but same resulting
+    analyses/generations) in all three cases.
+    Thus, morphemes at the PREFIX/STEM/SUFFIX order field level are called complex morphemes.
+    This method generates all combinations of complex morphemes by combining regular morphemes,
+    as per the order lines specifications. It can do so in a naive way by generating all possible
+    combinations, or by using the morphemes' conditions to reduce the space of possibilities to
+    a set of more plausible combinations. So for example, if we have for the SUFFIX field the
+    following order: `[Buffer] [NSuff.XXIN]`, and [Buffer] and [NSuff.XXIN] contain 40 and 30
+    allomorphs respectively, then the space of possibilities is 40 x 30 = 1,200 complex morphemes.
+    Many of those may be decuded to be implausible thanks to the simple heuristic of checking
+    whether the conditions of their component allomorphs are contradictory.
 
     Args:
         cmplx_morph_seq (str): space-separated sequence of classes that predefine the order of the morphemes
@@ -926,7 +1022,15 @@ def check_compatibility (cond_s: str, cond_t: str, cond_f: str,
     return valid                     
 
 
-def _process_defaults(header):
+def _process_defaults(header: str):
+    """Parse the default feature values per POS and store them in a dictionary.
+
+    Args:
+        header (str): String parsed from the sheets containing all the defaults and defines.
+
+    Returns:
+        Dict[str, Dict]: Dictionary containing the default feature values per POS.
+    """
     _order = [line.split()[1:] for line in header
                 if line.startswith('ORDER')][0]
     _defaults = [{f: d for f, d in [f.split(':') for f in line.split()[1:]]}

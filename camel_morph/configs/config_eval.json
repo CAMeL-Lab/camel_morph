@@ -16,110 +16,10 @@
         "banks_dir": "banks",
         "camel_tools": "./camel_morph/camel_tools",
         "service_account": "/Users/chriscay/.config/gspread/service_account.json",
-        "paradigms_config": "configs/config_paradigms.json",
+        "paradigms_config": "misc_files/config_paradigms.json",
         "banks_spreadsheet": "Paradigm-Banks"
     },
     "local": {
-        "adj_msa_split": {
-            "split_or": true,
-            "pruning": true,
-            "specs": {
-                "spreadsheet": "camel-morph-msa-nom-other",
-                "sheets": {
-                    "order": "MSA-Nom-ORDER",
-                    "morph": "MSA-Nom-MORPH"
-                },
-                "exclude": [
-                    "RED-MORPH"
-                ]
-            },
-            "lexicon": {
-                "spreadsheet": "camel-morph-msa-nom-other",
-                "sheets": [
-                    "MSA-Nom-LEX"
-                ]
-            },
-            "dialect": "msa",
-            "db": "XYZ_msa_nom_v1.0.db",
-            "debugging": {
-                "debugging_spreadsheet": "Paradigm-Debugging-Nominals",
-                "feats": {
-                    "": {
-                        "debugging_sheet": "MSA-Adj",
-                        "conj_tables": "conj_adj_msa_v1.0.tsv",
-                        "paradigm_debugging": "paradigm_debug_adj_msa_v1.0.tsv",
-                        "bank": "MSA-Adj-Bank.tsv"
-                    }
-                }
-            },
-            "pos_type": "nominal",
-            "pos": "adj",
-            "class_keys": [
-                "cond_t",
-                "cond_s",
-                "gen",
-                "num",
-                "cas"
-            ],
-            "extended_lemma_keys": [
-                "lemma",
-                "form",
-                "pos",
-                "rat",
-                "cond_t",
-                "index"
-            ]
-        },
-        "nominals_eval": {
-            "split_or": true,
-            "pruning": true,
-            "specs": {
-                "spreadsheet": "camel-morph-msa-nom-other",
-                "sheets": {
-                    "order": "MSA-Nom-ORDER",
-                    "morph": "MSA-Nom-MORPH"
-                },
-                "exclude": [
-                    "RED-MORPH"
-                ]
-            },
-            "lexicon": {
-                "spreadsheet": "camel-morph-msa-nom-other",
-                "sheets": [
-                    "MSA-Nom-LEX"
-                ]
-            },
-            "dialect": "msa",
-            "db": "XYZ_msa_nom_eval_v1.0.db",
-            "debugging": {
-                "debugging_spreadsheet": "Paradigm-Debugging-Nominals",
-                "feats": {
-                    "": {
-                        "debugging_sheet": "MSA-Noun",
-                        "conj_tables": "conj_noun_msa_v1.0.tsv",
-                        "paradigm_debugging": "paradigm_debug_noun_msa_v1.0.tsv",
-                        "bank": "MSA-Noun-Bank.tsv"
-                    }
-                }
-            },
-            "pos_type": "nominal",
-            "pos": "noun",
-            "class_keys": [
-                "cond_t",
-                "cond_s",
-                "gen",
-                "num",
-                "cas"
-            ],
-            "extended_lemma_keys": [
-                "lemma",
-                "form",
-                "pos",
-                "rat",
-                "cond_t",
-                "index"
-            ]
-        },
         "nom_msa_stats": {
             "pruning": true,
             "specs": {
@@ -139,24 +39,170 @@
                 ]
             },
             "debugging": {
-                "display_format": "expanded"
+                "display_format": "expanded",
+                "stats_spreadsheet": "CamelMorph-Nominals-Paper-Assets",
+                "stats_sheet": "Statistics-v1.0",
+                "table_range": ""
             },
             "lexprob": "return_all",
             "dialect": "msa",
             "db": "XYZ_msa_nom_stats_v1.0.db",
             "pos_type": "nominal",
-            "class_keys": [
-                "cond_t",
-                "gen",
-                "num",
-                "cas",
-                "meta_info",
-                "pos"
-            ],
-            "extended_lemma_keys": [
-                "lemma",
-                "pos"
-            ]
+            "class_map": {
+                "DBPrefix": [
+                    "[QUES]",
+                    "[EMPH]",
+                    "[CONJ]",
+                    "[CONJ-ACC]",
+                    "[PREP]",
+                    "[ART]"
+                ],
+                "DBSuffix": [
+                    "[PRON]",
+                    "[NSuff.XXIU]",
+                    "[NSuff.XXCU]",
+                    "[NSuff.XXDU]",
+                    "[NSuff.XXIG]",
+                    "[NSuff.XXCG]",
+                    "[NSuff.XXDG]",
+                    "[NSuff.XXIA]",
+                    "[NSuff.XXCA]",
+                    "[NSuff.XXDA]",
+                    "[NSuff.XXIN]",
+                    "[NSuff.XXCN]",
+                    "[NSuff.XXDN]"
+                ],
+                "Buffer": [
+                    "[NBuff]"
+                ],
+                "other": [
+                    "[EMPTY]"
+                ]
+            }
+        },
+        "nom_msa_stats_reindex": {
+            "pruning": true,
+            "reindex": true,
+            "specs": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": {
+                    "order": "MSA-Nom-ORDER",
+                    "morph": "MSA-Nom-MORPH"
+                },
+                "exclude": [
+                    "STATS"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-msa-nom",
+                "sheets": [
+                    "Lemma-Paradigm-Debugging-Noun-v2",
+                    "Lemma-Paradigm-Debugging-Adj-v2",
+                    "Lemma-Paradigm-Debugging-Adj_comp"
+                ]
+            },
+            "debugging": {
+                "display_format": "expanded"
+            },
+            "lexprob": "return_all",
+            "dialect": "msa",
+            "db": "XYZ_msa_nom_stats_reindex_v1.0.db",
+            "pos_type": "nominal",
+            "class_map": {
+                "DBPrefix": [
+                    "[QUES]",
+                    "[EMPH]",
+                    "[CONJ]",
+                    "[CONJ-ACC]",
+                    "[PREP]",
+                    "[ART]"
+                ],
+                "DBSuffix": [
+                    "[PRON]",
+                    "[NSuff.XXIU]",
+                    "[NSuff.XXCU]",
+                    "[NSuff.XXDU]",
+                    "[NSuff.XXIG]",
+                    "[NSuff.XXCG]",
+                    "[NSuff.XXDG]",
+                    "[NSuff.XXIA]",
+                    "[NSuff.XXCA]",
+                    "[NSuff.XXDA]",
+                    "[NSuff.XXIN]",
+                    "[NSuff.XXCN]",
+                    "[NSuff.XXDN]"
+                ],
+                "Buffer": [
+                    "[NBuff]"
+                ],
+                "other": [
+                    "[EMPTY]"
+                ]
+            }
+        },
+        "nom_eval": {
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": {
+                    "order": "MSA-Nom-ORDER",
+                    "morph": "MSA-Nom-MORPH"
+                },
+                "exclude": []
+            },
+            "lexicon": {
+                "spreadsheet": [
+                    "camel-morph-msa-nom",
+                    "Nominals-Sandbox"
+                ],
+                "sheets": [
+                    [
+                        "Lemma-Paradigm-Debugging-Noun-v2",
+                        "Lemma-Paradigm-Debugging-Adj-v2",
+                        "Lemma-Paradigm-Debugging-Adj_comp"
+                    ],
+                    [
+                        "Lemma-Paradigm-Debugging-Noun_num",
+                        "Lemma-Paradigm-Debugging-Noun_quant",
+                        "Lemma-Paradigm-Debugging-Adj_num",
+                        "MSA-Other-LEX",
+                        "MSA-Nom-Prop-LEX"
+                    ]
+                ]
+            },
+            "dialect": "msa",
+            "db": "XYZ_msa_nom_v1.0_test.db",
+            "class_map": {
+                "DBPrefix": [
+                    "[QUES]",
+                    "[EMPH]",
+                    "[CONJ]",
+                    "[CONJ-ACC]",
+                    "[PREP]",
+                    "[ART]"
+                ],
+                "DBSuffix": [
+                    "[PRON]",
+                    "[NSuff.XXIU]",
+                    "[NSuff.XXCU]",
+                    "[NSuff.XXDU]",
+                    "[NSuff.XXIG]",
+                    "[NSuff.XXCG]",
+                    "[NSuff.XXDG]",
+                    "[NSuff.XXIA]",
+                    "[NSuff.XXCA]",
+                    "[NSuff.XXDA]",
+                    "[NSuff.XXIN]",
+                    "[NSuff.XXCN]",
+                    "[NSuff.XXDN]"
+                ],
+                "Buffer": [
+                    "[NBuff]"
+                ],
+                "other": [
+                    "[EMPTY]"
+                ]
+            }
         }
     }
 }

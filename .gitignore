@@ -368,3 +368,4 @@ camel_morph/db_maker.py
 camel_morph.egg-info
 build
 dist
+camel_morph/configs/config_test.json

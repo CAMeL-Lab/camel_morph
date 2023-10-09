@@ -1,0 +1,283 @@
+{
+    "global": {
+        "data_dir": "data",
+        "specs": {
+            "spreadsheet": "camel-morph-common",
+            "sheets": [
+                "About",
+                "Header"
+            ]
+        },
+        "db_dir": "databases",
+        "debugging": "debugging_output",
+        "repr_lemmas_dir": "repr_lemmas",
+        "tables_dir": "tables",
+        "paradigm_debugging_dir": "paradigm_debugging",
+        "banks_dir": "banks",
+        "camel_tools": "./camel_morph/camel_tools",
+        "service_account": "/Users/chriscay/.config/gspread/service_account.json",
+        "paradigms_config": "misc_files/config_paradigms.json",
+        "banks_spreadsheet": "Paradigm-Banks"
+    },
+    "local": {
+        "all_aspects_egy": {
+            "dialect": "egy",
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-glf-verbs",
+                "sheets": {
+                    "order": "GLF-Verb-ORDER",
+                    "morph": "GLF-Verb-MORPH",
+                    "postregex": "PostRegex"
+                }
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-egy-verbs",
+                "sheets": [
+                    "EGY-Verb-LEX-PV",
+                    "EGY-Verb-LEX-IV",
+                    "EGY-Verb-LEX-CV"
+                ],
+                "backoff": {
+                    "EGY-Verb-LEX-PV": "EGY-Verb-LEX-PV-ABSTRACT",
+                    "EGY-Verb-LEX-IV": "EGY-Verb-LEX-IV-ABSTRACT",
+                    "EGY-Verb-LEX-CV": "EGY-Verb-LEX-CV-ABSTRACT"
+                },
+                "get_patterns_from_sheet": true,
+                "override_explicit": true
+            },
+            "db": "XYZ_egy_all_v1.0.db",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        },
+        "pv_egy": {
+            "dialect": "egy",
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-egy-verbs",
+                "sheets": {
+                    "order": "EGY-Verb-ORDER",
+                    "morph": "EGY-Verb-MORPH",
+                    "postregex": "PostRegex"
+                },
+                "exclude": [
+                    "IV",
+                    "CV"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-egy-verbs",
+                "sheets": [
+                    "EGY-Verb-LEX-PV"
+                ],
+                "get_patterns_from_sheet": true,
+                "override_explicit": true
+            },
+            "db": "XYZ_egy_pv_v1.0.db",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
+                "display_format": "unique",
+                "feats": {
+                    "asp:p mod:i": {
+                        "conj_tables": "conj_pv_egy_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_pv_egy_v1.0.tsv",
+                        "bank": "EGY-PV-Bank.tsv",
+                        "debugging_sheet": "EGY-PV"
+                    }
+                }
+            },
+            "lexprob": "misc_files/egy_verbs_lexprob.tsv",
+            "pos_type": "verbal",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        },
+        "pv_egy_red": {
+            "dialect": "egy",
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-egy-verbs",
+                "sheets": {
+                    "order": "EGY-Verb-ORDER",
+                    "morph": "EGY-Verb-MORPH",
+                    "postregex": "PostRegex"
+                },
+                "exclude": [
+                    "RED",
+                    "IV",
+                    "CV"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-egy-verbs",
+                "sheets": [
+                    "EGY-Verb-LEX-PV"
+                ],
+                "get_patterns_from_sheet": true,
+                "override_explicit": true
+            },
+            "db": "XYZ_egy_pv_v1.0_red.db",
+            "lexprob": "misc_files/egy_verbs_lexprob.tsv",
+            "pos_type": "verbal",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        },
+        "iv_egy": {
+            "dialect": "egy",
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-egy-verbs",
+                "sheets": {
+                    "order": "EGY-Verb-ORDER",
+                    "morph": "EGY-Verb-MORPH",
+                    "postregex": "PostRegex"
+                },
+                "exclude": [
+                    "PV",
+                    "CV"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-egy-verbs",
+                "sheets": [
+                    "EGY-Verb-LEX-IV"
+                ],
+                "get_patterns_from_sheet": true,
+                "override_explicit": true
+            },
+            "db": "XYZ_egy_iv_v1.0.db",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
+                "display_format": "unique",
+                "feats": {
+                    "asp:i mod:i": {
+                        "conj_tables": "conj_iv_egy_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_iv_egy_v1.0.tsv",
+                        "bank": "EGY-IV-Bank.tsv",
+                        "debugging_sheet": "EGY-IV"
+                    }
+                }
+            },
+            "lexprob": "misc_files/egy_verbs_lexprob.tsv",
+            "pos_type": "verbal",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        },
+        "iv_egy_red": {
+            "dialect": "egy",
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-egy-verbs",
+                "sheets": {
+                    "order": "EGY-Verb-ORDER",
+                    "morph": "EGY-Verb-MORPH",
+                    "postregex": "PostRegex"
+                },
+                "exclude": [
+                    "RED",
+                    "IV",
+                    "CV"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-egy-verbs",
+                "sheets": [
+                    "EGY-Verb-LEX-IV"
+                ],
+                "get_patterns_from_sheet": true,
+                "override_explicit": true
+            },
+            "db": "XYZ_egy_iv_v1.0_red.db",
+            "lexprob": "misc_files/egy_verbs_lexprob.tsv",
+            "pos_type": "verbal",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        },
+        "cv_egy": {
+            "dialect": "egy",
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-egy-verbs",
+                "sheets": {
+                    "order": "EGY-Verb-ORDER",
+                    "morph": "EGY-Verb-MORPH",
+                    "postregex": "PostRegex"
+                },
+                "exclude": [
+                    "PV",
+                    "IV"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-egy-verbs",
+                "sheets": [
+                    "EGY-Verb-LEX-CV"
+                ],
+                "get_patterns_from_sheet": true,
+                "override_explicit": true
+            },
+            "db": "XYZ_egy_cv_v1.0.db",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
+                "display_format": "unique",
+                "feats": {
+                    "asp:c mod:i": {
+                        "conj_tables": "conj_cv_egy_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_cv_egy_v1.0.tsv",
+                        "bank": "EGY-CV-Bank.tsv",
+                        "debugging_sheet": "EGY-CV"
+                    }
+                }
+            },
+            "lexprob": "misc_files/egy_verbs_lexprob.tsv",
+            "pos_type": "verbal",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        },
+        "cv_egy_red": {
+            "dialect": "egy",
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-egy-verbs",
+                "sheets": {
+                    "order": "EGY-Verb-ORDER",
+                    "morph": "EGY-Verb-MORPH",
+                    "postregex": "PostRegex"
+                },
+                "exclude": [
+                    "RED",
+                    "PV",
+                    "IV"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-egy-verbs",
+                "sheets": [
+                    "EGY-Verb-LEX-CV"
+                ],
+                "get_patterns_from_sheet": true,
+                "override_explicit": true
+            },
+            "db": "XYZ_egy_cv_v1.0_red.db",
+            "conj_tables": "conj_cv_egy_v1.0.tsv",
+            "lexprob": "misc_files/egy_verbs_lexprob.tsv",
+            "pos_type": "verbal",
+            "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        }
+    }
+}

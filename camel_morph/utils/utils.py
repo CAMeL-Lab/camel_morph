@@ -456,6 +456,13 @@ def get_db_dir_path(config, config_name):
     return os.path.join('databases',
                         f'camel-morph-{dialect}')
 
+def get_db_path(config, config_name):
+    dialect = config['local'][config_name]['dialect']
+    db_name = config['local'][config_name]['db']
+    return os.path.join('databases',
+                        f'camel-morph-{dialect}',
+                        db_name)
+
 
 def get_data_dir_path(config, config_name):
     dialect = config['local'][config_name]['dialect']

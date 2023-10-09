@@ -16,7 +16,7 @@
         "banks_dir": "banks",
         "camel_tools": "./camel_morph/camel_tools",
         "service_account": "/Users/chriscay/.config/gspread/service_account.json",
-        "paradigms_config": "configs/config_paradigms.json",
+        "paradigms_config": "misc_files/config_paradigms.json",
         "banks_spreadsheet": "Paradigm-Banks"
     },
     "local": {

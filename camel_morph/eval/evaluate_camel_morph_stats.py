@@ -92,7 +92,7 @@ def _get_analysis_counts(db):
     memoize = {}
     unique_analyses_no_clitics = set()
     counts, compat_entries, cmplx_morphs = {}, {}, {}
-    for cat_A in db.prefix_suffix_compat:
+    for cat_A in tqdm(db.prefix_suffix_compat):
         for cat_C in db.prefix_suffix_compat[cat_A]:
             if cat_A in db.prefix_stem_compat and cat_A in db.prefix_cat_hash:
                 for cat_B in db.prefix_stem_compat[cat_A]:
@@ -225,28 +225,18 @@ def get_number_of_stems(lexicon_specs, db_camel, db_calima):
 
 
 def get_specs_stats(morph_specs, lexicon_specs, order_specs):
-    class_map = {
-        'DBPrefix': ['[QUES]', '[EMPH]', '[CONJ]', '[PREP]', '[ART]'],
-        'DBSuffix': ['[PRON]',
-                     '[NSuff.XXIU]', '[NSuff.XXCU]', '[NSuff.XXDU]',
-                     '[NSuff.XXIG]', '[NSuff.XXCG]', '[NSuff.XXDG]',
-                     '[NSuff.XXIA]', '[NSuff.XXCA]', '[NSuff.XXDA]',
-                     '[NSuff.XXIN]', '[NSuff.XXCN]', '[NSuff.XXDN]'],
-        'Buffer': ['[NBuff]'],
-        'other': ['[EMPTY]']
-    }
     db_prefix_morphemes = set(map(tuple, morph_specs[morph_specs['CLASS'].isin(
-        class_map['DBPrefix'])][['CLASS', 'FUNC']].values.tolist()))
+        CLASS_MAP['DBPrefix'])][['CLASS', 'FUNC']].values.tolist()))
     db_prefix_allomorphs = set(map(tuple, morph_specs[morph_specs['CLASS'].isin(
-        class_map['DBPrefix'])][['CLASS', 'FUNC', 'FORM']].values.tolist()))
+        CLASS_MAP['DBPrefix'])][['CLASS', 'FUNC', 'FORM']].values.tolist()))
     
     db_suffix_morphemes = set(map(tuple, morph_specs[morph_specs['CLASS'].isin(
-        class_map['DBSuffix'])][['CLASS', 'FUNC']].values.tolist()))
+        CLASS_MAP['DBSuffix'])][['CLASS', 'FUNC']].values.tolist()))
     db_suffix_allomorphs = set(map(tuple, morph_specs[morph_specs['CLASS'].isin(
-        class_map['DBSuffix'])][['CLASS', 'FUNC', 'FORM']].values.tolist()))
+        CLASS_MAP['DBSuffix'])][['CLASS', 'FUNC', 'FORM']].values.tolist()))
     
     stem_buffers = set(map(tuple, morph_specs[morph_specs['CLASS'].isin(
-        class_map['Buffer'])][['CLASS', 'FUNC', 'FORM']].values.tolist()))
+        CLASS_MAP['Buffer'])][['CLASS', 'FUNC', 'FORM']].values.tolist()))
     
     morph_classes = set(lexicon_specs['CLASS'].tolist()) | \
                     set(morph_specs['CLASS'].tolist())
@@ -308,9 +298,6 @@ def get_db_stats(db_camel, db_calima):
         compat_count[system] = sum(len(compats) for compats in compat.values())
 
         unique_analyses_no_clitics_[system] = unique_analyses_no_clitics
-    
-    with open('scratch_files/unique_analyses_no_clitics.pkl', 'wb') as f:
-        pickle.dump(unique_analyses_no_clitics_, f)
 
     return cmplx_morph_count, compat_count, analyses_count
 
@@ -352,9 +339,10 @@ def create_stats_table(lemma_counts, stem_counts, specs_stats,
         table.append(['', analyses_count['camel'][count_type],
                       analyses_count['calima'][count_type]])
     
-    sh = sa.open('CamelMorph-Nominals-Paper-Assets')
-    sheet = sh.worksheet('Statistics-v1.0')
-    sheet.batch_update([{'range': 'E6:G20', 'values': table}])
+    sh = sa.open(config_local['debugging']['stats_spreadsheet'])
+    sheet = sh.worksheet(config_local['debugging']['stats_sheet'])
+    sheet.batch_update(
+        [{'range': config_local['debugging']['table_range'], 'values': table}])
 
 
 def get_stem_count_per_lemma(db_camel, db_calima):
@@ -443,15 +431,9 @@ if __name__ == "__main__":
     bw2ar = CharMapper.builtin_mapper('bw2ar')
     ar2bw = CharMapper.builtin_mapper('ar2bw')
 
-    # with open('unique_analyses_no_clitics.pkl', 'rb') as f:
-    #     unique_analyses_no_clitics_ = pickle.load(f)
-    #     camel_analyses = set((analysis[0], re.sub(r'[__]\d$', '', analysis[1])) + analysis[2:]
-    #                          for analysis in unique_analyses_no_clitics_['camel'])
-    #     calima_analyses = set((analysis[0], re.sub(r'[__]\d$', '', analysis[1])) + analysis[2:]
-    #                          for analysis in unique_analyses_no_clitics_['calima'])
-    
     sa = gspread.service_account(config_global['service_account'])
 
+    CLASS_MAP = config_local['class_map']
     db_name = config_local['db']
     db_dir = os.path.join(
         config_global['db_dir'], f"camel-morph-{config_local['dialect']}", db_name)
@@ -479,7 +461,7 @@ if __name__ == "__main__":
     morph_specs = morph_specs.replace(nan, '', regex=True)
     order_specs = order_specs.replace(nan, '', regex=True)
 
-    get_basic_lemma_paradigms(lexicon_specs)
+    # get_basic_lemma_paradigms(lexicon_specs)
 
     lemma_counts = get_number_of_lemmas(
         lexicon_specs, db_camel, db_calima)

@@ -1,0 +1,97 @@
+{
+    "global": {
+        "data_dir": "data",
+        "specs": {
+            "spreadsheet": "camel-morph-common",
+            "sheets": [
+                "About",
+                "Header"
+            ]
+        },
+        "db_dir": "databases",
+        "debugging": "debugging_output",
+        "repr_lemmas_dir": "repr_lemmas",
+        "tables_dir": "tables",
+        "paradigm_debugging_dir": "paradigm_debugging",
+        "banks_dir": "banks",
+        "camel_tools": "./camel_morph/camel_tools",
+        "service_account": "/Users/chriscay/.config/gspread/service_account.json",
+        "paradigms_config": "misc_files/config_paradigms.json",
+        "banks_spreadsheet": "Paradigm-Banks"
+    },
+    "local": {
+        "msa_cam_ready_sigmorphon2022": {
+            "dialect": "msa",
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-msa-verbs-cam-ready",
+                "sheets": {
+                    "order": "MSA-Verb-ORDER",
+                    "morph": "MSA-Verb-MORPH"
+                }
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-msa-verbs-cam-ready",
+                "sheets": [
+                    "MSA-Verb-LEX-PV",
+                    "MSA-Verb-LEX-IV",
+                    "MSA-Verb-LEX-CV"
+                ]
+            },
+            "db": "XYZ_msa_cr_v1.0.db",
+            "pos_type": "verbal",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        },
+        "egy_cam_ready_sigmorphon2022": {
+            "dialect": "egy",
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-egy-verbs-cam-ready",
+                "sheets": {
+                    "order": "EGY-Verb-ORDER",
+                    "morph": "EGY-Verb-MORPH",
+                    "postregex": "PostRegex"
+                }
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-egy-verbs-cam-ready",
+                "sheets": [
+                    "EGY-Verb-LEX-PV",
+                    "EGY-Verb-LEX-IV",
+                    "EGY-Verb-LEX-CV"
+                ]
+            },
+            "db": "XYZ_egy_cr_v1.0.db",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        },
+        "msa_example_sigmorphon2022": {
+            "dialect": "msa",
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-msa-verbs-example",
+                "sheets": {
+                    "order": "MSA-Verb-ORDER",
+                    "morph": "MSA-Verb-MORPH"
+                }
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-msa-verbs-example",
+                "sheets": [
+                    "MSA-Verb-LEX-PV"
+                ]
+            },
+            "db": "msa_example_v1.0.db",
+            "pos_type": "verbal",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        }
+    }
+}
