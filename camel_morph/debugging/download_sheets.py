@@ -28,6 +28,42 @@ import time
 import gspread
 import pandas as pd
 
+
+def _read_spreadsheet_with_sheets(config_x_mode, specs, mode):
+    for hierarchy in ['spreadsheet', 'sheets']:
+        hierarchy_s = f'{hierarchy}s' if hierarchy == 'spreadsheet' else hierarchy
+        names_specs_ = specs.setdefault(hierarchy_s, [])
+        
+        names_config = config_x_mode[hierarchy]
+        if type(names_config) is str:
+            names_config = [names_config]
+        elif type(names_config) is dict:
+            names_config = [v for v in names_config.values()]
+        elif type(names_config) is list:
+            names_config = names_config
+        else:
+            raise NotImplementedError
+
+        if hierarchy == 'spreadsheet':
+            names_specs_ += names_config
+        elif hierarchy == 'sheets':
+            if type(names_config[0]) is str:
+                names_specs_.append([])
+                for name_config in names_config:
+                    specs[hierarchy_s][-1].append(name_config)
+            elif type(names_config[0]) is list:
+                for name_config in names_config:
+                    for i, name_config_ in enumerate(name_config):
+                        if len(names_specs_) < len(name_config):
+                            names_specs_.append([])
+                        name_config_ = (list(name_config_) if type(name_config_) in [list, dict]
+                                        else [name_config_])
+                        for name_ in name_config_:
+                            specs[hierarchy_s][i].append(name_)
+            else:
+                raise NotImplementedError
+
+
 def download_sheets(lex=None, specs=None, save_dir=None, config=None, config_name=None, service_account=None):
     if type(service_account) is str:
         sa = gspread.service_account(service_account)
@@ -44,40 +80,17 @@ def download_sheets(lex=None, specs=None, save_dir=None, config=None, config_nam
         config_global = config['global']
         save_dir = config_global['data_dir']
         
+        message = """Need to fix the configuration. If this fails, then the configuration is probably
+        old and needs to be refactored in a way that can be read by this code. Passive key
+        should be moved out from specs and into the main body of the local config object."""
+        assert 'passive' not in config_local['specs'], message
+        
         specs = {}
         for config_x in [config_local, config_global]:
-            for hierarchy in ['spreadsheet', 'sheets']:
-                hierarchy_s = f'{hierarchy}s' if hierarchy == 'spreadsheet' else hierarchy
-                names_specs_ = specs.setdefault(hierarchy_s, [])
-                
-                names_config = config_x['specs'][hierarchy]
-                if type(names_config) is str:
-                    names_config = [names_config]
-                elif type(names_config) is dict:
-                    names_config = list(names_config.values())
-                elif type(names_config) is list:
-                    names_config = names_config
-                else:
-                    raise NotImplementedError
-
-                if hierarchy == 'spreadsheet':
-                    names_specs_ += names_config
-                elif hierarchy == 'sheets':
-                    if type(names_config[0]) is str:
-                        names_specs_.append([])
-                        for name_config in names_config:
-                            specs[hierarchy_s][-1].append(name_config)
-                    elif type(names_config[0]) is list:
-                        for name_config in names_config:
-                            for i, name_config_ in enumerate(name_config):
-                                if len(names_specs_) < len(name_config):
-                                    names_specs_.append([])
-                                name_config_ = (list(name_config_) if type(name_config_) in [list, dict]
-                                                else [name_config_])
-                                for name_ in name_config_:
-                                    specs[hierarchy_s][i].append(name_)
-                    else:
-                        raise NotImplementedError
+            for mode in ['specs', 'passive']:
+                config_x_mode = config_x.get(mode)
+                if config_x_mode is not None:
+                    _read_spreadsheet_with_sheets(config_x[mode], specs, mode)
 
         spreadsheets = config_local['lexicon']['spreadsheet']
         sheets = config_local['lexicon']['sheets']

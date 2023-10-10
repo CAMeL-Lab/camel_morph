@@ -230,7 +230,10 @@ def _preprocess_lex_features(lex_feat, f=None):
     return lex_feat
 
 
-def _preprocess_analysis(analysis, essential_keys=ESSENTIAL_KEYS, optional_keys=[]):
+def _preprocess_analysis(analysis,
+                         defaults,
+                         essential_keys=ESSENTIAL_KEYS,
+                         optional_keys=[]):
     if analysis['prc0'] in ['mA_neg', 'lA_neg']:
         analysis['prc1.5'] = analysis['prc0']
         analysis['prc0'] = '0'
@@ -248,7 +251,7 @@ def _preprocess_analysis(analysis, essential_keys=ESSENTIAL_KEYS, optional_keys=
             x = re.sub(r'^([bl])[ai]', r'\1', x)
             pred.append(x)
         elif re.match(r'prc\d|enc\d', k):
-            pred.append(analysis.get(k, '0'))
+            pred.append(analysis.get(k, defaults.get(k, '0')))
         elif k == 'bw':
             bw = [x.split('/')[1] for x in ar2bw(analysis['bw']).split('+')
                   if x and 'STEM' not in x]
@@ -256,7 +259,7 @@ def _preprocess_analysis(analysis, essential_keys=ESSENTIAL_KEYS, optional_keys=
             bw = poss_regex.sub('', bw)
             pred.append(bw)
         else:
-            pred.append(analysis.get(k, 'na'))
+            pred.append(analysis.get(k, defaults.get(k, 'na')))
     return tuple(pred)
 
 
@@ -434,6 +437,7 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
         diac_ldc, lex_ldc, bw_ldc = ldc
         total += 1
         analysis_gold = _preprocess_analysis(word_info['analysis'],
+                                             analyzer_camel._db.defaults,
                                              essential_keys)
 
         if 'raw' in eval_mode:
@@ -448,8 +452,9 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
         analyses_pred_ = analyzer_camel.analyze(analyzer_input)
         for analysis in analyses_pred_:
             analysis['source'] = 'main'
-        analyses_pred = set([_preprocess_analysis(analysis, essential_keys)
-                             for analysis in analyses_pred_])
+        analyses_pred = set(
+            [_preprocess_analysis(analysis, analyzer_camel._db.defaults, essential_keys)
+             for analysis in analyses_pred_])
 
         match = re.search(r'ADAM|CALIMA|SAMA', word_info['analysis']['gloss'])
         if match:
@@ -460,8 +465,9 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
             analyses_msa_pred = msa_camel_analyzer.analyze(analyzer_input)
             for analysis in analyses_msa_pred:
                 analysis['source'] = 'msa'
-            analyses_msa_pred = set([_preprocess_analysis(analysis, essential_keys)
-                                     for analysis in analyses_msa_pred])
+            analyses_msa_pred = set(
+                [_preprocess_analysis(analysis, msa_camel_analyzer._db.defaults, essential_keys)
+                 for analysis in analyses_msa_pred])
             analyses_pred = analyses_pred | analyses_msa_pred
 
         analyses_pred_no_source = set(
@@ -701,11 +707,11 @@ def evaluate_analyzer_comparison(data, n, output_path,
             match = re.search(r'ADAM|CALIMA|SAMA', analysis['gloss'])
             analysis['source'] = match.group().lower() if match else 'na'
         analyses_camel = {
-            tuple([f for i, f in enumerate(_preprocess_analysis(analysis, essential_keys))
+            tuple([f for i, f in enumerate(_preprocess_analysis(analysis, analyzer_camel._db.defaults, essential_keys))
                    if i != source_index]): analysis
             for analysis in analyses_camel if analysis['pos'] in CAMEL_POS}
         analyses_baseline = {
-            tuple([f for i, f in enumerate(_preprocess_analysis(analysis, essential_keys))
+            tuple([f for i, f in enumerate(_preprocess_analysis(analysis, analyzer_baseline._db.defaults, essential_keys))
                    if i != source_index]): analysis
             for analysis in analyses_baseline if analysis['pos'] in CAMEL_POS}
         analyses_camel_set, analyses_baseline_set = set(
@@ -911,13 +917,15 @@ if __name__ == "__main__":
         raise NotImplementedError
     
     POS_TYPE = config_local.get('pos_type')
-    if config_local.get('pos'):
+    if args.pos_or_type:
+        POS_OR_TYPE = args.pos_or_type
+    elif config_local.get('pos'):
         POS_OR_TYPE = config_local['pos']
     else:
         if POS_TYPE:
-            POS_OR_TYPE = config_local['pos_type']
+            POS_OR_TYPE = POS_TYPE
         else:
-            POS_OR_TYPE = args.pos_or_type
+            POS_OR_TYPE = 'any'
 
     ATB_POS, CAMEL_POS = load_required_pos(POS_OR_TYPE)
     for pos_type in ['nominal', 'verbal', 'other']:

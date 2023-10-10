@@ -137,7 +137,8 @@ def make_db(config:Dict, config_name:str, output_dir:Optional[str]=None):
     
     print("\nValidating combinations... [2/4]")
     cat2id: bool = config_local.get('cat2id', False)
-    db = construct_almor_db(SHEETS, config_local['pruning'], cond2class, cat2id)
+    defaults: bool = config_local.get('defaults', False)
+    db = construct_almor_db(SHEETS, config_local['pruning'], cond2class, cat2id, defaults)
 
     print("\nCollapsing categories and reindexing... [3/4]")
     reindex: bool = config_local.get('reindex', False)
@@ -159,7 +160,8 @@ def make_db(config:Dict, config_name:str, output_dir:Optional[str]=None):
 def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
                        pruning:bool,
                        cond2class:Dict,
-                       cat2id:bool=False) -> Dict:
+                       cat2id:bool=False,
+                       defaults:Optional[bool]=None) -> Dict:
     """
     Function which takes care of the condition validation process, i.e., deciding which
     (complex) morphemes are compatible, and prints them and their computed categories in
@@ -175,6 +177,7 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
         be useful in the pruning process.
         cat2id (bool): whether or not to convert the category names to IDs (makes them smaller,
         and thus makes the DB file size smaller, but eliminates the debug info contained in them).
+        defaults (bool): whether or not to add defaults per POS for the DB lines. Defaults to None.
 
     Returns:
         Dict: Database which contains entries (values) for each section (keys).
@@ -206,7 +209,7 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
             'REPLACE\t' + '\t'.join([replace for replace in POSTREGEX['REPLACE'].values.tolist()])
         ]
     
-    defaults = _process_defaults(db['OUT:###HEADER###'])
+    defaults_ = _process_defaults(db['OUT:###HEADER###']) if defaults else None
     cat2id = {} if cat2id else None
     
     def construct_process(lexicon: pd.DataFrame,
@@ -231,8 +234,13 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
             cmplx_morph_memoize=cmplx_stem_memoize,
             pruning_cond_s_f=pruning, pruning_same_class_incompat=pruning)
         
-        if not cmplx_stem_classes or not cmplx_suffix_classes or not cmplx_prefix_classes:
-            print('Stem/prefix/suffix class is empty; proceeding to process next order line.')
+        cmplx_type_empty = set()
+        if not cmplx_stem_classes: cmplx_type_empty.add('Stem')
+        if not cmplx_suffix_classes: cmplx_type_empty.add('Suffix')
+        if not cmplx_prefix_classes: cmplx_type_empty.add('Prefix')
+        if cmplx_type_empty:
+            cmplx_type_empty = '/'.join(cmplx_type_empty)
+            print(f'{cmplx_type_empty} class is empty; proceeding to process next order line.')
             return db
         
         cmplx_morph_classes = dict(
@@ -242,7 +250,7 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
         
         # Complex morphemes validation or word generation (across the prefix/stem/suffix boundary)
         db_ = cross_cmplx_morph_validation(
-            cmplx_morph_classes, order['CLASS'].lower(), short_cat_maps, defaults, stems_section_title, cat2id, backoff)
+            cmplx_morph_classes, order['CLASS'].lower(), short_cat_maps, defaults_, stems_section_title, cat2id, backoff)
         for section, contents in db_.items():
             # if 'BACKOFF' in stems_section_title and section != stems_section_title:
             #     assert set(contents) <= set(db[section])

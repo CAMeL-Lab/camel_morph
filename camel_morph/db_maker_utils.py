@@ -153,16 +153,18 @@ def read_morph_specs(config:Dict,
         lexicon_sheets = [lexicon_sheet]
     else:
         lexicon_sheets = local_specs['lexicon']['sheets']
+    
+    message = """Need to fix the configuration. If this fails, then the configuration is probably
+    old and needs to be refactored in a way that can be read by this code. Passive key
+    should be moved out from specs and into the main body of the local config object."""
+    assert 'passive' not in local_specs['specs'], message
     # `passive_patterns_sheets` contain regex transformation rules that specify a passive verb form
     # for each active form. This option is used when the passive verb entries are not included (frozen)
     # into the verb lexicon sheets. Therefore, if the verb lexicon only contains active forms, and
     # we want to generate passive forms on the fly, these patterns should be specified in the config. This
     # option is only useful for debugging, but final versions of the lexicon contain the generated passive verb
     # forms, therefore there is no need to specify this.
-    if local_specs['specs'].get('spreadsheet'):
-        passive_patterns_sheets: Optional[Dict] = local_specs['specs']['sheets'].get('passive')
-    else:
-        passive_patterns_sheets = local_specs['specs'].get('passive')
+    passive_patterns_sheets: Optional[Dict] = local_specs.get('passive')
     backoff_sheets: Optional[Dict] = local_specs['lexicon'].get('backoff')
     
     # Process LEXICON sheet
@@ -202,7 +204,7 @@ def read_morph_specs(config:Dict,
 
         if passive_patterns_sheets:
             # Generate passive verb lexicon on the fly from the generation patterns.
-            passive_patterns = passive_patterns_sheets.get(lexicon_sheet_name)
+            passive_patterns = passive_patterns_sheets['sheets'].get(lexicon_sheet_name)
             if passive_patterns:
                 LEXICON_PASS = generate_passive(
                     LEXICON_, os.path.join(data_dir, f"{passive_patterns}.csv"))
@@ -299,7 +301,7 @@ def read_morph_specs(config:Dict,
         ORDER = ORDER[ORDER.DEFINE == 'ORDER']  # skip comments & empty lines
         ORDER = ORDER.replace(nan, '', regex=True)
         for exclusion in exclusions:
-            ORDER = ORDER[~ORDER.EXCLUDE.str.contains(exclusion)]
+            ORDER = ORDER[~ORDER.EXCLUDE.str.contains(f'{exclusion}(?:\s|$)')]
 
     cond2class = None
     if MORPH is not None:
@@ -554,7 +556,7 @@ def process_morph_specs(MORPH:pd.DataFrame, exclusions: List[str]) -> pd.DataFra
                 MORPH.loc[idx, 'COND-F'] = ' '.join(cond_f_almrph)
 
     for exclusion in exclusions:
-        MORPH = MORPH[~MORPH.EXCLUDE.str.contains(exclusion)]
+        MORPH = MORPH[~MORPH.EXCLUDE.str.contains(f'{exclusion}(?:\s|$)')]
     
     return MORPH
 
