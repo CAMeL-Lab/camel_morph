@@ -44,12 +44,14 @@ except:
     from utils.generate_passive import generate_passive
     from utils.generate_abstract_lexicon import generate_abstract_lexicon
 
-EMPTY_ROW = dict(DEFINE=['MORPH'], CLASS=['[EMPTY]']) #, FEAT='prc0:0 prc1:0 prc1.5:0 prc2:0 prc3:0 enc0:0 enc1:0')
+EMPTY_ROW = dict(DEFINE=['MORPH'], CLASS=['[EMPTY]'], LINE=-1) #, FEAT='prc0:0 prc1:0 prc1.5:0 prc2:0 prc3:0 enc0:0 enc1:0')
 SPECS_HEADER_REQUIRED = dict(
     order=['EXCLUDE', 'DEFINE', 'CLASS', 'PREFIX', 'STEM',
            'SUFFIX', 'PREFIX-SHORT', 'STEM-SHORT', 'SUFFIX-SHORT'],
     morph=['EXCLUDE', 'DEFINE', 'CLASS', 'FUNC', 'FORM',
-           'BW', 'GLOSS', 'FEAT', 'COND-T', 'COND-S']
+           'BW', 'GLOSS', 'FEAT', 'COND-T', 'COND-S',
+           'CLASS', 'FUNC', 'FORM', 'BW', 'GLOSS',
+           'D3SEG', 'D3TOK', 'ATBSEG', 'ATBTOK']
 )
 ORDER_FIELDS = ['PREFIX', 'STEM', 'SUFFIX']
 ORDER_FIELDS_SHORT = ['PREFIX-SHORT', 'STEM-SHORT', 'SUFFIX-SHORT']
@@ -91,10 +93,10 @@ def read_morph_specs(config:Dict,
     safebw2ar = CharMapper.builtin_mapper('safebw2ar')
     
     # Specific configuration from the list of configurations in config['local']
-    local_specs: Dict = config['local'][config_name]
+    config_local: Dict = config['local'][config_name]
     # Directory where all the specification sheets are present
     data_dir: str = os.path.join(config['global']['data_dir'],
-                                 f"camel-morph-{local_specs['dialect']}", config_name)
+                                 f"camel-morph-{config_local['dialect']}", config_name)
     
     if process_morph:
         ABOUT = pd.read_csv(os.path.join(data_dir, 'About.csv'))
@@ -110,7 +112,7 @@ def read_morph_specs(config:Dict,
             one for verbs, and one for nominals. This method would have to be altered in
             order to allow morpheme sharing between concatenated files.
             """
-            specs_filenames = local_specs['specs']['sheets'][specs_type]
+            specs_filenames = config_local['specs']['sheets'][specs_type]
             specs_filenames = specs_filenames if type(specs_filenames) is list else [specs_filenames]
             specs = None
             for specs_filename in specs_filenames:
@@ -119,7 +121,7 @@ def read_morph_specs(config:Dict,
                 elif type(specs_filename) is str:
                     specs_filename = {specs_filename: ''}
 
-                for specs_filename_, index  in specs_filename.items():
+                for specs_filename_, index in specs_filename.items():
                     specs_filename_ = f'{specs_filename_}.csv'
                     specs_path = os.path.join(data_dir, specs_filename_)
                     specs_ = pd.read_csv(specs_path).replace(nan, '', regex=True)
@@ -152,20 +154,16 @@ def read_morph_specs(config:Dict,
     if lexicon_sheet is not None:
         lexicon_sheets = [lexicon_sheet]
     else:
-        lexicon_sheets = local_specs['lexicon']['sheets']
-    
-    message = """Need to fix the configuration. If this fails, then the configuration is probably
-    old and needs to be refactored in a way that can be read by this code. Passive key
-    should be moved out from specs and into the main body of the local config object."""
-    assert 'passive' not in local_specs['specs'], message
+        lexicon_sheets = config_local['lexicon']['sheets']
+
     # `passive_patterns_sheets` contain regex transformation rules that specify a passive verb form
     # for each active form. This option is used when the passive verb entries are not included (frozen)
     # into the verb lexicon sheets. Therefore, if the verb lexicon only contains active forms, and
     # we want to generate passive forms on the fly, these patterns should be specified in the config. This
     # option is only useful for debugging, but final versions of the lexicon contain the generated passive verb
     # forms, therefore there is no need to specify this.
-    passive_patterns_sheets: Optional[Dict] = local_specs.get('passive')
-    backoff_sheets: Optional[Dict] = local_specs['lexicon'].get('backoff')
+    passive_patterns_sheets: Optional[Dict] = config_local.get('passive')
+    backoff_sheets: Optional[Dict] = config_local['lexicon'].get('backoff')
     
     # Process LEXICON sheet
     # Loop over the specified lexicon (and backoff lexicon if present) sheets to concatenate those into
@@ -206,9 +204,12 @@ def read_morph_specs(config:Dict,
             # Generate passive verb lexicon on the fly from the generation patterns.
             passive_patterns = passive_patterns_sheets['sheets'].get(lexicon_sheet_name)
             if passive_patterns:
+                print(f'Generating automatic passive entries from {passive_patterns}...', end='')
+                #TODO: should import this method using importlib and a path from the local config
                 LEXICON_PASS = generate_passive(
                     LEXICON_, os.path.join(data_dir, f"{passive_patterns}.csv"))
                 LEXICON_ = pd.concat([LEXICON_, LEXICON_PASS], ignore_index=True)
+                print(f'Generated {len(LEXICON_PASS.index)} entries... Done.')
 
         if backoff_sheets:
             if backoff_sheets == 'auto':
@@ -234,6 +235,9 @@ def read_morph_specs(config:Dict,
         if LEXICON[lex_type] is None:
             continue
         LEXICON[lex_type] = LEXICON[lex_type].replace(nan, '', regex=True)
+        LEXICON[lex_type] = LEXICON[lex_type].astype(str)
+        LEXICON[lex_type] = LEXICON[lex_type].apply(
+            lambda x: x.str.strip() if x.dtype == 'object' and x.dtype not in [float, int] else x)
         LEXICON[lex_type].reset_index(drop=True, inplace=True)
         LEXICON[lex_type] = LEXICON[lex_type].apply(
             lambda x: x.str.strip() if x.dtype == "object" else x)
@@ -249,6 +253,15 @@ def read_morph_specs(config:Dict,
             LEXICON[lex_type]['FORM'] + '/' + LEXICON[lex_type]['BW']
         LEXICON[lex_type]['LEMMA'] = 'lex:' + LEXICON[lex_type]['LEMMA']
         LEXICON[lex_type] = LEXICON[lex_type] if len(LEXICON[lex_type].index) != 0 else None
+    
+    for col in ['D3SEG', 'D3TOK', 'ATBSEG', 'ATBTOK']:
+        if col not in LEXICON['concrete']:
+            LEXICON['concrete'][col] = ''
+    
+    if 'SOURCE' in LEXICON['concrete'].columns:
+        LEXICON['concrete'].loc[LEXICON['concrete']['SOURCE'] == '', 'SOURCE'] = 'lex'
+    else:
+        LEXICON['concrete']['SOURCE'] = 'lex'
 
     # Process POSTREGEX sheet
     #FIXME: make sure that symbols being compiled into regex are not mistaken for special characters.
@@ -256,11 +269,11 @@ def read_morph_specs(config:Dict,
     # Compiles the regex match expression from the sheet into a regex match expression that is
     # suitable for storing into the DB in Arabic script. Expects Safe BW transliteration in the sheet.
     POSTREGEX = None
-    postregex_path: Optional[str] = local_specs['specs']['sheets'].get('postregex')
+    postregex_path: Optional[str] = config_local['specs']['sheets'].get('postregex')
     if postregex_path:
         POSTREGEX = pd.read_csv(os.path.join(data_dir, f'{postregex_path}.csv'))
         POSTREGEX = POSTREGEX[(POSTREGEX.DEFINE == 'POSTREGEX') &
-                              (POSTREGEX.VARIANT == local_specs['dialect'].upper())]
+                              (POSTREGEX.VARIANT == config_local['dialect'].upper())]
         POSTREGEX = POSTREGEX.replace(nan, '', regex=True)
         for i, row in POSTREGEX.iterrows():
             POSTREGEX.at[i, 'MATCH'] = _bw2ar_regex(row['MATCH'], safebw2ar)
@@ -273,7 +286,7 @@ def read_morph_specs(config:Dict,
     # would be expanded into two rows, each with COND-T `a1 b1` and `a1 b2` respectively.
     # It is useful for debugging nominals, since we would like to debug at the
     # form gender-number level.
-    if local_specs.get('split_or') == True:
+    if config_local.get('split_or') == True:
         assert LEXICON['smart_backoff'] is None
         for lex_type in ['concrete', 'backoff']:
             if LEXICON[lex_type] is None:
@@ -294,7 +307,7 @@ def read_morph_specs(config:Dict,
                     LEXICON_.append(row.to_dict())
             LEXICON[lex_type] = pd.DataFrame(LEXICON_)
 
-    exclusions: List[str] = local_specs['specs'].get('exclude', [])
+    exclusions: List[str] = config_local['specs'].get('exclude', [])
     
     # Process ORDER sheet
     if ORDER is not None:
@@ -332,7 +345,9 @@ def read_morph_specs(config:Dict,
         MORPH = MORPH[MORPH.DEFINE == 'MORPH']
         MORPH = pd.concat([MORPH, pd.DataFrame(EMPTY_ROW)], ignore_index=True)
         MORPH = MORPH.replace(nan, '', regex=True)
-        MORPH = MORPH.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
+        MORPH = MORPH.astype(str)
+        MORPH = MORPH.apply(lambda x: x.str.strip()
+                            if x.dtype == 'object' and x.dtype not in [float, int] else x)
         MORPH = MORPH.replace('\s+', ' ', regex=True)
 
         MORPH['COND-S'] = MORPH['COND-S'].replace('[\[\]]', '', regex=True)
@@ -391,7 +406,7 @@ def read_morph_specs(config:Dict,
     # intersection of the collective (concatenated across morph and lexicon sheets)
     # COND-T and COND-S columns.
     #TODO: apply this to backoff too
-    clean_conditions: Optional[str] = local_specs.get('clean_conditions')
+    clean_conditions: Optional[str] = config_local.get('clean_conditions')
     if clean_conditions:
         conditions = {}
         for f in ['COND-T', 'COND-S', 'COND-F']:
@@ -557,6 +572,9 @@ def process_morph_specs(MORPH:pd.DataFrame, exclusions: List[str]) -> pd.DataFra
 
     for exclusion in exclusions:
         MORPH = MORPH[~MORPH.EXCLUDE.str.contains(f'{exclusion}(?:\s|$)')]
+
+    MORPH = MORPH.drop_duplicates([h for h in SPECS_HEADER_REQUIRED['morph']
+                                   if h not in ['EXCLUDE', 'DEFINE']])
     
     return MORPH
 
