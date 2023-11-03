@@ -35,8 +35,7 @@ errors, missing = {}, {}
 
 def generate_passive(LEXICON, patterns_path):
     from camel_tools.morphology.utils import strip_lex
-    passive_patterns = pd.read_csv(patterns_path)
-    passive_patterns = passive_patterns.replace(nan, '', regex=True)
+    passive_patterns = pd.read_csv(patterns_path, na_filter=False)
     passive_patterns['COND-S-ESSENTIAL-Act'] = passive_patterns.apply(
         lambda row: re.sub(r' ?(gem|hamzated|hollow|defective) ?', '', row['COND-S-Act']), axis=1)
     passive_patterns['COND-S-ESSENTIAL-Pass'] = passive_patterns.apply(
@@ -144,10 +143,9 @@ if __name__ == "__main__":
         config = json.load(f)
     data_dir = config['global']['data_dir']
 
-    LEXICON = pd.read_csv(os.path.join(data_dir, args.input_file))
+    LEXICON = pd.read_csv(os.path.join(data_dir, args.input_file), na_filter=False)
     # Replace spaces in BW and GLOSS with '#'; skip commented rows and empty lines
     LEXICON = LEXICON[LEXICON.DEFINE == 'LEXICON']
-    LEXICON = LEXICON.replace(nan, '', regex=True)
     LEXICON['GLOSS'] = LEXICON['GLOSS'].replace('\s+', '#', regex=True)
     LEXICON['COND-S'] = LEXICON['COND-S'].replace(' +', ' ', regex=True)
     LEXICON['COND-S'] = LEXICON['COND-S'].replace(' $', '', regex=True)

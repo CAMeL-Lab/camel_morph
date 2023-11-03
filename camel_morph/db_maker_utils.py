@@ -99,8 +99,8 @@ def read_morph_specs(config:Dict,
                                  f"camel-morph-{config_local['dialect']}", config_name)
     
     if process_morph:
-        ABOUT = pd.read_csv(os.path.join(data_dir, 'About.csv'))
-        HEADER = pd.read_csv(os.path.join(data_dir, 'Header.csv'))
+        ABOUT = pd.read_csv(os.path.join(data_dir, 'About.csv'), na_filter=False)
+        HEADER = pd.read_csv(os.path.join(data_dir, 'Header.csv'), na_filter=False)
 
         def _read_specs(specs_type):
             """Currently, different morph/order pair files are treated as independent entities,
@@ -124,7 +124,7 @@ def read_morph_specs(config:Dict,
                 for specs_filename_, index in specs_filename.items():
                     specs_filename_ = f'{specs_filename_}.csv'
                     specs_path = os.path.join(data_dir, specs_filename_)
-                    specs_ = pd.read_csv(specs_path).replace(nan, '', regex=True)
+                    specs_ = pd.read_csv(specs_path, na_filter=False)
                     assert set(SPECS_HEADER_REQUIRED[specs_type]) - set(specs_.columns) == set()
                     if specs_type == 'order':
                         unique_order_lines_ = Counter(map(tuple,
@@ -139,9 +139,8 @@ def read_morph_specs(config:Dict,
                         if index:
                             specs_[col] = specs_.apply(
                                 lambda row: re.sub(r'\]', f'-{index}]', row[col]), axis=1)
-                    specs = pd.concat([specs, specs_]) if specs is not None else specs_
+                    specs = pd.concat([specs, specs_]).fillna('') if specs is not None else specs_
                 
-            specs = specs.replace(nan, '', regex=True)
             specs.reset_index(drop=True, inplace=True)
             specs = specs.apply(lambda x: x.str.strip() if x.dtype == "object" else x)
             return specs
@@ -176,26 +175,26 @@ def read_morph_specs(config:Dict,
             for lexicon_sheet_, index in lexicon_sheet.items()}
     elif type(lexicon_sheets[0]) is str:
         lexicon_sheets = {sheet: '' for sheet in lexicon_sheets}
+    elif type(lexicon_sheets[0]) is pd.DataFrame:
+        assert len(lexicon_sheets) == 1
+        lexicon_sheets = {None: lexicon_sheets[0]}
     
     LEXICON = {'concrete': None, 'backoff': None, 'smart_backoff': None}
     for lexicon_sheet, index in lexicon_sheets.items():
+        lexicon_sheet_name = lexicon_sheet
         if type(lexicon_sheet) is str:
-            lexicon_sheet_name = lexicon_sheet
             # Setting dtype to silence warning of mixed types
             LEXICON_ = pd.read_csv(
-                os.path.join(data_dir, f"{lexicon_sheet_name}.csv"), dtype=object).replace(
-                    nan, '', regex=True)
+                os.path.join(data_dir, f"{lexicon_sheet_name}.csv"),
+                dtype=object, na_filter=False)
             if index:
                 LEXICON_['CLASS'] = LEXICON_.apply(
                     lambda row: re.sub(r'\]', f'-{index}]', row['CLASS']), axis=1)
         else:
-            lexicon_sheet_name = None
-            LEXICON_ = lexicon_sheet
+            LEXICON_ = index
         # Only use entries in which the `DEFINE` has 'LEXICON' specified.
         BACKOFF_ = LEXICON_[LEXICON_.DEFINE == 'BACKOFF']
-        BACKOFF_ = BACKOFF_.replace(nan, '', regex=True)
         LEXICON_ = LEXICON_[LEXICON_.DEFINE == 'LEXICON']
-        LEXICON_ = LEXICON_.replace(nan, '', regex=True)
         if 'COND-F' not in LEXICON_.columns:
             LEXICON_['COND-F'] = ''
             BACKOFF_['COND-F'] = ''
@@ -208,7 +207,7 @@ def read_morph_specs(config:Dict,
                 #TODO: should import this method using importlib and a path from the local config
                 LEXICON_PASS = generate_passive(
                     LEXICON_, os.path.join(data_dir, f"{passive_patterns}.csv"))
-                LEXICON_ = pd.concat([LEXICON_, LEXICON_PASS], ignore_index=True)
+                LEXICON_ = pd.concat([LEXICON_, LEXICON_PASS], ignore_index=True).fillna('')
                 print(f'Generated {len(LEXICON_PASS.index)} entries... Done.')
 
         if backoff_sheets:
@@ -219,22 +218,20 @@ def read_morph_specs(config:Dict,
             elif backoff_sheets.get(lexicon_sheet_name):
                 # Allow the specification of an already generated backoff lexicon and load it.
                 backoff_filename = f"{backoff_sheets[lexicon_sheet_name]}.csv"
-                SMART_BACKOFF_ = pd.read_csv(os.path.join(data_dir, backoff_filename))
-                SMART_BACKOFF_ = SMART_BACKOFF_.replace(nan, '', regex=True)
-            LEXICON['smart_backoff'] = pd.concat([LEXICON['smart_backoff'], SMART_BACKOFF_]) \
+                SMART_BACKOFF_ = pd.read_csv(os.path.join(data_dir, backoff_filename), na_filter=False)
+            LEXICON['smart_backoff'] = pd.concat([LEXICON['smart_backoff'], SMART_BACKOFF_]).fillna('') \
                 if LEXICON['smart_backoff'] is not None else SMART_BACKOFF_
 
         if len(LEXICON_.index):
-            LEXICON['concrete'] = pd.concat([LEXICON['concrete'], LEXICON_]) \
+            LEXICON['concrete'] = pd.concat([LEXICON['concrete'], LEXICON_]).fillna('') \
                 if LEXICON['concrete'] is not None else LEXICON_
         if len(BACKOFF_.index):
-            LEXICON['backoff'] = pd.concat([LEXICON['backoff'], BACKOFF_]) \
+            LEXICON['backoff'] = pd.concat([LEXICON['backoff'], BACKOFF_]).fillna('') \
                 if LEXICON['backoff'] is not None else BACKOFF_
 
     for lex_type in ['concrete', 'backoff']:
         if LEXICON[lex_type] is None:
             continue
-        LEXICON[lex_type] = LEXICON[lex_type].replace(nan, '', regex=True)
         LEXICON[lex_type] = LEXICON[lex_type].astype(str)
         LEXICON[lex_type] = LEXICON[lex_type].apply(
             lambda x: x.str.strip() if x.dtype == 'object' and x.dtype not in [float, int] else x)
@@ -254,27 +251,24 @@ def read_morph_specs(config:Dict,
         LEXICON[lex_type]['LEMMA'] = 'lex:' + LEXICON[lex_type]['LEMMA']
         LEXICON[lex_type] = LEXICON[lex_type] if len(LEXICON[lex_type].index) != 0 else None
     
-    for col in ['D3SEG', 'D3TOK', 'ATBSEG', 'ATBTOK']:
-        if col not in LEXICON['concrete']:
-            LEXICON['concrete'][col] = ''
-    
-    if 'SOURCE' in LEXICON['concrete'].columns:
-        LEXICON['concrete'].loc[LEXICON['concrete']['SOURCE'] == '', 'SOURCE'] = 'lex'
-    else:
-        LEXICON['concrete']['SOURCE'] = 'lex'
+        for col in ['D3SEG', 'D3TOK', 'ATBSEG', 'ATBTOK']:
+            if col not in LEXICON[lex_type]:
+                LEXICON[lex_type][col] = ''
+        
+        if 'SOURCE' in LEXICON[lex_type].columns:
+            LEXICON[lex_type].loc[LEXICON[lex_type]['SOURCE'] == '', 'SOURCE'] = 'lex'
+        else:
+            LEXICON[lex_type]['SOURCE'] = 'lex'
 
     # Process POSTREGEX sheet
-    #FIXME: make sure that symbols being compiled into regex are not mistaken for special characters.
-    # This was already done but does not cover unlikely cases.
     # Compiles the regex match expression from the sheet into a regex match expression that is
     # suitable for storing into the DB in Arabic script. Expects Safe BW transliteration in the sheet.
     POSTREGEX = None
     postregex_path: Optional[str] = config_local['specs']['sheets'].get('postregex')
     if postregex_path:
-        POSTREGEX = pd.read_csv(os.path.join(data_dir, f'{postregex_path}.csv'))
+        POSTREGEX = pd.read_csv(os.path.join(data_dir, f'{postregex_path}.csv'), na_filter=False)
         POSTREGEX = POSTREGEX[(POSTREGEX.DEFINE == 'POSTREGEX') &
                               (POSTREGEX.VARIANT == config_local['dialect'].upper())]
-        POSTREGEX = POSTREGEX.replace(nan, '', regex=True)
         for i, row in POSTREGEX.iterrows():
             POSTREGEX.at[i, 'MATCH'] = _bw2ar_regex(row['MATCH'], safebw2ar)
             POSTREGEX.at[i, 'REPLACE'] = _bw2ar_regex(
@@ -312,7 +306,6 @@ def read_morph_specs(config:Dict,
     # Process ORDER sheet
     if ORDER is not None:
         ORDER = ORDER[ORDER.DEFINE == 'ORDER']  # skip comments & empty lines
-        ORDER = ORDER.replace(nan, '', regex=True)
         for exclusion in exclusions:
             ORDER = ORDER[~ORDER.EXCLUDE.str.contains(f'{exclusion}(?:\s|$)')]
 
@@ -343,8 +336,7 @@ def read_morph_specs(config:Dict,
         
         # Process MORPH sheet
         MORPH = MORPH[MORPH.DEFINE == 'MORPH']
-        MORPH = pd.concat([MORPH, pd.DataFrame(EMPTY_ROW)], ignore_index=True)
-        MORPH = MORPH.replace(nan, '', regex=True)
+        MORPH = pd.concat([MORPH, pd.DataFrame(EMPTY_ROW)], ignore_index=True).fillna('')
         MORPH = MORPH.astype(str)
         MORPH = MORPH.apply(lambda x: x.str.strip()
                             if x.dtype == 'object' and x.dtype not in [float, int] else x)
@@ -632,6 +624,9 @@ def _bw2ar_regex(regex, bw2ar):
     convert characters which are special regex characters in the process. This expects
     the input not to be ambiguous e.g.,Safe BW.
     """
+    #FIXME: make sure that symbols being compiled into regex are not mistaken
+    # for special characters. The below does not do that properly, but was enough
+    # for the EGY sheets.
     match_ = []
     for match in re.split(r'(\\.|[\|}{\*\$_])', regex):
         match = match if re.match(r'(\\.)|[\|}{\*\$_]', match) else bw2ar(match)
