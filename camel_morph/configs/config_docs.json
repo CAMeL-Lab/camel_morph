@@ -60,26 +60,25 @@
                 "sheets": {
                     "order": "MSA-Nom-ORDER",
                     "morph": "MSA-Nom-MORPH"
-                },
-                "exclude": [
-                    "RED"
-                ]
+                }
             },
             "lexicon": {
-                "spreadsheet": "camel-morph-msa-nom-other",
+                "spreadsheet": "camel-morph-msa-nom",
                 "sheets": [
-                    "MSA-Nom-LEX"
+                    "Lemma-Paradigm-Debugging-Noun-v2",
+                    "Lemma-Paradigm-Debugging-Adj-v2",
+                    "Lemma-Paradigm-Debugging-Adj_comp"
                 ]
             },
             "docs_debugging": {
-                "bank": "",
+                "bank": "MSA-Docs-Bank.tsv",
                 "output_name": "docs_debug_msa_v1.0.tsv",
-                "debugging_spreadsheet": "",
-                "debugging_sheet": "",
+                "debugging_spreadsheet": "camel-morph-common",
+                "debugging_sheet": "MSA-Documentation-Nom-Auto-1",
                 "docs_tables": "docs_tables_msa_v1.0.tsv"
             },
             "dialect": "msa",
-            "db": "XYZ_msa_nom_docs_red.db",
+            "db": "XYZ_msa_nom_docs_v1.0.db",
             "pos_type": "nominal"
         }
     }
