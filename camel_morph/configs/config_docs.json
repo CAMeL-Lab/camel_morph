@@ -75,7 +75,7 @@
                 "output_name": "docs_debug_msa_v1.0.tsv",
                 "debugging_spreadsheet": "camel-morph-common",
                 "debugging_sheet": "MSA-Documentation-Nom-Auto-1",
-                "docs_tables": "docs_tables_msa_v1.0.tsv"
+                "docs_tables": "docs_tables_msa_v1.2.tsv"
             },
             "dialect": "msa",
             "db": "XYZ_msa_nom_docs_v1.0.db",

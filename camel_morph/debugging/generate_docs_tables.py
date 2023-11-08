@@ -181,65 +181,64 @@ def get_suffixes_across_form_feats(lemma, stem, gen, num, pos_, cond_t, actpart)
     cases_seen = set()
     for cond_t_ in cond_t.split('||'):
         col_form_feat = COND_T_CLASSES.index(cond_t_)
-        suffix, suffix_enc = {'diac': 'CHECK-ZERO'}, {'diac': 'CHECK-ZERO'}
         for case in ['n', 'a', 'g', 'u']:
             feats = dict(pos=pos_, gen=gen, num=num, cas=case)
-            analyses, analyses_enc = _generate_analyses(lemma, stem, feats, cond_t_, actpart)
-            cases = set([a[0]['cas'] for a in analyses + analyses_enc if a[0] is not None])
+            analyses = _generate_analyses(lemma, stem, feats, cond_t_, actpart)
+            cases = set([a[0]['cas'] for a in sum(analyses, []) if a[0] is not None])
             cases_seen.update(cases)
             cases = cases if cases else set(['-'])
-            multiple_gen, a_pos_ = [], []
-            for a_debug, a_enc_debug in zip(analyses, analyses_enc):
-                a, a_enc = a_debug[0], a_enc_debug[0]
-                suffix_feats, suffix_feats_enc = a_debug[6], a_enc_debug[6]
-                if a is not None and a_enc is not None:
-                    assert a['cas'] == a_enc['cas'] and a['gen'] == a_enc['gen'] and \
-                        a['num'] == a_enc['num'] and a['pos'] == a_enc['pos']
+            multiple_generations = []
+            for a_debug in zip(*analyses):
+                analyses_ = [analyses_[0] for analyses_ in a_debug]
+                suffixes_feats = [analyses_[6] if analyses_[6] is not None else {'diac': 'CHECK-ZERO'}
+                                for analyses_ in a_debug]
+                buffers = [a_.get('cm_buffer', '') if a_ is not None else 'CHECK-ZERO'
+                           for a_ in analyses_]
                 
-                if not ((a is None or a['cas'] == case) and (a_enc is None or a_enc['cas'] == case)):
+                if None not in analyses_:
+                    assert all(len(set(a_[f] for a_ in analyses_)) == 1
+                               for f in ['cas', 'gen', 'num', 'pos'])
+                if not all(a_ is None or a_['cas'] == case for a_ in analyses_):
                     continue
-                a_diac = a['diac'] if a is not None else 'CHECK'
-                a_enc_diac = a_enc['diac'] if a_enc is not None else 'CHECK'
-                a_gen = a_enc['gen'] if a_enc is not None else a['gen']
-                a_num = a_enc['num'] if a_enc is not None else a['num']
-                multiple_gen.append(f'{a_diac} / {a_enc_diac} ({a_gen}{a_num})')
-                a_pos_.append(a['pos'].upper() if a is not None else a_enc['pos'].upper())
-
-                suffix = suffix_feats if suffix_feats is not None else {'diac': 'CHECK-ZERO'}
-                suffix_enc = suffix_feats_enc if suffix_feats_enc is not None else {'diac': 'CHECK-ZERO'}
-                buffer = a.get('cm_buffer', '') if a is not None else 'CHECK-ZERO'
-                buffer_enc = a_enc.get('cm_buffer', '') if a_enc is not None else 'CHECK-ZERO'
+                
+                diacs = [a_['diac'] if a_ is not None else 'CHECK' for a_ in analyses_]
+                gens = set(a_['gen'] for a_ in analyses_ if a_ is not None)
+                nums = set(a_['num'] for a_ in analyses_ if a_ is not None)
+                pos = set(a_['pos'] for a_ in analyses_ if a_ is not None)
+                assert len(gens) == len(nums) == len(pos) == 1
+                a_gen, a_num, pos = next(iter(gens)), next(iter(nums)), next(iter(pos)).upper()
+                cell = ' / '.join(diacs) + f' ({a_gen}{a_num})'
+                multiple_generations.append(cell)
                 break
             
             form_feat2case2info[col_form_feat][case] = {
-                'suffixes': ' / '.join(f"X+{ar2bw(suff) if suff else 'Ø'}" for suff in (suffix['diac'], suffix_enc['diac'])),
-                'content':' // '.join(multiple_gen),
-                'pos': ' / '.join(a_pos_),
-                'buffers':  ' / '.join('X' + ('+' if buff else '') + ar2bw(buff) for buff in (buffer, buffer_enc))
+                'suffixes': ' / '.join(f"X+{ar2bw(suff['diac']) if suff['diac'] else 'Ø'}"
+                                       for suff in suffixes_feats),
+                'content':' // '.join(multiple_generations),
+                'pos': pos,
+                'buffers':  ' / '.join('X' + ('+' if buff else '') + ar2bw(buff) for buff in buffers)
             }
     
     return form_feat2case2info, cases_seen
 
 def _generate_analyses(lemma, stem, feats, cond_t_, actpart):
-    feats_, feats_enc_ = _process_and_generate_feats(feats, cond_t_, actpart)
-    analyses, _ = generator.generate(lemma, feats_, debug=True)
-    analyses_enc, _ = generator.generate(lemma, feats_enc_, debug=True)
-    analyses = [a for a in analyses if a[0]['cm_stem'] == stem]
-    analyses_enc = [a for a in analyses_enc if a[0]['cm_stem'] == stem]
+    feats_generate = _process_and_generate_feats(feats, cond_t_, actpart)
+    analyses = []
+    for feats_ in feats_generate:
+        analyses_, _ = generator.generate(lemma, feats_, debug=True)
+        analyses_ = [a for a in analyses_ if a[0]['cm_stem'] == stem]
+        analyses.append(analyses_)
 
-    if len(analyses) > len(analyses_enc):
-        for _ in range(len(analyses) - len(analyses_enc)):
-            analyses_enc.append((None,)*7)
-    elif len(analyses) < len(analyses_enc):
-        for _ in range(len(analyses_enc) - len(analyses)):
-            analyses.append((None,)*7)
+    pad_len = max(len(analyses_) for analyses_ in analyses)
+    for analyses_ in analyses:
+        analyses_ += [(None,)*7] * (pad_len - len(analyses_))
     
     sort_by_case = lambda a: (a[0]['cm_stem'] + a[0].get('cm_buffer', ''), a[0]['cas']) \
                              if a[0] is not None else (u'\u06FF', 'z')
-    analyses = sorted(analyses, key=sort_by_case)
-    analyses_enc = sorted(analyses_enc, key=sort_by_case)
+    for analyses_ in analyses:
+        analyses_ = sorted(analyses_, key=sort_by_case)
 
-    return analyses, analyses_enc
+    return analyses
 
 def get_form_feats_cluster_map(form_feats_set):
     slots2form_feats = {}
@@ -281,10 +280,13 @@ def _process_and_generate_feats(feats, cond_t, actpart):
         feats_['cas'] = feats['cas']
     
     feats_ = {k: '' if v == '-' else v for k, v in feats_.items()}
-    feats_enc_ = {**feats_, **{'enc0': '3ms_poss' if not actpart else '3ms_dobj'}}
-    feats_enc_['stt'] = 'c'
+    feats_enc_3ms = {**feats_, **{'enc0': '3ms_poss' if not actpart else '3ms_dobj'}}
+    feats_enc_3ms['stt'] = 'c'
+    feats_enc_1s = {**feats_, **{'enc0': '1s_poss' if not actpart else '1s_dobj'}}
+    feats_enc_1s['stt'] = 'c'
 
-    return feats_, feats_enc_
+
+    return feats_, feats_enc_3ms, feats_enc_1s
 
 
 def _get_pos2lemma2prob(db_lexprob, pos, cond_s2cond_t2feats2rows, pos2lemma2prob):
@@ -367,6 +369,7 @@ if __name__ == "__main__":
     pos_type = args.pos_type if args.pos_type else config_local['pos_type']
     if pos_type == 'verbal':
         POS = 'verb'
+        lexicon['COND-S'] = lexicon['COND-S'].replace(r'ditrans', '', regex=True)
     elif pos_type == 'nominal':
         POS = args.pos if args.pos else config_local.get('pos')
         lexicon['COND-S'] = lexicon['COND-S'].replace(r'L#', '', regex=True)
