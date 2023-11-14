@@ -5,7 +5,7 @@ This section guides you through the process of inspecting, making use of, and re
 ## Installation
 
 1. Clone (download) this repository and unzip in a directory of your choice.
-2. Make sure that you are running **Python 3.8** or **Python 3.9**.
+2. Make sure that you are running **Python 3.8** or **Python 3.9** (this release was tested on these two versions, but it is likely that it will work on other versions).
 3. Run the following command to install all needed libraries: `pip install -r requirements.txt`.
 4. Run all commands/scripts from the `sigmorphon2022_release` directory.
 
@@ -14,6 +14,11 @@ This section guides you through the process of inspecting, making use of, and re
 [![License](https://mirrors.creativecommons.org/presskit/buttons/80x15/svg/by.svg)](https://creativecommons.org/licenses/by/4.0/)
 
 The data used to compile a database is available in `csv` format (the way it was at submission time) in the following [folder](https://github.com/CAMeL-Lab/camel_morph/tree/main/sigmorphon2022_release/data).
+
+The data is also available for viewing from the Google Sheets interface using the following links, although, column width is not adjustable (you can download the sheet and open it in a personal spreadsheet as a workaround).
+
+- [MSA Verbs Specifications (Camera Ready)](https://docs.google.com/spreadsheets/d/1v9idxctnr6IsqG4c7bHs7lGx7GzbnTa2s4ghQCmLoPY/edit#gid=524706154)
+- [EGY Verbs Specifications (Camera Ready)](https://docs.google.com/spreadsheets/d/1OCqHIdeZpm9BNa-BiC7Xy6bAT_wkLnhuvKdo7X3-RtE/edit#gid=424095452)
 
 ### Data License
 
