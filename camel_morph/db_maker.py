@@ -278,7 +278,8 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
         if not cmplx_prefix_classes: cmplx_type_empty.add('Prefix')
         if cmplx_type_empty:
             cmplx_type_empty = '/'.join(cmplx_type_empty)
-            print(f'{cmplx_type_empty} class is empty; proceeding to process next order line.')
+            tqdm.write((f"{order['SUFFIX-SHORT']}: {cmplx_type_empty} class " 
+                        'is empty; proceeding to process next order line.'))
             return db
         
         cmplx_morph_classes = dict(
@@ -903,10 +904,10 @@ def print_almor_db(output_path, db):
         print('###STEMBACKOFF###', file=f)
         for x in db['OUT:###STEMBACKOFF###']:
             print(*x, sep=' ', file=f)
-
-        print('###POSTREGEX###', file=f)
+        
         postregex = db.get('OUT:###POSTREGEX###')
         if postregex:
+            print('###POSTREGEX###', file=f)
             for x in postregex:
                 print(x, file=f)
 
@@ -925,9 +926,9 @@ def print_almor_db(output_path, db):
             x = (*x[:2], underscore_ar.sub('_', x[2]))
             print(*x, sep='\t', file=f)
 
-        print('###SMARTBACKOFF###', file=f)
         smart_backoff = db.get('OUT:###SMARTBACKOFF###')
         if smart_backoff:
+            print('###SMARTBACKOFF###', file=f)
             for x in db['OUT:###SMARTBACKOFF###']:
                 print(*x, sep='\t', file=f)
             

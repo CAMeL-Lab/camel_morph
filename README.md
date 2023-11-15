@@ -63,14 +63,14 @@ To generate databases, paradigm-specific inflection (conjugation/declension) tab
 To start working with the Camel Morph environment:
 
 1. Clone (download) this repository and unzip in a directory of your choice.
-2. Make sure that you are running **Python 3.8** or **Python 3.9**.
+2. Make sure that you are running **Python 3.8** or **Python 3.9** (this release was tested on these two versions, but it is likely that it will work on other versions).
 3. Run the following command to install all needed libraries: `pip install -r requirements.txt`.
 4. Run all commands/scripts from the outer `camel_morph` directory.
 
 **For development purposes only:**
 
 1. Clone (download) a [fork](https://github.com/christios/camel_tools) of the Camel Tools repository. The Camel Morph databases will currently only function using the latter instance of Camel Tools. The changes in this fork will eventually be integrated to the main Camel Tools library. Unzip in a directory of your choice.
-2. Set the `CAMEL_TOOLS_PATH` value to the path of the Camel Tools fork repository in the configuration file that you will be using (default configuration file `./configs/config_default.json` provided; see [Configuration File Structure](#configuration-file-structure) section).
+2. Set the `CAMEL_TOOLS_PATH` value to the path of the Camel Tools fork repository in the configuration file that you will be using (default configuration file `./camel_morph/configs/config_default.json` provided; see [Configuration File Structure](#configuration-file-structure) section).
 
 For instructions on how to run the different scripts, see the below sections.
 
@@ -93,7 +93,7 @@ usage: db_maker.py [-h] [-config_file CONFIG_FILE]
 |short|default|help|
 | :--- | :--- | :--- |
 | `-h` | | Show this help message and exit.|
-|`-config_file`|`config_default.json`|Path of the configuration file which contains different configurations to run the DB on. Some pre-compiled configurations already exist in `./configs/config.json`, but new ones could be easily added. See [here](#configuration-file-structure) for an overview of the configuration file format. Defaults to `./configs/config_default.json`.|
+|`-config_file`|`config_default.json`|Path of the configuration file which contains different configurations to run the DB on. Some pre-compiled configurations already exist in `./camel_morph/configs/config.json`, but new ones could be easily added. See [here](#configuration-file-structure) for an overview of the configuration file format. Defaults to `./configs/config_default.json`.|
 |`-config_name`|`default_config`|Configuration name of one of the configurations contained in `CONFIG_FILE`. It contains script parameters, sheet paths, etc.|
 |`-output_dir`||Overrides path of the directory to output the DBs to (specified in the global section of `CONFIG_FILE`).|
 |`-run_profiling`||To generate an execution time profile of the specific configuration.|
@@ -101,7 +101,7 @@ usage: db_maker.py [-h] [-config_file CONFIG_FILE]
 
 ### Configuration File Structure
 
-In its most basic format, the configuration file should look like the example below in order to successfully run the scripts described in this guide. Unless otherwise stated, variables (beginning with `$`) are double quoted strings.
+In its most basic format, the configuration file should look like the example below in order to successfully run the scripts described in this guide. Unless otherwise stated, variables (beginning with `$`) are double quoted strings. See [here](camel_morph/configs/) for a list of configuration files used.
 
 #### Default Configuration File
 
