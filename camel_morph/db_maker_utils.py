@@ -99,8 +99,10 @@ def read_morph_specs(config:Dict,
                                  f"camel-morph-{config_local['dialect']}", config_name)
     
     if process_morph:
-        ABOUT = pd.read_csv(os.path.join(data_dir, 'About.csv'), na_filter=False)
-        HEADER = pd.read_csv(os.path.join(data_dir, 'Header.csv'), na_filter=False)
+        about_sheet_name = config['global']['specs']['sheets']['about']
+        ABOUT = pd.read_csv(os.path.join(data_dir, f'{about_sheet_name}.csv'), na_filter=False)
+        header_sheet_name = config['global']['specs']['sheets']['header']
+        HEADER = pd.read_csv(os.path.join(data_dir, f'{header_sheet_name}.csv'), index_col=0, na_filter=False)
 
         def _read_specs(specs_type):
             """Currently, different morph/order pair files are treated as independent entities,
@@ -255,10 +257,11 @@ def read_morph_specs(config:Dict,
             if col not in LEXICON[lex_type]:
                 LEXICON[lex_type][col] = ''
         
+        source = 'lex' if lex_type == 'concrete' else 'backoff'
         if 'SOURCE' in LEXICON[lex_type].columns:
-            LEXICON[lex_type].loc[LEXICON[lex_type]['SOURCE'] == '', 'SOURCE'] = 'lex'
+            LEXICON[lex_type].loc[LEXICON[lex_type]['SOURCE'] == '', 'SOURCE'] = source
         else:
-            LEXICON[lex_type]['SOURCE'] = 'lex'
+            LEXICON[lex_type]['SOURCE'] = source
 
     # Process POSTREGEX sheet
     # Compiles the regex match expression from the sheet into a regex match expression that is
@@ -677,7 +680,11 @@ def factorize_categories(prefix_stem_compat,
         with open(test, 'rb') as f:
             equivalences = pickle.load(f)
     
-    assert equivalences
+    if not equivalences:
+        print(('WARNING: Tried to factorize categories but found that they are already '
+               'optimally factorized'))
+        return {}
+
     equivalences_ = {}
     done = set()
     while done != {True}:
@@ -718,18 +725,22 @@ def factorize_compatibility_lines(prefix_stem_compat,
     stem_suffix_compat_ = _rebuild_compat_reduced(stem_suffix_compat)
     prefix_suffix_compat_ = _rebuild_compat_reduced(prefix_suffix_compat)
     
-    def _get_cats_map(X_Y_compat, X_type):
-        X_cats_sorted = sorted(set(X_Y_compat))
+    def _get_cats_map(X_Y_compat):
+        X_Y_compat_set = set(X_Y_compat)
+        X_type = set(X[0] for X in X_Y_compat_set)
+        assert len(X_type) == 1 and X_type <= {'P', 'X', 'S'}
+        X_type = next(iter(X_type))
+        X_cats_sorted = sorted(X_Y_compat_set)
         X_cat_map = {}
         for i, X_cat in enumerate(X_cats_sorted):
             X_cat_new = f'{X_type}{str(i + 1).zfill(5)}'
             X_cat_map[X_cat] = X_cat_new
         return X_cat_map
 
-    prefix_cat_map = _get_cats_map(prefix_stem_compat_, 'P')
-    stem_cat_map = _get_cats_map(stem_suffix_compat_, 'X')
+    prefix_cat_map = _get_cats_map(prefix_stem_compat_)
+    stem_cat_map = _get_cats_map(stem_suffix_compat_)
     suffix_stem_compat = _reverse_compat_table(stem_suffix_compat_)
-    suffix_cat_map = _get_cats_map(suffix_stem_compat, 'S')
+    suffix_cat_map = _get_cats_map(suffix_stem_compat)
 
     def _reindex_compat_categories(X_Y_compat, X_cat_map, Y_cat_map):
         X_Y_compat_ = {}
@@ -749,10 +760,6 @@ def factorize_compatibility_lines(prefix_stem_compat,
            prefix_cat_map, stem_cat_map, suffix_cat_map
            
 
-def reindex_morpheme_table_cats(X, X_cat_map, equivalences):
-    X_ = []
-    for X_entry in X:
-        X_cat = X_entry[1]
-        X_cat_new = X_cat_map[equivalences.get(X_cat, X_cat)]
-        X_.append((X_entry[0], X_cat_new, X_entry[2]))
-    return X_
+def reindex_cat(X_cat, X_cat_map, equivalences):
+    X_cat_new = X_cat_map[equivalences.get(X_cat, X_cat)]
+    return X_cat_new

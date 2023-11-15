@@ -148,6 +148,14 @@ def make_db(config:Dict, config_name:str, output_dir:Optional[str]=None):
     if logprob is not None:
         with open(logprob, 'rb') as f:
             logprob = pickle.load(f)
+        pos2lex2logprob = {}
+        for (pos, lex), logprob_ in logprob['pos_lex'].items():
+            pos2lex2logprob.setdefault(pos, {}).setdefault(lex, logprob_)
+        
+        for pos, lex2logprob in pos2lex2logprob.items():
+            pos2lex2logprob[pos] = dict(sorted(
+                lex2logprob.items(), key=lambda x: x[1], reverse=True))
+        logprob['pos2lex2logprob'] = pos2lex2logprob
     
     c0 = process_time()
     
@@ -224,26 +232,29 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
     # which is why we should consider it being done automatically, as this is often the source of bugs,
     # for example if some order is changed in the class fields and forgetting to change the associated
     # short name.
-    short_cat_maps = _get_short_cat_name_maps(ORDER) if 'PREFIX-SHORT' in ORDER.columns else None
+    short_cat_maps = None
+    if {'PREFIX-SHORT', 'STEM-SHORT', 'SUFFIX-SHORT'} <= set(ORDER.columns):
+        short_cat_maps = _get_short_cat_name_maps(ORDER) 
 
     # One-time filling of the About, Header, and PostRegex sections of the DB
     db = {}
     db['OUT:###ABOUT###'] = list(ABOUT['CONTENT'])
-    db['OUT:###HEADER###'] = list(HEADER['CONTENT'])
     if POSTREGEX is not None:
         db['OUT:###POSTREGEX###'] = [
             'MATCH\t' + '\t'.join([match for match in POSTREGEX['MATCH'].values.tolist()]),
             'REPLACE\t' + '\t'.join([replace for replace in POSTREGEX['REPLACE'].values.tolist()])
         ]
     
-    defaults_ = _process_defaults(db['OUT:###HEADER###']) if defaults else None
+    header_, defaults_ = _read_header_file(HEADER)
+    db['OUT:###HEADER###'] = header_
+
+    defaults_ = defaults_ if defaults else None
     cat2id = {} if cat2id else None
     
     def construct_process(lexicon: pd.DataFrame,
                           order: pd.DataFrame,
                           cmplx_stem_memoize: Dict[str, str],
-                          stems_section_title: str,
-                          backoff:bool=False):
+                          stems_section_title: str):
         """ Process which is ran for each ORDER line, in which plausible complex morphemes
         are generated and then tested (validated) against each other across the prefix/stem/suffix
         boundary. Complex prefixes/stems/suffixes which are compatible with each other are added as
@@ -278,48 +289,43 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
         # Complex morphemes validation or word generation (across the prefix/stem/suffix boundary)
         db_ = cross_cmplx_morph_validation(
             cmplx_morph_classes, order['CLASS'].lower(), short_cat_maps, defaults_,
-            stems_section_title, cat2id, backoff, morph2caphi, logprob)
+            stems_section_title, cat2id, morph2caphi, logprob)
         for section, contents in db_.items():
             # if 'BACKOFF' in stems_section_title and section != stems_section_title:
             #     assert set(contents) <= set(db[section])
-            db.setdefault(section, {}).update(contents)
+            if section != 'OUT:###STEMBACKOFF###':
+                db.setdefault(section, {}).update(contents)
+            else:
+                for backoff_mode, cats in contents.items():
+                    db.setdefault(section, {}).setdefault(backoff_mode, set()).update(cats)
     
     # For memoization to work as intended, same-aspect order lines should be placed next
     # to each other in the ORDER file, and since the stem part of the order usually stays
     # the same at the aspect level, then it makes sense to avoid recomputing all the combinations
     # each time and same them in the memo. dict.
-    if LEXICON is not None:
-        print('Concrete lexicon')
-        pbar = tqdm(total=len(list(ORDER.iterrows())))
-        cmplx_stem_memoize = {}
-        order_stem_prev = ''
-        for _, order in ORDER.iterrows():
-            pbar.set_description(order['SUFFIX-SHORT'])
-            if order['STEM'] != order_stem_prev:
-                cmplx_stem_memoize = {}
-                order_stem_prev = order['STEM']
-            construct_process(LEXICON, order, cmplx_stem_memoize,
-                            stems_section_title='OUT:###STEMS###')
-            pbar.update(1)
-        pbar.close()
-    #FIXME: Currently these backoff entries do not interact with the other morphemes.
-    # They are just inserted here for backward compatibility with the Analyzer engine.
-    if BACKOFF is not None:
-        print('Backoff lexicon')
-        pbar = tqdm(total=len(list(ORDER.iterrows())))
-        cmplx_stem_memoize = {}
-        order_stem_prev = ''
-        for _, order in ORDER.iterrows():
-            pbar.set_description(order['SUFFIX-SHORT'])
-            if order['STEM'] != order_stem_prev:
-                cmplx_stem_memoize = {}
-                order_stem_prev = order['STEM']
-            construct_process(BACKOFF, order, cmplx_stem_memoize,
-                            stems_section_title='OUT:###STEMS###', backoff=True)
-            pbar.update(1)
-        pbar.close()
-        
-    
+    for name, SHEET in [('Concrete', LEXICON), ('Backoff', BACKOFF)]:
+        if SHEET is not None:
+            print(f'{name} lexicon')
+            pbar = tqdm(total=len(list(ORDER.iterrows())))
+            cmplx_stem_memoize = {}
+            order_stem_prev = ''
+            for _, order in ORDER.iterrows():
+                pbar.set_description(order['SUFFIX-SHORT'])
+                if order['STEM'] != order_stem_prev:
+                    cmplx_stem_memoize = {}
+                    order_stem_prev = order['STEM']
+                construct_process(SHEET, order, cmplx_stem_memoize,
+                                stems_section_title='OUT:###STEMS###')
+                pbar.update(1)
+            pbar.close()
+
+    stem_backoffs_ = {}
+    if 'OUT:###STEMBACKOFF###' in db:
+        for backoff_mode, cats in db['OUT:###STEMBACKOFF###'].items():
+            stem_backoffs_[('STEMBACKOFF', backoff_mode, ' '.join(cats))] = 1
+    db['OUT:###STEMBACKOFF###'] = stem_backoffs_
+            
+    #TODO: maybe this should also be included in the above loop, but more study is needed
     if SMART_BACKOFF is not None:
         print('Smart Backoff lexicon')
         pbar = tqdm(total=len(list(ORDER.iterrows())))
@@ -338,7 +344,6 @@ def cross_cmplx_morph_validation(cmplx_morph_classes: Dict,
                                  defaults: Dict=None,
                                  stems_section_title: str='OUT:###STEMS###',
                                  cat2id:Optional[Dict]=None,
-                                 backoff:bool=False,
                                  morph2caphi:Optional[Dict]=None,
                                  logprob:Optional[Dict]=None) -> Dict:
     """Method which takes in classes of complex morphemes, and validates them against each other
@@ -357,8 +362,6 @@ def cross_cmplx_morph_validation(cmplx_morph_classes: Dict,
         SUFFIX-SHORT). Defaults to None.
         defaults (Dict, optional): default values of features for DB (from Header). Defaults to None.
         stems_section_title (_type_, optional): title of the section that will appear in the DB. Defaults to 'OUT:###STEMS###'.
-        backoff (bool): whether or not to add the correct category or just the same category
-        to all stem entries. Defaults to False.
         morph2caphi (Dict): maps to the different methods to use to convert diac to CAPHI based
         on the complex morpheme type. Defaults to None.
         logprob (Dict): dictionary containing the log probablities of different features, extracted
@@ -368,6 +371,7 @@ def cross_cmplx_morph_validation(cmplx_morph_classes: Dict,
         Dict: Database in progress
     """
     db = {}
+    db['OUT:###STEMBACKOFF###'] = {}
     db['OUT:###PREFIXES###'] = {}
     db['OUT:###SUFFIXES###'] = {}
     db[stems_section_title] = {}
@@ -428,7 +432,7 @@ def cross_cmplx_morph_validation(cmplx_morph_classes: Dict,
                     
                     for update_info in [update_info_stem, update_info_prefix, update_info_suffix]:
                         update_db(db, update_info, cat_memoize, short_cat_maps, defaults, cat2id,
-                                  backoff, morph2caphi, logprob)
+                                  morph2caphi, logprob)
                     # If morph class cat has already been computed previously, then cat is still `None`
                     # (because we will not go again in the morph for loop) and we need to retrieve the
                     # computed value. 
@@ -452,7 +456,6 @@ def update_db(db: Dict,
               short_cat_maps: Optional[Dict]=None,
               defaults: Optional[Dict]=None,
               cat2id:Optional[Dict]=None,
-              backoff:bool=False,
               morph2caphi:Optional[Dict]=None,
               logprob:Optional[Dict]=None):
     """If a combination of complex prefix/suffix/stem is valid, then each of the complex morphemes
@@ -484,8 +487,6 @@ def update_db(db: Dict,
         defaults (Optional[Dict], optional): default values of features parsed from the Header sheet (same ones
         which usually appear in the beginning of any DB file). They are used to specify feature values for DB entries
         for features whose value was not specified in the sheets. Defaults to None.
-        backoff (bool): whether or not to add the correct category or just the same category
-        to all stem entries. Defaults to False.
         morph2caphi (Dict): maps to the different methods to use to convert diac to CAPHI based
         on the complex morpheme type. Defaults to None.
         logprob (Dict): dictionary containing the log probablities of different features, extracted
@@ -517,10 +518,20 @@ def update_db(db: Dict,
             morph_entry = _generate(
                 cmplx_morph_seq, required_feats, cmplx_morph, cond_s, cond_t, cond_f,
                 short_cat_map, defaults if defaults != False else None,
-                cat2id, backoff, morph2caphi, logprob)
-            morph_entry_ = tuple(morph_entry.values())
+                cat2id, morph2caphi, logprob)
+            if defaults != False:
+                morph_entry_analysis_str = ' '.join(f"{k}:{morph_entry['analysis'][k]}"
+                    for k in defaults['order'] if morph_entry['analysis'].get(k) is not None)
+            else:
+                morph_entry_analysis_str = ' '.join(f"{k}:{v if v is not None else ''}"
+                    for k, v in  morph_entry['analysis'])
+            morph_entry_ = tuple(morph_entry[x] for x in ['match', 'cat']) + (morph_entry_analysis_str,)
             db[db_section].setdefault(morph_entry_, 0)
             db[db_section][morph_entry_] += 1
+
+            if morph_entry['match'] == 'NOAN':
+                for backoff_mode in morph_entry['analysis']['backoff_modes'].split():
+                    db['OUT:###STEMBACKOFF###'].setdefault(backoff_mode, set()).add(morph_entry['cat'])
         cat_memoize[cmplx_morph_type][cmplx_morph_cls] = morph_entry['cat']
 
 
@@ -584,7 +595,6 @@ def _generate_affix(affix_type: str,
                     short_cat_map: Optional[Dict]=None,
                     defaults: Dict=None,
                     cat2id:Optional[Dict]=None,
-                    backoff:bool=False,
                     morph2caphi:Optional[Dict]=None,
                     logprob:Optional[Dict]=None) -> Dict[str, str]:
     """From the CamelMorph specifications, loads the affix information
@@ -617,7 +627,7 @@ def _generate_affix(affix_type: str,
     Returns:
         Dict[str, str]: dict containing the 3 fields needed to store the complex affix as an entry in the DB.
     """
-    affix_match, analysis = _read_affix(affix)
+    affix_match, analysis = _read_affix(affix, affix_type)
     affix_type = 'P' if affix_type == 'prefix' else 'S'
     acat = _generate_cat_field(affix_type, cmplx_morph_seq, affix_cond_s, affix_cond_t,
                        affix_cond_f, short_cat_map, cat2id)
@@ -629,12 +639,7 @@ def _generate_affix(affix_type: str,
     for f in ['diac', 'd3seg', 'd3tok', 'atbseg', 'atbtok']:
         analysis[f] = bw2ar(analysis[f])
 
-    affix_type_ = 'pref' if affix_type == 'P' else 'suff'
-    analysis[f'cm_{affix_type_}_ids'] = '+'.join(
-        m['CLASS'] + ':' + str(int(float(m['LINE'] if m['LINE'] else -1))) for m in affix)
-    analysis_str = ' '.join(f'{k}:{analysis[k]}'
-                            for k in defaults['order'] if analysis.get(k) is not None)
-    affix = {'match': bw2ar(affix_match), 'cat': acat, 'analysis': analysis_str}
+    affix = {'match': bw2ar(affix_match), 'cat': acat, 'analysis': analysis}
     return affix
 
 
@@ -645,7 +650,6 @@ def _generate_stem(cmplx_morph_seq: str,
                    short_cat_map: Optional[Dict]=None,
                    defaults: Dict=None,
                    cat2id:Optional[Dict]=None,
-                   backoff:bool=False,
                    morph2caphi:Optional[Dict]=None,
                    logprob:Optional[Dict]=None) -> Dict[str, str]:
     """Same as `_generate_affix()` but slightly different.
@@ -663,8 +667,6 @@ def _generate_stem(cmplx_morph_seq: str,
         STEM, or SUFFIX column or ORDER) to its short name (PREFIX-SHORT, STEM-SHORT, and
         SUFFIX-SHORT). Defaults to None.
         defaults (Dict, optional): default values of features parsed from the Header sheet. Defaults to None.
-        backoff (bool): whether or not to add the correct category or just the same category
-        to all stem entries. Defaults to False.
         morph2caphi (Dict): maps to the different methods to use to convert diac to CAPHI based
         on the complex morpheme type. Defaults to None.
         logprob (Dict): dictionary containing the log probablities of different features, extracted
@@ -673,9 +675,7 @@ def _generate_stem(cmplx_morph_seq: str,
     Returns:
         Dict[str, str]: _description_
     """
-    stem_match, analysis, smart_backoff = _read_stem(stem)
-    xcat = _generate_cat_field('X', cmplx_morph_seq, stem_cond_s, stem_cond_t,
-                       stem_cond_f, short_cat_map, cat2id)
+    stem_match, analysis, backoff = _read_stem(stem)
     analysis['bw'] = _convert_bw_tag(analysis['bw'], backoff)
     
     if defaults is not None:
@@ -683,12 +683,17 @@ def _generate_stem(cmplx_morph_seq: str,
             if f not in analysis or analysis[f] == '_':
                 analysis[f] = defaults['defaults'][analysis['pos']][f]
     
-    if smart_backoff:
+    if backoff == 'smart':
         match = db_maker_utils._bw2ar_regex(stem_match, bw2ar)
-    elif backoff:
-        match = 'NOAN'
+    elif backoff == 'vanilla':
+        match = stem_match
+        analysis['backoff_modes'] = analysis['lex']
+        analysis['lex'] = 'NOAN'
     else:
         match = bw2ar(stem_match)
+
+    xcat = _generate_cat_field('X', cmplx_morph_seq, stem_cond_s, stem_cond_t,
+                               stem_cond_f, short_cat_map, cat2id)
     
     if not backoff:
         if morph2caphi is not None:
@@ -700,17 +705,18 @@ def _generate_stem(cmplx_morph_seq: str,
                 logprob_ = f'{logprob[f][lex_]:.6f}' if lex_ in logprob[f] else '-99'
                 analysis[f'{f}_logprob'] = logprob_
 
-        for f in ['lex', 'diac', 'root', 'd3seg', 'd3tok', 'atbseg', 'atbtok']:
-            if f == 'root' and analysis[f] == 'NTWS':
+        bw2ar_columns = ['lex', 'diac', 'cm_stem', 'cm_buffer', 'root',
+                         'd3seg', 'd3tok', 'atbseg', 'atbtok',
+                         'pattern', 'pattern_abstract']
+        for f in bw2ar_columns:
+            if analysis[f] == 'NTWS' or analysis[f] is None:
                 continue
             analysis[f] = bw2ar(analysis[f])
 
-    analysis_str = ' '.join(f'{k}:{analysis[k]}'
-                            for k in defaults['order'] if analysis.get(k) is not None)
-    stem = {'match': match, 'cat': xcat, 'analysis': analysis_str}
+    stem = {'match': match, 'cat': xcat, 'analysis': analysis}
     return stem
 
-def _read_affix(affix: List[Dict]) -> Tuple[str, Dict]:
+def _read_affix(affix: List[Dict], affix_type: str) -> Tuple[str, Dict]:
     """From the CamelMorph specifications, loads the affix information
     of multiple morphemes appearing in the prefix/suffix portion of the order line
     and which are deemed to be compatible with each other to form a complex affix, and
@@ -719,6 +725,7 @@ def _read_affix(affix: List[Dict]) -> Tuple[str, Dict]:
 
     Args:
         affix (List[Dict]): individual analyses (dict) of the morphemes in the complex affix.
+        affix_type (str): 'prefix' or 'suffix'
 
     Returns:
         Tuple[str, Dict]: information to store in the DB.
@@ -741,6 +748,9 @@ def _read_affix(affix: List[Dict]) -> Tuple[str, Dict]:
         analysis['source'] = source[0]
     else:
         analysis['source'] = 'lex'
+    affix_type = 'pref' if affix_type == 'prefix' else 'suff'
+    analysis[f'cm_{affix_type}_ids'] = '+'.join(
+        m['CLASS'] + ':' + str(int(float(m['LINE'] if m['LINE'] else -1))) for m in affix)
 
     affix_match = _generate_match_field(analysis['diac'])
     return affix_match, analysis
@@ -777,18 +787,32 @@ def _read_stem(stem: List[Dict]) -> Tuple[str, Dict]:
             analysis[col.lower()] = feat[0]
         elif col == 'SOURCE':
             analysis['source'] = 'lex'
+        else:
+            analysis[col.lower()] = 'NTWS'
+
+        if col == 'PATTERN_ABSTRACT' and analysis['pattern_abstract'] != 'NTWS':
+            pattern_abstract = analysis['pattern_abstract']
+            pattern_abstract = pattern_abstract.replace('1', 'f')
+            pattern_abstract = pattern_abstract.replace('2', 'E')
+            pattern_abstract = pattern_abstract.replace('3', 'l')
+            pattern_abstract = pattern_abstract.replace('4', 'l')
+            pattern_abstract = pattern_abstract.replace('5', 'l')
+            analysis['pattern_abstract'] = pattern_abstract
 
     analysis['cm_stem_ids'] = '+'.join(
         s['CLASS'] + ':' + str(int(float(s['LINE'] if s['LINE'] else -1)))
         for s in stem)
+    analysis['cm_stem'], analysis['cm_buffer'] = stem[0]['FORM'], None
+    if len(stem) > 1 and len(stem) == 2 and stem[1]['FORM'] not in ['_', '']:
+        analysis['cm_buffer'] = stem[1]['FORM']
     
-    smart_backoff = False
     analysis['diac'] = ''.join(
         s['FORM'] for s in stem if s['FORM'] != '_').strip()
-    if not any([s['DEFINE'] == 'SMARTBACKOFF' for s in stem]):
-        stem_match = _generate_match_field(analysis['diac'])
-    else:
-        smart_backoff = True
+
+    stem_defines = set(s['DEFINE'] for s in stem)
+    if 'SMARTBACKOFF' in stem_defines:
+        assert stem_defines <= {'MORPH', 'SMARTBACKOFF'}
+        backoff = 'smart'
         stem_match = []
         for s in stem:
             if s['FORM'] != '_':
@@ -798,8 +822,15 @@ def _read_stem(stem: List[Dict]) -> Tuple[str, Dict]:
                 else:
                     stem_match.append(_generate_match_field(s['FORM']))
         stem_match = f"^{''.join(stem_match)}$"
+    elif 'BACKOFF' in  stem_defines:
+        backoff = 'vanilla'
+        assert stem_defines <= {'MORPH', 'BACKOFF'}
+        stem_match = 'NOAN'
+    else:
+        backoff = None
+        stem_match = _generate_match_field(analysis['diac'])
 
-    return stem_match, analysis, smart_backoff
+    return stem_match, analysis, backoff
 
 
 def _read_compatibility_tables(X_Y_compat):
@@ -868,6 +899,10 @@ def print_almor_db(output_path, db):
     with open(output_path, 'w') as f:
         for x in db['OUT:###HEADER###']:
             print(x, file=f)
+
+        print('###STEMBACKOFF###', file=f)
+        for x in db['OUT:###STEMBACKOFF###']:
+            print(*x, sep=' ', file=f)
 
         print('###POSTREGEX###', file=f)
         postregex = db.get('OUT:###POSTREGEX###')
@@ -1156,6 +1191,49 @@ def _choose_required_feats(pos_type):
     else:
         raise NotImplementedError
     return required_feats
+
+
+def _read_header_file(header:pd.DataFrame):
+    header_ = []
+    order = list(header.columns)[1:]
+    defines = {}
+    for _, row in header[header['DEFINE'] == 'DEFINE'].iterrows():
+        for feat in order:
+            if row[feat]:
+                defines.setdefault(feat, []).append(row[feat])
+    
+    header_.append('###DEFINES###')
+    for feat in order:
+        line = f'DEFINE {feat} ' + ' '.join(f'{feat}:{v}' for v in defines[feat])
+        header_.append(line)
+    
+    defaults = {}
+    for _, row in header[header['DEFINE'] == 'DEFAULT'].iterrows():
+        for feat in order:
+            defaults.setdefault(row['pos'], {}).setdefault(feat, row[feat])
+    
+    header_.append('###DEFAULTS###')
+    for pos, feat2value in defaults.items():
+        line = ' '.join(f'{feat}:{feat2value[feat]}' for feat in order)
+        line = f'DEFAULT pos:{pos} ' + line
+        header_.append(line)
+
+    header_.append('###ORDER###')
+    header_.append('ORDER ' + ' '.join(order))
+
+    tokenizations = []
+    for _, row in header[header['DEFINE'] == 'TOKENIZATION'].iterrows():
+        for feat in order:
+            if row[feat] == 'X':
+                tokenizations.append(feat)
+    
+    header_.append('###TOKENIZATIONS###')
+    header_.append('TOKENIZATION ' + ' '.join(tokenizations))
+
+    defaults = {'defaults': defaults, 'order': order}
+
+    return header_, defaults
+
 
 
 if __name__ == "__main__":
