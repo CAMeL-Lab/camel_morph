@@ -355,6 +355,7 @@ MigrationBackup/
 !sigmorphon2022_release/requirements.txt
 
 data/
+!data/camel-morph-msa/default_config/Header-v2.csv
 databases/
 debugging_output/tables
 debugging_output/tables_docs
