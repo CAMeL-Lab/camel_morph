@@ -3,10 +3,10 @@
         "data_dir": "data",
         "specs": {
             "spreadsheet": "camel-morph-common",
-            "sheets": [
-                "About",
-                "Header"
-            ]
+            "sheets": {
+                "about": "About",
+                "header": "Header-v2"
+            }
         },
         "db_dir": "databases",
         "debugging": "debugging_output",
@@ -78,65 +78,7 @@
             "db": "XYZ_msa_full_v1.0.db",
             "pos_type": "any"
         },
-        "full_system_factored": {
-            "pruning": true,
-            "reindex": true,
-            "specs": {
-                "spreadsheet": [
-                    "camel-morph-msa-nom-other",
-                    "camel-morph-msa-verbs-cam-ready"
-                ],
-                "sheets": {
-                    "order": [
-                        {
-                            "MSA-Nom-ORDER": "N"
-                        },
-                        {
-                            "MSA-Verb-ORDER": "V"
-                        }
-                    ],
-                    "morph": [
-                        {
-                            "MSA-Nom-MORPH": "N"
-                        },
-                        {
-                            "MSA-Verb-MORPH": "V"
-                        }
-                    ]
-                },
-                "exclude": []
-            },
-            "lexicon": {
-                "spreadsheet": [
-                    "camel-morph-msa-nom",
-                    "Nominals-Sandbox",
-                    "camel-morph-msa-verbs-cam-ready"
-                ],
-                "sheets": [
-                    {
-                        "Lemma-Paradigm-Debugging-Noun-v2": "N",
-                        "Lemma-Paradigm-Debugging-Adj-v2": "N",
-                        "Lemma-Paradigm-Debugging-Adj_comp": "N"
-                    },
-                    {
-                        "Lemma-Paradigm-Debugging-Noun_num": "N",
-                        "Lemma-Paradigm-Debugging-Noun_quant": "N",
-                        "Lemma-Paradigm-Debugging-Adj_num": "N",
-                        "MSA-Other-LEX": "N",
-                        "MSA-Nom-Prop-LEX": "N"
-                    },
-                    {
-                        "MSA-Verb-LEX-PV": "V",
-                        "MSA-Verb-LEX-IV": "V",
-                        "MSA-Verb-LEX-CV": "V"
-                    }
-                ]
-            },
-            "dialect": "msa",
-            "db": "XYZ_msa_full_factored_v1.0.db",
-            "pos_type": "any"
-        },
-        "full_system_factored_auto_passive": {
+        "full_system_factored_wiki": {
             "pruning": true,
             "reindex": true,
             "specs": {
@@ -171,10 +113,168 @@
                     "MSA-Verb-LEX-IV": "MSA-Verb-IV-Passive-Patterns"
                 }
             },
+            "debugging": {
+                "stats_spreadsheet": "CamelMorph-Full-Paper-Assets",
+                "stats_sheet": "Statistics-v1.0",
+                "table_start_cell": "O86",
+                "pos_display": [
+                    "verbal.lex",
+                    "nominal.lex",
+                    "other.lex",
+                    "noun_prop.wiki"
+                ]
+            },
             "lexicon": {
                 "spreadsheet": [
                     "camel-morph-msa-nom",
                     "Nominals-Sandbox",
+                    "Wiki-Names-Extraction",
+                    "camel-morph-msa-verbs"
+                ],
+                "sheets": [
+                    {
+                        "Lemma-Paradigm-Debugging-Noun-v2": "N",
+                        "Lemma-Paradigm-Debugging-Adj-v2": "N",
+                        "Lemma-Paradigm-Debugging-Adj_comp": "N",
+                        "MSA-Nom-LEX-Backoff": "N"
+                    },
+                    {
+                        "Lemma-Paradigm-Debugging-Noun_num": "N",
+                        "Lemma-Paradigm-Debugging-Noun_quant": "N",
+                        "Lemma-Paradigm-Debugging-Adj_num": "N",
+                        "MSA-Other-LEX": "N",
+                        "MSA-Nom-Prop-LEX": "N"
+                    },
+                    {
+                        "MSA-Nom-Prop-Annex-LEX": "N"
+                    },
+                    {
+                        "MSA-Verb-LEX-PV": "V",
+                        "MSA-Verb-LEX-IV": "V",
+                        "MSA-Verb-LEX-CV": "V",
+                        "MSA-Verb-LEX-Backoff": "V"
+                    }
+                ]
+            },
+            "dialect": "msa",
+            "db": "XYZ_msa_full_factored_wiki_v1.2.db",
+            "pos_type": "any",
+            "class_map": "misc_files/class2complx_morpheme_type.json",
+            "caphi": "camel_morph.scratch.SBWtoPhon",
+            "logprob": "misc_files/logprob_atb.pkl"
+        },
+        "full_system_backoff": {
+            "pruning": true,
+            "reindex": true,
+            "specs": {
+                "spreadsheet": [
+                    "camel-morph-msa-nom-other",
+                    "camel-morph-msa-verbs"
+                ],
+                "sheets": {
+                    "order": [
+                        {
+                            "MSA-Nom-ORDER": "N"
+                        },
+                        {
+                            "MSA-Verb-ORDER": "V"
+                        }
+                    ],
+                    "morph": [
+                        {
+                            "MSA-Nom-MORPH": "N"
+                        },
+                        {
+                            "MSA-Verb-MORPH": "V"
+                        }
+                    ]
+                },
+                "exclude": []
+            },
+            "debugging": {
+                "stats_spreadsheet": "CamelMorph-Full-Paper-Assets",
+                "stats_sheet": "Statistics-v1.0",
+                "table_start_cell": "O68",
+                "pos_display": [
+                    "verbal.lex",
+                    "nominal.lex",
+                    "other.lex",
+                    "noun_prop.wiki"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": [
+                    "camel-morph-msa-nom",
+                    "camel-morph-msa-verbs"
+                ],
+                "sheets": [
+                    {
+                        "MSA-Nom-LEX-Backoff": "N"
+                    },
+                    {
+                        "MSA-Verb-LEX-Backoff": "V"
+                    }
+                ]
+            },
+            "dialect": "msa",
+            "db": "XYZ_msa_full_backoff_v1.0.db",
+            "pos_type": "any",
+            "class_map": "misc_files/class2complx_morpheme_type.json",
+            "caphi": "camel_morph.scratch.SBWtoPhon",
+            "logprob": "misc_files/logprob_atb.pkl"
+        },
+        "full_system_unfactored_wiki": {
+            "pruning": true,
+            "cat2id": true,
+            "caphi": "camel_morph.scratch.SBWtoPhon",
+            "specs": {
+                "spreadsheet": [
+                    "camel-morph-msa-nom-other",
+                    "camel-morph-msa-verbs"
+                ],
+                "sheets": {
+                    "order": [
+                        {
+                            "MSA-Nom-ORDER": "N"
+                        },
+                        {
+                            "MSA-Verb-ORDER": "V"
+                        }
+                    ],
+                    "morph": [
+                        {
+                            "MSA-Nom-MORPH": "N"
+                        },
+                        {
+                            "MSA-Verb-MORPH": "V"
+                        }
+                    ]
+                },
+                "exclude": []
+            },
+            "passive": {
+                "spreadsheet": "camel-morph-msa-verbs",
+                "sheets": {
+                    "MSA-Verb-LEX-PV": "MSA-Verb-PV-Passive-Patterns",
+                    "MSA-Verb-LEX-IV": "MSA-Verb-IV-Passive-Patterns"
+                }
+            },
+            "debugging": {
+                "stats_spreadsheet": "CamelMorph-Full-Paper-Assets",
+                "stats_sheet": "Statistics-v1.0",
+                "table_start_cell": "P45",
+                "pos_display": [
+                    "verbal.lex",
+                    "nominal.lex",
+                    "other.lex",
+                    "noun_prop.wiki"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": [
+                    "camel-morph-msa-nom",
+                    "Nominals-Sandbox",
+                    "Wiki-Names-Extraction",
                     "camel-morph-msa-verbs"
                 ],
                 "sheets": [
@@ -191,6 +291,9 @@
                         "MSA-Nom-Prop-LEX": "N"
                     },
                     {
+                        "MSA-Nom-Prop-Annex-LEX": "N"
+                    },
+                    {
                         "MSA-Verb-LEX-PV": "V",
                         "MSA-Verb-LEX-IV": "V",
                         "MSA-Verb-LEX-CV": "V"
@@ -198,8 +301,92 @@
                 ]
             },
             "dialect": "msa",
-            "db": "XYZ_msa_full_factored_auto_passive_v1.0.db",
-            "pos_type": "any"
+            "db": "XYZ_msa_full_unfactored_wiki_v1.0.db",
+            "pos_type": "any",
+            "class_map": "misc_files/class2complx_morpheme_type.json"
+        },
+        "full_system_factored_wiki_same_proclitics": {
+            "pruning": true,
+            "reindex": true,
+            "specs": {
+                "spreadsheet": [
+                    "camel-morph-msa-nom-other",
+                    "camel-morph-msa-verbs"
+                ],
+                "sheets": {
+                    "order": [
+                        {
+                            "MSA-Nom-ORDER": ""
+                        },
+                        {
+                            "MSA-Verb-ORDER": ""
+                        }
+                    ],
+                    "morph": [
+                        {
+                            "MSA-Nom-MORPH": ""
+                        },
+                        {
+                            "MSA-Verb-MORPH": ""
+                        }
+                    ]
+                },
+                "exclude": []
+            },
+            "passive": {
+                "spreadsheet": "camel-morph-msa-verbs",
+                "sheets": {
+                    "MSA-Verb-LEX-PV": "MSA-Verb-PV-Passive-Patterns",
+                    "MSA-Verb-LEX-IV": "MSA-Verb-IV-Passive-Patterns"
+                }
+            },
+            "debugging": {
+                "stats_spreadsheet": "CamelMorph-Full-Paper-Assets",
+                "stats_sheet": "Statistics-v1.0",
+                "table_start_cell": "P28",
+                "pos_display": [
+                    "verbal.lex",
+                    "nominal.lex",
+                    "other.lex",
+                    "noun_prop.wiki"
+                ]
+            },
+            "lexicon": {
+                "spreadsheet": [
+                    "camel-morph-msa-nom",
+                    "Nominals-Sandbox",
+                    "Wiki-Names-Extraction",
+                    "camel-morph-msa-verbs"
+                ],
+                "sheets": [
+                    {
+                        "Lemma-Paradigm-Debugging-Noun-v2": "",
+                        "Lemma-Paradigm-Debugging-Adj-v2": "",
+                        "Lemma-Paradigm-Debugging-Adj_comp": ""
+                    },
+                    {
+                        "Lemma-Paradigm-Debugging-Noun_num": "",
+                        "Lemma-Paradigm-Debugging-Noun_quant": "",
+                        "Lemma-Paradigm-Debugging-Adj_num": "",
+                        "MSA-Other-LEX": "",
+                        "MSA-Nom-Prop-LEX": ""
+                    },
+                    {
+                        "MSA-Nom-Prop-Annex-LEX": ""
+                    },
+                    {
+                        "MSA-Verb-LEX-PV": "",
+                        "MSA-Verb-LEX-IV": "",
+                        "MSA-Verb-LEX-CV": ""
+                    }
+                ]
+            },
+            "dialect": "msa",
+            "db": "XYZ_msa_full_factored_wiki_same_proclitics_v1.0.db",
+            "pos_type": "any",
+            "class_map": "misc_files/class2complx_morpheme_type.json",
+            "caphi": "camel_morph.scratch.SBWtoPhon",
+            "logprob": "misc_files/logprob_atb.pkl"
         }
     }
 }

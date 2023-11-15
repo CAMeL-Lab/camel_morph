@@ -3,10 +3,10 @@
         "data_dir": "data",
         "specs": {
             "spreadsheet": "camel-morph-common",
-            "sheets": [
-                "About",
-                "Header"
-            ]
+            "sheets": {
+                "about": "About",
+                "header": "Header-v2"
+            }
         },
         "db_dir": "databases",
         "debugging": "debugging_output",
@@ -42,43 +42,17 @@
                 "display_format": "expanded",
                 "stats_spreadsheet": "CamelMorph-Nominals-Paper-Assets",
                 "stats_sheet": "Statistics-v1.0",
-                "table_range": ""
+                "table_start_cell": ""
             },
             "lexprob": "return_all",
             "dialect": "msa",
             "db": "XYZ_msa_nom_stats_v1.0.db",
-            "pos_type": "nominal",
-            "class_map": {
-                "DBPrefix": [
-                    "[QUES]",
-                    "[EMPH]",
-                    "[CONJ]",
-                    "[CONJ-ACC]",
-                    "[PREP]",
-                    "[ART]"
-                ],
-                "DBSuffix": [
-                    "[PRON]",
-                    "[NSuff.XXIU]",
-                    "[NSuff.XXCU]",
-                    "[NSuff.XXDU]",
-                    "[NSuff.XXIG]",
-                    "[NSuff.XXCG]",
-                    "[NSuff.XXDG]",
-                    "[NSuff.XXIA]",
-                    "[NSuff.XXCA]",
-                    "[NSuff.XXDA]",
-                    "[NSuff.XXIN]",
-                    "[NSuff.XXCN]",
-                    "[NSuff.XXDN]"
-                ],
-                "Buffer": [
-                    "[NBuff]"
-                ],
-                "other": [
-                    "[EMPTY]"
-                ]
-            }
+            "pos": [
+                "noun",
+                "adj",
+                "adj_comp"
+            ],
+            "class_map": "misc_files/class2complx_morpheme_type.json"
         },
         "nom_msa_stats_reindex": {
             "pruning": true,
@@ -107,38 +81,12 @@
             "lexprob": "return_all",
             "dialect": "msa",
             "db": "XYZ_msa_nom_stats_reindex_v1.0.db",
-            "pos_type": "nominal",
-            "class_map": {
-                "DBPrefix": [
-                    "[QUES]",
-                    "[EMPH]",
-                    "[CONJ]",
-                    "[CONJ-ACC]",
-                    "[PREP]",
-                    "[ART]"
-                ],
-                "DBSuffix": [
-                    "[PRON]",
-                    "[NSuff.XXIU]",
-                    "[NSuff.XXCU]",
-                    "[NSuff.XXDU]",
-                    "[NSuff.XXIG]",
-                    "[NSuff.XXCG]",
-                    "[NSuff.XXDG]",
-                    "[NSuff.XXIA]",
-                    "[NSuff.XXCA]",
-                    "[NSuff.XXDA]",
-                    "[NSuff.XXIN]",
-                    "[NSuff.XXCN]",
-                    "[NSuff.XXDN]"
-                ],
-                "Buffer": [
-                    "[NBuff]"
-                ],
-                "other": [
-                    "[EMPTY]"
-                ]
-            }
+            "pos": [
+                "noun",
+                "adj",
+                "adj_comp"
+            ],
+            "class_map": "misc_files/class2complx_morpheme_type.json"
         },
         "nom_eval": {
             "pruning": true,
@@ -172,37 +120,36 @@
             },
             "dialect": "msa",
             "db": "XYZ_msa_nom_v1.0_test.db",
-            "class_map": {
-                "DBPrefix": [
-                    "[QUES]",
-                    "[EMPH]",
-                    "[CONJ]",
-                    "[CONJ-ACC]",
-                    "[PREP]",
-                    "[ART]"
+            "class_map": "misc_files/class2complx_morpheme_type.json",
+            "pos_type": [
+                "nominal",
+                "other"
+            ]
+        },
+        "other_eval": {
+            "pruning": true,
+            "specs": {
+                "spreadsheet": "camel-morph-msa-nom-other",
+                "sheets": {
+                    "order": "MSA-Nom-ORDER",
+                    "morph": "MSA-Nom-MORPH"
+                },
+                "exclude": []
+            },
+            "lexicon": {
+                "spreadsheet": [
+                    "Nominals-Sandbox"
                 ],
-                "DBSuffix": [
-                    "[PRON]",
-                    "[NSuff.XXIU]",
-                    "[NSuff.XXCU]",
-                    "[NSuff.XXDU]",
-                    "[NSuff.XXIG]",
-                    "[NSuff.XXCG]",
-                    "[NSuff.XXDG]",
-                    "[NSuff.XXIA]",
-                    "[NSuff.XXCA]",
-                    "[NSuff.XXDA]",
-                    "[NSuff.XXIN]",
-                    "[NSuff.XXCN]",
-                    "[NSuff.XXDN]"
-                ],
-                "Buffer": [
-                    "[NBuff]"
-                ],
-                "other": [
-                    "[EMPTY]"
+                "sheets": [
+                    [
+                        "MSA-Other-LEX"
+                    ]
                 ]
-            }
+            },
+            "dialect": "msa",
+            "db": "XYZ_msa_other_v1.0.db",
+            "class_map": "misc_files/class2complx_morpheme_type.json",
+            "pos_type": "other"
         }
     }
 }

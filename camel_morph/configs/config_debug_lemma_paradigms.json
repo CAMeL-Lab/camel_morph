@@ -3,10 +3,10 @@
         "data_dir": "data",
         "specs": {
             "spreadsheet": "camel-morph-common",
-            "sheets": [
-                "About",
-                "Header"
-            ]
+            "sheets": {
+                "about": "About",
+                "header": "Header-v2"
+            }
         },
         "db_dir": "databases",
         "debugging": "debugging_output",

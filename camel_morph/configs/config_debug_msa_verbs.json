@@ -3,10 +3,10 @@
         "data_dir": "data",
         "specs": {
             "spreadsheet": "camel-morph-common",
-            "sheets": [
-                "About",
-                "Header"
-            ]
+            "sheets": {
+                "about": "About",
+                "header": "Header-v2"
+            }
         },
         "db_dir": "databases",
         "debugging": "debugging_output",
@@ -27,15 +27,18 @@
                 "spreadsheet": "camel-morph-msa-verbs",
                 "sheets": {
                     "order": "MSA-Verb-ORDER",
-                    "morph": "MSA-Verb-MORPH",
-                    "passive": {
-                        "MSA-Verb-LEX-PV": "MSA-Verb-PV-Passive-Patterns",
-                        "MSA-Verb-LEX-IV": "MSA-Verb-IV-Passive-Patterns"
-                    }
+                    "morph": "MSA-Verb-MORPH"
                 },
                 "exclude": [
                     "RED"
                 ]
+            },
+            "passive": {
+                "spreadsheet": "camel-morph-msa-verbs",
+                "sheets": {
+                    "MSA-Verb-LEX-PV": "MSA-Verb-PV-Passive-Patterns",
+                    "MSA-Verb-LEX-IV": "MSA-Verb-IV-Passive-Patterns"
+                }
             },
             "lexicon": {
                 "spreadsheet": "camel-morph-msa-verbs",
@@ -64,11 +67,14 @@
                 "spreadsheet": "camel-morph-msa-verbs",
                 "sheets": {
                     "order": "MSA-Verb-ORDER",
-                    "morph": "MSA-Verb-MORPH",
-                    "passive": {
-                        "MSA-Verb-LEX-PV": "MSA-Verb-PV-Passive-Patterns",
-                        "MSA-Verb-LEX-IV": "MSA-Verb-IV-Passive-Patterns"
-                    }
+                    "morph": "MSA-Verb-MORPH"
+                }
+            },
+            "passive": {
+                "spreadsheet": "camel-morph-msa-verbs",
+                "sheets": {
+                    "MSA-Verb-LEX-PV": "MSA-Verb-PV-Passive-Patterns",
+                    "MSA-Verb-LEX-IV": "MSA-Verb-IV-Passive-Patterns"
                 }
             },
             "lexicon": {
@@ -94,19 +100,24 @@
         "pv_msa": {
             "dialect": "msa",
             "pruning": true,
+            "caphi": "camel_morph.scratch.SBWtoPhon",
+            "logprob": "misc_files/logprob_atb.json",
             "specs": {
                 "spreadsheet": "camel-morph-msa-verbs",
                 "sheets": {
                     "order": "MSA-Verb-ORDER",
-                    "morph": "MSA-Verb-MORPH",
-                    "passive": {
-                        "MSA-Verb-LEX-PV": "MSA-Verb-PV-Passive-Patterns"
-                    }
+                    "morph": "MSA-Verb-MORPH"
                 },
                 "exclude": [
                     "IV",
                     "CV"
                 ]
+            },
+            "passive": {
+                "spreadsheet": "camel-morph-msa-verbs",
+                "sheets": {
+                    "MSA-Verb-LEX-PV": "MSA-Verb-PV-Passive-Patterns"
+                }
             },
             "lexicon": {
                 "spreadsheet": "camel-morph-msa-verbs",
@@ -127,9 +138,19 @@
                         "bank": "MSA-PV-Bank.tsv",
                         "debugging_sheet": "MSA-PV"
                     }
-                }
+                },
+                "stats_spreadsheet": "CamelMorph-Full-Paper-Assets",
+                "stats_sheet": "Statistics-v1.0",
+                "table_start_cell": "O86",
+                "pos_display": [
+                    "verbal.lex",
+                    "nominal.lex",
+                    "other.lex",
+                    "noun_prop.wiki"
+                ]
             },
             "pos_type": "verbal",
+            "class_map": "misc_files/class2complx_morpheme_type.json",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"
@@ -142,16 +163,19 @@
                 "spreadsheet": "camel-morph-msa-verbs",
                 "sheets": {
                     "order": "MSA-Verb-ORDER",
-                    "morph": "MSA-Verb-MORPH",
-                    "passive": {
-                        "MSA-Verb-LEX-PV": "MSA-Verb-PV-Passive-Patterns"
-                    }
+                    "morph": "MSA-Verb-MORPH"
                 },
                 "exclude": [
                     "RED",
                     "IV",
                     "CV"
                 ]
+            },
+            "passive": {
+                "spreadsheet": "camel-morph-msa-verbs",
+                "sheets": {
+                    "MSA-Verb-LEX-IV": "MSA-Verb-IV-Passive-Patterns"
+                }
             },
             "lexicon": {
                 "spreadsheet": "camel-morph-msa-verbs",
@@ -235,15 +259,18 @@
                 "spreadsheet": "camel-morph-msa-verbs",
                 "sheets": {
                     "order": "MSA-Verb-ORDER",
-                    "morph": "MSA-Verb-MORPH",
-                    "passive": {
-                        "MSA-Verb-LEX-PV": "MSA-Verb-IV-Passive-Patterns"
-                    }
+                    "morph": "MSA-Verb-MORPH"
                 },
                 "exclude": [
                     "PV",
                     "CV"
                 ]
+            },
+            "passive": {
+                "spreadsheet": "camel-morph-msa-verbs",
+                "sheets": {
+                    "MSA-Verb-LEX-IV": "MSA-Verb-IV-Passive-Patterns"
+                }
             },
             "lexicon": {
                 "spreadsheet": "camel-morph-msa-verbs",
@@ -305,16 +332,19 @@
                 "spreadsheet": "camel-morph-msa-verbs",
                 "sheets": {
                     "order": "MSA-Verb-ORDER",
-                    "morph": "MSA-Verb-MORPH",
-                    "passive": {
-                        "MSA-Verb-LEX-PV": "MSA-Verb-IV-Passive-Patterns"
-                    }
+                    "morph": "MSA-Verb-MORPH"
                 },
                 "exclude": [
                     "RED",
                     "PV",
                     "CV"
                 ]
+            },
+            "passive": {
+                "spreadsheet": "camel-morph-msa-verbs",
+                "sheets": {
+                    "MSA-Verb-LEX-IV": "MSA-Verb-IV-Passive-Patterns"
+                }
             },
             "lexicon": {
                 "spreadsheet": "camel-morph-msa-verbs",

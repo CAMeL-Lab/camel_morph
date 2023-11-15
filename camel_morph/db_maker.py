@@ -739,7 +739,7 @@ def _read_affix(affix: List[Dict], affix_type: str) -> Tuple[str, Dict]:
                   for m in affix for feat in m['FEAT'].split()}
     analysis = {**analysis, **affix_feat}
     for col in ['D3SEG', 'D3TOK', 'ATBSEG', 'ATBTOK']:
-        tok = [m[col] if m[col] else m['FORM'].strip() for m in affix]
+        tok = [m[col] if m.get(col) else m['FORM'].strip() for m in affix]
         tok = ''.join(t for t in tok if t != '_')
         analysis[col.lower()] = tok
     
@@ -777,7 +777,7 @@ def _read_stem(stem: List[Dict]) -> Tuple[str, Dict]:
     analysis = {**analysis, **stem_feat}
     
     for col in ['D3SEG', 'D3TOK', 'ATBSEG', 'ATBTOK']:
-        tok = [s[col] if s[col] else s['FORM'].strip() for s in stem]
+        tok = [s[col] if s.get(col) else s['FORM'].strip() for s in stem]
         tok = ''.join(t for t in tok if t != '_')
         analysis[col.lower()] = tok
     

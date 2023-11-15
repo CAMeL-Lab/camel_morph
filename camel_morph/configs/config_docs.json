@@ -3,10 +3,10 @@
         "data_dir": "data",
         "specs": {
             "spreadsheet": "camel-morph-common",
-            "sheets": [
-                "About",
-                "Header"
-            ]
+            "sheets": {
+                "about": "About",
+                "header": "Header-v2"
+            }
         },
         "db_dir": "databases",
         "camel_tools": "./camel_morph/camel_tools",
@@ -15,6 +15,7 @@
         "docs_debugging_dir": "docs_debugging",
         "docs_banks_dir": "banks_docs",
         "docs_tables_dir": "tables_docs",
+        "paradigms_config": "misc_files/config_paradigms.json",
         "banks_spreadsheet": "Paradigm-Banks"
     },
     "local": {
@@ -80,6 +81,42 @@
             "dialect": "msa",
             "db": "XYZ_msa_nom_docs_v1.0.db",
             "pos_type": "nominal"
+        },
+        "verbs_msa_docs": {
+            "pruning": true,
+            "reindex": true,
+            "specs": {
+                "spreadsheet": "camel-morph-msa-verbs",
+                "sheets": {
+                    "order": "MSA-Verb-ORDER",
+                    "morph": "MSA-Verb-MORPH"
+                }
+            },
+            "passive": {
+                "spreadsheet": "camel-morph-msa-verbs",
+                "sheets": {
+                    "MSA-Verb-LEX-PV": "MSA-Verb-PV-Passive-Patterns",
+                    "MSA-Verb-LEX-IV": "MSA-Verb-IV-Passive-Patterns"
+                }
+            },
+            "lexicon": {
+                "spreadsheet": "camel-morph-msa-verbs",
+                "sheets": [
+                    "MSA-Verb-LEX-PV",
+                    "MSA-Verb-LEX-IV",
+                    "MSA-Verb-LEX-CV"
+                ]
+            },
+            "docs_debugging": {
+                "bank": "MSA-Verb-Docs-Bank.tsv",
+                "output_name": "docs_debug_verbs_msa_v1.0.tsv",
+                "debugging_spreadsheet": "camel-morph-common",
+                "debugging_sheet": "MSA-Documentation-Verb-Auto",
+                "docs_tables": "docs_tables_verbs_msa_v1.0.tsv"
+            },
+            "dialect": "msa",
+            "db": "XYZ_msa_verbs_docs_v1.0.db",
+            "pos_type": "verbal"
         }
     }
 }

@@ -50,8 +50,7 @@ SPECS_HEADER_REQUIRED = dict(
            'SUFFIX', 'PREFIX-SHORT', 'STEM-SHORT', 'SUFFIX-SHORT'],
     morph=['EXCLUDE', 'DEFINE', 'CLASS', 'FUNC', 'FORM',
            'BW', 'GLOSS', 'FEAT', 'COND-T', 'COND-S',
-           'CLASS', 'FUNC', 'FORM', 'BW', 'GLOSS',
-           'D3SEG', 'D3TOK', 'ATBSEG', 'ATBTOK']
+           'CLASS', 'FUNC', 'FORM', 'BW', 'GLOSS']
 )
 ORDER_FIELDS = ['PREFIX', 'STEM', 'SUFFIX']
 ORDER_FIELDS_SHORT = ['PREFIX-SHORT', 'STEM-SHORT', 'SUFFIX-SHORT']
