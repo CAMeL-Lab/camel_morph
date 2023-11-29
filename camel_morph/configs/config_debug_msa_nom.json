@@ -34,7 +34,7 @@
             "lexicon": {
                 "spreadsheet": "camel-morph-msa-nom",
                 "sheets": [
-                    "Lemma-Paradigm-Debugging-Noun-v2",
+                    "MSA-Noun-LEX",
                     "Lemma-Paradigm-Debugging-Adj-v2",
                     "Lemma-Paradigm-Debugging-Adj_comp"
                 ]
@@ -87,7 +87,7 @@
             "lexicon": {
                 "spreadsheet": "camel-morph-msa-nom",
                 "sheets": [
-                    "Lemma-Paradigm-Debugging-Noun-v2",
+                    "MSA-Noun-LEX",
                     "Lemma-Paradigm-Debugging-Adj-v2",
                     "Lemma-Paradigm-Debugging-Adj_comp"
                 ]

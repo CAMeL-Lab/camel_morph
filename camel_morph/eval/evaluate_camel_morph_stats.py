@@ -5,6 +5,7 @@ import re
 from collections import Counter
 from itertools import product
 import pickle
+import json
 
 import gspread
 from numpy import nan
@@ -17,8 +18,9 @@ sys.path.insert(0, package_path)
 
 from camel_morph.debugging.download_sheets import download_sheets
 from camel_morph.debugging.debug_lemma_paradigms import regenerate_signature_lex_rows, _strip_brackets
-from camel_morph.utils.utils import get_config_file
+from camel_morph.utils.utils import get_config_file, col_letter2index, index2col_letter
 from camel_morph import db_maker, db_maker_utils
+from camel_morph.eval.evaluate_camel_morph import load_required_pos
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-config_file_main", default='config_default.json',
@@ -35,9 +37,6 @@ parser.add_argument("-camel_tools", default='local', choices=['local', 'official
                         type=str, help="Path of the directory containing the camel_tools modules.")
 args = parser.parse_args([] if "__file__" not in globals() else None)
 
-
-POS = ['noun', 'adj', 'adj_comp']
-
 lex_keys = ['diac', 'lex']
 lex_pos_keys = [*lex_keys, 'pos']
 proclitic_keys = ['prc0', 'prc1', 'prc2', 'prc3']
@@ -52,17 +51,20 @@ essential_keys_form_feats_no_lex_pos = essential_keys_no_lex_pos + form_keys
 essential_keys_form_feats_no_clitics = lex_pos_keys + feats_oblig + form_keys
 
 
-def _get_analysis_counts(db):
-    stem_cat_hash, stem_hash_diac_only = {}, {}
+def get_analysis_counts(db, forms=False, ids=False):
+    stem_cat_hash, stem_cat_hash_diac_only, stem_cat_hash_diac_only_no_wiki = {}, {}, {}
     for match in db.stem_hash:
         if match == 'NOAN':
             continue
         for cat_analysis in db.stem_hash[match]:
             cat, analysis = cat_analysis
-            if POS and analysis['pos'] not in POS:
+            if CAMEL_POS and analysis['pos'] not in CAMEL_POS:
                 continue
             stem_cat_hash.setdefault(cat, []).append(analysis)
-            stem_hash_diac_only.setdefault(cat, []).append(analysis.get('diac', ''))
+            stem_cat_hash_diac_only.setdefault(cat, []).append(analysis.get('diac', ''))
+            if analysis.get('source') != 'wiki':
+                stem_cat_hash_diac_only_no_wiki.setdefault(cat, []).append(
+                    analysis.get('diac', ''))
 
     X_cat_hash_no_clitics, X_hash_diac_only = {}, {}
     for morph_type in ['prefix', 'suffix']:
@@ -91,34 +93,72 @@ def _get_analysis_counts(db):
 
     memoize = {}
     unique_analyses_no_clitics = set()
-    counts, compat_entries, cmplx_morphs = {}, {}, {}
+    analysis_counts, compat_entries, cmplx_morphs = {}, {}, {}
+    forms, ids = set() if forms else None, {} if ids else None
     for cat_A in tqdm(db.prefix_suffix_compat):
         for cat_C in db.prefix_suffix_compat[cat_A]:
             if cat_A in db.prefix_stem_compat and cat_A in db.prefix_cat_hash:
                 for cat_B in db.prefix_stem_compat[cat_A]:
                     if cat_B in db.stem_suffix_compat and cat_B in stem_cat_hash:
                         if cat_C in db.stem_suffix_compat[cat_B] and cat_C in db.suffix_cat_hash:
-                                A_counts = len(db.prefix_cat_hash[cat_A])
-                                B_counts = len(stem_cat_hash[cat_B])
-                                C_counts = len(db.suffix_cat_hash[cat_C])
-                                counts.setdefault('analyses', {}).setdefault(
+                                feat_combs_A = [tuple(a.get(k, '0') for k in essential_keys_form_feats)
+                                                    for a in db.prefix_cat_hash[cat_A]]
+                                feat_combs_B = [tuple(a.get(k, '0') for k in essential_keys_form_feats)
+                                                for a in stem_cat_hash[cat_B]]
+                                feat_combs_C = [tuple(a.get(k, '0') for k in essential_keys_form_feats)
+                                                for a in db.suffix_cat_hash[cat_C]]
+                                A_counts = len(set(feat_combs_A))
+                                B_counts = len(set(feat_combs_B))
+                                B_counts_no_wiki = len([a for a in stem_cat_hash[cat_B] if a.get('source') != 'wiki'])
+                                C_counts = len(set(feat_combs_C))
+                                
+                                analysis_counts.setdefault('analyses', {}).setdefault(
                                     (cat_A, cat_B, cat_C), A_counts * B_counts * C_counts)
+                                analysis_counts.setdefault('analyses_no_wiki', {}).setdefault(
+                                    (cat_A, cat_B, cat_C), A_counts * B_counts_no_wiki * C_counts)
                                 
                                 cmplx_morphs.setdefault('prefix', set()).add(cat_A)
                                 cmplx_morphs.setdefault('stem', set()).add(cat_B)
                                 cmplx_morphs.setdefault('suffix', set()).add(cat_C)
                                 
                                 A_counts_diac_only = len(set(X_hash_diac_only['prefix'][cat_A]))
-                                B_counts_diac_only = len(set(stem_hash_diac_only[cat_B]))
+                                B_counts_diac_only = len(set(stem_cat_hash_diac_only[cat_B]))
+                                B_counts_diac_only_no_wiki = len(set(stem_cat_hash_diac_only_no_wiki.get(cat_B, [])))
                                 C_counts_diac_only = len(set(X_hash_diac_only['suffix'][cat_C]))
-                                counts.setdefault('forms', {}).setdefault(
+                                analysis_counts.setdefault('forms', {}).setdefault(
                                     (cat_A, cat_B, cat_C), A_counts_diac_only * B_counts_diac_only * C_counts_diac_only)
+                                analysis_counts.setdefault('forms_no_wiki', {}).setdefault(
+                                    (cat_A, cat_B, cat_C), A_counts_diac_only * B_counts_diac_only_no_wiki * C_counts_diac_only)
+                                
+                                if forms is not None:
+                                    A_diac_only = set(X_hash_diac_only['prefix'][cat_A])
+                                    B_diac_only = set(stem_cat_hash_diac_only[cat_B])
+                                    C_diac_only = set(X_hash_diac_only['suffix'][cat_C])
+                                    forms_ = set(map(lambda x: ''.join(x), product(A_diac_only, B_diac_only, C_diac_only)))
+                                    forms.update(forms_)
+                                
+                                if ids is not None:
+                                    ids.setdefault('stem', {}).setdefault('split', set()).update(
+                                        set(id_ for a in stem_cat_hash[cat_B] for id_ in a['cm_stem_ids'].split('+')))
+                                    ids.setdefault('prefix', {}).setdefault('split', set()).update(
+                                        set(id_ for a in db.prefix_cat_hash[cat_A] for id_ in a['cm_pref_ids'].split('+')))
+                                    ids.setdefault('suffix', {}).setdefault('split', set()).update(
+                                        set(id_ for a in db.suffix_cat_hash[cat_C] for id_ in a['cm_suff_ids'].split('+')))
+                                    
+                                    ids.setdefault('stem', {}).setdefault('not_split', set()).update(
+                                        set(a['cm_stem_ids'] for a in stem_cat_hash[cat_B]))
+                                    ids.setdefault('prefix', {}).setdefault('not_split', set()).update(
+                                        set(a['cm_pref_ids'] for a in db.prefix_cat_hash[cat_A]))
+                                    ids.setdefault('suffix', {}).setdefault('not_split', set()).update(
+                                        set(a['cm_suff_ids'] for a in db.suffix_cat_hash[cat_C]))
 
                                 if cat_A in X_cat_hash_no_clitics['prefix'] and cat_C in X_cat_hash_no_clitics['suffix']:
                                     A_counts_no_clitics = len(X_cat_hash_no_clitics['prefix'][cat_A])
                                     C_counts_no_clitics = len(X_cat_hash_no_clitics['suffix'][cat_C])
-                                    counts.setdefault('no_clitics', {}).setdefault(
+                                    analysis_counts.setdefault('no_clitics', {}).setdefault(
                                         (cat_A, cat_B, cat_C), A_counts_no_clitics * B_counts * C_counts_no_clitics)
+                                    analysis_counts.setdefault('no_clitics_no_wiki', {}).setdefault(
+                                        (cat_A, cat_B, cat_C), A_counts_no_clitics * B_counts_no_wiki * C_counts_no_clitics)
                                     
                                     feat_combs_A = [tuple(a.get(k, 'N/A') for k in essential_keys_form_feats_no_clitics)
                                                     for a in X_cat_hash_no_clitics['prefix'][cat_A]]
@@ -141,39 +181,30 @@ def _get_analysis_counts(db):
                                 compat_entries.setdefault('BC', set()).add((cat_B, cat_C))
                                 compat_entries.setdefault('AC', set()).add((cat_A, cat_C))
 
-    return counts, compat_entries, cmplx_morphs, unique_analyses_no_clitics
+    info = dict(
+        analysis_counts=analysis_counts,
+        compat_entries=compat_entries,
+        cmplx_morphs=cmplx_morphs,
+        unique_analyses_no_clitics=unique_analyses_no_clitics,
+        forms=forms,
+        ids=ids
+    )
 
-
-def _underscore_soundness(lemmas_db_camel):
-    lemmas_db_camel_, bad_entries = {}, {}
-    for lemma_pos in lemmas_db_camel:
-        lemmas_db_camel_.setdefault(
-            (lemma_pos[0].split('_')[0], lemma_pos[1]), []).append(lemma_pos)
-    for lemma_pos, lemmas_pos in lemmas_db_camel_.items():
-        if len(lemmas_pos) == 1:
-            if re.search(r'\d', lemmas_pos[0][0]):
-                bad_entries[lemma_pos] = lemmas_pos
-        else:
-            if any(not bool(re.search(r'\d', lemma_pos[0])) for lemma_pos in lemmas_pos):
-                bad_entries[lemma_pos] = lemmas_pos
-            else:
-                numbers = [int(lemma_pos[0].split('_')[1]) for lemma_pos in lemmas_pos]
-                numbers = sorted(numbers)
-                if numbers[0] != 1 or sorted(numbers) != list(range(min(numbers), max(numbers)+1)):
-                    bad_entries[lemma_pos] = lemmas_pos
+    return info
 
 
 def _get_lex_specs(lexicon_specs, feats):
-    return set((feats_[0].split(':')[1], feats_[1].split('/')[1].lower(), *feats_[2:])
+    lexicon_specs['POS'] = lexicon_specs['FEAT'].str.extract('pos:(\S+)')[0]
+    return set((feats_[0].split(':')[1], feats_[1].lower(), *feats_[2:])
                 for feats_ in lexicon_specs[feats].values.tolist())
 
 def _get_lex_db(db, feats):
     return set(
-        tuple(ar2bw(analysis[feat]) if feat in ['lex', 'stem'] else analysis[feat]
+        tuple(ar2bw(analysis[feat]) if feat in ['lex', 'stem'] else analysis.get(feat, '')
             for feat in feats)
         for _, analyses in db.stem_hash.items()
         for cat, analysis in analyses
-        if analysis['pos'] in POS)
+        if analysis['pos'] in CAMEL_POS)
 
 def _get_lex_db_calima(db_calima, feats):
     lex_db_calima = _get_lex_db(db_calima, feats)
@@ -191,35 +222,49 @@ def _get_lex_db_calima(db_calima, feats):
     return lex_db_calima
 
 
-def _aggregate_results(lemmas_specs, lemmas_db_camel, lemmas_db_calima):
-    systems = [('specs', lemmas_specs), ('db_camel', lemmas_db_camel),
-               ('db_calima', lemmas_db_calima)]
-    lemma_counts = {}
-    for system, lemmas_ in systems:
-        for pos in POS:
-            lemma_counts.setdefault(pos, {}).setdefault(system,
-                sum(1 for lemma_pos in lemmas_ if lemma_pos[1] == pos))
-    return lemma_counts
+def _aggregate_results(lex_specs, lex_db_camel, lex_db_calima,
+                       index2feat):
+    pos_index, source_index = index2feat.index('POS'), index2feat.index('SOURCE')
+    systems = [('specs', lex_specs), ('db_camel', lex_db_camel),
+               ('db_calima', lex_db_calima)]
+    lex_counts = {}
+    for system, lexs_ in systems:
+        for pos_or_type_source in POS_DISPLAY:
+            pos_or_type, source = pos_or_type_source.split('.')
+            lex_counts.setdefault(pos_or_type_source, {}).setdefault(system, 0)
+            for feats in lexs_:
+                if feats[source_index] == source:
+                    if (pos_or_type in POS_TYPES and
+                        POS2POS_TYPE[feats[pos_index]] == pos_or_type or
+                        pos_or_type not in POS_TYPES and 
+                        feats[pos_index] == pos_or_type):
+                        lex_counts[pos_or_type_source][system] += 1
+    return lex_counts
 
 
 def get_number_of_lemmas(lexicon_specs, db_camel, db_calima):
-    lemmas_specs = _get_lex_specs(lexicon_specs, ['LEMMA', 'BW'])
-    lemmas_db_camel = _get_lex_db(db_camel, ['lex', 'pos'])
-    lemmas_db_calima = _get_lex_db_calima(db_calima, ['lex', 'pos'])
-    assert len(lemmas_specs) == len(lemmas_db_camel)
+    lemmas_specs = _get_lex_specs(lexicon_specs, ['LEMMA', 'POS', 'SOURCE'])
+    lemmas_db_camel = _get_lex_db(db_camel, ['lex', 'pos', 'source'])
+    lemmas_db_calima = _get_lex_db_calima(db_calima, ['lex', 'pos', 'source'])
+    diff = abs(len(lemmas_specs) - len(lemmas_db_camel))
+    if diff:
+        print(('\nWARNING: The number of lemmas between the specs and the DB '
+               f'is not the same ({diff} difference)'))
     lemma_counts = _aggregate_results(
-        lemmas_specs, lemmas_db_camel, lemmas_db_calima)
+        lemmas_specs, lemmas_db_camel, lemmas_db_calima,
+        ['LEMMA', 'POS', 'SOURCE'])
 
     return lemma_counts
 
 
 def get_number_of_stems(lexicon_specs, db_camel, db_calima):
-    stems_specs = _get_lex_specs(lexicon_specs, ['LEMMA', 'BW', 'FORM'])
-    stems_db_camel = _get_lex_db(db_camel, ['lex', 'pos', 'diac'])
-    stems_db_calima = _get_lex_db_calima(db_calima, ['lex', 'pos', 'diac'])
+    stems_specs = _get_lex_specs(lexicon_specs, ['LEMMA', 'POS', 'FORM', 'SOURCE'])
+    stems_db_camel = _get_lex_db(db_camel, ['lex', 'pos', 'diac', 'source'])
+    stems_db_calima = _get_lex_db_calima(db_calima, ['lex', 'pos', 'diac', 'source'])
     assert len(stems_specs) != len(stems_db_camel)
     stem_counts = _aggregate_results(
-        stems_specs, stems_db_camel, stems_db_calima)
+        stems_specs, stems_db_camel, stems_db_calima,
+        ['LEMMA', 'POS', 'FORM', 'SOURCE'])
 
     return stem_counts
 
@@ -254,7 +299,9 @@ def get_specs_stats(morph_specs, lexicon_specs, order_specs):
 
     conditions_morph = get_conds_from_specs(morph_specs)
     conditions_lexicon = get_conds_from_specs(lexicon_specs)
-    assert conditions_lexicon - conditions_morph == set()
+    print()
+    print(('WARNING: There are conditions in the lexicon that are not in morph: '
+           f"{' '.join(conditions_lexicon - conditions_morph)}"))
 
     
     order_lines = []
@@ -282,24 +329,36 @@ def get_specs_stats(morph_specs, lexicon_specs, order_specs):
 
 
 def get_db_stats(db_camel, db_calima):
-    cmplx_morph_count, compat_count, analyses_count = {}, {}, {}
+    cmplx_morph_count, compat_count, analysis_counts = {}, {}, {}
     unique_analyses_no_clitics_ = {}
     for system, db in [('calima', db_calima), ('camel', db_camel)]:
-        analyses_count_, compat, cmplx_morphs, unique_analyses_no_clitics = _get_analysis_counts(db)
+        info = get_analysis_counts(db)
+        unique_analyses_no_clitics = info['unique_analyses_no_clitics']
+        analysis_counts_ = info['analysis_counts']
+        compat_entries = info['compat_entries']
+        cmplx_morphs = info['cmplx_morphs']
 
         for morph_type in ['prefix', 'suffix']:
             X_cat_hash = getattr(db, f'{morph_type}_cat_hash')
             count = sum(len(X_cat_hash[cat]) for cat in cmplx_morphs[morph_type])
             cmplx_morph_count.setdefault(system, {}).setdefault(morph_type, count)
         
-        analyses_count[system] = {k: sum(v.values())
-                                  for k, v in analyses_count_.items()}
+        analysis_counts[system] = {k: sum(v.values())
+                                  for k, v in analysis_counts_.items()}
         
-        compat_count[system] = sum(len(compats) for compats in compat.values())
+        compat_count[system] = sum(len(compats) for compats in compat_entries.values())
 
         unique_analyses_no_clitics_[system] = unique_analyses_no_clitics
 
-    return cmplx_morph_count, compat_count, analyses_count
+    return cmplx_morph_count, compat_count, analysis_counts
+
+
+def get_range(table, start_cell):
+    start_col, start_row = re.match(r'([A-Z]+)(\d+)', start_cell).groups()
+    assert len(set(len(row) for row in table)) == 1
+    end_col = index2col_letter(col_letter2index(start_col) + len(table[0]) - 1)
+    end_row = int(start_row) + len(table) - 1
+    return f'{start_cell}:{end_col}{end_row}'
 
 
 def create_stats_table(lemma_counts, stem_counts, specs_stats,
@@ -336,13 +395,15 @@ def create_stats_table(lemma_counts, stem_counts, specs_stats,
         
     # (d) section
     for count_type in ['forms', 'analyses', 'no_clitics']:
-        table.append(['', analyses_count['camel'][count_type],
-                      analyses_count['calima'][count_type]])
+        count_camel = analyses_count['camel'][count_type]
+        count_no_wiki = analyses_count['camel'][count_type + '_no_wiki']
+        count_calima = analyses_count['calima'][count_type]
+        table.append(['', f'{count_camel} ({count_no_wiki})', count_calima])
     
     sh = sa.open(config_local['debugging']['stats_spreadsheet'])
     sheet = sh.worksheet(config_local['debugging']['stats_sheet'])
-    sheet.batch_update(
-        [{'range': config_local['debugging']['table_range'], 'values': table}])
+    range_ = get_range(table, config_local['debugging']['table_start_cell'])
+    sheet.batch_update([{'range': range_, 'values': table}])
 
 
 def get_stem_count_per_lemma(db_camel, db_calima):
@@ -351,9 +412,9 @@ def get_stem_count_per_lemma(db_camel, db_calima):
         for analyses in db.stem_hash.values():
             for _, analysis in analyses:
                 lemma, pos, diac = analysis['lex'], analysis['pos'], analysis['diac']
-                if pos in POS:
+                if pos in CAMEL_POS:
                     stem_counts.setdefault(system, {}).setdefault(
-                        (lemma, pos), set()).add(diac)
+                        (lemma, POS2POS_TYPE[pos]), set()).add(diac)
         hist = sorted(Counter([len(stems)
             for stems in stem_counts[system].values()]).items())
         with open(f'scratch_files/stem_counts_per_lemma_{system}.tsv', 'w') as f:
@@ -364,7 +425,7 @@ def get_stem_count_per_lemma(db_camel, db_calima):
 def get_basic_lemma_paradigms(lexicon_specs):
     """Get frequencies of basic paradigms (bp)"""
     sh = sa.open('camel-morph-msa-nom')
-    sheet = sh.worksheet('Lemma-Class-Reference-noun')
+    sheet = sh.worksheet('Lemma-Paradigm-Reference-Nom')
     reference_bp = pd.DataFrame(sheet.get_all_records())
 
     def _parse_signature(signature):
@@ -406,7 +467,7 @@ def get_basic_lemma_paradigms(lexicon_specs):
     table_paper = pd.DataFrame(sheet.get_all_records())
     table = []
     for bp in [bp_id for bp_id in table_paper['id'].tolist() if bp_id]:
-        row = [pos2bp_freq[pos].get(bp, 0) for pos in POS]
+        row = [pos2bp_freq[pos].get(bp, 0) for pos in CAMEL_POS]
         row.append(sum(row))
         table.append(row)
     sheet.batch_update([{'range': 'K2:N33', 'values': table}])
@@ -433,7 +494,30 @@ if __name__ == "__main__":
 
     sa = gspread.service_account(config_global['service_account'])
 
-    CLASS_MAP = config_local['class_map']
+    ATB_POS, CAMEL_POS, POS_OR_TYPE = load_required_pos(config_local)
+    with open('misc_files/atb2camel_pos.json') as f:
+        pos_type2atb2camel_pos = json.load(f)
+        POS_TYPES = set(pos_type2atb2camel_pos)
+        POS2POS_TYPE = {}
+        for pos_type, atb2camel_pos in pos_type2atb2camel_pos.items():
+            if pos_type not in ['verbal', 'nominal', 'other']:
+                continue
+            for camel_pos in atb2camel_pos.values():
+                camel_pos = camel_pos if type(camel_pos) is list else [camel_pos]
+                for camel_pos_ in camel_pos:
+                    assert camel_pos_ not in POS2POS_TYPE
+                    POS2POS_TYPE[camel_pos_.lower()] = pos_type
+
+    #TODO: This object should be returned from the read_morph_specs() method
+    # because that method alters the names of the classes (appends indexes)
+    # Currently, the appended indexes are hard-coded into the json file, but 
+    # only the classes that appear in the sheets should appear in the JSON,
+    # and the altered ones should be added by read_morph_specs().
+    with open(config_local['class_map']) as f:
+        CLASS_MAP = json.load(f)
+    
+    POS_DISPLAY = config_local['debugging'].get('pos_display', CAMEL_POS)
+
     db_name = config_local['db']
     db_dir = os.path.join(
         config_global['db_dir'], f"camel-morph-{config_local['dialect']}", db_name)

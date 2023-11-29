@@ -77,7 +77,6 @@ if args.camel_tools == 'local':
 from camel_tools.utils.charmap import CharMapper
 from camel_tools.morphology.utils import strip_lex
 from camel_tools.morphology.database import MorphologyDB
-from camel_tools.morphology.analyzer import DEFAULT_NORMALIZE_MAP
 
 ar2bw = CharMapper.builtin_mapper('ar2bw')
 bw2ar = CharMapper.builtin_mapper('bw2ar')
@@ -85,23 +84,50 @@ bw2ar = CharMapper.builtin_mapper('bw2ar')
 POS_NOMINAL = utils.POS_NOMINAL
 
 cond_t_sort_order = {'MS':0, 'MD':1, 'MP':2, 'FS':3, 'FD':4, 'FP':5}
+inspect_cases = {}
 
 def _sort_stems_nominals(stems):
+    global inspect_cases
     stems_cond_t = set(stem['cond_t'] for stem in stems)
-    if {'MP', 'MS||MD'} <= stems_cond_t or {'FS', 'MS||MD'} <= stems_cond_t:
-        return stems.sort(reverse=True,
-            key=lambda stem: (len(stem['cond_t']),
-                              1 if stem['cond_t'] in {'FS', 'MP'} else -cond_t_sort_order[stem['cond_t'][:2]]))
-    elif stems_cond_t <= {'MS', 'FS', 'FP', 'MS||MD||FP'}:
-        return stems.sort(reverse=True,
-            key=lambda stem: (len(stem['cond_t']),
-                              -cond_t_sort_order[stem['cond_t'][:2]]))
-    elif stems_cond_t == {'MS', 'MD||FP'}:
-        return stems.sort(key=lambda stem: -len(stem['cond_t']), reverse=True)
+    
+    stems_ = None
+    if {'MS||MD', 'MS||MD||FP'} <= stems_cond_t:
+        case_ = '2'
+        sort_order, broken_plural = [], False
+        for stem in stems:
+            if stem['cond_t'] == 'MS||MD':
+                sort_order.append(0)
+            elif stem['cond_t'] == 'MS' and not broken_plural:
+                broken_plural = True
+                sort_order.append(1)
+            elif stem['cond_t'] == 'MS||MD||FP':
+                sort_order.append(2 if 'MS' in stems_cond_t else 1)
+            else:
+                extras_index = 3 if 'MS' in stems_cond_t else 2
+                sort_order.append(max(extras_index, len(sort_order)))
+        stems_ = [None] * len(stems)
+        for i, index in enumerate(sort_order):
+            stems_[index] = stems[i]
     else:
-        stems.sort(reverse=True,
-            key=lambda stem: (-100,) if stem['cond_t'] == 'MS||MD||FP' else
-                (len(stem['cond_t']), -cond_t_sort_order[stem['cond_t'][:2]]))
+        if {'MP', 'MS||MD'} <= stems_cond_t:
+            sort_fn = lambda stem: (
+                len(stem['cond_t']),
+                1 if stem['cond_t'] == 'MP' else -cond_t_sort_order[stem['cond_t'][:2]])
+            case_ = '1'
+        elif stems_cond_t == {'MS', 'MD||FP'}:
+            sort_fn = lambda stem: -len(stem['cond_t'])
+            case_ = '3'
+        else:
+            sort_fn = lambda stem: (
+                len(stem['cond_t']), -cond_t_sort_order[stem['cond_t'][:2]])
+            case_ = '4'
+
+    if stems_ is None:
+        stems_ = sorted(stems, reverse=True, key=sort_fn)
+    inspect_cases.setdefault(case_, set()).add(
+        tuple(stem['cond_t'] for stem in stems_))
+    
+    return stems_
                               
 
 def create_repr_lemmas_list(config,
@@ -164,7 +190,7 @@ def create_repr_lemmas_list(config,
             info['lemma'] = info['lemma'][1:-1]
         elif info_display_format == 'expanded':
             if stems[0]['pos'] in POS_NOMINAL:
-                _sort_stems_nominals(stems)
+                stems = _sort_stems_nominals(stems)
             for k in info_union_feats:
                 if k in ['lemma', 'pos']:
                     info[k] = '-'.join(
@@ -254,23 +280,22 @@ def get_extended_lemmas(lexicon, extended_lemma_keys):
 def get_lemma2prob(POS, db, uniq_lemma_classes, lemma2prob):
     if lemma2prob is None:
         lemma2prob = {}
-        for lemmas_cond_sig, lemmas_info in uniq_lemma_classes.items():
+        for lemmas_info in uniq_lemma_classes.values():
             for info in lemmas_info['lemmas']:
-                lemma_stripped = re.sub(r'[aiuo]', '', strip_lex(info['lemma']))
+                lemma_stripped = strip_lex(info['lemma'])
                 lemma_ar = bw2ar(lemma_stripped)
-                normalized_lemma_ar = DEFAULT_NORMALIZE_MAP(lemma_ar)
-                matches = db.stem_hash.get(normalized_lemma_ar, [])
-                db_entries = [db_entry[1] for db_entry in matches]
-                entries_filtered = [e  for e in db_entries
-                    if strip_lex(re.sub(r'[َُِْ]', '', e['lex'])) == lemma_ar and e['pos'] in POS]
-                if len(entries_filtered) >= 1:
-                    lemma2prob[lemma_stripped] = max([float(a['pos_lex_logprob']) for a in db_entries])
+                analyses = db.lemma_hash.get(lemma_ar, [])
+                analyses_filtered = [a  for a in analyses
+                    if strip_lex(a['lex']) == lemma_ar and a['pos'] in POS]
+                if len(analyses_filtered) >= 1:
+                    lemma2prob[lemma_stripped] = max(
+                        [float(a['pos_lex_logprob']) for a in analyses_filtered])
                 else:
                     lemma2prob[lemma_stripped] = -99.0
     else:
         lemma2prob_ = {}
         for lemma, prob in lemma2prob.items():
-            lemma = re.sub(r'[aiuo]', '', strip_lex(lemma))
+            lemma = strip_lex(lemma)
             if lemma in lemma2prob_:
                 if prob > lemma2prob_[lemma]:
                     lemma2prob_[lemma] = prob
@@ -279,7 +304,7 @@ def get_lemma2prob(POS, db, uniq_lemma_classes, lemma2prob):
         lemma2prob = lemma2prob_
         for lemmas_cond_sig, lemmas_info in uniq_lemma_classes.items():
             for info in lemmas_info['lemmas']:
-                lemma_stripped = re.sub(r'[aiuo]', '', strip_lex(info['lemma']))
+                lemma_stripped = strip_lex(info['lemma'])
                 if lemma_stripped not in lemma2prob:
                     lemma2prob[lemma_stripped] = 0
     
@@ -309,7 +334,7 @@ def get_highest_prob_lemmas(POS,
                 uniq_lemma_classes_[lemmas_cond_sig]['freq'] = lemmas_info['freq']
                 done = True
 
-        best_indexes = (-np.array([lemma2prob[re.sub(r'[aiuo]', '', lemma)] for lemma in lemmas])).argsort()[:len(lemmas)]
+        best_indexes = (-np.array([lemma2prob[lemma] for lemma in lemmas])).argsort()[:len(lemmas)]
         for best_index in best_indexes:
             best_lemma_info = lemmas_info['lemmas'][best_index]
             best_lemma_info['freq'] = lemmas_info['freq']
@@ -393,9 +418,9 @@ def setup(config_local, config_global, feats, lemma2prob):
                               for pos in POS
                               for lemma, freq in pos2lemma2prob[pos].items()}
     elif lexprob_db is not None:
-        lexprob_db = MorphologyDB(lexprob_db)
+        lexprob_db = MorphologyDB(lexprob_db, flags='g')
     else:
-        lexprob_db = MorphologyDB.builtin_db()
+        lexprob_db = MorphologyDB.builtin_db(flags='g')
 
     display_format = (config_local['debugging']['display_format']
                       if 'display_format' in config_local['debugging']

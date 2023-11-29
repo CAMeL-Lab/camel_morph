@@ -101,7 +101,7 @@
             "dialect": "msa",
             "pruning": true,
             "caphi": "camel_morph.scratch.SBWtoPhon",
-            "logprob": "misc_files/logprob_atb.json",
+            "logprob": "misc_files/logprob_atb.pkl",
             "specs": {
                 "spreadsheet": "camel-morph-msa-verbs",
                 "sheets": {
@@ -123,8 +123,7 @@
                 "spreadsheet": "camel-morph-msa-verbs",
                 "sheets": [
                     "MSA-Verb-LEX-PV"
-                ],
-                "backoff": "auto"
+                ]
             },
             "db": "XYZ_msa_pv_v1.0.db",
             "debugging": {
@@ -276,10 +275,7 @@
                 "spreadsheet": "camel-morph-msa-verbs",
                 "sheets": [
                     "MSA-Verb-LEX-IV"
-                ],
-                "backoff": {
-                    "MSA-Verb-LEX-IV": "MSA-Verb-LEX-IV-ABSTRACT"
-                }
+                ]
             },
             "db": "XYZ_msa_iv_v1.0.db",
             "debugging": {
@@ -335,9 +331,9 @@
                     "morph": "MSA-Verb-MORPH"
                 },
                 "exclude": [
-                    "RED",
                     "PV",
-                    "CV"
+                    "CV",
+                    "RED"
                 ]
             },
             "passive": {
@@ -350,12 +346,46 @@
                 "spreadsheet": "camel-morph-msa-verbs",
                 "sheets": [
                     "MSA-Verb-LEX-IV"
-                ],
-                "backoff": {
-                    "MSA-Verb-LEX-IV": "MSA-Verb-LEX-IV-ABSTRACT"
+                ]
+            },
+            "db": "XYZ_msa_iv_v1.0.db",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging",
+                "display_format": "unique",
+                "lexprob_db": "eval_files/calima-msa-s31_0.4.2.utf8.db",
+                "feats": {
+                    "asp:i mod:i": {
+                        "conj_tables": "conj_iv-i_msa_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_iv-i_msa_v1.0.tsv",
+                        "bank": "MSA-IV-Ind-Bank.tsv",
+                        "debugging_sheet": "MSA-IV-Ind"
+                    },
+                    "asp:i mod:s": {
+                        "conj_tables": "conj_iv-s_msa_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_iv-s_msa_v1.0.tsv",
+                        "bank": "MSA-IV-Sub-Bank.tsv",
+                        "debugging_sheet": "MSA-IV-Sub"
+                    },
+                    "asp:i mod:j": {
+                        "conj_tables": "conj_iv-j_msa_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_iv-j_msa_v1.0.tsv",
+                        "bank": "MSA-IV-Jus-Bank.tsv",
+                        "debugging_sheet": "MSA-IV-Jus"
+                    },
+                    "asp:i mod:e": {
+                        "conj_tables": "conj_iv-e_msa_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_iv-e_msa_v1.0.tsv",
+                        "bank": "MSA-IV-(X)Ener-Bank.tsv",
+                        "debugging_sheet": "MSA-IV-Ener"
+                    },
+                    "asp:i mod:x": {
+                        "conj_tables": "conj_iv-x_msa_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_iv-x_msa_v1.0.tsv",
+                        "bank": "MSA-IV-(X)Ener-Bank.tsv",
+                        "debugging_sheet": "MSA-IV-XEner"
+                    }
                 }
             },
-            "db": "XYZ_msa_iv_v1.0_red.db",
             "pos_type": "verbal",
             "extended_lemma_keys": [
                 "lemma",
@@ -380,10 +410,7 @@
                 "spreadsheet": "camel-morph-msa-verbs",
                 "sheets": [
                     "MSA-Verb-LEX-CV"
-                ],
-                "backoff": {
-                    "MSA-Verb-LEX-CV": "MSA-Verb-LEX-CV-ABSTRACT"
-                }
+                ]
             },
             "db": "XYZ_msa_cv_v1.0.db",
             "debugging": {

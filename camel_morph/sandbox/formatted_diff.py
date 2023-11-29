@@ -3,6 +3,15 @@ import os
 import sys
 import pandas as pd
 from numpy import nan
+from csv import Sniffer
+import gspread
+from gspread_formatting import CellFormat, format_cell_ranges, Color
+
+file_path = os.path.abspath(__file__).split('/')
+package_path = '/'.join(file_path[:len(file_path) - 1 - file_path[::-1].index('camel_morph')])
+sys.path.insert(0, package_path)
+
+from camel_morph.utils.utils import index2col_letter
 
 COLUMNS_PROJECTS = dict(
     camel_morph=dict(
@@ -24,62 +33,102 @@ def _check_soundness_of_indexes(df):
     df_indexes = df[ID_COL].values.tolist()
     assert len(set(df_indexes)) == len(df_indexes)
 
-def formatted_diff(select_for_compare, compare_with_selected):
-    before = _get_index2row(select_for_compare)
-    after = _get_index2row(compare_with_selected)
+def formatted_diff(sheets_df):
+    src = _get_index2row(sheets_df['src'])
+    tgt = _get_index2row(sheets_df['tgt'])
 
-    after2before = {}
-    for index_after, row_after in after.items():
-        if index_after in before:
-            row_before = before[index_after]
+    color_tgt = CellFormat(backgroundColor=Color(0.714, 0.843, 0.659))
+    color_src = CellFormat(backgroundColor=Color(0.918, 0.6, 0.6))
+
+    tgt2src = {}
+    for index_tgt, row_tgt in tgt.items():
+        if index_tgt in src:
+            row_src = src[index_tgt]
             # Row did not change
-            if row_after == row_before:
-                after2before[index_after] = 'no_edit'
+            if row_tgt == row_src:
+                tgt2src[index_tgt] = 'no_edit'
             # An edit happened
             else:
-                after2before[index_after] = [i for i, x in enumerate(row_after) if x != row_before[i]]
+                tgt2src[index_tgt] = [i for i, x in enumerate(row_tgt) if x != row_src[i]]
         # Row was added
         else:
-            after2before[index_after] = 'new'
-    # Row was deleted
-    unused_indexes = set(before) - set(after)
-    unused_rows = []
-    for index_before in unused_indexes:
-        row_ = list(before[index_before])
-        row_.insert(ID_INDEX, index_before)
-        row_.insert(DIFF_INDEX, 'deleted')
-        unused_rows.append(row_)
+            tgt2src[index_tgt] = 'new'
 
-    output = []
-    for index_after, diffs in sorted(after2before.items(), key=lambda row: row[ID_INDEX]):
-        if diffs in ['no_edit', 'new']:
-            output_ = [index_after] + list(after[index_after]) + [diffs]
-        else:
-            output_ = [index_after]
-            output_ += list(after[index_after])
-            output_ += [' '.join(f'{COLUMNS_ESSENTIAL[i].lower()}:{col}'
-                        for i, col in enumerate(before[index_after]) if i in diffs)]
+    COLUMNS_NON_ESSENTIAL = [col for col in sheets_df['tgt'].columns
+                             if col not in COLUMNS_ESSENTIAL and col != ID_COL]
+
+    COLUMNS_TGT = [ID_COL]
+    for col in sheets_df['src'].columns:
+        if col in COLUMNS_ESSENTIAL:
+            COLUMNS_TGT += [col, f'{col}_OLD']
+    end_col = index2col_letter(len(COLUMNS_TGT) + len(COLUMNS_NON_ESSENTIAL) - 1)
+
+    col2index = {h: i for i, h in enumerate(COLUMNS_TGT)}
+    output, formatting = [], []
+    for i_sheet, row in sheets_df['tgt'].iterrows():
+        index_tgt = row[ID_COL]
+        diffs = tgt2src[index_tgt]
+        output_ = []
+        for i, col in enumerate(COLUMNS_ESSENTIAL):
+            if diffs in ['no_edit', 'new']:
+                output_ += [tgt[index_tgt][i], '']
+                if diffs == 'new':
+                    cell_a1_row = f'A{i_sheet + 2}:{end_col}{i_sheet + 2}'
+                    formatting.append((cell_a1_row, color_tgt))
+            else:
+                if i in diffs:
+                    output_ += [tgt[index_tgt][i], src[index_tgt][i]]
+                    cell_a1_tgt = f'{index2col_letter(col2index[col])}{i_sheet + 2}'
+                    cell_a1_src = f'{index2col_letter(col2index[col] + 1)}{i_sheet + 2}'
+                    formatting += [(cell_a1_src, color_src), (cell_a1_tgt, color_tgt)]
+                else:
+                    output_ += [tgt[index_tgt][i], '']
+        
+        output_ += [row[col] for col in COLUMNS_NON_ESSENTIAL]
+                
+        output_.insert(0, index_tgt)
         output.append(output_)
     
-    output += unused_rows
-    output = sorted(output, key=lambda row: row[ID_INDEX])
-    output.insert(0, COLUMNS_OUTPUT)
+    # Row was deleted
+    unused_indexes = set(src) - set(tgt)
+    for index_src in unused_indexes:
+        row = sheets_df['src'][sheets_df['src']['ID'] == index_src]
+        output_ = []
+        for i, col in enumerate(COLUMNS_ESSENTIAL):
+            output_ += ['', src[index_src][i]]
+        output_ += [row[col].values[0] if row.get(col) is not None else ''
+                    for col in COLUMNS_NON_ESSENTIAL]
+        output_.insert(0, index_src)
+        cell_a1_row = f'A{len(output) + 2}:{end_col}{len(output) + 2}'
+        formatting.append((cell_a1_row, color_src))
+        output.append(output_)
 
-    return output
+    output_df = pd.DataFrame(output)
+    output_df.columns = COLUMNS_TGT + COLUMNS_NON_ESSENTIAL
+
+    return output_df, formatting
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    parser.add_argument("-select_for_compare_sh", default='',
+                        type=str, help="Spreadsheet containing the data to select for compare (src).")
     parser.add_argument("-select_for_compare", default='',
-                        type=str, help="Path of the file to select for compare (left).")
+                        type=str, help="Path of the file or name of the sheet to select for compare (src).")
+    parser.add_argument("-compare_with_selected_sh", default='',
+                        type=str, help="Spreadsheet containing the data to select for compare (tgt).")
     parser.add_argument("-compare_with_selected", default='',
-                        type=str, help="Path of the file to compare with selected (right).")
-    parser.add_argument("-output_path", default='',
-                        type=str, help="Path of the files to output to.")
+                        type=str, help="Path of the file to compare with selected (tgt).")
+    parser.add_argument("-output_sh", default='',
+                        type=str, help="Spreadsheet to output the diff to.")
+    parser.add_argument("-output", default='',
+                        type=str, help="Path of the file or name of the sheet to output to.")
     parser.add_argument("-project", required=True,
                         type=str, help="Name of the project. Used to determine which columns to use.")
     parser.add_argument("-camel_tools", default='',
                         type=str, help="Path of the directory containing the camel_tools modules.")
+    parser.add_argument("-service_account", default='',
+                        type=str, help="Path of the JSON file containing the information about the service account used for the Google API.")
     args = parser.parse_args([] if "__file__" not in globals() else None)
 
     if args.camel_tools:
@@ -88,9 +137,6 @@ if __name__ == "__main__":
 
     from camel_tools.utils.charmap import CharMapper
 
-    ar2bw = CharMapper.builtin_mapper('ar2bw')
-    bw2ar = CharMapper.builtin_mapper('bw2ar')
-
     COLUMNS = COLUMNS_PROJECTS[args.project]['columns']
     ID_COL = COLUMNS_PROJECTS[args.project]['id']
     COLUMNS_ESSENTIAL = [col for col in COLUMNS if col != ID_COL]
@@ -98,22 +144,58 @@ if __name__ == "__main__":
     ID_INDEX = COLUMNS.index(COLUMNS_PROJECTS[args.project]['id'])
     DIFF_INDEX = COLUMNS_OUTPUT.index('DIFF')
 
-    select_for_compare = pd.read_csv(args.select_for_compare, sep=None)
-    select_for_compare = select_for_compare.replace(nan, '')
-    compare_with_selected = pd.read_csv(args.compare_with_selected, sep=None)
-    compare_with_selected = compare_with_selected.replace(nan, '')
-    for i, row in compare_with_selected.iterrows():
-        if not row[ID_COL]:
-            compare_with_selected.loc[i, ID_COL] = compare_with_selected.loc[i - 1, ID_COL] + 0.001
+    ar2bw = CharMapper.builtin_mapper('ar2bw')
+    bw2ar = CharMapper.builtin_mapper('bw2ar')
 
-    _check_soundness_of_indexes(select_for_compare)
-    _check_soundness_of_indexes(compare_with_selected)
+    sa = gspread.service_account(args.service_account)
+
+    sh_sheets = [(args.select_for_compare_sh, args.select_for_compare),
+                (args.compare_with_selected_sh, args.compare_with_selected)]
     
-    output = formatted_diff(select_for_compare, compare_with_selected)
+    sniffer = Sniffer()
+
+    sheets_df, sheet_handles = {}, {}
+    for index, (sh_name, sheet_name) in enumerate(sh_sheets):
+        if sh_name:
+            sh = sa.open(sh_name)
+            sheet = sh.worksheet(sheet_name)
+            sheet_handles ['src' if index == 0 else 'tgt'] = {
+                'sh': sh, 'sheet': sheet}
+            sheet = pd.DataFrame(sheet.get_all_records())
+        else:
+            with open(args.select_for_compare) as f:
+                dialect = sniffer.sniff(f.readline())
+            delimiter = dialect.delimiter
+            sheet = pd.read_csv(sheet_name, sep=delimiter, na_filter=False)
+            sheet_handles ['src' if index == 0 else 'tgt'] = {
+                'sh': '', 'sheet': sheet}
+
+        for i, row in sheet.iterrows():
+            if not row[ID_COL]:
+                sheet.loc[i, ID_COL] = sheet.loc[i - 1, ID_COL] + 0.001
+        
+        _check_soundness_of_indexes(sheet)
+        sheets_df['src' if index == 0 else 'tgt'] = sheet
     
-    with open(args.output_path, 'w') as f:
-        for i, row in enumerate(output):
-            if i and type(row[ID_INDEX]) is float and row[ID_INDEX].is_integer():
-                row[ID_INDEX] = int(row[ID_INDEX])
-            print(*row, sep='\t', file=f)
+    output_df, formatting = formatted_diff(sheets_df)
+    
+    if not args.output_sh:
+        output_df.to_csv(args.output, sep='\t')
+    else:
+        end_col = index2col_letter(len(output_df.columns) - 1)
+        sh = sa.open(args.output_sh)
+        sheets_output = sh.worksheets()
+        if args.output in [sheet.title for sheet in sheets_output]:
+            sheet = sh.worksheet(title=args.output)
+        else:
+            sheet = sh.add_worksheet(title=args.output, rows=100, cols=20)
+        sheet.batch_clear([f'A:{end_col}'])
+        sheet.update(
+            f'A:{end_col}', [output_df.columns.values.tolist()] +
+            output_df.values.tolist())
+        color_reset = CellFormat(backgroundColor=Color(1.0, 1.0, 1.0))
+        format_cell_ranges(sheet, [(f'A:{end_col}', color_reset)])
+        formatting = [formatting[i:i+80000] for i in range(0, len(formatting), 80000)]
+        for formatting_ in formatting:
+            format_cell_ranges(sheet, formatting_)
         

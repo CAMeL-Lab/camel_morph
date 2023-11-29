@@ -32,12 +32,12 @@ import sys
 from itertools import product
 
 try:
-    from ..utils.utils import _strip_brackets, get_config_file, POS_NOMINAL
+    from ..utils.utils import strip_brackets, get_config_file, POS_NOMINAL
 except:
     file_path = os.path.abspath(__file__).split('/')
     package_path = '/'.join(file_path[:len(file_path) - 1 - file_path[::-1].index('camel_morph')])
     sys.path.insert(0, package_path)
-    from camel_morph.utils.utils import _strip_brackets, get_config_file, POS_NOMINAL
+    from camel_morph.utils.utils import strip_brackets, get_config_file, POS_NOMINAL
 
 
 parser = argparse.ArgumentParser()
@@ -87,12 +87,15 @@ from camel_morph.utils.utils import assign_pattern
 bw2ar = CharMapper.builtin_mapper('bw2ar')
 ar2bw = CharMapper.builtin_mapper('ar2bw')
 
-TEST_FEATS_VERB = ['pos', 'asp', 'vox', 'per', 'gen', 'num', 'mod',
-                   'enc0', 'enc1', 'prc0', 'prc1', 'prc1.5', 'prc2', 'prc3']
-TEST_FEATS_NOM = ['pos', 'gen', 'num', 'stt', 'cas',
-                  'enc0', 'enc1', 'prc0', 'prc1', 'prc1.5', 'prc2', 'prc3']
-TEST_FEATS_OTHER = ['pos', 'asp', 'vox', 'per', 'gen', 'num', 'mod', 'stt', 'cas',
-                    'enc0', 'enc1', 'prc0', 'prc1', 'prc1.5', 'prc2', 'prc3']
+CLITIC_FEATURES = ['prc0', 'prc1', 'prc1.5', 'prc2', 'prc3', 'enc0', 'enc1']
+TEST_FEATS_VERB = ['pos', 'asp', 'vox', 'per', 'gen', 'num', 'mod'] + CLITIC_FEATURES
+TEST_FEATS_NOM = ['pos', 'gen', 'num', 'stt', 'cas'] + CLITIC_FEATURES
+TEST_FEATS_OTHER_OBLIG = ['asp', 'per', 'gen', 'num', 'vox', 'mod', 'stt', 'cas']
+TEST_FEATS_OTHER = ['pos'] + TEST_FEATS_OTHER_OBLIG + CLITIC_FEATURES
+
+
+AFFIX_STEM_CLASSES = ['[STEM-NOMINATIVE]', '[STEM-ACCUSATIVE]', '[STEM-GENITIVE]',
+                      '[STEM-CONST]', '[STEM-NOM]', '[STEM-ADJ]']
 
 
 # <POS>.<A><P><G><N>.<S><C><V><M>
@@ -117,7 +120,7 @@ sig2feat = {
         'num': ['S', 'D', 'Q']},
     'feats2': {
         'stt': ['D', 'I', 'C'],
-        'cas': ['N', 'G', 'A'],
+        'cas': ['N', 'G', 'A', 'U'],
         'vox': ['A', 'P'],
         'mod': ['S', 'I', 'J', 'E', 'X']},
     'feats3': {
@@ -143,7 +146,7 @@ sig2feat = {
         'enc0': {
             'VERB':['3ms_dobj'],
             'NOM': ['3ms_poss', '1s_poss'],
-            'OTHER': ['3ms_pron']
+            'OTHER': ['3ms_pron', 'mA_rel', 'mA_sub']
         },
         'enc1': {
             'VERB':['3ms_dobj'],
@@ -181,15 +184,17 @@ def parse_signature(signature, pos):
                         if feat_present:
                             features_.setdefault(feat, []).append(
                                 'p' if feat == 'num' and possible_value == 'Q' else possible_value.lower())
-                            features_[feat] = [v for v in features_[feat] if v != 'u']
+                            features_[feat] = [v for v in features_[feat] if v != '']
                             break
                         else:
-                            features_.setdefault(feat, []).append('u')
+                            features_.setdefault(feat, []).append('')
 
     features_multiple, features_single = {}, {}
     for feat, values in features_.items():
         values_ = set(values)
-        if len(values_) == 1:
+        if values_ == {''}:
+            continue
+        elif len(values_) == 1:
             features_single.update({feat: values[0]})
         else:
             for v in values_:
@@ -223,6 +228,65 @@ def expand_paradigm(paradigms, pos_type, paradigm_key):
             
     return paradigm_
 
+
+def _generate_other_pos_paradigm_slot(info, pos_type, defaults, defines):
+    test_feats_other = TEST_FEATS_OTHER_OBLIG + CLITIC_FEATURES
+    chosen_features = [f for f in test_feats_other if defaults[f] != 'na']
+    features_ = {}
+    for f in chosen_features:
+        if f in info and strip_brackets(info[f]):
+            features_.setdefault('fixed', []).append(f)
+        else:
+            features_.setdefault('variable', []).append(f)
+    
+    feature_combs = [[None]] * len(test_feats_other)
+    if 'variable' in features_:
+        for f in features_['variable']:
+            if f in CLITIC_FEATURES:
+                sig = 'feats3' if 'prc' in f else 'feats4'
+                values = sig2feat[sig][f].get('OTHER', [])
+                values = [None] + [v for v in defines[f] if v in values]
+                if values:
+                    feature_combs[test_feats_other.index(f)] = values
+            else:
+                feature_combs[test_feats_other.index(f)] = [
+                    v for v in defines[f] if v not in ['na', 'b'] and (f == 'cas' or v != 'u')]
+    if 'fixed' in features_ :
+        for f in features_['fixed']:
+            feature_combs[test_feats_other.index(f)] = [strip_brackets(info[f])]
+
+    feature_combs = list(product(*feature_combs))
+    paradigm = []
+    for feature_comb in feature_combs:
+        if pos_type == 'verbal':
+            pos_type_ = 'VERB'
+        elif pos_type == 'nominal':
+            pos_type_ = 'NOM'
+        else:
+            pos_type_ = pos_type
+        
+        slot = [pos_type_.upper()]
+        slot += [''] * len(test_feats_other)
+        for i, f in enumerate(test_feats_other):
+            if feature_comb[i] is not None:
+                if i < test_feats_other.index('prc0'):
+                    slot[i + 1] = feature_comb[i].upper()
+                else:
+                    slot[i + 1] = f'{f[0].upper()}{f[-1]}_{feature_comb[i]}'
+
+        slot.insert(1, '.'); slot.insert(6, '.'); slot.insert(8, '.')
+        slot.insert(12, '.'); slot.insert(18, '.')
+        
+
+        slot = re.sub(r'\.+', '.', ''.join(slot))
+        feats = {f: feature_comb[i] for i, f in enumerate(test_feats_other)
+                 if feature_comb[i] is not None}
+        feats['pos'] = strip_brackets(info['pos'])
+        paradigm.append((feats,  ''.join(slot)))
+
+    return paradigm
+
+
 def filter_and_status(outputs):
     # If analysis is the same except for stemgloss, filter out (as duplicate)
     signature_outputs = []
@@ -255,7 +319,7 @@ def filter_and_status(outputs):
     
     return signature_outputs_
 
-def _strip_brackets(info):
+def strip_brackets(info):
     if info[0] == '[' and info[-1] == ']':
         info = info[1:-1]
     return info
@@ -279,9 +343,13 @@ def create_conjugation_tables(config,
         lemma_raw = lemma[:]
         lemma = strip_lex(lemma)
         pattern = None
-        if pos_type == 'verbal':
+        pos_type_, paradigm_key_ = pos_type, paradigm_key
+        if pos_type == 'other' and strip_brackets(info['morph_class']) in AFFIX_STEM_CLASSES:
+            pos_type_ = 'nominal'
+        
+        if pos_type_ == 'verbal':
             pattern = assign_pattern(lemma)['pattern_conc']
-        elif pos_type == 'nominal':
+        elif pos_type_ == 'nominal':
             match = re.search(r'([MF][SDP])', cond_t)
             form_gen, form_num = None, None
             if match:
@@ -297,14 +365,23 @@ def create_conjugation_tables(config,
                 lemmas_conj.append(outputs)
                 continue
             
-            paradigm_key = f'gen:{gen} num:{num}'
+            paradigm_key_ = f'gen:{gen} num:{num}'
 
-        lemma_raw = bw2ar(lemma_raw)
-
-        paradigm = expand_paradigm(paradigms, pos_type, paradigm_key)
+        lemma_ar = bw2ar(lemma_raw)
+        
+        if pos_type == 'other' and strip_brackets(info['morph_class']) not in AFFIX_STEM_CLASSES:
+            paradigm = _generate_other_pos_paradigm_slot(
+                info, pos_type_, generator._db.defaults[strip_brackets(pos)], generator._db.defines)
+        else:
+            paradigm = expand_paradigm(paradigms, pos_type_, paradigm_key_)
+        
         outputs = {}
         for signature in paradigm:
-            features = parse_signature(signature, _strip_brackets(pos))
+            if type(signature) is tuple:
+                features, signature = signature
+                features = [features]
+            else:
+                features = parse_signature(signature, strip_brackets(pos))
             # This assumes that if we have multiple feature sets, they are all similiar
             # in all feature dimensions except for one (thus the break).
             diff = ''
@@ -314,24 +391,37 @@ def create_conjugation_tables(config,
                         diff = k
                         break
             for features_ in features:
+                # if pos_type_ == 'other':
+                #     discard = False
+                #     for f, v in features_.items():
+                #         if f != 'pos' and f in info:
+                #             if v != _strip_brackets(info[f]):
+                #                 discard = True
+                #                 break
+                #     if discard:
+                #         continue
+
                 # Using altered local copy of generator.py in camel_tools
-                analyses, debug_message = generator.generate(lemma_raw, features_, debug=True)
+                analyses, debug_message = generator.generate(lemma_ar, features_, debug=True)
                 prefix_cats = [a[1] for a in analyses]
                 stem_cats = [a[2] for a in analyses]
                 suffix_cats = [a[3] for a in analyses]
                 analyses = [a[0] for a in analyses]
                 debug_info = dict(analyses=analyses,
+                                  pos_type=pos_type_,
                                   gloss=gloss,
                                   bw=bw,
                                   form=form,
                                   gen=gen,
                                   num=num,
+                                  enc0=info.get('enc0', ''),
                                   cond_s=cond_s,
                                   cond_t=cond_t,
                                   prefix_cats=prefix_cats,
                                   stem_cats=stem_cats,
                                   suffix_cats=suffix_cats,
                                   lemma=info['lemma'],
+                                  morph_class=info['morph_class'],
                                   pattern=pattern,
                                   pos=pos,
                                   freq=info.get('freq'),
@@ -349,7 +439,7 @@ def process_nom_gen_num_(feat, form_feat,
                          form=None, cond_t=None, cond_s=None, gloss=None,
                          bw=None, lemma=None, pattern=None, pos=None,
                          freq=None):
-    feat_ = _strip_brackets(feat)
+    feat_ = strip_brackets(feat)
     if feat_ == '-':
         if form_feat:
             feat_ = form_feat
@@ -379,8 +469,8 @@ def process_outputs(lemmas_conj, pos_type, HEADER):
     for paradigm in lemmas_conj:
         for signature, info in paradigm.items():
             output = {}
-            form = _strip_brackets(info['form'])
-            pos = _strip_brackets(info['pos'].upper())
+            form = strip_brackets(info['form'])
+            pos = strip_brackets(info['pos'].upper())
             features = info['features']
             signature = re.sub('Q', 'P', signature)
             output['signature'] = signature
@@ -404,17 +494,17 @@ def process_outputs(lemmas_conj, pos_type, HEADER):
                         stem_bw = f"{bw2ar(form)}/{pos}"
                         test_feats = TEST_FEATS_NOM
                         if stem_bw not in analysis['bw'] or \
-                            _strip_brackets(info['gloss']) != analysis['stemgloss']:
+                            strip_brackets(info['gloss']) != analysis['stemgloss']:
                             continue
                     elif pos_type == 'verbal':
                         test_feats = TEST_FEATS_VERB
                         if info['lemma'] != ar2bw(analysis['lex']) or \
-                            _strip_brackets(info['gloss']) != analysis['stemgloss']:
+                            strip_brackets(info['gloss']) != analysis['stemgloss']:
                             continue
                     elif pos_type == 'other':
                         test_feats = TEST_FEATS_OTHER
                         if analysis['stem'] not in bw2ar(form) or \
-                            _strip_brackets(info['gloss']) != analysis['stemgloss']:
+                            strip_brackets(info['gloss']) != analysis['stemgloss']:
                             continue
                     valid_analyses = True
                     output_ = output.copy()
@@ -462,20 +552,23 @@ def process_outputs(lemmas_conj, pos_type, HEADER):
                     output_['status'] = 'OK-ZERO-E0-DEFINITE'
                 elif pos.lower() == 'adj' and 'E0' in signature and features.get('stt') == 'c':
                     output_['status'] = 'OK-ZERO-E0-ADJ-CONSTRUCT'
-                elif 'E0' in signature and '!PRON' in _strip_brackets(info['cond_t']).split():
+                elif 'E0' in signature and re.search(r'\[STEM-(CONJ(-PREP)?|STANDALONE)\]', info['morph_class']):
                     output_['status'] = 'OK-ZERO-OTHER-PRON'
-                elif 'P1' in signature and '!PREP' in _strip_brackets(info['cond_t']).split():
+                elif 'P1' in signature and re.search(r'\[STEM-(CONJ(-PRON)?|STANDALONE|POSS)\]', info['morph_class']):
                     output_['status'] = 'OK-ZERO-OTHER-PREP'
-                elif 'P2' in signature and '!CONJ' in _strip_brackets(info['cond_t']).split():
+                elif 'P2' in signature and re.search(r'\[STEM-STANDALONE\]', info['morph_class']):
                     output_['status'] = 'OK-ZERO-OTHER-CONJ'
+                elif 'E0_mA' in signature and not bool(re.search(r'm[aA]', info['enc0'])):
+                    output_['status'] = 'OK-ZERO-OTHER-MA'
                 else:
                     output_['status'] = 'CHECK-ZERO'
                 output_['line'] = line
-                line += 1
                 output_ordered = OrderedDict()
                 for h in HEADER:
                     output_ordered[h.upper()] = output_.get(h, '')
-                conjugations.append(output_ordered)
+                if 'OK-ZERO' not in output_ordered['STATUS']:
+                    conjugations.append(output_ordered)
+                    line += 1
             color = abs(color - 1)
     
     conjugations.insert(0, OrderedDict((i, x) for i, x in enumerate(map(str.upper, HEADER))))
@@ -533,7 +626,7 @@ def setup(config_local, config_global, feats, repr_lemmas):
             repr_lemmas = list(repr_lemmas.values())
 
     repr_lemmas = [info for info in list(repr_lemmas.values())
-                   if not POS or _strip_brackets(info['pos']) in POS]
+                   if not POS or strip_brackets(info['pos']) in POS]
     return pos_type, paradigms, generator, repr_lemmas
 
 

@@ -37,6 +37,20 @@ POS_NOMINAL = [
     'noun_quant', 'pron', 'pron_dem', 'pron_exclam', 'pron_interrog',
     'pron_rel', 'verb_nom', 'verb_pseudo']
 
+lex_keys = ['diac', 'lex']
+lex_pos_keys = [*lex_keys, 'pos']
+proclitic_keys = ['prc0', 'prc1', 'prc2', 'prc3']
+enclitic_keys = ['enc0', 'enc1']
+clitic_keys = [*proclitic_keys, *enclitic_keys]
+feats_oblig = ['asp', 'mod', 'vox', 'per', 'num', 'gen', 'cas', 'stt']
+form_keys = ['form_num', 'form_gen']
+essential_keys = [*lex_pos_keys, *feats_oblig, *clitic_keys]
+essential_keys_no_lex_pos = [k for k in essential_keys if k not in lex_pos_keys]
+essential_keys_form_feats = essential_keys + form_keys
+essential_keys_form_feats_no_lex_pos = essential_keys_no_lex_pos + form_keys
+essential_keys_form_feats_no_clitics = lex_pos_keys + feats_oblig + form_keys
+
+
 def patternize_root(root, dc=None, surface_form=False):
     """Will patternize denuded roots (except patterns which are inherently
     geminate which it treats as a root), while keeping defective letters and
@@ -372,6 +386,19 @@ def analyze_pattern_egy(root, stem):
     return tmp_stem
 
 
+def index2col_letter(index):
+    column_letter = chr(ord('A') - 1 + index // 26) if index >= 26 else ''
+    column_letter += chr(ord('A') + index % 26)
+    return column_letter
+
+
+def col_letter2index(col_letter):
+    index = 0
+    for i, col_letter_ in enumerate(col_letter[::-1]):
+        index += (26 ** i) * (ord(col_letter_) - ord('A') + (1 if i else 0))
+    return index
+
+
 def add_check_mark_online(rows,
                           spreadsheet,
                           worksheet,
@@ -402,9 +429,7 @@ def add_check_mark_online(rows,
         raise NotImplementedError
 
     status_column_index = header.index(status_col_name)
-    column_letter = (chr(ord('A') - 1 + status_column_index // 26)
-                     if status_column_index >= 26 else '')
-    column_letter += chr(ord('A') + status_column_index % 26)
+    column_letter = index2col_letter(status_column_index)
 
     status_old = worksheet.col_values(status_column_index + 1)[1:]
     lemmas = worksheet.col_values(header.index('LEMMA') + 1)[1:]
@@ -437,7 +462,7 @@ def add_check_mark_online(rows,
         
     worksheet.update(col_range, status_new)
 
-def _strip_brackets(info):
+def strip_brackets(info):
     if info[0] == '[' and info[-1] == ']':
         info = info[1:-1]
     return info

@@ -25,9 +25,7 @@
             "lexicon": {
                 "spreadsheet": "camel-morph-msa-verbs",
                 "sheets": [
-                    "MSA-Verb-LEX-PV",
-                    "MSA-Verb-LEX-IV",
-                    "MSA-Verb-LEX-CV"
+                    "MSA-Verb-LEX-PV"
                 ]
             },
             "db": "XYZ_msa_cr_v1.0.db",

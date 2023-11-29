@@ -5,6 +5,7 @@ import re
 import json
 from collections import Counter
 
+from tqdm import tqdm
 from numpy import nan
 import pandas as pd
 
@@ -16,8 +17,8 @@ from camel_morph.utils.utils import get_config_file
 parser = argparse.ArgumentParser()
 parser.add_argument("-config_file", default='config_default.json',
                         type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
-parser.add_argument("-config_name", default='default_config',
-                    type=str, help="Name of the configuration to load from the config file.")
+parser.add_argument("-config_name", action='append',
+                    help="Name of the configuration to load from the config file.")
 parser.add_argument("-mode", default='generate_lex',
                     type=str, help="Task that the script should execute.")
 parser.add_argument("-download", default=False,
@@ -65,11 +66,12 @@ def _split_field(field):
     return field_split
 
 
-def well_formedness_check(config_local):
+def well_formedness_check(config, config_name):
+    config_local = config['local'][config_name]
     sheet_name = config_local['lexicon']['sheets'][0]
     dialect = config_local['dialect']
     data_path = os.path.join(
-        f'data/camel-morph-{dialect}', args.config_name, f'{sheet_name}.csv')
+        f'data/camel-morph-{dialect}', config_name, f'{sheet_name}.csv')
     nom_lex = pd.read_csv(data_path)
     nom_lex = nom_lex.replace(nan, '')
     essential_columns = ['ROOT', 'LEMMA', 'FORM', 'GLOSS', 'FEAT', 'COND-T', 'COND-S']
@@ -212,33 +214,34 @@ def regenerate_signature_lex_rows(config, config_name,
 
 if __name__ == "__main__":
     config = get_config_file(args.config_file)
-    config_name = args.config_name
-    config_local = config['local'][config_name]
     config_global = config['global']
-
-    POS = args.pos if args.pos else config_local['pos']
-    POS = POS if type(POS) is list else [POS]
-    sheet_name = args.sheet if args.sheet else config_local['debugging']['sheets'][0]
-    spreadsheet = args.spreadsheet if args.spreadsheet else config_local['debugging']['debugging_spreadsheet']
-
-    data_dir = os.path.join(config_global['data_dir'],
-                            f"camel-morph-{config_local['dialect']}",
-                            config_name)
 
     sa = gspread.service_account(config_global['service_account'])
 
-    if args.download or not os.path.exists(data_dir):
-        download_sheets(config=config,
-                        config_name=config_name,
-                        service_account=sa)
-
-    if args.well_formedness:
-        well_formedness_check(config_local)
-
-    sh = sa.open(spreadsheet)
-    sheets = sh.worksheets()
-
     if args.mode == 'generate_lex':
+        assert len(args.config_name) == 1
+        config_name = args.config_name[0]
+        config_local = config['local'][config_name]
+        
+
+        if args.well_formedness:
+            well_formedness_check(config, config_name)
+
+        POS = args.pos if args.pos else config_local['pos']
+        POS = POS if type(POS) is list else [POS]
+        sheet_name = args.sheet if args.sheet else config_local['debugging']['sheets'][0]
+        spreadsheet = args.spreadsheet if args.spreadsheet else config_local['debugging']['debugging_spreadsheet']
+        sh = sa.open(spreadsheet)
+        sheets = sh.worksheets()
+
+        data_dir = os.path.join(config_global['data_dir'],
+                                f"camel-morph-{config_local['dialect']}",
+                                config_name)
+        if args.download or not os.path.exists(data_dir):
+            download_sheets(config=config,
+                            config_name=config_name,
+                            service_account=sa)
+
         repr_lemmas = create_repr_lemmas_list(config=config,
                                               config_name=config_name)
         rows = generate_lex_rows(repr_lemmas)
@@ -254,5 +257,14 @@ if __name__ == "__main__":
             [repr_lemmas.columns.values.tolist()] + repr_lemmas.values.tolist())
     
     elif args.mode == 'regenerate_sig':
-        sheet = [sheet for sheet in sheets if sheet.title == sheet_name][0]
-        regenerate_signature_lex_rows(config, config_name, sheet=sheet, sh=sh)
+        for config_name_ in (pbar := tqdm(args.config_name)):
+            pbar.set_description(config_name_)
+            config_local_ = config['local'][config_name_]
+            POS = args.pos if args.pos else config_local_['pos']
+            POS = POS if type(POS) is list else [POS]
+            spreadsheet = args.spreadsheet if args.spreadsheet else config_local_['debugging']['debugging_spreadsheet']
+            sheet_name = args.sheet if args.sheet else config_local_['debugging']['sheets'][0]
+            sh = sa.open(spreadsheet)
+            sheets = sh.worksheets()
+            sheet = [sheet for sheet in sheets if sheet.title == sheet_name][0]
+            regenerate_signature_lex_rows(config, config_name_, sheet=sheet, sh=sh)

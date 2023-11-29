@@ -15,7 +15,7 @@ from numpy import nan
 from glf_pilot_utils import FEATS_INFLECT
 try:
     from .. import db_maker, db_maker_utils
-    from ..debugging.generate_docs_tables import _get_structured_lexicon_classes
+    from ..debugging.generate_docs_tables import _get_structured_lexicon_classes_nom
     from ..eval import evaluate_camel_morph
     from ..utils import utils
     from ..debugging.download_sheets import download_sheets
@@ -24,7 +24,7 @@ except:
     package_path = '/'.join(file_path[:len(file_path) - 1 - file_path[::-1].index('camel_morph')])
     sys.path.insert(0, package_path)
     from camel_morph import db_maker, db_maker_utils
-    from camel_morph.debugging.generate_docs_tables import _get_structured_lexicon_classes
+    from camel_morph.debugging.generate_docs_tables import _get_structured_lexicon_classes_nom
     from camel_morph.eval import evaluate_camel_morph
     from camel_morph.utils import utils
     from camel_morph.debugging.download_sheets import download_sheets
@@ -125,7 +125,7 @@ def get_backoff_stems_from_egy(config_glf,
     lexicon_processed = _filter_and_process_abstract_entries(
         lexicon, config_glf, config_name_glf)
     
-    cond_s2cond_t2feats2rows = _get_structured_lexicon_classes(lexicon_processed)
+    cond_s2cond_t2feats2rows = _get_structured_lexicon_classes_nom(lexicon_processed)
     stem_classes = {}
     for cond_s, cond_t2feats2rows in cond_s2cond_t2feats2rows.items():
         for cond_t, feats2rows in cond_t2feats2rows.items():
@@ -361,7 +361,7 @@ if __name__ == "__main__":
                                                              args.possible_analyses_filtered_path,
                                                              analyzer,
                                                              msa_camel_analyzer=None,
-                                                             best_analysis=False,
+                                                             k_best_analyses=False,
                                                              print_recall=False,
                                                              essential_keys=ESSENTIAL_KEYS)
     print('Done.\n')

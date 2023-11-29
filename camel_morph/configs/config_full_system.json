@@ -22,64 +22,6 @@
     "local": {
         "full_system": {
             "pruning": true,
-            "cat2id": true,
-            "specs": {
-                "spreadsheet": [
-                    "camel-morph-msa-nom-other",
-                    "camel-morph-msa-verbs-cam-ready"
-                ],
-                "sheets": {
-                    "order": [
-                        {
-                            "MSA-Nom-ORDER": "N"
-                        },
-                        {
-                            "MSA-Verb-ORDER": "V"
-                        }
-                    ],
-                    "morph": [
-                        {
-                            "MSA-Nom-MORPH": "N"
-                        },
-                        {
-                            "MSA-Verb-MORPH": "V"
-                        }
-                    ]
-                },
-                "exclude": []
-            },
-            "lexicon": {
-                "spreadsheet": [
-                    "camel-morph-msa-nom",
-                    "Nominals-Sandbox",
-                    "camel-morph-msa-verbs-cam-ready"
-                ],
-                "sheets": [
-                    {
-                        "Lemma-Paradigm-Debugging-Noun-v2": "N",
-                        "Lemma-Paradigm-Debugging-Adj-v2": "N",
-                        "Lemma-Paradigm-Debugging-Adj_comp": "N"
-                    },
-                    {
-                        "Lemma-Paradigm-Debugging-Noun_num": "N",
-                        "Lemma-Paradigm-Debugging-Noun_quant": "N",
-                        "Lemma-Paradigm-Debugging-Adj_num": "N",
-                        "MSA-Other-LEX": "N",
-                        "MSA-Nom-Prop-LEX": "N"
-                    },
-                    {
-                        "MSA-Verb-LEX-PV": "V",
-                        "MSA-Verb-LEX-IV": "V",
-                        "MSA-Verb-LEX-CV": "V"
-                    }
-                ]
-            },
-            "dialect": "msa",
-            "db": "XYZ_msa_full_v1.0.db",
-            "pos_type": "any"
-        },
-        "full_system_factored_wiki": {
-            "pruning": true,
             "reindex": true,
             "specs": {
                 "spreadsheet": [
@@ -126,27 +68,24 @@
             },
             "lexicon": {
                 "spreadsheet": [
-                    "camel-morph-msa-nom",
-                    "Nominals-Sandbox",
-                    "Wiki-Names-Extraction",
+                    "camel-morph-msa-nom-other",
+                    "camel-morph-msa-annex",
                     "camel-morph-msa-verbs"
                 ],
                 "sheets": [
                     {
-                        "Lemma-Paradigm-Debugging-Noun-v2": "N",
-                        "Lemma-Paradigm-Debugging-Adj-v2": "N",
-                        "Lemma-Paradigm-Debugging-Adj_comp": "N",
+                        "MSA-Noun-LEX": "N",
+                        "MSA-Adj-LEX": "N",
+                        "MSA-Adj-Comp-LEX": "N",
+                        "MSA-Noun-Num-LEX": "N",
+                        "MSA-Noun-Quant-LEX": "N",
+                        "MSA-Adj-Num-LEX": "N",
+                        "MSA-Noun-Prop-LEX": "N",
+                        "MSA-Other-LEX": "N",
                         "MSA-Nom-LEX-Backoff": "N"
                     },
                     {
-                        "Lemma-Paradigm-Debugging-Noun_num": "N",
-                        "Lemma-Paradigm-Debugging-Noun_quant": "N",
-                        "Lemma-Paradigm-Debugging-Adj_num": "N",
-                        "MSA-Other-LEX": "N",
-                        "MSA-Nom-Prop-LEX": "N"
-                    },
-                    {
-                        "MSA-Nom-Prop-Annex-LEX": "N"
+                        "MSA-Noun-Prop-Annex-LEX": "N"
                     },
                     {
                         "MSA-Verb-LEX-PV": "V",
@@ -157,67 +96,7 @@
                 ]
             },
             "dialect": "msa",
-            "db": "XYZ_msa_full_factored_wiki_v1.2.db",
-            "pos_type": "any",
-            "class_map": "misc_files/class2complx_morpheme_type.json",
-            "caphi": "camel_morph.scratch.SBWtoPhon",
-            "logprob": "misc_files/logprob_atb.pkl"
-        },
-        "full_system_backoff": {
-            "pruning": true,
-            "reindex": true,
-            "specs": {
-                "spreadsheet": [
-                    "camel-morph-msa-nom-other",
-                    "camel-morph-msa-verbs"
-                ],
-                "sheets": {
-                    "order": [
-                        {
-                            "MSA-Nom-ORDER": "N"
-                        },
-                        {
-                            "MSA-Verb-ORDER": "V"
-                        }
-                    ],
-                    "morph": [
-                        {
-                            "MSA-Nom-MORPH": "N"
-                        },
-                        {
-                            "MSA-Verb-MORPH": "V"
-                        }
-                    ]
-                },
-                "exclude": []
-            },
-            "debugging": {
-                "stats_spreadsheet": "CamelMorph-Full-Paper-Assets",
-                "stats_sheet": "Statistics-v1.0",
-                "table_start_cell": "O68",
-                "pos_display": [
-                    "verbal.lex",
-                    "nominal.lex",
-                    "other.lex",
-                    "noun_prop.wiki"
-                ]
-            },
-            "lexicon": {
-                "spreadsheet": [
-                    "camel-morph-msa-nom",
-                    "camel-morph-msa-verbs"
-                ],
-                "sheets": [
-                    {
-                        "MSA-Nom-LEX-Backoff": "N"
-                    },
-                    {
-                        "MSA-Verb-LEX-Backoff": "V"
-                    }
-                ]
-            },
-            "dialect": "msa",
-            "db": "XYZ_msa_full_backoff_v1.0.db",
+            "db": "XYZ_msa_full_factored_wiki_v1.3.db",
             "pos_type": "any",
             "class_map": "misc_files/class2complx_morpheme_type.json",
             "caphi": "camel_morph.scratch.SBWtoPhon",
@@ -279,19 +158,19 @@
                 ],
                 "sheets": [
                     {
-                        "Lemma-Paradigm-Debugging-Noun-v2": "N",
-                        "Lemma-Paradigm-Debugging-Adj-v2": "N",
-                        "Lemma-Paradigm-Debugging-Adj_comp": "N"
+                        "MSA-Noun-LEX": "N",
+                        "MSA-Adj-LEX": "N",
+                        "MSA-Adj-Comp-LEX": "N"
                     },
                     {
-                        "Lemma-Paradigm-Debugging-Noun_num": "N",
-                        "Lemma-Paradigm-Debugging-Noun_quant": "N",
-                        "Lemma-Paradigm-Debugging-Adj_num": "N",
+                        "MSA-Noun-Num-LEX": "N",
+                        "MSA-Noun-Quant-LEX": "N",
+                        "MSA-Adj-Num-LEX": "N",
                         "MSA-Other-LEX": "N",
-                        "MSA-Nom-Prop-LEX": "N"
+                        "MSA-Noun-Prop-LEX": "N"
                     },
                     {
-                        "MSA-Nom-Prop-Annex-LEX": "N"
+                        "MSA-Noun-Prop-Annex-LEX": "N"
                     },
                     {
                         "MSA-Verb-LEX-PV": "V",
@@ -305,7 +184,7 @@
             "pos_type": "any",
             "class_map": "misc_files/class2complx_morpheme_type.json"
         },
-        "full_system_factored_wiki_same_proclitics": {
+        "full_system_same_proclitics": {
             "pruning": true,
             "reindex": true,
             "specs": {
@@ -360,19 +239,19 @@
                 ],
                 "sheets": [
                     {
-                        "Lemma-Paradigm-Debugging-Noun-v2": "",
-                        "Lemma-Paradigm-Debugging-Adj-v2": "",
-                        "Lemma-Paradigm-Debugging-Adj_comp": ""
+                        "MSA-Noun-LEX": "",
+                        "MSA-Adj-LEX": "",
+                        "MSA-Adj-Comp-LEX": ""
                     },
                     {
-                        "Lemma-Paradigm-Debugging-Noun_num": "",
-                        "Lemma-Paradigm-Debugging-Noun_quant": "",
-                        "Lemma-Paradigm-Debugging-Adj_num": "",
+                        "MSA-Noun-Num-LEX": "",
+                        "MSA-Noun-Quant-LEX": "",
+                        "MSA-Adj-Num-LEX": "",
                         "MSA-Other-LEX": "",
-                        "MSA-Nom-Prop-LEX": ""
+                        "MSA-Noun-Prop-LEX": ""
                     },
                     {
-                        "MSA-Nom-Prop-Annex-LEX": ""
+                        "MSA-Noun-Prop-Annex-LEX": ""
                     },
                     {
                         "MSA-Verb-LEX-PV": "",

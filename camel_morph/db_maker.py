@@ -40,25 +40,30 @@ import pandas as pd
 try:
     # Needed for when db_maker() needs to be imported by another script
     from . import db_maker_utils
+    from .utils.utils import essential_keys_form_feats, get_config_file
+    from .debugging.download_sheets import download_sheets
 except:
     # Needed for when db_maker() is ran from within this script
     import db_maker_utils
+    from utils.utils import essential_keys_form_feats, get_config_file
+    from debugging.download_sheets import download_sheets
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-config_file", default='camel_morph/configs/config_default.json',
+parser.add_argument("-config_file", default='config_default.json',
                     type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
 parser.add_argument("-config_name", default='default_config',
                     type=str, help="Name of the configuration to load from the config file.")
 parser.add_argument("-output_dir", default='',
                     type=str, help="Path of the directory to output the DBs to.")
+parser.add_argument("-download", default=False,
+                    action='store_true', help="Whether or not to download the data before doing anything. This should be done in case data was changed in Google Sheets since last time this script was ran.")
 parser.add_argument("-run_profiling", default=False,
                     action='store_true', help="Run execution time profiling for the make_db().")
 parser.add_argument("-camel_tools", default='local', choices=['local', 'official'],
                     type=str, help="Path of the directory containing the camel_tools modules.")
 args, _ = parser.parse_known_args()
 
-with open(args.config_file) as f:
-    config = json.load(f)
+config = get_config_file(args.config_file)
 config_local =  config['local'][args.config_name]
 config_global =  config['global']
 
@@ -69,6 +74,7 @@ if args.camel_tools == 'local':
 from camel_tools.utils.normalize import normalize_alef_bw, normalize_alef_maksura_bw, normalize_teh_marbuta_bw
 from camel_tools.utils.charmap import CharMapper
 from camel_tools.utils.dediac import dediac_bw
+
 
 normalize_map = CharMapper({
     '<': 'A',
@@ -88,6 +94,8 @@ _clitic_feats = ['enc0', 'enc1', 'enc2', 'prc0', 'prc1', 'prc1.5', 'prc2', 'prc3
 
 PRE_POST_REGEX_SYMBOL = re.compile(r'[#@]')
 PRE_POST_REGEX_SYMBOL_SMARTBACKOFF = re.compile(r'^\^|\$$|[#@]')
+HAMZA_WASL_RE = re.compile(r'\{')
+SEG_TOK_SCHEMES = ['D3SEG', 'D3TOK', 'ATBSEG', 'ATBTOK']
 
 """
 Useful terms to know for a better understanding of the comments:
@@ -136,6 +144,10 @@ def make_db(config:Dict, config_name:str, output_dir:Optional[str]=None):
     """
     config_global: Dict = config['global']
     config_local: Dict = config['local'][config_name]
+
+    if args.download:
+        print()
+        download_sheets(config=config, config_name=config_name)
     
     caphi_code_path: str = config_local.get('caphi')
     morph2caphi = None
@@ -172,7 +184,7 @@ def make_db(config:Dict, config_name:str, output_dir:Optional[str]=None):
     print("\nCollapsing categories and reindexing... [3/4]")
     reindex: bool = config_local.get('reindex', False)
     if reindex:
-        collapse_and_reindex_categories(db)
+        db, _ = collapse_and_reindex_categories(db, collapse_morphemes=False)
     
     print("\nGenerating DB file... [4/4]")
     if output_dir is None:
@@ -580,8 +592,10 @@ def _convert_bw_tag(bw_tag:str, backoff:bool=False):
     return '+'.join(utf8_bw_tag)
 
 def _generate_match_field(diac):
-    #NOTE: for nominals, postregex symbol is @ while for verbs it is #
+    #NOTE: For EGY nominals, postregex symbol is @ while for verbs it is #
+    #NOTE: Maybe this is unnecessary and EGY can use #; should look into this
     diac_ = PRE_POST_REGEX_SYMBOL.sub('', diac)
+    diac_ = diac_.replace('_', '')
     diac_ = dediac_bw(diac_)
     diac_ = normalize_teh_marbuta_bw(diac_)
     diac_ = normalize_alef_maksura_bw(diac_)
@@ -634,7 +648,7 @@ def _generate_affix(affix_type: str,
                        affix_cond_f, short_cat_map, cat2id)
     analysis['bw'] = _convert_bw_tag(analysis['bw'])
     affix_type_ = 'DBPrefix' if affix_type == 'P' else 'DBSuffix'
-    if morph2caphi is not None:
+    if morph2caphi is not None and 'caphi' not in analysis:
         analysis['caphi'] = morph2caphi[affix_type_](
             PRE_POST_REGEX_SYMBOL.sub('', analysis['diac']))
     for f in ['diac', 'd3seg', 'd3tok', 'atbseg', 'atbtok']:
@@ -697,7 +711,7 @@ def _generate_stem(cmplx_morph_seq: str,
                                stem_cond_f, short_cat_map, cat2id)
     
     if not backoff:
-        if morph2caphi is not None:
+        if morph2caphi is not None and 'caphi' not in analysis:
             analysis['caphi'] = morph2caphi['DBStem'](
                 PRE_POST_REGEX_SYMBOL.sub('', analysis['diac']))
         if logprob is not None:
@@ -710,9 +724,10 @@ def _generate_stem(cmplx_morph_seq: str,
                          'd3seg', 'd3tok', 'atbseg', 'atbtok',
                          'pattern', 'pattern_abstract']
         for f in bw2ar_columns:
-            if analysis[f] == 'NTWS' or analysis[f] is None:
-                continue
-            analysis[f] = bw2ar(analysis[f])
+            if f in analysis:
+                if analysis[f] == 'NTWS' or analysis[f] is None:
+                    continue
+                analysis[f] = bw2ar(analysis[f])
 
     stem = {'match': match, 'cat': xcat, 'analysis': analysis}
     return stem
@@ -739,10 +754,14 @@ def _read_affix(affix: List[Dict], affix_type: str) -> Tuple[str, Dict]:
     affix_feat = {feat.split(':')[0]: feat.split(':')[1]
                   for m in affix for feat in m['FEAT'].split()}
     analysis = {**analysis, **affix_feat}
-    for col in ['D3SEG', 'D3TOK', 'ATBSEG', 'ATBTOK']:
-        tok = [m[col] if m.get(col) else m['FORM'].strip() for m in affix]
-        tok = ''.join(t for t in tok if t != '_')
-        analysis[col.lower()] = tok
+    for col in ['D3SEG', 'D3TOK', 'ATBSEG', 'ATBTOK', 'CAPHI']:
+        if col in SEG_TOK_SCHEMES:
+            value = [m[col] if m.get(col) else m['FORM'].strip() for m in affix]
+        else:
+            value = [m[col] for m in affix if m.get(col)]
+        value = ''.join(t for t in value if t != '_')
+        if col != 'CAPHI' or col == 'CAPHI' and value:
+            analysis[col.lower()] = value
     
     source = [m['SOURCE'] for m in affix if m.get('SOURCE')]
     if source and any(source):
@@ -776,11 +795,17 @@ def _read_stem(stem: List[Dict]) -> Tuple[str, Dict]:
     stem_feat = {feat.split(':')[0]: feat.split(':')[1]
                 for s in stem for feat in s['FEAT'].split()}
     analysis = {**analysis, **stem_feat}
+
+    analysis['diac'] = ''.join(
+        s['FORM'] for s in stem if s['FORM'] != '_').strip()
     
-    for col in ['D3SEG', 'D3TOK', 'ATBSEG', 'ATBTOK']:
-        tok = [s[col] if s.get(col) else s['FORM'].strip() for s in stem]
-        tok = ''.join(t for t in tok if t != '_')
-        analysis[col.lower()] = tok
+    for col in SEG_TOK_SCHEMES + ['CAPHI']:
+        value = [s[col] if s.get(col) else s['FORM'].strip() for s in stem]
+        value = ''.join(t for t in value if t != '_')
+        if col in SEG_TOK_SCHEMES:
+            value = HAMZA_WASL_RE.sub('A', value)
+        if value and value != analysis['diac']:
+            analysis[col.lower()] = value
     
     for col in ['ROOT', 'PATTERN_ABSTRACT', 'PATTERN', 'SOURCE']:
         feat = [s[col] for s in stem if s.get(col)]
@@ -791,24 +816,12 @@ def _read_stem(stem: List[Dict]) -> Tuple[str, Dict]:
         else:
             analysis[col.lower()] = 'NTWS'
 
-        if col == 'PATTERN_ABSTRACT' and analysis['pattern_abstract'] != 'NTWS':
-            pattern_abstract = analysis['pattern_abstract']
-            pattern_abstract = pattern_abstract.replace('1', 'f')
-            pattern_abstract = pattern_abstract.replace('2', 'E')
-            pattern_abstract = pattern_abstract.replace('3', 'l')
-            pattern_abstract = pattern_abstract.replace('4', 'l')
-            pattern_abstract = pattern_abstract.replace('5', 'l')
-            analysis['pattern_abstract'] = pattern_abstract
-
     analysis['cm_stem_ids'] = '+'.join(
         s['CLASS'] + ':' + str(int(float(s['LINE'] if s['LINE'] else -1)))
         for s in stem)
     analysis['cm_stem'], analysis['cm_buffer'] = stem[0]['FORM'], None
     if len(stem) > 1 and len(stem) == 2 and stem[1]['FORM'] not in ['_', '']:
         analysis['cm_buffer'] = stem[1]['FORM']
-    
-    analysis['diac'] = ''.join(
-        s['FORM'] for s in stem if s['FORM'] != '_').strip()
 
     stem_defines = set(s['DEFINE'] for s in stem)
     if 'SMARTBACKOFF' in stem_defines:
@@ -849,49 +862,236 @@ def _write_compatibility_tables(X_Y_compat):
     return X_Y_compat_
 
 
-def collapse_and_reindex_categories(db):
-    prefix_stem_compat = _read_compatibility_tables(db['OUT:###TABLE AB###'])
-    stem_suffix_compat = _read_compatibility_tables(db['OUT:###TABLE BC###'])
-    prefix_suffix_compat = _read_compatibility_tables(db['OUT:###TABLE AC###'])
+def _reindex_morpheme_table_cats(X, X_cat_map, equivalences):
+    X_ = []
+    for X_entry in X:
+        X_cat = X_entry[1]
+        X_cat_new = db_maker_utils.reindex_cat(X_cat, X_cat_map, equivalences)
+        X_.append((X_entry[0], X_cat_new, X_entry[2]))
+    return X_
 
+
+def _reindex_backoff_stem_cats(mode2cats, X_cat_map, equivalences):
+    mode2cats_ = {}
+    for entry_type ,backoff_mode, cats in mode2cats:
+        cats_new = []
+        for cat in cats.split():
+            cat_new = db_maker_utils.reindex_cat(cat, X_cat_map, equivalences)
+            cats_new.append(cat_new)
+        mode2cats_[(entry_type, backoff_mode, ' '.join(cats_new))] = 1
+    return mode2cats_
+
+
+def collapse_and_reindex_morphemes(A, B, C, AB, BC, AC):
+    entries = {}
+    for name, entries_ in [('A', A), ('B', B), ('C', C)]:
+        for match_, cat, analysis in entries_:
+            analysis_ = {}
+            for f_v in analysis.split():
+                f_v = f_v.split(':')
+                f, v = f_v[0], ':'.join(f_v[1:])
+                analysis_[f] = v
+            analysis_key = tuple(analysis_.get(k, 'NA') for k in essential_keys_form_feats)
+            entries.setdefault(name, {}).setdefault(analysis_key, {}).setdefault(
+                cat, []).append(((match_, analysis)))
+    
+    duplicates = {}
+    problematic = {}
+    for name, entries_ in entries.items():
+        for analysis_key, cat2entries in entries_.items():
+            if len(cat2entries) > 1:
+                for cat in cat2entries:
+                    problematic.setdefault(name, {}).setdefault(
+                        analysis_key, []).append(cat)
+                for cat, match_analyses in cat2entries.items():
+                    if len(match_analyses) > 1:
+                        duplicates.setdefault(name, {}).setdefault(
+                            analysis_key, []).append(cat)
+    
+    CB = db_maker_utils._reverse_compat_table(BC)
+    CA = db_maker_utils._reverse_compat_table(AC)
+    BA = db_maker_utils._reverse_compat_table(AB)
+    
+    XYZ_info = {}
+    for name, entries_ in problematic.items():
+        if name == 'C':
+            max_cat_index = int(re.search(r'[A-Z]+(\d+)', sorted(CB)[-1]).group(1)[1:])
+            info = _get_mapping_for_table_Z(entries_, AB, BC, AC, 'S', max_cat_index)
+        elif name == 'B':
+            max_cat_index = int(re.search(r'[A-Z]+(\d+)', sorted(BA)[-1]).group(1)[1:])
+            info = _get_mapping_for_table_Z(entries_, AC, CB, AB, 'X', max_cat_index)
+        elif name == 'A':
+            max_cat_index = int(re.search(r'[A-Z]+(\d+)', sorted(AB)[-1]).group(1)[1:])
+            info = _get_mapping_for_table_Z(entries_, BC, CA, BA, 'P', max_cat_index)
+        
+        XYZ_info[name] = info
+
+    A_, B_, C_, AB_, BC_, AC_ = _reindex_morphemes_after_collapse(
+        XYZ_info, entries, A, B, C, AB, BC, AC)
+
+    return A_, B_, C_, AB_, BC_, AC_, XYZ_info
+
+
+def _reindex_morphemes_after_collapse(collapsing_info, entries, A, B, C, AB, BC, AC):
+    A_, B_, C_ = set(), set(), set()
+    for name, X_, X in [['A', A_, A], ['B', B_, B], ['C', C_, C]]:
+        X_info = collapsing_info[name][0]
+        xnew2Xold = {x_cat_new: set(info['cats']) for x_cat_new, info in X_info.items()}
+        xold2Xnew = db_maker_utils._reverse_compat_table(xnew2Xold)
+        for x_match_old, x_cat_old, x_analysis_old in X:
+            for x_cat_new in xold2Xnew.get(x_cat_old, [x_cat_old]):
+                X_.add((x_match_old, x_cat_new, x_analysis_old))
+        
+        # kill_entries = set()
+        # for cat_new, info in X_info.items():
+        #     cats_old, analysis_key = info['cats'], info['analysis_key']
+        #     for cat_old in cats_old:
+        #         entries_old = entries[name][analysis_key][cat_old]
+        #         for match_, analysis in entries_old:
+        #             X_.add((match_, cat_new, analysis))
+        #             kill_entries.add((match_, cat_old, analysis))
+        # assert kill_entries <= set(X)
+        # X_.update({entry for entry in X if entry not in kill_entries})
+
+    
+    AB_, BC_, AC_ = {}, {}, {}
+    for name, XY_, XY in [['AB', AB_, AB], ['BC', BC_, BC], ['AC', AC_, AC]]:
+        name_src, name_tgt = name
+        X_info_src, X_info_tgt = collapsing_info[name_src][0], collapsing_info[name_tgt][0]
+        xnew2Xold = {x_cat_new: set(info['cats']) for x_cat_new, info in X_info_src.items()}
+        xold2Xnew = db_maker_utils._reverse_compat_table(xnew2Xold)
+        ynew2Yold = {y_cat_new: set(info['cats']) for y_cat_new, info in X_info_tgt.items()}
+        yold2Ynew = db_maker_utils._reverse_compat_table(ynew2Yold)
+        for x_old, Y_old in XY.items():
+            for x_new in xold2Xnew.get(x_old, [x_old]):
+                for y_old in Y_old:
+                    XY_.setdefault(x_new, set()).update(yold2Ynew.get(y_old, [y_old]))
+
+    # assert  len(A_) <= len(A) and len(B_) <= len(B) and len(C_) <= len(C)
+    assert [sum(len(Y) for Y in XY_.values()) == sum(len(Y) for Y in XY.values())
+            for XY_, XY in [(AB_, AB), (BC_, BC), (AC_, AC)]]
+    
+    return A_, B_, C_, AB_, BC_, AC_
+
+
+def _get_mapping_for_table_Z(entries, XY, YZ, XZ, name, max_cat_index):
+    Z_info, failed = {}, {}
+    for analysis_key, cats in entries.items():
+        XY_, YZ_, XZ_ = {}, {}, {}
+        YZ_new, XZ_new = {}, {}
+        cat_new = f'{name}{str(max_cat_index + len(Z_info) + 1).zfill(5)}'
+        for cat in cats:
+            for y, Z_ in YZ.items():
+                if cat in Z_:
+                    YZ_.setdefault(y, set()).add(cat)
+                    YZ_new.setdefault(y, set()).add(cat_new)
+            for x, Z_ in XZ.items():
+                if cat in Z_:
+                    XZ_.setdefault(x, set()).add(cat)
+                    XZ_new.setdefault(x, set()).add(cat_new)
+            for x, Y_ in XY.items():
+                if x in XZ_:
+                    for y in Y_:
+                        if y in YZ_:
+                            XY_.setdefault(x, set()).add(y)
+        
+        combinations, combinations_new = set(), set()
+        COMBINATIONS = [(combinations, (XY_, YZ_, XZ_)),
+                        (combinations_new, (XY_, YZ_new, XZ_new))]
+        for combinations_, (XY_, YZ_, XZ_) in COMBINATIONS:
+            for x, Y_ in XY_.items():
+                for y in Y_:
+                    for c in YZ_.get(y, []):
+                        for x, Z_ in XZ_.items():
+                            if c in Z_:
+                                combinations_.add((x, y, c))
+        
+        combinations_reindexed = {
+            comb[:2] + (next(iter(combinations_new))[2],) for comb in combinations}
+        if combinations_reindexed <= combinations_new:
+            Z_old_cats = [tuple(sorted(info['cats'])) for info in Z_info.values()]
+            if tuple(sorted(cats)) not in Z_old_cats:
+                Z_info[cat_new] = {}
+                Z_info[cat_new]['cats'] = cats
+                #FIXME: allow multiple analysis keys to be appended
+                Z_info[cat_new]['analysis_key'] = analysis_key
+            operation = 'equal'
+        elif combinations_reindexed & combinations_new:
+            operation = 'intersect'
+        else:
+            operation = 'no_intersect'
+        if operation != 'equal':
+            info = failed.setdefault(operation, {}).setdefault(analysis_key, {})
+            info['cats'] = cats
+            info['combinations'] = combinations
+            info['combinations_reindexed'] = combinations_reindexed
+            info['combinations_new'] = combinations_new
+    
+    return Z_info, failed
+
+
+def collapse_and_reindex_categories(db, collapse_morphemes):
+    prefix_stem_compat_ = _read_compatibility_tables(db['OUT:###TABLE AB###'])
+    stem_suffix_compat_ = _read_compatibility_tables(db['OUT:###TABLE BC###'])
+    prefix_suffix_compat_ = _read_compatibility_tables(db['OUT:###TABLE AC###'])
+
+    prefixes_ = db['OUT:###PREFIXES###']
+    stems_ = db['OUT:###STEMS###']
+    suffixes_ = db['OUT:###SUFFIXES###']
+    backoff_stems_ = db['OUT:###STEMBACKOFF###']
+
+    print('Factorization Round 1')
     equivalences = db_maker_utils.factorize_categories(
-        prefix_stem_compat, stem_suffix_compat, prefix_suffix_compat)
+        prefix_stem_compat_, stem_suffix_compat_, prefix_suffix_compat_)
+    debug_info = None
     
-    prefix_stem_compat_, stem_suffix_compat_, prefix_suffix_compat_, \
-        prefix_cat_map, stem_cat_map, suffix_cat_map = \
-            db_maker_utils.factorize_compatibility_lines(
-                prefix_stem_compat, stem_suffix_compat, prefix_suffix_compat, equivalences)
-    
+    i = 0
+    while i < 1 or equivalences != {}:
+        if equivalences:
+            prefix_stem_compat_, stem_suffix_compat_, prefix_suffix_compat_, \
+                prefix_cat_map, stem_cat_map, suffix_cat_map = \
+                    db_maker_utils.factorize_compatibility_lines(
+                        prefix_stem_compat_, stem_suffix_compat_, prefix_suffix_compat_, equivalences)
+
+            prefixes_ = _reindex_morpheme_table_cats(prefixes_, prefix_cat_map, equivalences)
+            stems_ = _reindex_morpheme_table_cats(stems_, stem_cat_map, equivalences)
+            suffixes_ = _reindex_morpheme_table_cats(suffixes_, suffix_cat_map, equivalences)
+            backoff_stems_ = _reindex_backoff_stem_cats(backoff_stems_, stem_cat_map, equivalences)
+        #TODO: deal with backoff stems here also
+        if collapse_morphemes:
+            collapsed = collapse_and_reindex_morphemes(
+                prefixes_, stems_, suffixes_,
+                prefix_stem_compat_, stem_suffix_compat_, prefix_suffix_compat_)
+            prefixes_, stems_, suffixes_, prefix_stem_compat_, stem_suffix_compat_, \
+                prefix_suffix_compat_, debug_info = collapsed
+        
+        print(f'Factorization Round {i + 2}')
+        equivalences = db_maker_utils.factorize_categories(
+            prefix_stem_compat_, stem_suffix_compat_, prefix_suffix_compat_)
+        
+        i += 1
+
     prefix_stem_compat_ = _write_compatibility_tables(prefix_stem_compat_)
     stem_suffix_compat_ = _write_compatibility_tables(stem_suffix_compat_)
     prefix_suffix_compat_ = _write_compatibility_tables(prefix_suffix_compat_)
-    
-    prefixes = db['OUT:###PREFIXES###']
-    stems = db['OUT:###STEMS###']
-    suffixes = db['OUT:###SUFFIXES###']
 
-    prefixes_ = db_maker_utils.reindex_morpheme_table_cats(
-        prefixes, prefix_cat_map, equivalences)
-    stems_ = db_maker_utils.reindex_morpheme_table_cats(
-        stems, stem_cat_map, equivalences)
-    suffixes_ = db_maker_utils.reindex_morpheme_table_cats(
-        suffixes, suffix_cat_map, equivalences)
-    
     db['OUT:###PREFIXES###'] = prefixes_
     db['OUT:###STEMS###'] = stems_
     db['OUT:###SUFFIXES###'] = suffixes_
     db['OUT:###TABLE AB###'] = prefix_stem_compat_
     db['OUT:###TABLE BC###'] = stem_suffix_compat_
     db['OUT:###TABLE AC###'] = prefix_suffix_compat_
+    db['OUT:###STEMBACKOFF###'] = backoff_stems_
 
     collapse_and_reindex_debug = dict(
-        equivalences=equivalences,
-        prefix_cat_map=prefix_cat_map,
-        stem_cat_map=stem_cat_map,
-        suffix_cat_map=suffix_cat_map
+        equivalences=equivalences if equivalences else None,
+        prefix_cat_map=prefix_cat_map if equivalences else None,
+        stem_cat_map=stem_cat_map if equivalences else None,
+        suffix_cat_map=suffix_cat_map if equivalences else None,
+        morpheme_collapsing_debug_info=debug_info
     )
 
-    return db
+    return db, collapse_and_reindex_debug
 
 
 def print_almor_db(output_path, db):

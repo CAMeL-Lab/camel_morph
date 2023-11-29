@@ -35,7 +35,14 @@ import gspread
 import pandas as pd
 from numpy import nan
 import numpy as np
+from nltk.metrics.distance import edit_distance
 pd.options.mode.chained_assignment = None  # default='warn'
+
+file_path = os.path.abspath(__file__).split('/')
+package_path = '/'.join(file_path[:len(file_path) - 1 - file_path[::-1].index('camel_morph')])
+sys.path.insert(0, package_path)
+
+from camel_morph.utils.utils import index2col_letter
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-egy_magold_path", default='eval_files/ARZ-All-train.113012.magold',
@@ -56,6 +63,8 @@ parser.add_argument("-msa_baseline_db", default='eval_files/calima-msa-s31_0.4.2
                     type=str, help="Path of the MSA baseline DB file we will be comparing against.")
 parser.add_argument("-egy_baseline_db", default='eval_files/calima-egy-c044_0.2.0.utf8.db',
                     type=str, help="Path of the EGY baseline DB file we will be comparing against.")
+parser.add_argument("-k_best_analyses", default=1,
+                    type=int, help="Number of generated analyses to display when printing report.")
 parser.add_argument("-spreadsheet", default='',
                     type=str, help="Spreadsheet to write the results to.")
 parser.add_argument("-compare_stats_cell", default='',
@@ -73,7 +82,7 @@ parser.add_argument("-pos_or_type", default='', choices=['verbal', 'nominal', 'o
 'compare_camel_tb_msa_raw', 'compare_camel_tb_egy_raw']"""
 parser.add_argument("-eval_mode", default='',
                     type=str, help="What evaluation to perform.")
-parser.add_argument("-n", default=1000000000,
+parser.add_argument("-n_limit", default=1000000000,
                     type=int, help="Number of instances to evaluate.")
 parser.add_argument("-camel_tools", default='local', choices=['local', 'official'],
                     type=str, help="Path of the directory containing the camel_tools modules.")
@@ -98,6 +107,8 @@ from camel_tools.morphology.database import MorphologyDB
 from camel_tools.morphology.analyzer import Analyzer
 from camel_tools.utils.charmap import CharMapper
 from camel_tools.utils.dediac import dediac_bw
+from camel_tools.morphology.utils import strip_lex
+
 
 bw2ar = CharMapper.builtin_mapper('bw2ar')
 ar2bw = CharMapper.builtin_mapper('ar2bw')
@@ -112,6 +123,7 @@ ESSENTIAL_KEYS = ['source', 'diac', 'lex', 'pos', 'asp', 'mod',
                   'vox', 'per', 'num', 'gen', 'stt', 'cas',
                   'prc0', 'prc1', 'prc1.5', 'prc2', 'prc3',
                   'enc0', 'enc1', 'enc2', 'stem_seg']
+NON_BINDING_MATCH_KEYS = ['d3seg', 'd3tok', 'atbseg', 'atbtok', 'caphi']
 
 FIELD2SENTENCE_INDEX = {f: i
     for i, f in enumerate(['sentence'])}
@@ -120,8 +132,14 @@ FIELD2INFO_INDEX = {f: i
 FIELD2LDC_INDEX = {f: i
     for i, f in enumerate(['word', 'diac', 'lex', 'bw', 'gloss'])}
 
-POS_TYPE, POS_OR_TYPE = '', ''
+POS_OR_TYPE = ''
 ATB_POS_ALL, CAMEL_POS_ALL = {}, {}
+
+
+def _strip_brackets(info):
+    if info[0] == '[' and info[-1] == ']':
+        info = info[1:-1]
+    return info
 
 
 def _load_analysis(analysis):
@@ -134,12 +152,10 @@ def _load_analysis(analysis):
 
 def _preprocess_magold_data(gold_data, POS=None,
                             load_analysis_fn=_load_analysis,
-                            pos_type=None,
+                            pos_type=POS_OR_TYPE,
                             field2sentence_index=FIELD2SENTENCE_INDEX,
                             field2info_index=FIELD2INFO_INDEX,
                             field2ldc_index=FIELD2LDC_INDEX):
-    global POS_TYPE
-    pos_type = POS_TYPE
     ldc_tag_exists = field2info_index is not None and 'ldc' in field2info_index
     if not ldc_tag_exists:
         print('WARNING: Using POS from analysis and not BW tag choose which words to analyze.')
@@ -157,24 +173,25 @@ def _preprocess_magold_data(gold_data, POS=None,
         for info in words_info:
             analysis = load_analysis_fn(
                 info[field2info_index['calima']].split()[1:])
-            if POS is not None:
-                if ldc_tag_exists:
-                    ldc = info[field2info_index['ldc']]
-                    ldc_split = ldc.split(' # ')
-                    ldc_BW_components = set(
-                        ldc_split[field2ldc_index['bw']].split('+'))
-                    intersect = ldc_BW_components & ATB_POS
-                    if pos_type == 'other':
-                        if not bool(intersect) or \
-                           bool(ldc_BW_components & ATB_POS_ALL['nominal']) or \
-                           bool(ldc_BW_components & ATB_POS_ALL['verbal']):
-                            continue
-                    else:
-                        if not bool(intersect):
-                            continue
-                else:
-                    if analysis['pos'] not in POS:
+            if ldc_tag_exists:
+                ldc = info[field2info_index['ldc']]
+                ldc_split = ldc.split(' # ')
+                ldc_BW_components = set(
+                    ldc_split[field2ldc_index['bw']].split('+'))
+                intersect = ldc_BW_components & ATB_POS
+                if len(pos_type) == 1 and pos_type[0] == 'other':
+                    if not bool(intersect) or \
+                        bool(ldc_BW_components & ATB_POS_ALL['nominal']) or \
+                        bool(ldc_BW_components & ATB_POS_ALL['verbal']):
                         continue
+                elif len(pos_type) > 1:
+                    raise NotImplementedError
+                else:
+                    if not bool(intersect):
+                        continue
+            else:
+                if POS is not None and analysis['pos'] not in POS:
+                    continue
             
             magold = OrderedDict(
                 (f, info[i]) for f, i in field2info_index.items()
@@ -230,6 +247,12 @@ def _preprocess_lex_features(lex_feat, f=None):
     return lex_feat
 
 
+def _preprocess_tok_features(tok_feat):
+    tok_feat = aA_regex.sub('A', tok_feat)
+    tok_feat = sukun_regex.sub('', tok_feat)
+    return tok_feat
+
+
 def _preprocess_analysis(analysis,
                          defaults,
                          essential_keys=ESSENTIAL_KEYS,
@@ -264,7 +287,8 @@ def _preprocess_analysis(analysis,
 
 
 def recall_print(examples, results_path,
-                 essential_keys=ESSENTIAL_KEYS):
+                 essential_keys=ESSENTIAL_KEYS,
+                 k_best_analyses=1):
     essential_keys_no_bw_source = [
         k for k in essential_keys if k not in ['bw', 'source']]
     outputs_ = []
@@ -277,10 +301,16 @@ def recall_print(examples, results_path,
             ex_col = pd.DataFrame(
                 [(f"{i} {example['word']['info']['word']}", label,
                   example['match'])]*len(row.index))
+            ldc_split = example['word']['info']['magold']['ldc'].split(' # ')[1:4]
+            diac_ldc, lex_ldc, bw_ldc = ldc_split
+            lex_ldc = strip_lex(_strip_brackets(lex_ldc))
             extra_info = pd.DataFrame(
                 [(bw2ar(example['word']['info']['sentence']),
-                  *example['word']['info']['magold'].values(), example['count'])])
-            row = pd.concat([ex_col, extra_info, row], axis=1)
+                 diac_ldc, lex_ldc, bw_ldc,
+                 example['word']['info']['magold']['ranking'],
+                 example['freq'])])
+            non_binding_mismatches = pd.DataFrame([[example['non_binding_mismatches']]])
+            row = pd.concat([ex_col, extra_info, row, non_binding_mismatches], axis=1)
             # Avoids duplicate indexes issue (generates errors)
             row.columns = range(row.columns.size)
             outputs_.append(row)
@@ -289,22 +319,23 @@ def recall_print(examples, results_path,
     outputs = pd.concat(outputs_)
     outputs = outputs.replace(nan, '', regex=True)
     outputs.columns = ['filter', 'label', 'match', 'sentence',
-        *example['word']['info']['magold'], 'freq'] + \
-        [f'{k}_g' for k in essential_keys] + essential_keys
+        'diac_ldc', 'lex_ldc', 'bw_ldc', 'ranking', 'freq'] + \
+        [f'{k}_g' for k in essential_keys] + essential_keys + ['non_binding_mismatches']
     outputs['calima_mismatches'] = outputs[essential_keys_no_bw_source].apply(
         lambda row: row.str.contains(']')).sum(axis=1)
-    sample_pool_mask = outputs['label'].isin(['wrong', 'noan'])
-    sample_size = min(100, int(0.1*sample_pool_mask.sum()))
-    sample_filter = set(outputs[sample_pool_mask].sample(
-        sample_size, weights='freq', random_state=42)['filter'].tolist())
     outputs['sampled'] = 0
-    outputs.loc[outputs['filter'].isin(sample_filter), 'sampled'] = 1
+    if k_best_analyses == 1:
+        sample_pool_mask = outputs['label'].isin(['wrong', 'noan'])
+        sample_size = min(100, int(0.1*sample_pool_mask.sum()))
+        sample_filter = set(outputs[sample_pool_mask].sample(
+            sample_size, weights='freq', random_state=42)['filter'].tolist())
+        outputs.loc[outputs['filter'].isin(sample_filter), 'sampled'] = 1
 
     outputs.reset_index(drop=True, inplace=True)
     outputs.to_csv(results_path, index=False, sep='\t')
 
     if sh is not None:
-        sheet_name = f'{DIALECT}-Recall-{POS_OR_TYPE}'
+        sheet_name = f"{DIALECT}-Recall-{'_'.join(POS_OR_TYPE)}"
         print(f'Uploading outputs to sheet {sheet_name} in spreadsheet {sh.title}... ', end='')
         upload(df=outputs, sheet_name=sheet_name, template_sheet_name='Recall-template')
         print('Done.')
@@ -323,33 +354,46 @@ def filter_and_rank_analyses(analyses_pred, analysis_gold, analysis_gold_ldc,
     for analysis_index, analysis in enumerate(analyses_pred):
         analysis_ = []
         for index, f in enumerate(analysis):
+            index2similarity.setdefault(analysis_index, 0)
             if f == analysis_gold[index]:
                 analysis_.append(f)
-                index2similarity.setdefault(analysis_index, 0)
-                if index == bw_index:
-                    index2similarity[analysis_index] += len(analysis) \
-                        if mode == 'bw' else 1
-                else:
+                if mode == 'sama':
                     index2similarity[analysis_index] += (
                         1.01 if analysis[source_index] == 'main' else 1)
             else:
                 analysis_.append(f'[{f}]')
 
-            if index == diac_index and f != analysis_gold_ldc[0] or \
-                index == lex_index and f != analysis_gold_ldc[1]:
-                analysis_[-1] = f'({analysis_[-1]})'
-            elif index == bw_index and f != analysis_gold_ldc[2]:
+            if index == diac_index:
+                if f != analysis_gold_ldc[0]:
+                    analysis_[-1] = f'({analysis_[-1]})'
+                if mode == 'bw':
+                    similarity = 1 - edit_distance(f, analysis_gold_ldc[0]) / max(
+                        len(f), len(analysis_gold_ldc[0]))
+                    index2similarity[analysis_index] += similarity
+            elif index == lex_index:
+                if f != analysis_gold_ldc[1]:
+                    analysis_[-1] = f'({analysis_[-1]})'
+                if mode == 'bw':
+                    similarity = 1 - edit_distance(f, analysis_gold_ldc[1]) / max(
+                        len(f), len(analysis_gold_ldc[1]))
+                    index2similarity[analysis_index] += similarity
+            elif index == bw_index:
                 ldc_gold_set = set(analysis_gold_ldc[2].split('+'))
-                bw_pred_comp_ = []
-                for bw_pred_comp in f.split('+'):
-                    if bw_pred_comp not in ldc_gold_set:
-                        bw_pred_comp = f'({bw_pred_comp})'
-                    bw_pred_comp_.append(bw_pred_comp)
-                bw_pred_comp = '+'.join(bw_pred_comp_)
-                if '[' in analysis_[-1]:
-                    analysis_[-1] = f'[{bw_pred_comp}]'
-                else:
-                    analysis_[-1] = bw_pred_comp
+                bw_pred_comps = f.split('+')
+                bw_pred_comps_set = set(bw_pred_comps)
+                similarity = len(bw_pred_comps_set & ldc_gold_set) / len(ldc_gold_set)
+                index2similarity[analysis_index] += similarity
+                if f != analysis_gold_ldc[2]:
+                    bw_pred_comp_ = []
+                    for bw_pred_comp in bw_pred_comps:
+                        if bw_pred_comp not in ldc_gold_set:
+                            bw_pred_comp = f'({bw_pred_comp})'
+                        bw_pred_comp_.append(bw_pred_comp)
+                    bw_pred_comp = '+'.join(bw_pred_comp_)
+                    if '[' in analysis_[-1]:
+                        analysis_[-1] = f'[{bw_pred_comp}]'
+                    else:
+                        analysis_[-1] = bw_pred_comp
 
         analyses_pred_.append(tuple(analysis_))
     sorted_indexes = sorted(
@@ -364,7 +408,7 @@ def replace_values_with_empty(obj):
     if isinstance(obj, dict):
         for key, value in obj.items():
             if isinstance(value, str):
-                if key not in ['match', 'ldc', 'ranking', 'gold']:
+                if key not in ['match', 'ldc', 'ranking', 'gold', 'non_binding_mismatches']:
                     obj[key] = ''
             elif isinstance(value, tuple):
                 obj[key] = ('',) * len(obj[key])
@@ -381,10 +425,11 @@ def replace_values_with_empty(obj):
 
 
 def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
-                    msa_camel_analyzer=None, best_analysis=True,
+                    msa_camel_analyzer=None, k_best_analyses=1,
                     pos_type=None,
                     print_recall=True,
                     essential_keys=ESSENTIAL_KEYS,
+                    non_binding_match_keys=NON_BINDING_MATCH_KEYS,
                     field2ldc_index=FIELD2LDC_INDEX):
     essential_keys.insert(0, 'bw')
     bw_index = essential_keys.index('bw')
@@ -418,8 +463,6 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
         if 'ldc' in word_info['info']['magold']:
             ldc = word_info['info']['magold']['ldc'].split(' # ')
             ldc = {ldc_index2field[i]: comp for i, comp in enumerate(ldc)}
-            # if ldc['lex'] != '[mumav~il_1]' or ldc['diac'] != 'mumav~iliy':
-            #     continue
             diac_lemma_bw = tuple(ldc[f] for f in ['diac', 'lex', 'bw'])
         else:
             diac_lemma_bw = tuple(word_info['analysis'][f]
@@ -436,9 +479,8 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
     for (word, ldc), word_info in data_unique:
         diac_ldc, lex_ldc, bw_ldc = ldc
         total += 1
-        analysis_gold = _preprocess_analysis(word_info['analysis'],
-                                             analyzer_camel._db.defaults,
-                                             essential_keys)
+        analysis_gold = _preprocess_analysis(
+            word_info['analysis'], analyzer_camel._db.defaults, essential_keys)
 
         if 'raw' in eval_mode:
             analyzer_input = word
@@ -449,32 +491,45 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
 
         analyzer_input = bw2ar(analyzer_input)
 
-        analyses_pred_ = analyzer_camel.analyze(analyzer_input)
-        for analysis in analyses_pred_:
+        analyses_pred_raw = analyzer_camel.analyze(analyzer_input)
+        for analysis in analyses_pred_raw:
             analysis['source'] = 'main'
-        analyses_pred = set(
-            [_preprocess_analysis(analysis, analyzer_camel._db.defaults, essential_keys)
-             for analysis in analyses_pred_])
+
+        def get_processed_analysis_tuples(analyses_raw, analyzer):
+            analyses_ = {}
+            for analysis in analyses_raw:
+                analysis_tuple = _preprocess_analysis(
+                    analysis, analyzer._db.defaults, essential_keys)
+                for k in non_binding_match_keys:
+                    analyses_.setdefault(analysis_tuple, {}).setdefault(
+                        k, []).append(analysis[k])
+            return analyses_
+        
+        analyses_pred = get_processed_analysis_tuples(
+            analyses_pred_raw, analyzer_camel)
 
         match = re.search(r'ADAM|CALIMA|SAMA', word_info['analysis']['gloss'])
         if match:
-            analysis_gold = (match.group().lower(),) + \
-                analysis_gold[source_index + 1:]
+            analysis_gold = analysis_gold[:source_index] + (match.group().lower(),) + \
+                            analysis_gold[source_index:]
 
         if msa_camel_analyzer is not None:
-            analyses_msa_pred = msa_camel_analyzer.analyze(analyzer_input)
-            for analysis in analyses_msa_pred:
+            analyses_msa_pred_raw = msa_camel_analyzer.analyze(analyzer_input)
+            for analysis in analyses_msa_pred_raw:
                 analysis['source'] = 'msa'
-            analyses_msa_pred = set(
-                [_preprocess_analysis(analysis, msa_camel_analyzer._db.defaults, essential_keys)
-                 for analysis in analyses_msa_pred])
-            analyses_pred = analyses_pred | analyses_msa_pred
+            analyses_msa_pred = get_processed_analysis_tuples(
+                analyses_pred_raw, msa_camel_analyzer)
+            # Union of msa and other
+            for analysis, non_binding_info in analyses_msa_pred.items():
+                for k in non_binding_match_keys:
+                    analyses_pred.setdefault(analysis, {}).setdefault(
+                        k, []).append(non_binding_info[k])
 
-        analyses_pred_no_source = set(
-            [tuple([f for i, f in enumerate(analysis) if i not in excluded_indexes])
-                for analysis in analyses_pred])
+        analyses_pred_no_source = {
+            tuple(f for i, f in enumerate(analysis) if i not in excluded_indexes): non_binding_info
+            for analysis, non_binding_info in analyses_pred.items()}
         analysis_gold_no_source = tuple(
-            [f for i, f in enumerate(analysis_gold) if i not in excluded_indexes])
+            f for i, f in enumerate(analysis_gold) if i not in excluded_indexes)
         
         analysis_gold_ldc = (_preprocess_lex_features(diac_ldc),
                              _preprocess_lex_features(lex_ldc, f='lex'),
@@ -485,14 +540,8 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
         mode = 'bw' if 'ldc_dediac_match' in eval_mode else 'sama'
         analyses_pred = filter_and_rank_analyses(
             analyses_pred, analysis_gold, analysis_gold_ldc, essential_keys, mode)
-        if best_analysis:
-            analyses_pred = analyses_pred[0:1]
-        else:
-            #FIXME: might need fixing; why are we excluding source, lex, etc.?
-            analyses_pred = [
-                analysis for analysis in analyses_pred
-                if all(analysis[i] == analysis_gold[i] for i, k in enumerate(essential_keys)
-                        if k not in ['source', 'lex', 'diac', 'stem_seg'])]
+        analyses_pred = analyses_pred[:k_best_analyses]
+        
         match = ''
         if analysis_gold_ldc in analyses_pred_ldc:
             match = 'ldc'
@@ -501,9 +550,25 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
                 if analysis_gold_ldc[i] in [a[i] for a in analyses_pred_ldc]:
                     match += (' ' if match else '') + f'ldc:{f}'
         
+        non_binding_mismatches = ''
         if analysis_gold_no_source in analyses_pred_no_source:
             match += ' feats' if match else 'feats'
-        
+            for k in non_binding_match_keys:
+                non_binding_feat_pred = analyses_pred_no_source[analysis_gold_no_source][k]
+                non_binding_feat_gold = word_info['analysis'][k]
+                if k != 'caphi':
+                    non_binding_feat_pred = [
+                        _preprocess_tok_features(v) for v in non_binding_feat_pred]
+                    non_binding_feat_gold = _preprocess_tok_features(non_binding_feat_gold)
+                    non_binding_feat_pred = set(map(_preprocess_tok_features,
+                                                    map(ar2bw, set(non_binding_feat_pred))))
+                if non_binding_feat_gold in non_binding_feat_pred:
+                    match += (' ' if match else '') + k
+                else:
+                    non_binding_feat_pred = '-'.join(non_binding_feat_pred)
+                    non_binding_mismatches += (' ' if match else '') + \
+                        f'{k}/g:{non_binding_feat_gold}/p:{non_binding_feat_pred}'
+
         is_error = False
         if 'ldc_dediac_match' not in eval_mode and \
                 analysis_gold_no_source in analyses_pred_no_source or \
@@ -540,7 +605,8 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
              'match': match,
              'pred': analyses_pred,
              'gold': analysis_gold,
-             'count': counts[(word, ldc)]})
+             'non_binding_mismatches': non_binding_mismatches,
+             'freq': counts[(word, ldc)]})
         
         correct = len(examples.get('correct', []))
         wrong = len(examples.get('wrong', []))
@@ -550,8 +616,8 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
         pbar.update(1)
 
     pbar.close()
-    correct = sum(e['count'] for e in examples.get('correct', []))
-    wrong = sum(e['count'] for e in examples.get('wrong', []))
+    correct = sum(e['freq'] for e in examples.get('correct', []))
+    wrong = sum(e['freq'] for e in examples.get('wrong', []))
     total = correct + wrong
     recall_token = (correct / total) if total else 0
     print(f"Token space recall: {recall_token:.2%}")
@@ -560,7 +626,8 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
                       if l == 'correct' or 'drop' in l]
     if print_recall:
         replace_values_with_empty(no_print_cases)
-        recall_print(examples, output_path, essential_keys=essential_keys)
+        recall_print(examples, output_path, essential_keys=essential_keys,
+                     k_best_analyses=k_best_analyses)
 
     correct_cases = examples['correct']
     return correct_cases
@@ -683,7 +750,7 @@ def compare_print(words, analyses_words, status, results_path,
 
     if sh is not None:
         upload(df=analysis_results,
-               sheet_name=f"{DIALECT}-Compare-{POS_OR_TYPE}",
+               sheet_name=f"{DIALECT}-Compare-{'_'.join(POS_OR_TYPE)}",
                template_sheet_name='Compare-template')
 
 
@@ -823,8 +890,8 @@ def compare_stats(compare_results):
                   'overlap', 'camel_superset', 'baseline_superset']
     table = []
     with open(os.path.join(output_dir, 'stats_compare_results_1.tsv'), 'w') as f:
-        table.append([POS_OR_TYPE, *header_col])
-        print(POS_OR_TYPE, *header_col, sep='\t', file=f)
+        table.append(['_'.join(POS_OR_TYPE), *header_col])
+        print('_'.join(POS_OR_TYPE), *header_col, sep='\t', file=f)
         for row in header_row:
             table.append([])
             row_ = stats.get(row)
@@ -847,30 +914,51 @@ def compare_stats(compare_results):
     return stats
 
 
-def load_required_pos(required_pos_or_type):
+def load_required_pos(config_local):
+    POS_TYPE = config_local.get('pos_type')
+    if args.pos_or_type:
+        POS_OR_TYPE = [args.pos_or_type]
+    elif config_local.get('pos'):
+        POS_OR_TYPE = (config_local['pos']
+                       if type(config_local['pos']) is list
+                       else [config_local['pos']])
+    else:
+        if POS_TYPE:
+            POS_OR_TYPE = POS_TYPE if type(POS_TYPE) is list else [POS_TYPE]
+        else:
+            POS_OR_TYPE = ['any']
+
     with open('misc_files/atb2camel_pos.json') as f:
         pos_type2atb2camel_pos = json.load(f)
         pos_type2atb2camel_pos['any'] = {**pos_type2atb2camel_pos['verbal'],
             **pos_type2atb2camel_pos['nominal'], **pos_type2atb2camel_pos['other']}
     
-    ATB_POS, CAMEL_POS = set(), set()
-    for pos_type, atb_pos2camel_pos in pos_type2atb2camel_pos.items():
-        if pos_type != 'not_mappable':
-            atb_pos2camel_pos = {
-                atb: set(camel) if type(camel) is list else set([camel])
-                for atb, camel in atb_pos2camel_pos.items()}
-            if required_pos_or_type in ['verbal', 'nominal', 'other', 'any']:
-                if pos_type == required_pos_or_type:
-                    ATB_POS.update(atb_pos2camel_pos.keys())
-                    CAMEL_POS.update(*[map(str.lower, camel_pos)
-                                       for camel_pos in atb_pos2camel_pos.values()])
-            else:
-                ATB_POS.update([atb
-                                for atb, camel in atb_pos2camel_pos.items()
-                                if required_pos_or_type.upper() in camel])
-                CAMEL_POS.update([required_pos_or_type])
+    def _load_required_pos(required_pos_or_type):
+        atb_pos, camel_pos = set(), set()
+        for pos_type, atb_pos2camel_pos in pos_type2atb2camel_pos.items():
+            if pos_type != 'not_mappable':
+                atb_pos2camel_pos = {
+                    atb: set(camel) if type(camel) is list else set([camel])
+                    for atb, camel in atb_pos2camel_pos.items()}
+                for required_pos_or_type_ in required_pos_or_type:
+                    if required_pos_or_type_ in ['verbal', 'nominal', 'other', 'any']:
+                        if pos_type == required_pos_or_type_:
+                            atb_pos.update(atb_pos2camel_pos.keys())
+                            camel_pos.update(*[map(str.lower, camel_pos)
+                                            for camel_pos in atb_pos2camel_pos.values()])
+                    else:
+                        atb_pos.update([atb
+                                        for atb, camel in atb_pos2camel_pos.items()
+                                        if required_pos_or_type_.upper() in camel])
+                        camel_pos.update([required_pos_or_type_])
+        return atb_pos, camel_pos
+
+    ATB_POS, CAMEL_POS = _load_required_pos(POS_OR_TYPE)
+    for pos_type in ['nominal', 'verbal', 'other']:
+        atb_pos_, camel_pos_ = _load_required_pos([pos_type])
+        ATB_POS_ALL[pos_type], CAMEL_POS_ALL[pos_type] = atb_pos_, camel_pos_
     
-    return ATB_POS, CAMEL_POS
+    return ATB_POS, CAMEL_POS, POS_OR_TYPE
 
 
 def upload(df, sheet_name, template_sheet_name):
@@ -886,13 +974,14 @@ def upload(df, sheet_name, template_sheet_name):
         new_sheet = True
     sheet_df = pd.DataFrame(sheet.get_all_records())
     assert list(sheet_df.columns[:len(df.columns)]) == list(df.columns)
+    end_col = index2col_letter(len(df.columns) - 1)
     if not new_sheet:
-        sheet.batch_clear(['A:BC'])
-    sheet.update('A:BC', [df.columns.values.tolist()] + df.values.tolist())
+        sheet.batch_clear([f'A:{end_col}'])
+    sheet.update(f'A:{end_col}', [df.columns.values.tolist()] + df.values.tolist())
     if len(sheet_df.index) > len(df.index) and not new_sheet:
         sheet.delete_rows(len(df.index) + 2, len(sheet_df.index) + 1)
     else:
-        sheet.set_basic_filter('A:BC')
+        sheet.set_basic_filter(f'A:{end_col}')
 
 
 if __name__ == "__main__":
@@ -916,23 +1005,9 @@ if __name__ == "__main__":
     else:
         raise NotImplementedError
     
-    POS_TYPE = config_local.get('pos_type')
-    if args.pos_or_type:
-        POS_OR_TYPE = args.pos_or_type
-    elif config_local.get('pos'):
-        POS_OR_TYPE = config_local['pos']
-    else:
-        if POS_TYPE:
-            POS_OR_TYPE = POS_TYPE
-        else:
-            POS_OR_TYPE = 'any'
+    ATB_POS, CAMEL_POS, POS_OR_TYPE = load_required_pos(config_local)
 
-    ATB_POS, CAMEL_POS = load_required_pos(POS_OR_TYPE)
-    for pos_type in ['nominal', 'verbal', 'other']:
-        atb_pos_, camel_pos_ = load_required_pos(pos_type)
-        ATB_POS_ALL[pos_type], CAMEL_POS_ALL[pos_type] = atb_pos_, camel_pos_
-
-    output_dir = os.path.join(args.output_dir, POS_OR_TYPE)
+    output_dir = os.path.join(args.output_dir, '_'.join(POS_OR_TYPE))
     os.makedirs(output_dir, exist_ok=True)
 
     db_camel = MorphologyDB(camel_db_path)
@@ -953,7 +1028,7 @@ if __name__ == "__main__":
             raise NotImplementedError
         print('Baseline DB path:', db_baseline_path)
         db_baseline = MorphologyDB(db_baseline_path)
-        analyzer_baseline = Analyzer(db_baseline, legacy=True)
+        analyzer_baseline = Analyzer(db_baseline)
 
     if 'msa' in args.eval_mode and 'egy' not in args.eval_mode:
         if 'magold' in args.eval_mode:
@@ -974,12 +1049,12 @@ if __name__ == "__main__":
     with open(data_path) as f:
         data = f.read()
 
-    print(f'POS (type): {POS_OR_TYPE}')
+    print(f"POS (type): {' '.join(POS_OR_TYPE)}")
 
     print('Preprocessing data...', end=' ')
     if 'magold' in args.eval_mode:
         print('using dataset:', 'MAGOLD')
-        data = _preprocess_magold_data(data, CAMEL_POS)
+        data = _preprocess_magold_data(data, CAMEL_POS, pos_type=POS_OR_TYPE)
     elif 'camel_tb' in args.eval_mode:
         print('using dataset:', 'CAMeL TB')
         data = _preprocess_camel_tb_data(data)
@@ -996,9 +1071,9 @@ if __name__ == "__main__":
                 'databases/camel-morph-msa', config_local_msa['db']))
             msa_camel_analyzer = Analyzer(msa_camel_db)
 
-        evaluate_recall(data, args.n, args.eval_mode, output_path,
+        evaluate_recall(data, args.n_limit, args.eval_mode, output_path,
                         analyzer_camel, msa_camel_analyzer,
-                        pos_type=POS_TYPE)
+                        pos_type=POS_OR_TYPE, k_best_analyses=args.k_best_analyses)
 
     elif 'compare' in args.eval_mode:
         print('Eval mode:', 'COMPARE')
@@ -1010,7 +1085,7 @@ if __name__ == "__main__":
             raise NotImplementedError
 
         status = evaluate_analyzer_comparison(
-            data, args.n, output_path, analyzer_camel, analyzer_baseline)
+            data, args.n_limit, output_path, analyzer_camel, analyzer_baseline)
 
         compare_stats(status)
     else:

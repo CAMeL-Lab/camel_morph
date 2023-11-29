@@ -65,7 +65,9 @@ def _read_spreadsheet_with_sheets(config_x_mode, specs, mode):
 
 
 def download_sheets(lex=None, specs=None, save_dir=None, config=None, config_name=None, service_account=None):
-    if type(service_account) is str:
+    if service_account is None:
+        sa = gspread.service_account(config['global']['service_account'])
+    elif type(service_account) is str:
         sa = gspread.service_account(service_account)
     else:
         sa = service_account
@@ -79,11 +81,6 @@ def download_sheets(lex=None, specs=None, save_dir=None, config=None, config_nam
         config_local = config['local'][config_name]
         config_global = config['global']
         save_dir = config_global['data_dir']
-        
-        message = """Need to fix the configuration. If this fails, then the configuration is probably
-        old and needs to be refactored in a way that can be read by this code. Passive key
-        should be moved out from specs and into the main body of the local config object."""
-        assert 'passive' not in config_local['specs'], message
         
         specs = {}
         for config_x in [config_local, config_global]:

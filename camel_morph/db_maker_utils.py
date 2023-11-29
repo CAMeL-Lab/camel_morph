@@ -261,6 +261,9 @@ def read_morph_specs(config:Dict,
             LEXICON[lex_type].loc[LEXICON[lex_type]['SOURCE'] == '', 'SOURCE'] = source
         else:
             LEXICON[lex_type]['SOURCE'] = source
+        
+        if 'LINE' not in LEXICON[lex_type].columns:
+            LEXICON[lex_type]['LINE'] = ''
 
     # Process POSTREGEX sheet
     # Compiles the regex match expression from the sheet into a regex match expression that is

@@ -31,12 +31,18 @@ import os
 
 import gspread
 
+file_path = os.path.abspath(__file__).split('/')
+package_path = '/'.join(file_path[:len(file_path) - 1 - file_path[::-1].index('camel_morph')])
+sys.path.insert(0, package_path)
+
 try:
-    from camel_morph.utils.utils import assign_pattern, add_check_mark_online
-    from camel_morph.debugging.download_sheets import download_sheets
+    from utils.utils import assign_pattern, add_check_mark_online, get_config_file, get_data_dir_path
+    from debugging.download_sheets import download_sheets
+    from db_maker_utils import read_morph_specs
 except:
-    from camel_morph.camel_morph.utils.utils import assign_pattern, add_check_mark_online
-    from camel_morph.camel_morph.debugging.download_sheets import download_sheets
+    from camel_morph.utils.utils import assign_pattern, add_check_mark_online, get_config_file, get_data_dir_path
+    from camel_morph.debugging.download_sheets import download_sheets
+    from camel_morph.db_maker_utils import read_morph_specs
 
 two_stem_well_formedness_options_dialect = {
     'msa': [('c-suff', 'v-suff')],
@@ -164,7 +170,7 @@ def well_formedness_check(verbs, lemma2info, spreadsheet=None, sheet=None):
     # All COND-S associated to a lemma must belong to the stem condition categories
     # and they must be unique
     error_cases = {}
-    stem_cond_cats = ['[STEM-X]', '[X-STEM]', '[X-ROOT]', '[X-TRANS]', '[PREF-X]', '[LEMMA]']
+    stem_cond_cats = ['[STEM-X.V]', '[X-STEM.V]', '[X-ROOT.V]', '[X-TRANS.V]', '[PREF-X.V]', '[LEMMA.V]']
     for lemma, info in lemma2info.items():
         if (all([cond2class[cond][0] in stem_cond_cats
                         for row in info[2] for cond in row['cond-s'].split()]) and
@@ -357,6 +363,10 @@ if __name__ == "__main__":
                         type=str, help="Path of the directory containing the camel_tools modules.")
     parser.add_argument("-fix_mode", default='manual', choices=['manual', 'automatic'],
                         type=str, help="Mode to specify how things should be fixed (manually with status filling or automatically).")
+    parser.add_argument("-transitivity", required=True,
+                        type=str, help="Spreadsheet followed by space followed by sheet for the sheet containing transitivity information (generally PV).")
+    parser.add_argument("-no_download", default=False,
+                        action='store_true', help="Do not download data.")
     parser.add_argument("-service_account", default='',
                         type=str, help="Path of the JSON file containing the information about the service account used for the Google API.")
     args = parser.parse_args()
@@ -370,9 +380,8 @@ if __name__ == "__main__":
     bw2ar = CharMapper.builtin_mapper('bw2ar')
     
     if args.config_file and args.config_name:
-        with open(args.config_file) as f:
-            config = json.load(f)
-            config_local = config['local'][args.config_name]
+        config = get_config_file(args.config_file)
+        config_local = config['local'][args.config_name]
         lexicon_sheets = config_local['lexicon']['sheets']
     else:
         lexicon_sheets = args.lex
@@ -381,31 +390,39 @@ if __name__ == "__main__":
 
     sa = gspread.service_account(args.service_account)
     sh = sa.open(config_local['lexicon']['spreadsheet'])
-    download_sheets(save_dir=args.data_dir,
-                    config=config,
-                    config_name=args.config_name,
-                    service_account=sa)
+    if not args.no_download:
+        download_sheets(save_dir=args.data_dir,
+                        config=config,
+                        config_name=args.config_name,
+                        service_account=sa)
+    lemma2trans = {}    
+    if args.transitivity:
+        sh_trans_name, sheet_trans_name = args.transitivity.split()
+        sh_trans = sa.open(sh_trans_name)
+        sheet_trans = sh_trans.worksheet(sheet_trans_name)
+        sheet_trans_df = pd.DataFrame(sheet_trans.get_all_records())
+        for _, row in sheet_trans_df.iterrows():
+            trans = re.search(r'(intrans|ditrans|trans)', row['COND-S']).group(1)
+            lemma2trans.setdefault(row['LEMMA'], set()).add(trans)
+        lemma2trans_ = {}
+        for lemma, trans in lemma2trans.items():
+            lemma2trans_.setdefault(
+                'bad' if len(trans) > 1 else 'ok', {}).setdefault(lemma, trans)
+        lemma2trans = lemma2trans_
+    if 'bad' in lemma2trans:
+        print('\nWARNING: There are some lemmas in PV which have mixed transitivity.')
 
     verbs, sheets = {}, {}
     for sheet in lexicon_sheets:
         asp = re.search(r'[cip]v', sheet, re.I).group().lower()
-        verbs[asp] = pd.read_csv(os.path.join(args.data_dir, f'{sheet}.csv'))
+        data_path = os.path.join(
+            get_data_dir_path(config, args.config_name), f'{sheet}.csv')
+        verbs[asp] = pd.read_csv(data_path)
         verbs[asp] = verbs[asp].replace(nan, '', regex=True)
         verbs[asp] = verbs[asp][verbs[asp].DEFINE == 'LEXICON']
         sheets[asp] = sheet
 
-    morph = pd.read_csv(os.path.join(args.data_dir, f"{config_local['specs']['morph']}.csv"))
-    class2cond = morph[morph.DEFINE == 'CONDITIONS']
-    class2cond = {cond_class["CLASS"]:
-                            [cond for cond in cond_class["FUNC"].split() if cond]
-                  for _, cond_class in class2cond.iterrows()}
-    cond2class = {
-        cond: (cond_class,
-               int(''.join(
-                   ['1' if i == index else '0' for index in range(len(cond_s))]), 2)
-               )
-        for cond_class, cond_s in class2cond.items()
-        for i, cond in enumerate(cond_s)}
+    _, cond2class = read_morph_specs(config, args.config_name)
 
     verbs_ = msa_verbs_lexicon_well_formedness(verbs=verbs,
                                                strictness=args.strictness,
