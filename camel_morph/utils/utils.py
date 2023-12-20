@@ -27,6 +27,8 @@ import os
 import json
 from itertools import takewhile
 
+import pandas as pd
+
 consonants_bw = "['|>&<}bptvjHxd*rzs$SDTZEgfqklmnhwy]"
 double_cons = re.compile('{}{}'.format(consonants_bw, consonants_bw))
 CONS_CLUSTER_IMPLEM = False
@@ -106,6 +108,7 @@ def correct_soundness(soundness):
 def analyze_pattern(lemma, root=None, surface_form=False):
     lemma_raw = lemma
     lemma = re.sub(r'\|', '>A', lemma)
+    lemma = re.sub(r'aA', 'A', lemma)
     dc = None
     if CONS_CLUSTER_IMPLEM:
         contains_double_cons = double_cons.search(lemma)
@@ -281,7 +284,7 @@ def analyze_pattern(lemma, root=None, surface_form=False):
             lemma[3] == "~" or lemma[2] == 'z'):
             if root and root[0] in ['d', 'D', 'v', 'T', 'Z']:
                 pattern = pattern[:2] + '1' + pattern[3:]
-    result['pattern'] = pattern
+    result['pattern'] = re.sub(r'([^a])A', r'\1aA', pattern)
     result['pattern_abstract'] = abstract_pattern
     result['soundness'] = soundness
     return result
@@ -468,27 +471,6 @@ def strip_brackets(info):
     return info
 
 
-def get_config_file(config_file):
-    configs_dir = os.path.join(
-        '/'.join(os.path.dirname(__file__).split('/')[:-1]), 'configs')
-    with open(os.path.join(configs_dir, config_file)) as f:
-        config = json.load(f)
-    return config
-
-
-def get_db_dir_path(config, config_name):
-    dialect = config['local'][config_name]['dialect']
-    return os.path.join('databases',
-                        f'camel-morph-{dialect}')
-
-def get_db_path(config, config_name):
-    dialect = config['local'][config_name]['dialect']
-    db_name = config['local'][config_name]['db']
-    return os.path.join('databases',
-                        f'camel-morph-{dialect}',
-                        db_name)
-
-
 def get_data_dir_path(config, config_name):
     dialect = config['local'][config_name]['dialect']
     return os.path.join('data',
@@ -496,15 +478,8 @@ def get_data_dir_path(config, config_name):
                         config_name)
 
 
-def get_lex_paths(config, config_name):
-    config_local = config['local'][config_name]
-    dialect = config_local['dialect']
-    lex_paths = []
-    for sheet_name in config_local['lexicon']['sheets']:
-        lex_dir = get_data_dir_path(config, config_name)
-        lex_path = os.path.join(lex_dir, f'{sheet_name}.csv')
-        lex_paths.append(lex_path) 
-    return lex_paths
+def sheet2df(sheet):
+    return pd.DataFrame(sheet.get_all_records())
 
 
 def lcp(strings):
@@ -513,3 +488,306 @@ def lcp(strings):
         return len(set(strings_)) == 1
     
     return ''.join(i[0] for i in takewhile(allsame, zip(*strings)))
+
+
+class Debugging:
+    def __init__(self, debugging, feats=None) -> None:
+        if debugging is None:
+            debugging = {}
+        self.bank = debugging.get('bank')
+        self.sheets = debugging.get('sheets')
+        self.debugging_sheet = debugging.get('debugging_sheet')
+        self.debugging_spreadsheet = debugging.get('debugging_spreadsheet')
+        self.paradigm_debugging = debugging.get('paradigm_debugging')
+        self.display_format = debugging.get('display_format')
+        self.lexprob_db = debugging.get('lexprob_db')
+        self.docs_bank = debugging.get('docs_bank')
+        self.docs_output_name = debugging.get('docs_output_name')
+        self.docs_debugging_spreadsheet = debugging.get('docs_debugging_spreadsheet')
+        self.docs_debugging_sheet = debugging.get('debugging_sheet')
+        self.docs_tables = debugging.get('docs_tables')
+        self.insert_index = debugging.get('insert_index')
+        self.conj_tables = debugging.get('conj_tables')
+        self.pos_display = debugging.get('pos_display')
+        self.stats_spreadsheet = debugging.get('stats_spreadsheet')
+        self.stats_sheet = debugging.get('stats_sheet')
+        self.table_start_cell = debugging.get('table_start_cell')
+        self.feats = {feats_: Debugging(debugging_)
+                      for feats_, debugging_ in debugging.get('feats', {}).items()}
+        self.feats = self.feats if self.feats != {} else None
+
+        self.debugging_feats = None
+        if feats is not None:
+            self.debugging_feats = self.feats[feats]
+
+    def __repr__(self) -> str:
+        return str(self.__dict__)
+        
+
+class Config:
+    GLOBAL_SHEET_TYPES = ['about', 'header']
+    SHEET_TYPES_ESSENTIAL = ['order', 'morph', 'lexicon']
+    SHEET_TYPES_OPTIONAL = ['postregex', 'passive', 'backoff']
+    LOCAL_SHEET_TYPES = SHEET_TYPES_ESSENTIAL + SHEET_TYPES_OPTIONAL
+    SHEET_TYPES = GLOBAL_SHEET_TYPES + SHEET_TYPES_ESSENTIAL + \
+        SHEET_TYPES_OPTIONAL
+
+    def __init__(self, config_file, config_name=None, feats=None) -> None:
+        self._config_file = config_file
+        self._config = self.read_config()
+        self._config_name = config_name
+        self._config_global = self.read_config_global()
+        self._config_local = None
+        if config_name is not None:
+            self._config_local = self.read_config_local(config_name, feats)
+
+
+    def read_config(self):
+        configs_dir = os.path.join(
+            '/'.join(os.path.dirname(__file__).split('/')[:-1]), 'configs')
+        with open(os.path.join(configs_dir, self._config_file)) as f:
+            config = json.load(f)
+        return config
+    
+    
+    def read_config_local(self, config_name, feats=None):
+        if config_name not in self._config['local']:
+            return
+        config_local = self._config['local'][config_name]
+        self._config_local = config_local
+        # Dialect being used for the configuration (for storing debugging files
+        # and DB files in corresponding directories)
+        self.dialect = config_local.get('dialect')
+        # Whether or not to perform pruning before compatibility validation
+        # (pruning refers to the process of eliminating easily eliminable
+        # combinations of allomorphs based on their condition classes)
+        self.pruning = config_local.get('pruning')
+        # Wether or not to perform reindexing of categories and collapsing
+        # of morphemes after compatibilities have been determined through validation.
+        self.reindex = config_local.get('reindex')
+        # Names of the specification sheets (ORDER, MORPH, LEXICON)
+        self.specs = self._read_specs()
+        # Name of the (output) DB associated with the configuration
+        self.db = config_local.get('db')
+        # POS type (nominal, verbal, other, any) associated with the configuration
+        self.pos_type = config_local.get('pos_type')
+        # POS (CAPHI) associated with the configuration (if any)
+        self.pos = config_local.get('pos')
+        # Features to use to augment the unique lemmas while choosing
+        # representative lemmas
+        self.extended_lemma_keys = config_local.get('extended_lemma_keys')
+        # Features to unique on while choosing representative lemmas
+        self.class_keys = config_local.get('class_keys')
+        # Path of file containing lemmas to exclude while extracting
+        # representative lemmas
+        self.exclusions = config_local.get('exclusions')
+        # Whether or not to split lexicon lines based on ORed (OR operation)
+        # COND-T terms
+        self.split_or = config_local.get('split_or')
+        # Whether or not to transform categories from the debugging format
+        # to a generic ID format
+        self.cat2id = config_local.get('cat2id')
+        # Whether or not to fill in some unspecified features with their default values
+        self.defaults = config_local.get('defaults')
+        # Whether or not to automatically delete conditions which are not 
+        # being utilized from COND-S and COND-T by cross-checking between 
+        # MORPH and LEXICON sheets
+        self.clean_conditions = config_local.get('clean_conditions')
+        # Script to load for caphi conversion
+        self.caphi = config_local.get('caphi')
+        # Object containing log probabilities of lemmas (or lexpos)
+        self.logprob = config_local.get('logprob')
+        # Path of class map object mapping morpheme classes to complex morpheme classes
+        self.class_map = config_local.get('class_map')
+        # Information for miscellaneous debugging utilities
+        self.debugging = Debugging(config_local.get('debugging'), feats)
+        return config_local
+
+    def read_config_global(self):
+        config_global = self._config['global']
+        self._config_global = config_global
+        # Directory where all sheets from Google Sheets are downloaded
+        self.data_dir = config_global.get('data_dir')
+        # Directory where the Camel Morph DBs are output
+        self.db_dir = config_global.get('db_dir')
+        # Directory where the debugging sheets are output
+        self.debugging_dir = config_global.get('debugging_dir')
+        # Directory where the documentation debugging sheets are output
+        self.docs_debugging_dir = config_global.get('docs_debugging_dir')
+        # Directory within the debugging dir where the documentation banks are output
+        self.docs_banks_dir = config_global.get('docs_banks_dir')
+        # Directory within the debugging dir where the inflection tables for doc are output
+        self.docs_tables_dir = config_global.get('docs_tables_dir')
+        # Directory within the debugging dir where the representative lemmas
+        # are output
+        self.repr_lemmas_dir = config_global.get('repr_lemmas_dir')
+        # Names of the global specification sheets (ABOUT, HEADER)
+        self.specs_global = self._read_specs_global()
+        # Directory within the debugging dir where the debugging inflection
+        # tables are output
+        self.tables_dir = config_global.get('tables_dir')
+        # Directory within the debugging dir where automatically bank-debugged
+        # inflection tables are output
+        self.paradigm_debugging_dir = config_global.get('paradigm_debugging_dir')
+        # Directory within the debugging dir where the banks are output
+        self.banks_dir = config_global.get('banks_dir')
+        # Path of an alternative fork of camel_tools to used instead of the
+        # official release
+        self.camel_tools = config_global.get('camel_tools')
+        # Path to the JSON file containing the credentials to the Google Cloud
+        # account used to perform sheet operations via the gspread API
+        self.service_account = config_global.get('service_account')
+        # Paradigm slots used as part of the morph_debugging process
+        self.paradigms_config = config_global.get('paradigms_config')
+        # Spreadsheet to which banks are uploaded
+        self.banks_spreadsheet = config_global.get('banks_spreadsheet')
+        return config_global
+
+    def _read_specs(self):
+        # Essential specification sheets
+        self.order = self._config_local['specs']['order']
+        self.morph = self._config_local['specs']['morph']
+        self.lexicon = self._config_local['specs']['lexicon']
+        # Sheets containing POSTREGEX regex strings to compile into the DB
+        self.postregex = self._config_local['specs'].get('postregex')
+        # Keywords used to exclude entries containing them in the EXCLUDE column
+        self.exclude = self._config_local['specs'].get('exclude')
+        # Sheets used to automatically generate passive entries for PV and IV verbs
+        # based on regex rules
+        self.passive = self._config_local['specs'].get('passive')
+        # Sheets containing smart backoff entries to use for DB compilation
+        self.backoff = self._config_local['specs'].get('backoff')
+        return self._config_local['specs']
+    
+    def _read_specs_global(self):
+        # Essential specification global specification sheets
+        self.about = self._config_global['specs']['about']
+        self.header = self._config_global['specs']['header']
+        return self._config_global['specs']
+    
+    def get_dialect_project_dir_path(self, dialect=None):
+        return f'camel-morph-{dialect if dialect is not None else self.dialect}'
+
+
+    def get_spreadsheet2sheets(self,
+                               sheet_types=[],
+                               config_name=None,
+                               with_labels=False):
+        if sheet_types == []:
+            sheet_types = Config.SHEET_TYPES
+        else:
+            if type(sheet_types) is str:
+                assert sheet_types in Config.SHEET_TYPES
+                sheet_types = [sheet_types]
+            elif type(sheet_types) is list:
+                assert set(sheet_types) <= set(Config.SHEET_TYPES)
+            else:
+                raise NotImplementedError
+        
+        if config_name is not None:
+            config_local = self._config['local'][config_name]
+        else:
+            config_local = self._config_local
+
+        spreadsheet2sheets = {}
+        for sheet_type in sheet_types:
+            if Config.GLOBAL_SHEET_TYPES:
+                spreadsheet2sheets_ = getattr(self, sheet_type)
+            else:
+                spreadsheet2sheets_ = config_local['specs'][sheet_type]
+            if spreadsheet2sheets_ is None:
+                continue
+            for spreadsheet, sheets in spreadsheet2sheets_.items():
+                sheets_ = []
+                if type(sheets) is str:
+                    sheets_.append((sheets, '') if with_labels else sheets)
+                elif type(sheets) is list:
+                    for sheet in sheets:
+                        sheets_.append((sheet, '') if with_labels else sheet)
+                elif type(sheets) is dict:
+                    for sheet, label in sheets.items():
+                        if sheet_type in Config.SHEET_TYPES_OPTIONAL:
+                            sheet, label = label, sheet
+                        sheets_.append((sheet, label) if with_labels else sheet)
+                else:
+                    raise NotImplementedError
+                for sheet in sheets_:
+                    spreadsheet2sheets.setdefault(spreadsheet, []).append(sheet)
+
+        return spreadsheet2sheets
+    
+    def get_sheets_list(self,
+                        sheet_types=None,
+                        config_name=None,
+                        with_labels=False):
+        spreadsheet2sheets = self.get_spreadsheet2sheets(
+            sheet_types, config_name, with_labels)
+        sheets = sum(spreadsheet2sheets.values(), [])
+        return sheets
+    
+    def get_sheets_paths(self,
+                         sheet_types=[],
+                         config_name=None,
+                         with_labels=False,
+                         ext='csv'):
+        data_dir_path = self.get_data_dir_path()
+        sheet_paths = []
+        for sheet_name in self.get_sheets_list(sheet_types, config_name, with_labels):
+            if with_labels:
+                sheet_name_, label = sheet_name
+                sheet_path = os.path.join(data_dir_path, f'{sheet_name_}.{ext}')
+                sheet_paths.append((sheet_path, label))
+            else:
+                sheet_path = os.path.join(data_dir_path, f'{sheet_name}.{ext}')
+                sheet_paths.append(sheet_path)
+
+        return sheet_paths
+    
+    def get_sheet_path_from_name(self,
+                                 sheet_name,
+                                 ext='csv'):
+        return os.path.join(self.get_data_dir_path(), f'{sheet_name}.{ext}')
+
+    def get_repr_lemmas_file_name(self):
+        return f'repr_lemmas_{self._config_name}.pkl'
+    
+    def get_repr_lemmas_dir_path(self):
+        return os.path.join(
+            self.debugging_dir, self.repr_lemmas_dir, self.get_dialect_project_dir_path())
+    
+    def get_repr_lemmas_path(self):
+        return os.path.join(self.get_repr_lemmas_dir_path(), self.get_repr_lemmas_file_name())
+
+    def get_db_dir_path(self):
+        return os.path.join(self.db_dir, self.get_dialect_project_dir_path())
+
+    def get_db_path(self):
+        db_name = self._config_local['db']
+        return os.path.join(self.get_db_dir_path(), db_name)
+
+    def get_data_dir_path(self):
+        return os.path.join(self.data_dir, self.get_dialect_project_dir_path(), self._config_name)
+    
+    def get_banks_dir_path(self):
+        return os.path.join(
+            self.debugging_dir, self.banks_dir, self.get_dialect_project_dir_path())
+    
+    def get_tables_dir_path(self):
+        return os.path.join(
+            self.debugging_dir, self.tables_dir, self.get_dialect_project_dir_path())
+
+    def get_docs_banks_dir_path(self):
+        return os.path.join(
+            self.debugging_dir, self.docs_banks_dir, self.get_dialect_project_dir_path())
+    
+    def get_paradigm_debugging_dir_path(self):
+        return os.path.join(
+            self.debugging_dir, self.paradigm_debugging_dir, self.get_dialect_project_dir_path())
+
+    def get_docs_debugging_dir_path(self):
+        return os.path.join(
+            self.debugging_dir, self.docs_debugging_dir, self.get_dialect_project_dir_path())
+    
+    def get_docs_tables_dir_path(self):
+        return os.path.join(
+            self.debugging_dir, self.docs_tables_dir, self.get_dialect_project_dir_path())

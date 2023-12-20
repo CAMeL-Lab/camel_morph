@@ -13,11 +13,17 @@ import numpy as np
 import eval_utils
 from eval_utils import essential_keys_no_lex_pos
 
+file_path = os.path.abspath(__file__).split('/')
+package_path = '/'.join(file_path[:len(file_path) - 1 - file_path[::-1].index('camel_morph')])
+sys.path.insert(0, package_path)
+
+from camel_morph.utils.utils import Config
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-output_dir", default='eval_files',
                     type=str, help="Path of the directory to output evaluation results.")
-parser.add_argument("-config_file", default='configs/config_default.json',
+parser.add_argument("-config_file", default='config_default.json',
                     type=str, help="Config file specifying which sheets to use.")
 parser.add_argument("-db_system", required=True,
                         type=str, help="Path of the system DB file we will be evaluating against the baseline.")
@@ -49,12 +55,10 @@ args = parser.parse_args()
 
 random.seed(42)
 
-with open(args.config_file) as f:
-    config = json.load(f)
+config = Config(args.config_file)
 
 if args.camel_tools == 'local':
-    camel_tools_dir = config['global']['camel_tools']
-    sys.path.insert(0, camel_tools_dir)
+    sys.path.insert(0, config.camel_tools)
 
 from camel_tools.morphology.database import MorphologyDB
 from camel_tools.morphology.generator import Generator
@@ -84,7 +88,7 @@ def _produce_generations(lemma_ar, oblig_feats, clitic_feats, feats_set):
                 feats_all = {**feats_oblig, **feats_clitic}
                 try:
                     generations_baseline += generator_baseline.generate(
-                        lemma_ar, feats_all, legacy=True)
+                        lemma_ar, feats_all)
                 except:
                     failed.setdefault('baseline', []).append((lemma_ar, feats_all))
                 if feats_all.get('prc0') not in ['mA_neg', 'lA_neg']:
@@ -98,7 +102,7 @@ def _produce_generations(lemma_ar, oblig_feats, clitic_feats, feats_set):
             if feats_set in ['baseline_only', 'intersection']:
                 try:
                     generations_ = generator_baseline.generate(
-                        lemma_ar, feats_clitic, legacy=True)
+                        lemma_ar, feats_clitic)
                     generations_baseline += generations_
                 except:
                     failed.setdefault('baseline', []).append((lemma_ar, feats_clitic))
