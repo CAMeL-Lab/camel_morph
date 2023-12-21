@@ -1,7 +1,0 @@
-,LINE,PATTERN_ABSTRACT,ROOT,DEFINE,CLASS,LEMMA,FORM,BW,GLOSS,FEAT,COND-T,COND-S,COMMENTS,STATUS
-0,1,1a2a3,k.t.b,LEXICON,[STEM-PV],katab-u,katab,PV,write,pos:verb asp:p vox:a mod:i,,trans,,
-1,2,1a2a3,n.H.t,LEXICON,[STEM-PV],naHat-i,naHat,PV,sculpt;engrave;shape,pos:verb asp:p vox:a mod:i,,#t trans,,
-2,3,1a2a3,n.H.t,LEXICON,[STEM-PV],naHat-u,naHat,PV,sculpt;engrave;shape,pos:verb asp:p vox:a mod:i,,#t trans,,
-3,4,1a2a3,r.m.y,LEXICON,[STEM-PV],ramaY-i,ram,PV,throw;fling;shoot,pos:verb asp:p vox:a mod:i,,#-ay defective trans,,
-4,5,1a2a3,r.n.n,LEXICON,[STEM-PV],ran~-i,ranan,PV,ring;resound,pos:verb asp:p vox:a mod:i,c-suff,#n gem trans,,
-5,6,1a2a3,r.n.n,LEXICON,[STEM-PV],ran~-i,ran~,PV,ring;resound,pos:verb asp:p vox:a mod:i,v-suff,#n gem trans,,
