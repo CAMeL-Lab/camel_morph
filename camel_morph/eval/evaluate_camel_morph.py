@@ -109,8 +109,10 @@ bw2ar = CharMapper.builtin_mapper('bw2ar')
 ar2bw = CharMapper.builtin_mapper('ar2bw')
 
 sukun_regex = re.compile('o')
-aA_regex = re.compile(r'(?<!^[wf])aA')
+aA_regex = re.compile(r'aA')
+hamza_wasl_regex = re.compile(r'{')
 poss_regex = re.compile(r'_POSS')
+xv_suff_do_regex = re.compile(r'[PIC]VSUFF_DO')
 
 GOLD_DROP_RE = re.compile(r'None|DEFAULT|TBupdate|no_rule')
 
@@ -141,7 +143,7 @@ def _load_analysis(analysis):
     analysis_ = {}
     for field in analysis:
         field = field.split(':')
-        analysis_[field[0]] = ''.join(field[1:])
+        analysis_[field[0]] = ':'.join(field[1:])
     return analysis_
 
 
@@ -229,7 +231,24 @@ def _preprocess_ldc_bw(bw):
     """Filters out .VN in NOUN.VN and ADJ.VN"""
     bw = '+'.join(comp.split('.')[0] for comp in bw.split('+'))
     bw = poss_regex.sub('', bw)
+    bw = xv_suff_do_regex.sub('XVSUFF_DO', bw)
     return bw
+
+def _preprocess_camel_bw(bw):
+    bw = re.sub(r'\(null\)/', '', bw)
+    return bw
+
+def _remove_null_bw_segments(bw):
+    null_comp, bw_ = [], []
+    for bw_comp in bw.split('+'):
+        if 'null' in bw_comp or bw_comp.startswith('o/'):
+            null_comp.append(bw_comp.split('/')[1])
+        else:
+            bw_.append(bw_comp)
+    bw = '+'.join(bw_)
+    assert len(null_comp) <= 1
+    null_comp = None if not null_comp else null_comp[0]
+    return bw, null_comp
 
 
 def _preprocess_lex_features(lex_feat, f=None):
@@ -244,6 +263,7 @@ def _preprocess_lex_features(lex_feat, f=None):
 
 def _preprocess_tok_features(tok_feat):
     tok_feat = aA_regex.sub('A', tok_feat)
+    tok_feat = hamza_wasl_regex.sub('A', tok_feat)
     tok_feat = sukun_regex.sub('', tok_feat)
     return tok_feat
 
@@ -271,7 +291,8 @@ def _preprocess_analysis(analysis,
         elif re.match(r'prc\d|enc\d', k):
             pred.append(analysis.get(k, defaults.get(k, '0')))
         elif k == 'bw':
-            bw = [x.split('/')[1] for x in ar2bw(analysis['bw']).split('+')
+            bw = [(x.split('/')[1] if 'null' not in x and not x.startswith('o/') else x)
+                  for x in ar2bw(analysis['bw']).split('+')
                   if x and 'STEM' not in x]
             bw = '+'.join(x for x in bw if x not in ['CASE_DEF_U', 'CASE_INDEF_U'])
             bw = poss_regex.sub('', bw)
@@ -299,11 +320,12 @@ def recall_print(examples, results_path,
             ldc_split = example['word']['info']['magold']['ldc'].split(' # ')[1:4]
             diac_ldc, lex_ldc, bw_ldc = ldc_split
             lex_ldc = strip_lex(_strip_brackets(lex_ldc))
-            extra_info = pd.DataFrame(
-                [(bw2ar(example['word']['info']['sentence']),
-                 diac_ldc, lex_ldc, bw_ldc,
-                 example['word']['info']['magold']['ranking'],
-                 example['freq'])])
+            extra_info = pd.concat([
+                pd.DataFrame([bw2ar(example['word']['info']['sentence'])]),
+                pd.DataFrame([(diac_ldc, lex_ldc, bw_ldc)]*len(row.index)),
+                pd.DataFrame([example['word']['info']['magold']['ranking']]),
+                pd.DataFrame([example['freq']]*len(row.index))],
+                ignore_index=True, axis=1).fillna('')
             non_binding_mismatches = pd.DataFrame([[example['non_binding_mismatches']]])
             row = pd.concat([ex_col, extra_info, row, non_binding_mismatches], axis=1)
             # Avoids duplicate indexes issue (generates errors)
@@ -473,6 +495,8 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
     pbar = tqdm(total=len(data_unique))
     for (word, ldc), word_info in data_unique:
         diac_ldc, lex_ldc, bw_ldc = ldc
+        # if diac_ldc != 'yaEiyhA' or bw_ldc != 'IV3MS+IV+IVSUFF_MOOD:I+IVSUFF_DO:3FS':
+        #     continue
         total += 1
         analysis_gold = _preprocess_analysis(
             word_info['analysis'], analyzer_camel._db.defaults, essential_keys)
@@ -529,21 +553,38 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
         analysis_gold_ldc = (_preprocess_lex_features(diac_ldc),
                              _preprocess_lex_features(lex_ldc, f='lex'),
                              _preprocess_ldc_bw(bw_ldc))
-        analyses_pred_ldc = {(a[diac_index], a[lex_index], a[bw_index])
-                             for a in analyses_pred}
+        analyses_pred_ldc_with_null = {
+            (a[diac_index], a[lex_index], a[bw_index]) for a in analyses_pred}
+        
+        analyses_pred_ldc_no_null, null_comps = set(), set()
+        for a in analyses_pred_ldc_with_null:
+            bw_pred, null_comp = _remove_null_bw_segments(a[2])
+            if null_comp is not None:
+                null_comps.add(null_comp)
+            analyses_pred_ldc_no_null.add((*a[:2], bw_pred))
+        bw_ldc_no_null = '+'.join(bw_comp for bw_comp in analysis_gold_ldc[2].split('+')
+                                  if bw_comp not in null_comps)
+        analysis_gold_ldc_no_null = (*analysis_gold_ldc[:2], bw_ldc_no_null)
+
+        analyses_pred_ldc = {
+            (*a[:2], _preprocess_camel_bw(a[2])) for a in analyses_pred_ldc_with_null}
 
         mode = 'bw' if 'ldc_dediac_match' in eval_mode else 'sama'
         analyses_pred = filter_and_rank_analyses(
             analyses_pred, analysis_gold, analysis_gold_ldc, essential_keys, mode)
-        analyses_pred = analyses_pred[:k_best_analyses]
         
         match = ''
         if analysis_gold_ldc in analyses_pred_ldc:
             match = 'ldc'
+        elif analysis_gold_ldc_no_null in analyses_pred_ldc_no_null:
+            match = 'ldc-no-null'
         else:
             for i, f in enumerate(['diac', 'lex', 'bw']):
                 if analysis_gold_ldc[i] in [a[i] for a in analyses_pred_ldc]:
                     match += (' ' if match else '') + f'ldc:{f}'
+            if 'bw' not in match:
+                if analysis_gold_ldc_no_null[2] in [a[2] for a in analyses_pred_ldc_no_null]:
+                    match += (' ' if match else '') + f'ldc:bw-no-null'
         
         non_binding_mismatches = ''
         if analysis_gold_no_source in analyses_pred_no_source:
@@ -568,7 +609,9 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
         if 'ldc_dediac_match' not in eval_mode and \
                 analysis_gold_no_source in analyses_pred_no_source or \
             'ldc_dediac_match' in eval_mode and \
-                analysis_gold_ldc in analyses_pred_ldc:
+                analysis_gold_ldc in analyses_pred_ldc or \
+            'ldc_dediac_match_no_null' in eval_mode and \
+                analysis_gold_ldc_no_null in analyses_pred_ldc_no_null:
             correct += 1
         elif pos_type == 'verbal':
             for pred, gold in itertools.product(analyses_pred_no_source, [analysis_gold_no_source]):
@@ -598,7 +641,7 @@ def evaluate_recall(data, n, eval_mode, output_path, analyzer_camel,
         examples.setdefault(label, []).append(
             {'word': word_info,
              'match': match,
-             'pred': analyses_pred,
+             'pred': analyses_pred[:k_best_analyses] if is_error else analyses_pred[:1],
              'gold': analysis_gold,
              'non_binding_mismatches': non_binding_mismatches,
              'freq': counts[(word, ldc)]})
