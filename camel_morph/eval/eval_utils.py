@@ -10,6 +10,8 @@ from collections import Counter
 from types import ModuleType, FunctionType
 from gc import get_referents
 
+import eval_utils
+
 # Custom objects know their class.
 # Function objects seem to know way too much, including modules.
 # Exclude modules as well.
@@ -35,7 +37,7 @@ mat_names = ['diac_mat_baseline', 'diac_mat_system', 'system_only_mat',
 
 sukun_ar, fatHa_ar = 'ْ', 'َ'
 sukun_regex = re.compile(sukun_ar)
-aA_regex = re.compile(f'(?<!^[وف]){fatHa_ar}ا')
+aA_regex = re.compile(f'{fatHa_ar}ا')
 
 class bcolors:
     HEADER = '\033[95m'
@@ -97,6 +99,7 @@ def get_all_lemmas_from_db(db):
     lemmas_pos = set()
     for match, analyses in db.stem_hash.items():
         for cat, analysis in analyses:
+            eval_utils.preprocess_lex_features(analysis)
             lemmas_pos.add((analysis['lex'], analysis['pos']))
     return lemmas_pos
 
@@ -286,7 +289,7 @@ def get_closest_key(analysis_key_compare, analysis_keys):
 def preprocess_lex_features(analysis, return_analysis=False):
     for k in ['lex', 'diac']:
         analysis[k] = sukun_regex.sub('', analysis[k])
-        analysis[k] = aA_regex.sub('A', analysis[k])
+        analysis[k] = aA_regex.sub('ا', analysis[k])
     if return_analysis:
         return analysis
 
