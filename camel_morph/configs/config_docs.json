@@ -2,16 +2,17 @@
     "global": {
         "data_dir": "data",
         "specs": {
-            "spreadsheet": "camel-morph-common",
-            "sheets": {
-                "about": "About",
-                "header": "Header-v2"
+            "about": {
+                "camel-morph-common": "About"
+            },
+            "header": {
+                "camel-morph-common": "Header-v2"
             }
         },
         "db_dir": "databases",
         "camel_tools": "./camel_morph/camel_tools",
         "service_account": "/Users/chriscay/.config/gspread/service_account.json",
-        "debugging": "debugging_output",
+        "debugging_dir": "debugging_output",
         "docs_debugging_dir": "docs_debugging",
         "docs_banks_dir": "banks_docs",
         "docs_tables_dir": "tables_docs",
@@ -25,57 +26,59 @@
             "clean_conditions": false,
             "pruning": false,
             "specs": {
-                "spreadsheet": "camel-morph-egy-nom-other",
-                "sheets": {
-                    "order": "EGY-Nom-ORDER",
-                    "morph": "EGY-Nom-MORPH",
-                    "postregex": "PostRegex"
+                "order": {
+                    "camel-morph-egy-nom-other": "EGY-Nom-ORDER"
+                },
+                "morph": {
+                    "camel-morph-egy-nom-other": "EGY-Nom-MORPH"
+                },
+                "postregex": {
+                    "camel-morph-egy-nom-other": "PostRegex"
                 },
                 "exclude": [
                     "RED"
-                ]
+                ],
+                "lexicon": {
+                    "camel-morph-egy-nom-other": [
+                        "EGY-Nom-LEX"
+                    ]
+                }
             },
-            "lexicon": {
-                "spreadsheet": "camel-morph-egy-nom-other",
-                "sheets": [
-                    "EGY-Nom-LEX"
-                ]
-            },
-            "docs_debugging": {
-                "bank": "EGY-Docs-Bank.tsv",
-                "output_name": "docs_debug_egy_v1.0.tsv",
-                "debugging_spreadsheet": "camel-morph-common",
-                "debugging_sheet": "EGY-Documentation-Nom-Auto",
+            "debugging": {
+                "docs_bank": "EGY-Docs-Bank.tsv",
+                "docs_output_name": "docs_debug_egy_v1.0.tsv",
+                "docs_debugging_spreadsheet": "camel-morph-common",
+                "docs_debugging_sheet": "EGY-Documentation-Nom-Auto",
                 "docs_tables": "docs_tables_egy_v1.0.tsv",
                 "insert_index": true
             },
             "db": "XYZ_egy_nom_docs_red.db",
-            "lexprob": "misc_files/egy_lexprob.tsv",
+            "logprob": "misc_files/egy_lexprob.tsv",
             "pos_type": "nominal"
         },
         "nominals_msa_docs": {
             "split_or": false,
             "pruning": true,
             "specs": {
-                "spreadsheet": "camel-morph-msa-nom-other",
-                "sheets": {
-                    "order": "MSA-Nom-ORDER",
-                    "morph": "MSA-Nom-MORPH"
+                "order": {
+                    "camel-morph-msa-nom-other": "MSA-Nom-ORDER"
+                },
+                "morph": {
+                    "camel-morph-msa-nom-other": "MSA-Nom-MORPH"
+                },
+                "lexicon": {
+                    "camel-morph-msa-nom": [
+                        "MSA-Noun-LEX",
+                        "Lemma-Paradigm-Debugging-Adj-v2",
+                        "Lemma-Paradigm-Debugging-Adj_comp"
+                    ]
                 }
             },
-            "lexicon": {
-                "spreadsheet": "camel-morph-msa-nom",
-                "sheets": [
-                    "MSA-Noun-LEX",
-                    "Lemma-Paradigm-Debugging-Adj-v2",
-                    "Lemma-Paradigm-Debugging-Adj_comp"
-                ]
-            },
-            "docs_debugging": {
-                "bank": "MSA-Docs-Bank.tsv",
-                "output_name": "docs_debug_msa_v1.0.tsv",
-                "debugging_spreadsheet": "camel-morph-common",
-                "debugging_sheet": "MSA-Documentation-Nom-Auto-1",
+            "debugging": {
+                "docs_bank": "MSA-Docs-Bank.tsv",
+                "docs_output_name": "docs_debug_msa_v1.0.tsv",
+                "docs_debugging_spreadsheet": "camel-morph-common",
+                "docs_debugging_sheet": "MSA-Documentation-Nom-Auto-1",
                 "docs_tables": "docs_tables_msa_v1.2.tsv"
             },
             "dialect": "msa",
@@ -86,32 +89,31 @@
             "pruning": true,
             "reindex": true,
             "specs": {
-                "spreadsheet": "camel-morph-msa-verbs",
-                "sheets": {
-                    "order": "MSA-Verb-ORDER",
-                    "morph": "MSA-Verb-MORPH"
+                "order": {
+                    "camel-morph-msa-verbs": "MSA-Verb-ORDER"
+                },
+                "morph": {
+                    "camel-morph-msa-verbs": "MSA-Verb-MORPH"
+                },
+                "lexicon": {
+                    "camel-morph-msa-verbs": [
+                        "MSA-Verb-LEX-PV",
+                        "MSA-Verb-LEX-IV",
+                        "MSA-Verb-LEX-CV"
+                    ]
+                },
+                "passive": {
+                    "camel-morph-msa-verbs": {
+                        "MSA-Verb-LEX-PV": "MSA-Verb-PV-Passive-Patterns",
+                        "MSA-Verb-LEX-IV": "MSA-Verb-IV-Passive-Patterns"
+                    }
                 }
             },
-            "passive": {
-                "spreadsheet": "camel-morph-msa-verbs",
-                "sheets": {
-                    "MSA-Verb-LEX-PV": "MSA-Verb-PV-Passive-Patterns",
-                    "MSA-Verb-LEX-IV": "MSA-Verb-IV-Passive-Patterns"
-                }
-            },
-            "lexicon": {
-                "spreadsheet": "camel-morph-msa-verbs",
-                "sheets": [
-                    "MSA-Verb-LEX-PV",
-                    "MSA-Verb-LEX-IV",
-                    "MSA-Verb-LEX-CV"
-                ]
-            },
-            "docs_debugging": {
-                "bank": "MSA-Verb-Docs-Bank.tsv",
-                "output_name": "docs_debug_verbs_msa_v1.0.tsv",
-                "debugging_spreadsheet": "camel-morph-common",
-                "debugging_sheet": "MSA-Documentation-Verb-Auto",
+            "debugging": {
+                "docs_bank": "MSA-Verb-Docs-Bank.tsv",
+                "docs_output_name": "docs_debug_verbs_msa_v1.0.tsv",
+                "docs_debugging_spreadsheet": "camel-morph-common",
+                "docs_debugging_sheet": "MSA-Documentation-Verb-Auto",
                 "docs_tables": "docs_tables_verbs_msa_v1.0.tsv"
             },
             "dialect": "msa",

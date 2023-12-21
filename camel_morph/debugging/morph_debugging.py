@@ -10,7 +10,7 @@ package_path = '/'.join(file_path[:len(file_path) - 1 - file_path[::-1].index('c
 sys.path.insert(0, package_path)
 
 from camel_morph.debugging.download_sheets import download_sheets
-from camel_morph.utils.utils import get_config_file
+from camel_morph.utils.utils import Config
 from camel_morph.debugging.create_repr_lemmas_list import create_repr_lemmas_list
 from camel_morph.debugging.generate_conj_table import create_conjugation_tables
 from camel_morph.debugging.paradigm_debugging import automatic_bank_annotation
@@ -45,71 +45,63 @@ def _get_df(table):
 
 
 if __name__ == "__main__":
-    config_name = args.config_name_main
-    config = get_config_file(args.config_file_main)
-    config_local = config['local'][config_name]
-    config_global = config['global']
+    config = Config(args.config_file_main, args.config_name_main)
 
     if args.camel_tools == 'local':
-        camel_tools_dir = config_global['camel_tools']
-        sys.path.insert(0, camel_tools_dir)
+        sys.path.insert(0, config.camel_tools)
     
-    sa = gspread.service_account(config_global['service_account'])
+    sa = gspread.service_account(config.service_account)
     
     if not args.no_download:
         print()
         download_sheets(config=config,
-                        config_name=config_name,
                         service_account=sa)
-    
-    print('\nExtracting representative lemma groups...', end=' ')
-    repr_lemmas = create_repr_lemmas_list(config=config,
-                                          config_name=config_name,
-                                          feats_bank=args.feats)
-    print('Done.\n')
-    
+        
     if not args.no_build_db:
         print('Building DB...')
-        db_maker.make_db(config, config_name)
+        db_maker.make_db(config)
         print()
-
-    HEADER = [
-        'line', 'status', 'count', 'signature', 'lemma', 'diac_ar', 'diac', 'freq',
-        'qc', 'warnings', 'comments', 'pattern', 'stem', 'bw', 'gloss', 'pos',
-        'cond-s', 'cond-t', 'pref-cat', 'stem-cat', 'suff-cat', 'feats', 'debug', 'color'
-    ]
-
-    print('Building inflection table...', end=' ')
-    conj_table = create_conjugation_tables(config=config,
-                                           config_name=config_name,
-                                           paradigm_key=args.feats,
-                                           repr_lemmas=repr_lemmas,
-                                           HEADER=HEADER)
-    conj_table = _get_df(conj_table)
-    print('Done.\n')
+        
+    feats = args.feats
+    if not args.feats:
+        feats = list(config.debugging.feats)
     
-    print('Querying bank and automatically quality checking inflection table...', end=' ')
-    outputs = automatic_bank_annotation(config=config,
-                                        config_name=config_name,
-                                        feats=args.feats,
-                                        new_conj_table=conj_table,
-                                        sa=sa,
-                                        HEADER=HEADER)
-    outputs = _get_df(outputs)
-    print('Done.\n')
-    
-    upload_sheet(config=config,
-                 config_name=config_name,
-                 feats=args.feats,
-                 sheet=outputs,
-                 input_dir='paradigm_debugging_dir',
-                 mode='backup',
-                 sa=sa)
-    upload_sheet(config=config,
-                 config_name=config_name,
-                 feats=args.feats,
-                 sheet=outputs,
-                 input_dir='banks_dir',
-                 mode='backup',
-                 sa=sa)
+    for feats_ in feats:
+        config = Config(args.config_file_main, args.config_name_main, feats_)
+        print('\nExtracting representative lemma groups...', end=' ')
+        repr_lemmas = create_repr_lemmas_list(config=config)
+        print('Done.\n')
+
+        HEADER = [
+            'line', 'status', 'count', 'signature', 'lemma', 'diac_ar', 'diac', 'freq',
+            'qc', 'warnings', 'comments', 'pattern', 'stem', 'bw', 'gloss', 'pos',
+            'cond-s', 'cond-t', 'pref-cat', 'stem-cat', 'suff-cat', 'feats', 'debug', 'color'
+        ]
+
+        print('Building inflection table...', end=' ')
+        conj_table = create_conjugation_tables(config=config,
+                                               paradigm_key=feats_,
+                                               repr_lemmas=repr_lemmas,
+                                               HEADER=HEADER)
+        conj_table = _get_df(conj_table)
+        print('Done.\n')
+        
+        print('Querying bank and automatically quality checking inflection table...', end=' ')
+        outputs, bank = automatic_bank_annotation(config=config,
+                                                  new_conj_table=conj_table,
+                                                  sa=sa,
+                                                  HEADER=HEADER)
+        outputs = _get_df(outputs)
+        print('Done.\n')
+        
+        upload_sheet(config=config,
+                     sheet=outputs,
+                     input_dir='paradigm_debugging_dir',
+                     mode='backup',
+                     sa=sa)
+        upload_sheet(config=config,
+                     sheet=bank.to_df(),
+                     input_dir='banks_dir',
+                     mode='backup',
+                     sa=sa)
     

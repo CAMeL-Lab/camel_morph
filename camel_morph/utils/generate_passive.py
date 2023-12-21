@@ -25,28 +25,33 @@ import re
 import argparse
 import json
 import os
+import sys
 
 import pandas as pd
 from numpy import nan
 
-from camel_morph.utils.utils import assign_pattern
+file_path = os.path.abspath(__file__).split('/')
+package_path = '/'.join(file_path[:len(file_path) - 1 - file_path[::-1].index('camel_morph')])
+sys.path.insert(0, package_path)
+
+from camel_morph.utils.utils import assign_pattern, Config
 
 errors, missing = {}, {}
 
 def generate_passive(LEXICON, patterns_path):
     from camel_tools.morphology.utils import strip_lex
     passive_patterns = pd.read_csv(patterns_path, na_filter=False)
-    passive_patterns['COND-S-ESSENTIAL-Act'] = passive_patterns.apply(
-        lambda row: re.sub(r' ?(gem|hamzated|hollow|defective) ?', '', row['COND-S-Act']), axis=1)
-    passive_patterns['COND-S-ESSENTIAL-Pass'] = passive_patterns.apply(
-        lambda row: re.sub(r' ?(gem|hamzated|hollow|defective) ?', '', row['COND-S-Pass']), axis=1)
+    passive_patterns['COND-S-ESSENTIAL'] = passive_patterns.apply(
+        lambda row: re.sub(r' ?(gem|hamzated|hollow|defective) ?', '', row['COND-S']), axis=1)
+    passive_patterns['COND-S-ESSENTIAL-PASS'] = passive_patterns.apply(
+        lambda row: re.sub(r' ?(gem|hamzated|hollow|defective) ?', '', row['COND-S-PASS']), axis=1)
     passive_patterns_map = {}
     for _, row in passive_patterns.iterrows():
-        info = dict(regex_match=row['REGEX-match'],
-                    regex_sub=row['REGEX-sub'],
-                    cond_t_pass=row['COND-T-Pass'],
-                    cond_s_pass=row['COND-S-ESSENTIAL-Pass'])
-        key = (row['Pattern'], row['COND-T-Act'], row['COND-S-ESSENTIAL-Act'])
+        info = dict(regex_match=row['MATCH'],
+                    regex_sub=row['SUB'],
+                    cond_t_pass=row['COND-T-PASS'],
+                    cond_s_pass=row['COND-S-ESSENTIAL-PASS'])
+        key = (row['PATTERN'], row['COND-T'], row['COND-S-ESSENTIAL'])
         passive_patterns_map.setdefault(key, []).append(info)
 
     soundness_pattern = re.compile(r'(hollow|defective|gem|hamzated)')
@@ -60,7 +65,8 @@ def generate_passive(LEXICON, patterns_path):
         return pattern if pattern else nan
 
     def get_info(row):
-        infos = passive_patterns_map.get((row['PATTERN-DEF'], row['COND-T'], row['COND-S-ESSENTIAL']))
+        infos = passive_patterns_map.get(
+            (row['PATTERN-DEF'], row['COND-T'], row['COND-S-ESSENTIAL']))
         if infos != None:
             if len(infos) == 1:
                 info = infos[0]
@@ -72,7 +78,9 @@ def generate_passive(LEXICON, patterns_path):
                         info['regex_sub'] = info['regex_sub'].replace('$', '\\')
                         return info
         else:
-            missing.setdefault((row['PATTERN-DEF'], row['COND-T'], row['COND-S-ESSENTIAL']), []).append(row.to_dict())
+            missing.setdefault(
+                (row['PATTERN-DEF'], row['COND-T'], row['COND-S-ESSENTIAL']), []).append(
+                    row.to_dict())
             return nan
 
     def get_pattern(row):
@@ -84,14 +92,14 @@ def generate_passive(LEXICON, patterns_path):
         match = soundness_pattern.search(row['COND-S'])
         return match.group(1) if match else ''
 
-    LEXICON = LEXICON[~LEXICON['COND-S'].str.contains("Frozen")]
+    LEXICON = LEXICON[~LEXICON['COND-S'].str.contains('Frozen')]
 
     LEXICON_PASS = LEXICON.copy()
     LEXICON_PASS['PATTERN-DEF'] = LEXICON_PASS.apply(assign_pattern_wrapper, axis=1)
     LEXICON_PASS = LEXICON_PASS[LEXICON_PASS['PATTERN-DEF'].notna()]
     LEXICON_PASS['COND-T'] = LEXICON_PASS['COND-T'].str.strip()
-    LEXICON_PASS['COND-S-ESSENTIAL'] = LEXICON_PASS.apply(
-        lambda row: re.sub(r'ditrans|trans|intrans|gem|hamzated|hollow|defective', '', row['COND-S']), axis=1)
+    LEXICON_PASS['COND-S-ESSENTIAL'] = LEXICON_PASS.apply(lambda row: re.sub(
+        r'ditrans|trans|intrans|gem|hamzated|hollow|defective', '', row['COND-S']), axis=1)
     LEXICON_PASS['COND-S-ESSENTIAL'] = LEXICON_PASS['COND-S-ESSENTIAL'].str.strip()
     LEXICON_PASS['PATTERN-MAP'] = LEXICON_PASS.apply(get_info, axis=1)
     LEXICON_PASS = LEXICON_PASS[LEXICON_PASS['PATTERN-MAP'].notna()]
@@ -105,12 +113,12 @@ def generate_passive(LEXICON, patterns_path):
     # All passive forms should be intransitive
     LEXICON_PASS['COND-T'] = LEXICON_PASS.apply(
         lambda row: row['PATTERN-MAP']['cond_t_pass'], axis=1)
-    LEXICON_PASS['COND-S-ESSENTIAL-Pass'] = LEXICON_PASS.apply(
+    LEXICON_PASS['COND-S-ESSENTIAL-PASS'] = LEXICON_PASS.apply(
         lambda row: row['PATTERN-MAP']['cond_s_pass'], axis=1)
-    LEXICON_PASS['COND-S-ESSENTIAL-Pass'] = LEXICON_PASS['COND-S-ESSENTIAL-Pass'].str.strip()
+    LEXICON_PASS['COND-S-ESSENTIAL-PASS'] = LEXICON_PASS['COND-S-ESSENTIAL-PASS'].str.strip()
     LEXICON_PASS['COND-S'] = LEXICON_PASS.apply(
-        lambda row: row['COND-S-ESSENTIAL-Pass'] +
-                    (' ' if row['COND-S-ESSENTIAL-Pass'] else '') +
+        lambda row: row['COND-S-ESSENTIAL-PASS'] +
+                    (' ' if row['COND-S-ESSENTIAL-PASS'] else '') +
                     row['SOUND'] +
                     (' ' if row['SOUND'] else '') + "intrans", axis=1)
     
@@ -139,11 +147,9 @@ if __name__ == "__main__":
                         type=str, help="Path of file which contains the passive pattern maps.")
     args = parser.parse_args()
 
-    with open(args.config_file) as f:
-        config = json.load(f)
-    data_dir = config['global']['data_dir']
+    config = Config(args.config_file, args.config_name)
 
-    LEXICON = pd.read_csv(os.path.join(data_dir, args.input_file), na_filter=False)
+    LEXICON = pd.read_csv(args.input_file, na_filter=False)
     # Replace spaces in BW and GLOSS with '#'; skip commented rows and empty lines
     LEXICON = LEXICON[LEXICON.DEFINE == 'LEXICON']
     LEXICON['GLOSS'] = LEXICON['GLOSS'].replace('\s+', '#', regex=True)
@@ -152,8 +158,7 @@ if __name__ == "__main__":
     LEXICON['COND-T'] = LEXICON['COND-T'].replace(' +', ' ', regex=True)
     LEXICON['COND-T'] = LEXICON['COND-T'].replace(' $', '', regex=True)
 
-    LEXICON_PASS = generate_passive(LEXICON, os.path.join(data_dir,args.patterns))
+    LEXICON_PASS = generate_passive(LEXICON, args.patterns)
     
-    output_name = re.sub(r'(.*).csv', r'\1-PASS.csv', args.input_file)
-    output_path = os.path.join(data_dir, output_name)
+    output_path = re.sub(r'(.*).csv', r'\1-PASS.csv', args.input_file)
     LEXICON_PASS.to_csv(output_path)

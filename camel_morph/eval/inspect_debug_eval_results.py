@@ -13,8 +13,14 @@ import eval_utils
 from eval_utils import color, bold, underline
 from row_classes import *
 
+file_path = os.path.abspath(__file__).split('/')
+package_path = '/'.join(file_path[:len(file_path) - 1 - file_path[::-1].index('camel_morph')])
+sys.path.insert(0, package_path)
+
+from camel_morph.utils.utils import Config
+
 parser = argparse.ArgumentParser()
-parser.add_argument("-config_file", default='eval_files/report_default',
+parser.add_argument("-config_file", default='config_default.json',
                     type=str, help="Config file specifying which sheets to use.")
 parser.add_argument("-pos", required=True,
                     type=str, help="Part-of-speech to perform the evaluation on.")
@@ -36,12 +42,10 @@ parser.add_argument("-camel_tools", default='local', choices=['local', 'official
                     type=str, help="Path of the directory containing the camel_tools modules.")
 args = parser.parse_args()
 
-with open('camel_morph/configs/config_default.json') as f:
-    config = json.load(f)
+config = Config(args.config_file)
 
 if args.camel_tools == 'local':
-    camel_tools_dir = config['global']['camel_tools']
-    sys.path.insert(0, camel_tools_dir)
+    sys.path.insert(0, config.camel_tools)
 
 from camel_tools.morphology.database import MorphologyDB
 from camel_tools.morphology.generator import Generator
@@ -367,13 +371,11 @@ def section_unshared_combinations_high_level_stats():
     feat2index = {feat: i for i, feat in enumerate(eval_utils.essential_keys_no_lex_pos)}
 
     if args.system_feat_subcombs:
-        feat_subcombs_path_system = os.path.join(
-            args.report_dir, args.system_feat_subcombs)
+        feat_subcombs_path_system = args.system_feat_subcombs
     else:
         feat_subcombs_path_system = None
     if args.baseline_feat_subcombs:
-        feat_subcombs_path_baseline = os.path.join(
-            args.report_dir, args.baseline_feat_subcombs)
+        feat_subcombs_path_baseline = args.baseline_feat_subcombs
     else:
         feat_subcombs_path_baseline = None
     

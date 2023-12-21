@@ -2,14 +2,15 @@
     "global": {
         "data_dir": "data",
         "specs": {
-            "spreadsheet": "camel-morph-common",
-            "sheets": {
-                "about": "About",
-                "header": "Header-v2"
+            "about": {
+                "camel-morph-common": "About"
+            },
+            "header": {
+                "camel-morph-common": "Header-v2"
             }
         },
         "db_dir": "databases",
-        "debugging": "debugging_output",
+        "debugging_dir": "debugging_output",
         "repr_lemmas_dir": "repr_lemmas",
         "tables_dir": "tables",
         "paradigm_debugging_dir": "paradigm_debugging",
@@ -23,20 +24,6 @@
         "banks_spreadsheet": "Paradigm-Banks"
     },
     "local": {
-        "msa_pv_capstones": {
-            "pruning": true,
-            "specs": {
-                "order": "ORDER-PV-Capstones",
-                "morph": "MSA-MORPH-PV-Capstones"
-            },
-            "lexicon": {
-                "spreadsheet": "msa-verb-lex-capstones",
-                "sheets": [
-                    "MSA-LEX-PV-Capstones"
-                ]
-            },
-            "db": "XYZ_msa_pv_v1.0_red.db"
-        },
         "nom_glf_split_red": {
             "split_or": false,
             "cat2id": true,
@@ -44,20 +31,22 @@
             "clean_conditions": false,
             "pruning": false,
             "specs": {
-                "spreadsheet": "camel-morph-glf-nom-other-pilot",
-                "sheets": {
-                    "order": "GLF-Nom-ORDER",
-                    "morph": "GLF-Nom-MORPH",
-                    "postregex": "GLF-PostRegex"
+                "order": {
+                    "camel-morph-glf-nom-other-pilot": "GLF-Nom-ORDER"
+                },
+                "morph": {
+                    "camel-morph-glf-nom-other-pilot": "GLF-Nom-MORPH"
+                },
+                "postregex": {
+                    "camel-morph-glf-nom-other-pilot": "GLF-PostRegex"
+                },
+                "lexicon": {
+                    "camel-morph-glf-nom-other-pilot": [
+                        "GLF-Nom-LEX"
+                    ]
                 },
                 "exclude": [
                     "RED"
-                ]
-            },
-            "lexicon": {
-                "spreadsheet": "camel-morph-glf-nom-other-pilot",
-                "sheets": [
-                    "GLF-Nom-LEX"
                 ]
             },
             "db": "XYZ_glf_nom_v1.0_red.db",
@@ -72,7 +61,7 @@
                     }
                 }
             },
-            "lexprob": "misc_files/egy_lexprob.tsv",
+            "logprob": "misc_files/egy_lexprob.tsv",
             "pos_type": "nominal",
             "class_keys": [
                 "cond_t",
@@ -95,32 +84,34 @@
             "clean_conditions": false,
             "pruning": false,
             "specs": {
-                "spreadsheet": "camel-morph-glf-nom-other-pilot",
-                "sheets": {
-                    "order": "GLF-Nom-ORDER",
-                    "morph": "GLF-Nom-MORPH",
-                    "postregex": "GLF-PostRegex"
+                "order": {
+                    "camel-morph-glf-nom-other-pilot": "GLF-Nom-ORDER"
+                },
+                "morph": {
+                    "camel-morph-glf-nom-other-pilot": "GLF-Nom-MORPH"
+                },
+                "postregex": {
+                    "camel-morph-glf-nom-other-pilot": "GLF-PostRegex"
+                },
+                "lexicon": {
+                    "camel-morph-glf-nom-other-pilot": [
+                        "EGY-Nom-LEX"
+                    ]
                 },
                 "exclude": [
                     "RED"
                 ]
             },
-            "lexicon": {
-                "spreadsheet": "camel-morph-glf-nom-other-pilot",
-                "sheets": [
-                    "EGY-Nom-LEX"
-                ]
-            },
-            "docs_debugging": {
-                "bank": "GLF-Docs-Bank.tsv",
-                "output_name": "docs_debug_glf_v1.0.tsv",
-                "debugging_spreadsheet": "camel-morph-glf-nom-other-pilot",
-                "debugging_sheet": "GLF-Documentation-Nom-Auto",
+            "debugging": {
+                "docs_bank": "GLF-Docs-Bank.tsv",
+                "docs_output_name": "docs_debug_glf_v1.0.tsv",
+                "docs_debugging_spreadsheet": "camel-morph-glf-nom-other-pilot",
+                "docs_debugging_sheet": "GLF-Documentation-Nom-Auto",
                 "docs_tables": "docs_tables_glf_v1.0.tsv",
                 "insert_index": true
             },
             "db": "XYZ_glf_nom_docs_red.db",
-            "lexprob": "misc_files/glf_lexprob.tsv",
+            "logprob": "misc_files/glf_lexprob.tsv",
             "pos_type": "nominal"
         }
     }

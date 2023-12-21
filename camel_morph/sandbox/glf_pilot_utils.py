@@ -8,8 +8,14 @@ import re
 import pickle
 from collections import Counter
 
+file_path = os.path.abspath(__file__).split('/')
+package_path = '/'.join(file_path[:len(file_path) - 1 - file_path[::-1].index('camel_morph')])
+sys.path.insert(0, package_path)
+
+from camel_morph.utils.utils import Config
+
 parser = argparse.ArgumentParser()
-parser.add_argument("-config_file", default='camel_morph/configs/config_default.json',
+parser.add_argument("-config_file", default='config_default.json',
                         type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
 parser.add_argument("-config_name", default='default_config', nargs='+',
                     type=str, help="Name of the configuration to load from the config file. If more than one is added, then lemma classes from those will not be counted in the current list.")
@@ -17,15 +23,10 @@ parser.add_argument("-camel_tools", default='local', choices=['local', 'official
                         type=str, help="Path of the directory containing the camel_tools modules.")
 args, _ = parser.parse_known_args([] if "__file__" not in globals() else None)
 
-with open(args.config_file) as f:
-    config = json.load(f)
-    config_name = args.config_name
-    config_local = config['local'][config_name]
-    config_global = config['global']
+config = Config(args.config_file, args.config_name)
 
 if args.camel_tools == 'local':
-    camel_tools_dir = config_global['camel_tools']
-    sys.path.insert(0, camel_tools_dir)
+    sys.path.insert(0, config.camel_tools)
 
 from camel_tools.utils.charmap import CharMapper
 from camel_tools.utils.charsets import AR_LETTERS_CHARSET

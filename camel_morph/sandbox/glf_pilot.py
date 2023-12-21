@@ -1,18 +1,14 @@
 import os
 import sys
 import argparse
-import json
-import xml.etree.ElementTree as ET
 from tqdm import tqdm
 import re
 import pickle
-from copy import deepcopy
 from collections import Counter
 
 import pandas as pd
 from numpy import nan
 
-from glf_pilot_utils import FEATS_INFLECT
 try:
     from .. import db_maker, db_maker_utils
     from ..debugging.generate_docs_tables import _get_structured_lexicon_classes_nom
@@ -75,9 +71,8 @@ def _get_id2info(stem_classes):
     return id2info
 
 
-def _filter_and_process_abstract_entries(lexicon, config_glf, config_name_glf):
+def _filter_and_process_abstract_entries(lexicon, config_glf):
     SHEETS, _ = db_maker_utils.read_morph_specs(config_glf,
-                                                config_name_glf,
                                                 lexicon_cond_f=False)
     morph = SHEETS['morph']
     valid_conditions = set(cond_
@@ -102,12 +97,10 @@ def _filter_and_process_abstract_entries(lexicon, config_glf, config_name_glf):
     return lexicon
 
 
-def get_backoff_stems_from_egy(config_glf,
-                               config_name_glf,
+def get_backoff_stems_from_egy(config_glf:utils.Config,
                                processing_mode='automatic'):
     if processing_mode == 'automatic':
         SHEETS, _ = db_maker_utils.read_morph_specs(config_egy,
-                                                    config_name_egy,
                                                     process_morph=False,
                                                     lexicon_cond_f=False)
         lexicon = SHEETS['lexicon']
@@ -115,7 +108,7 @@ def get_backoff_stems_from_egy(config_glf,
             lambda row: re.sub('lex:', '', row['LEMMA']), axis=1)
     
     elif processing_mode == 'manual':
-        lex_path = utils.get_lex_paths(config_glf, config_name_glf)[0]
+        lex_path = config_glf.get_sheets_paths('lexicon')[0]
         lexicon = pd.read_csv(lex_path)
         lexicon = lexicon.replace(nan, '')
     
@@ -123,7 +116,7 @@ def get_backoff_stems_from_egy(config_glf,
         raise NotImplementedError
     
     lexicon_processed = _filter_and_process_abstract_entries(
-        lexicon, config_glf, config_name_glf)
+        lexicon, config_glf)
     
     cond_s2cond_t2feats2rows = _get_structured_lexicon_classes_nom(lexicon_processed)
     stem_classes = {}
@@ -251,11 +244,11 @@ def get_generated_form_counts_from_gumar(stem_classes, possible_analyses, output
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-config_file_egy", default='camel_morph/configs/config_default.json',
+    parser.add_argument("-config_file_egy", default='config_default.json',
                         type=str, help="Config file specifying which sheets to use from `specs_sheets` for the EGY lexicon.")
     parser.add_argument("-config_name_egy", default='default_config', nargs='+',
                         type=str, help="Name of the configuration to load from the config file for the EGY lexicon.")
-    parser.add_argument("-config_file_glf", default='camel_morph/configs/config_default.json',
+    parser.add_argument("-config_file_glf", default='config_default.json',
                         type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
     parser.add_argument("-config_name_glf", default='default_config', nargs='+',
                         type=str, help="Name of the configuration to load from the config file. If more than one is added, then lemma classes from those will not be counted in the current list.")
@@ -288,21 +281,13 @@ if __name__ == "__main__":
                         type=str, help="Path of the directory containing the camel_tools modules.")
     args = parser.parse_args([] if "__file__" not in globals() else None)
 
-    with open(args.config_file_egy) as f:
-        config_egy = json.load(f)
     config_name_egy = args.config_name_egy[0]
-    config_local_egy = config_egy['local'][config_name_egy]
-    config_global_egy = config_egy['global']
-
-    with open(args.config_file_glf) as f:
-        config_glf = json.load(f)
+    config_egy = utils.Config(args.config_file_egy, config_name_egy)
     config_name_glf = args.config_name_glf[0]
-    config_local_glf = config_glf['local'][config_name_glf]
-    config_global_glf = config_glf['global']
+    config_glf = utils.Config(args.config_file_glf, config_name_glf)
 
     if args.camel_tools == 'local':
-        camel_tools_dir = config_global_egy['camel_tools']
-        sys.path.insert(0, camel_tools_dir)
+        sys.path.insert(0, config_egy.camel_tools)
 
     from camel_tools.morphology.database import MorphologyDB
     from camel_tools.morphology.analyzer import Analyzer
@@ -315,29 +300,24 @@ if __name__ == "__main__":
 
     if args.download_glf_sheets:
         print()
-        data_dir = utils.get_data_dir_path(config_glf, config_name_glf)
-        download_sheets(save_dir=data_dir,
-                        config=config_glf,
-                        config_name=config_name_glf,
-                        service_account=config_global_glf['service_account'])
+        download_sheets(config=config_glf,
+                        service_account=config_egy.service_account)
 
     print('\nFetching (or computing) backoff stems... ')
     stem_classes = get_backoff_stems_from_egy(
-        config_glf, config_name_glf, processing_mode=args.backoff_stems)
+        config_glf, processing_mode=args.backoff_stems)
     print('Done.')
 
     if args.build_glf_db:
-        sheet_name = config_glf['local'][config_name_glf]['lexicon']['sheets'][0]
-        config_glf_modif = deepcopy(config_glf)
-        config_glf_modif_local = config_glf_modif['local'][config_name_glf]
-        config_glf_modif_local['lexicon']['sheets'][0] = sheet_name + '_modif'
-        db_maker.make_db(config_glf_modif, config_name_glf)
+        sheet_name = config_glf.get_sheets_list('lexicon')['sheets'][0]
+        config_glf_modif = utils.Config(args.config_file_glf, config_name_glf)
+        sh_name = next(config_glf_modif.lexicon) 
+        config_glf_modif.lexicon[sh_name]= [sheet_name + '_modif']
+        db_maker.make_db(config_glf_modif)
         print()
 
-    db_name = config_local_glf['db']
-    db_dir = utils.get_db_dir_path(config_glf, config_name_glf)
-    db = MorphologyDB(os.path.join(db_dir, db_name), flags='a')
-    db_gen = MorphologyDB(os.path.join(db_dir, db_name), flags='gd')
+    db = MorphologyDB(config_glf.get_db_path(), flags='a')
+    db_gen = MorphologyDB(config_glf.get_db_path(), flags='gd')
     generator = Generator(db_gen)
     analyzer = Analyzer(db, backoff='NOAN-ONLY_ALL')
     

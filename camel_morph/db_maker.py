@@ -40,12 +40,12 @@ import pandas as pd
 try:
     # Needed for when db_maker() needs to be imported by another script
     from . import db_maker_utils
-    from .utils.utils import essential_keys_form_feats, get_config_file
+    from .utils.utils import essential_keys_form_feats, Config
     from .debugging.download_sheets import download_sheets
 except:
     # Needed for when db_maker() is ran from within this script
     import db_maker_utils
-    from utils.utils import essential_keys_form_feats, get_config_file
+    from utils.utils import essential_keys_form_feats, Config
     from debugging.download_sheets import download_sheets
 
 parser = argparse.ArgumentParser()
@@ -63,13 +63,10 @@ parser.add_argument("-camel_tools", default='local', choices=['local', 'official
                     type=str, help="Path of the directory containing the camel_tools modules.")
 args, _ = parser.parse_known_args()
 
-config = get_config_file(args.config_file)
-config_local =  config['local'][args.config_name]
-config_global =  config['global']
+config = Config(args.config_file, args.config_name)
 
 if args.camel_tools == 'local':
-    camel_tools_dir = config_global['camel_tools']
-    sys.path.insert(0, camel_tools_dir)
+    sys.path.insert(0, config.camel_tools)
 
 from camel_tools.utils.normalize import normalize_alef_bw, normalize_alef_maksura_bw, normalize_teh_marbuta_bw
 from camel_tools.utils.charmap import CharMapper
@@ -125,7 +122,7 @@ Useful terms to know for a better understanding of the comments:
     with other complex morphemes
 """
 
-def make_db(config:Dict, config_name:str, output_dir:Optional[str]=None):
+def make_db(config:Config, output_path:Optional[str]=None):
     """
     Main function which takes in a set of specifications from `csv` files (downloadable
     from Google Sheets) and which, from the latter, prints out a `db` file in the ALMOR format,
@@ -138,25 +135,20 @@ def make_db(config:Dict, config_name:str, output_dir:Optional[str]=None):
     and vice versa.
 
     Args:
-        config (Dict): dictionary containing all the necessary information to build the `db` file.
-        config_name (str): key of the specific ("local") configuration to get information from in the config file.
-        output_dir (str, optional): path of the directory to output the `db` file to.
+        config (Config): dictionary containing all the necessary information to build the `db` file.
+        output_path (str): path of the output DB. Defaults to None
     """
-    config_global: Dict = config['global']
-    config_local: Dict = config['local'][config_name]
-
     if args.download:
         print()
-        download_sheets(config=config, config_name=config_name)
+        download_sheets(config=config)
     
-    caphi_code_path: str = config_local.get('caphi')
     morph2caphi = None
-    if caphi_code_path:
-        caphi_module = importlib.import_module(caphi_code_path)
+    if config.caphi is not None:
+        caphi_module = importlib.import_module(config.caphi)
         morph2caphi = {morph_type: getattr(caphi_module, f'caphi_{morph_type}')
                        for morph_type in ['DBPrefix', 'DBStem', 'DBSuffix']}
     
-    logprob: Dict[str] = config_local.get('logprob')
+    logprob: Dict[str] = config.logprob
     if logprob is not None:
         with open(logprob, 'rb') as f:
             logprob = pickle.load(f)
@@ -172,26 +164,24 @@ def make_db(config:Dict, config_name:str, output_dir:Optional[str]=None):
     c0 = process_time()
     
     print("\nLoading and processing sheets... [1/4]")
-    SHEETS, cond2class = db_maker_utils.read_morph_specs(config, config_name)
+    SHEETS, cond2class = db_maker_utils.read_morph_specs(config)
     
     print("\nValidating combinations... [2/4]")
-    cat2id: bool = config_local.get('cat2id', False)
-    defaults: bool = config_local.get('defaults', True)
+    cat2id: bool = config.cat2id if config.cat2id is not None else False
+    defaults: bool = config.defaults if config.defaults is not None else True
     
-    db = construct_almor_db(SHEETS, config_local['pruning'],
+    db = construct_almor_db(SHEETS, config.pruning,
         cond2class, cat2id, defaults, morph2caphi, logprob)
 
     print("\nCollapsing categories and reindexing... [3/4]")
-    reindex: bool = config_local.get('reindex', False)
+    reindex: bool = config.reindex if config.reindex is not None else False
     if reindex:
         db, _ = collapse_and_reindex_categories(db, collapse_morphemes=False)
     
     print("\nGenerating DB file... [4/4]")
-    if output_dir is None:
-        output_dir = config_global['db_dir']
-    output_dir = os.path.join(output_dir, f"camel-morph-{config_local['dialect']}")
-    os.makedirs(output_dir, exist_ok=True)
-    print_almor_db(os.path.join(output_dir, config_local['db']), db)
+    if output_path is None:
+        output_path = config.get_db_path()
+    print_almor_db(output_path, db)
     
     c1 = process_time()
     print(f"\nTotal time required: {strftime('%M:%S', gmtime(c1 - c0))}")
@@ -318,7 +308,7 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
     # each time and same them in the memo. dict.
     for name, SHEET in [('Concrete', LEXICON), ('Backoff', BACKOFF)]:
         if SHEET is not None:
-            print(f'{name} lexicon')
+            print(f'\n{name} lexicon')
             pbar = tqdm(total=len(list(ORDER.iterrows())))
             cmplx_stem_memoize = {}
             order_stem_prev = ''
@@ -759,7 +749,7 @@ def _read_affix(affix: List[Dict], affix_type: str) -> Tuple[str, Dict]:
             value = [m[col] if m.get(col) else m['FORM'].strip() for m in affix]
         else:
             value = [m[col] for m in affix if m.get(col)]
-        value = ''.join(t for t in value if t != '_')
+        value = ''.join(t for t in value)
         if col != 'CAPHI' or col == 'CAPHI' and value:
             analysis[col.lower()] = value
     
@@ -801,7 +791,7 @@ def _read_stem(stem: List[Dict]) -> Tuple[str, Dict]:
     
     for col in SEG_TOK_SCHEMES + ['CAPHI']:
         value = [s[col] if s.get(col) else s['FORM'].strip() for s in stem]
-        value = ''.join(t for t in value if t != '_')
+        value = ''.join(t for t in value)
         if col in SEG_TOK_SCHEMES:
             value = HAMZA_WASL_RE.sub('A', value)
         if value and value != analysis['diac']:
@@ -1422,16 +1412,16 @@ def _read_header_file(header:pd.DataFrame):
     header_.append('###ORDER###')
     header_.append('ORDER ' + ' '.join(order))
 
-    tokenizations = []
+    tokenizations = {}
     for _, row in header[header['DEFINE'] == 'TOKENIZATION'].iterrows():
         for feat in order:
-            if row[feat] == 'X':
-                tokenizations.append(feat)
+            if row[feat]:
+                tokenizations.setdefault(feat, row[feat])
     
     header_.append('###TOKENIZATIONS###')
-    header_.append('TOKENIZATION ' + ' '.join(tokenizations))
+    header_.append('TOKENIZATION ' + ' '.join(o for o in order if o in tokenizations))
 
-    defaults = {'defaults': defaults, 'order': order}
+    defaults = {'defaults': defaults, 'order': order, 'tokenizations': tokenizations}
 
     return header_, defaults
 
@@ -1442,11 +1432,12 @@ if __name__ == "__main__":
         profiler = cProfile.Profile()
         profiler.enable()
     
-    output_dir = args.output_dir if args.output_dir else config_global['db_dir']
+    output_dir = args.output_dir if args.output_dir else config.get_db_dir_path()
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
+    output_path = os.path.join(output_dir, config.db)
 
-    make_db(config, args.config_name, output_dir)
+    make_db(config, output_dir)
     
     if args.run_profiling:
         profiler.disable()

@@ -18,7 +18,7 @@ sys.path.insert(0, package_path)
 
 from camel_morph.debugging.download_sheets import download_sheets
 from camel_morph.debugging.debug_lemma_paradigms import regenerate_signature_lex_rows, _strip_brackets
-from camel_morph.utils.utils import get_config_file, col_letter2index, index2col_letter
+from camel_morph.utils.utils import Config, col_letter2index, index2col_letter
 from camel_morph import db_maker, db_maker_utils
 from camel_morph.eval.evaluate_camel_morph import load_required_pos
 
@@ -400,9 +400,9 @@ def create_stats_table(lemma_counts, stem_counts, specs_stats,
         count_calima = analyses_count['calima'][count_type]
         table.append(['', f'{count_camel} ({count_no_wiki})', count_calima])
     
-    sh = sa.open(config_local['debugging']['stats_spreadsheet'])
-    sheet = sh.worksheet(config_local['debugging']['stats_sheet'])
-    range_ = get_range(table, config_local['debugging']['table_start_cell'])
+    sh = sa.open(config.debugging.stats_spreadsheet)
+    sheet = sh.worksheet(config.debugging.stats_sheet)
+    range_ = get_range(table, config.debugging.table_start_cell)
     sheet.batch_update([{'range': range_, 'values': table}])
 
 
@@ -438,7 +438,7 @@ def get_basic_lemma_paradigms(lexicon_specs):
             signature2bp[_parse_signature(row['signature'])] = row['id']
     
     lemma_pos2signature = regenerate_signature_lex_rows(
-        config, config_name, lexicon_specs=lexicon_specs)
+        config, lexicon_specs=lexicon_specs)
 
     pos2bp_freq, lemma_pos_used = {}, set()
     for _, row in lexicon_specs.iterrows():
@@ -476,14 +476,10 @@ def get_basic_lemma_paradigms(lexicon_specs):
 
 
 if __name__ == "__main__":
-    config_name = args.config_name_main
-    config = get_config_file(args.config_file_main)
-    config_local = config['local'][config_name]
-    config_global = config['global']
+    config = Config(args.config_file_main, args.config_name_main)
 
     if args.camel_tools == 'local':
-        camel_tools_dir = config_global['camel_tools']
-        sys.path.insert(0, camel_tools_dir)
+        sys.path.insert(0, config.camel_tools)
 
     from camel_tools.morphology.database import MorphologyDB
     from camel_tools.utils.charmap import CharMapper
@@ -492,9 +488,9 @@ if __name__ == "__main__":
     bw2ar = CharMapper.builtin_mapper('bw2ar')
     ar2bw = CharMapper.builtin_mapper('ar2bw')
 
-    sa = gspread.service_account(config_global['service_account'])
+    sa = gspread.service_account(config.service_account)
 
-    ATB_POS, CAMEL_POS, POS_OR_TYPE = load_required_pos(config_local)
+    ATB_POS, CAMEL_POS, POS_OR_TYPE = load_required_pos(config.pos, config.pos_type)
     with open('misc_files/atb2camel_pos.json') as f:
         pos_type2atb2camel_pos = json.load(f)
         POS_TYPES = set(pos_type2atb2camel_pos)
@@ -513,32 +509,27 @@ if __name__ == "__main__":
     # Currently, the appended indexes are hard-coded into the json file, but 
     # only the classes that appear in the sheets should appear in the JSON,
     # and the altered ones should be added by read_morph_specs().
-    with open(config_local['class_map']) as f:
+    with open(config.class_map) as f:
         CLASS_MAP = json.load(f)
     
-    POS_DISPLAY = config_local['debugging'].get('pos_display', CAMEL_POS)
+    POS_DISPLAY = config.debugging.pos_display if config.debugging.pos_display \
+        is not None else CAMEL_POS
 
-    db_name = config_local['db']
-    db_dir = os.path.join(
-        config_global['db_dir'], f"camel-morph-{config_local['dialect']}", db_name)
-    db_camel = MorphologyDB(db_dir, 'dag')
+    db_camel = MorphologyDB(config.get_db_path(), 'dag')
     db_calima = MorphologyDB(args.msa_baseline_db, 'dag')
 
     # stem_counts = get_stem_count_per_lemma(db_camel, db_calima)
     
     if not args.no_download:
         print()
-        download_sheets(config=config,
-                        config_name=config_name,
-                        service_account=sa)
+        download_sheets(config=config, service_account=sa)
 
     if not args.no_build_db:
         print('Building DB...')
-        SHEETS = db_maker.make_db(config, config_name)
+        SHEETS = db_maker.make_db(config)
         print()
     else:
-        SHEETS, _ = db_maker_utils.read_morph_specs(
-            config, config_name, lexicon_cond_f=False)
+        SHEETS, _ = db_maker_utils.read_morph_specs(config, lexicon_cond_f=False)
 
     lexicon_specs, morph_specs, order_specs = SHEETS['lexicon'], SHEETS['morph'], SHEETS['order']
     lexicon_specs = lexicon_specs.replace(nan, '', regex=True)

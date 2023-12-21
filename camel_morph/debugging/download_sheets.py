@@ -23,115 +23,71 @@
 
 import os
 import argparse
-import json
+import sys
 import time
 import gspread
 import pandas as pd
+from collections import OrderedDict
+
+file_path = os.path.abspath(__file__).split('/')
+package_path = '/'.join(file_path[:len(file_path) -
+                                    1 - file_path[::-1].index('camel_morph')])
+sys.path.insert(0, package_path)
+from camel_morph.utils.utils import Config
 
 
-def _read_spreadsheet_with_sheets(config_x_mode, specs, mode):
-    for hierarchy in ['spreadsheet', 'sheets']:
-        hierarchy_s = f'{hierarchy}s' if hierarchy == 'spreadsheet' else hierarchy
-        names_specs_ = specs.setdefault(hierarchy_s, [])
-        
-        names_config = config_x_mode[hierarchy]
-        if type(names_config) is str:
-            names_config = [names_config]
-        elif type(names_config) is dict:
-            names_config = [v for v in names_config.values()]
-        elif type(names_config) is list:
-            names_config = names_config
-        else:
-            raise NotImplementedError
-
-        if hierarchy == 'spreadsheet':
-            names_specs_ += names_config
-        elif hierarchy == 'sheets':
-            if type(names_config[0]) is str:
-                names_specs_.append([])
-                for name_config in names_config:
-                    specs[hierarchy_s][-1].append(name_config)
-            elif type(names_config[0]) is list:
-                for name_config in names_config:
-                    for i, name_config_ in enumerate(name_config):
-                        if len(names_specs_) < len(name_config):
-                            names_specs_.append([])
-                        name_config_ = (list(name_config_) if type(name_config_) in [list, dict]
-                                        else [name_config_])
-                        for name_ in name_config_:
-                            specs[hierarchy_s][i].append(name_)
-            else:
-                raise NotImplementedError
-
-
-def download_sheets(lex=None, specs=None, save_dir=None, config=None, config_name=None, service_account=None):
+def download_sheets(specs=None, save_dir=None, config:Config=None, service_account=None):
     if service_account is None:
-        sa = gspread.service_account(config['global']['service_account'])
+        sa = gspread.service_account(config.service_account)
     elif type(service_account) is str:
         sa = gspread.service_account(service_account)
     else:
         sa = service_account
 
-    if lex or specs:
-        lex = {'spreadsheets': [ss[0] for ss in lex],
-               'sheets': [ss[1:] for ss in lex]}
-        specs = {'spreadsheets': [ss[0] for ss in specs],
-                 'sheets': [ss[1:] for ss in specs]}
-    else:
-        config_local = config['local'][config_name]
-        config_global = config['global']
-        save_dir = config_global['data_dir']
-        
-        specs = {}
-        for config_x in [config_local, config_global]:
-            for mode in ['specs', 'passive']:
-                config_x_mode = config_x.get(mode)
-                if config_x_mode is not None:
-                    _read_spreadsheet_with_sheets(config_x[mode], specs, mode)
+    specs_ = {}
+    if specs is not None:
+        for s in specs:
+            assert len(s) >= 2
+            spreadsheet = s[0]
+            specs_.setdefault(spreadsheet, OrderedDict()).update(
+                {sheet: None for sheet in s[1:]})
 
-        spreadsheets = config_local['lexicon']['spreadsheet']
-        sheets = config_local['lexicon']['sheets']
-        lex = {
-            'spreadsheets': [spreadsheets] if type(spreadsheets) is not list else spreadsheets,
-            'sheets': [[sheet_ for sheet_ in sheet] for sheet in sheets]
-                       if type(sheets[0]) in [list, dict] else [sheets],
-        }
+    for spreadsheet, sheets in config.get_spreadsheet2sheets().items():
+        specs_.setdefault(spreadsheet, OrderedDict()).update(
+            {sheet: None for sheet in sheets})
     
-    if not os.path.exists(save_dir):
+    if save_dir is not None and not os.path.exists(save_dir):
         os.mkdir(save_dir)
 
-    for spreadsheets in [lex, specs]:
-        for i, spreadsheet_name in enumerate(spreadsheets['spreadsheets']):
-            spreadsheet = sa.open(spreadsheet_name)
-            for sheet_name in spreadsheets['sheets'][i]:
-                print(f'Downloading {spreadsheet_name} -> {sheet_name} ...')
-                not_downloaded = True
-                while not_downloaded:
-                    try:
-                        sheet = spreadsheet.worksheet(sheet_name)
-                        not_downloaded = False
-                    except gspread.exceptions.APIError as e:
-                        if 'Quota exceeded' in e.args[0]['message']:
-                            print('Quota exceeded, waiting for 30 seconds and then retrying...')
-                            time.sleep(30)
-                        else:
-                            raise NotImplementedError
-                sheet = pd.DataFrame(sheet.get_all_records())
-                if config is not None:
-                    output_dir = os.path.join(save_dir, f"camel-morph-{config_local['dialect']}", config_name)
-                else:
-                    output_dir = save_dir
-                os.makedirs(output_dir, exist_ok=True)
-                output_path = os.path.join(output_dir, f'{sheet_name}.csv')
-                sheet.to_csv(output_path)
+    for spreadsheet_name, sheets in specs_.items():
+        spreadsheet = sa.open(spreadsheet_name)
+        for sheet_name in sheets:
+            print(f'Downloading {spreadsheet_name} -> {sheet_name} ...')
+            not_downloaded = True
+            while not_downloaded:
+                try:
+                    sheet = spreadsheet.worksheet(sheet_name)
+                    not_downloaded = False
+                except gspread.exceptions.APIError as e:
+                    if 'Quota exceeded' in e.args[0]['message']:
+                        print('Quota exceeded, waiting for 30 seconds and then retrying...')
+                        time.sleep(30)
+                    else:
+                        raise NotImplementedError
+            sheet = pd.DataFrame(sheet.get_all_records())
+            if save_dir is not None:
+                output_dir = save_dir
+            else:
+                output_dir = config.get_data_dir_path()
+            os.makedirs(output_dir, exist_ok=True)
+            output_path = os.path.join(output_dir, f'{sheet_name}.csv')
+            sheet.to_csv(output_path)
     
     print(f'Files saved to: {output_dir}')
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-lex", nargs='+', action='append', default=[],
-                        type=str, help="Name of the lexicon gsheets to download followed by the desired individual sheets.")
     parser.add_argument("-specs", nargs='+', action='append', default=[],
                         type=str, help="Name of the specs spreadsheet to download followed by the desired individual sheets.")
     parser.add_argument("-save_dir", default='',
@@ -144,16 +100,11 @@ if __name__ == "__main__":
                         type=str, help="Path of the JSON file containing the information about the service account used for the Google API.")
     args = parser.parse_args()
 
-    save_dir = args.save_dir
-    service_account = args.service_account
+    print(args.specs)
+    sys.exit()
     config = None
-    if not args.lex and not args.specs:
-        with open(args.config_file) as f:
-            config = json.load(f)
-        config_local = config['local'][args.config_name]
-        config_global = config['global']
-        save_dir = None
-        service_account = config_global['service_account']
+    if args.config_file and args.config_name:
+        config = Config(args.config_file, args.config_name)
+        assert not args.save_dir
 
-    download_sheets(args.lex, args.specs, save_dir,
-                    config, args.config_name, service_account)
+    download_sheets(args.specs, args.save_dir, config, args.service_account)

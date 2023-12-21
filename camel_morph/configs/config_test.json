@@ -2,14 +2,15 @@
     "global": {
         "data_dir": "data",
         "specs": {
-            "spreadsheet": "camel-morph-common",
-            "sheets": {
-                "about": "About",
-                "header": "Header-v2"
+            "about": {
+                "camel-morph-common": "About"
+            },
+            "header": {
+                "camel-morph-common": "Header-v2"
             }
         },
         "db_dir": "databases",
-        "debugging": "debugging_output",
+        "debugging_dir": "debugging_output",
         "repr_lemmas_dir": "repr_lemmas",
         "tables_dir": "tables",
         "paradigm_debugging_dir": "paradigm_debugging",
@@ -24,21 +25,21 @@
             "dialect": "msa",
             "pruning": true,
             "specs": {
-                "spreadsheet": "camel-morph-msa-verbs",
-                "sheets": {
-                    "order": "MSA-Verb-ORDER",
-                    "morph": "MSA-Verb-MORPH"
+                "order": {
+                    "camel-morph-msa-verbs": "MSA-Verb-ORDER"
+                },
+                "morph": {
+                    "camel-morph-msa-verbs": "MSA-Verb-MORPH"
                 },
                 "exclude": [
                     "PV",
                     "IV"
-                ]
-            },
-            "lexicon": {
-                "spreadsheet": "camel-morph-msa-verbs",
-                "sheets": [
-                    "MSA-Verb-LEX-CV"
-                ]
+                ],
+                "lexicon": {
+                    "camel-morph-msa-verbs": [
+                        "MSA-Verb-LEX-CV"
+                    ]
+                }
             },
             "db": "XYZ_msa_full_factored_auto_passive_v1.0.db",
             "debugging": {
@@ -77,21 +78,21 @@
             "cat2id": true,
             "pruning": true,
             "specs": {
-                "spreadsheet": "camel-morph-msa-verbs-test",
-                "sheets": {
-                    "order": "MSA-Verb-ORDER",
-                    "morph": "MSA-Verb-MORPH"
+                "order": {
+                    "camel-morph-msa-verbs": "MSA-Verb-ORDER"
+                },
+                "morph": {
+                    "camel-morph-msa-verbs": "MSA-Verb-MORPH"
                 },
                 "exclude": [
                     "IV",
                     "CV"
-                ]
-            },
-            "lexicon": {
-                "spreadsheet": "camel-morph-msa-verbs-test",
-                "sheets": [
-                    "MSA-Verb-LEX-PV"
-                ]
+                ],
+                "lexicon": {
+                    "camel-morph-msa-verbs": [
+                        "MSA-Verb-LEX-PV"
+                    ]
+                }
             },
             "db": "XYZ_msa_pv_ramaY_v1.0.db",
             "pos_type": "verbal",
@@ -106,20 +107,20 @@
             "pruning": true,
             "class_map": "misc_files/class2complx_morpheme_type.json",
             "specs": {
-                "spreadsheet": "camel-morph-msa-verbs-test",
-                "sheets": {
-                    "order": "MSA-Verb-ORDER",
-                    "morph": "MSA-Verb-MORPH"
+                "order": {
+                    "camel-morph-msa-verbs-test": "MSA-Verb-ORDER"
                 },
-                "exclude": []
-            },
-            "lexicon": {
-                "spreadsheet": "camel-morph-msa-verbs-test",
-                "sheets": [
-                    "MSA-Verb-LEX-PV",
-                    "MSA-Verb-LEX-IV",
-                    "MSA-Verb-LEX-CV"
-                ]
+                "morph": {
+                    "camel-morph-msa-verbs-test": "MSA-Verb-MORPH"
+                },
+                "exclude": [],
+                "lexicon": {
+                    "camel-morph-msa-verbs-test": [
+                        "MSA-Verb-LEX-PV",
+                        "MSA-Verb-LEX-IV",
+                        "MSA-Verb-LEX-CV"
+                    ]
+                }
             },
             "db": "XYZ_msa_ramaY_v1.0.db",
             "pos_type": "verbal"
@@ -131,18 +132,18 @@
             "pruning": true,
             "class_map": "misc_files/class2complx_morpheme_type.json",
             "specs": {
-                "spreadsheet": "camel-morph-msa-nom-other-test",
-                "sheets": {
-                    "order": "MSA-Nom-ORDER",
-                    "morph": "MSA-Nom-MORPH"
+                "order": {
+                    "camel-morph-msa-nom-other-test": "MSA-Nom-ORDER"
                 },
-                "exclude": []
-            },
-            "lexicon": {
-                "spreadsheet": "camel-morph-msa-nom-other-test",
-                "sheets": [
-                    "MSA-Nom-LEX"
-                ]
+                "morph": {
+                    "camel-morph-msa-nom-other-test": "MSA-Nom-MORPH"
+                },
+                "exclude": [],
+                "lexicon": {
+                    "camel-morph-msa-nom-other-test": [
+                        "MSA-Nom-LEX"
+                    ]
+                }
             },
             "db": "XYZ_msa_safiyr_v1.0.db",
             "pos_type": "nominal"
@@ -153,18 +154,18 @@
             "pruning": true,
             "class_map": "misc_files/class2complx_morpheme_type.json",
             "specs": {
-                "spreadsheet": "camel-morph-msa-nom-other-test",
-                "sheets": {
-                    "order": "MSA-Nom-ORDER",
-                    "morph": "MSA-Nom-MORPH"
+                "order": {
+                    "camel-morph-msa-nom-other-test": "MSA-Nom-ORDER"
                 },
-                "exclude": []
-            },
-            "lexicon": {
-                "spreadsheet": "camel-morph-msa-nom-other-test",
-                "sheets": [
-                    "MSA-Other-LEX"
-                ]
+                "morph": {
+                    "camel-morph-msa-nom-other-test": "MSA-Nom-MORPH"
+                },
+                "exclude": [],
+                "lexicon": {
+                    "camel-morph-msa-nom-other-test": [
+                        "MSA-Other-LEX"
+                    ]
+                }
             },
             "db": "XYZ_msa_kayofa_v1.0.db",
             "pos_type": "nominal"
@@ -175,22 +176,21 @@
             "pruning": true,
             "class_map": "misc_files/class2complx_morpheme_type.json",
             "specs": {
-                "spreadsheet": "camel-morph-msa-nom-other-test",
-                "sheets": {
-                    "order": "MSA-Nom-ORDER",
-                    "morph": "MSA-Nom-MORPH"
+                "order": {
+                    "camel-morph-msa-nom-other-test": "MSA-Nom-ORDER"
                 },
-                "exclude": []
-            },
-            "lexicon": {
-                "spreadsheet": "camel-morph-msa-nom-other-test",
-                "sheets": [
-                    "MSA-Nom-LEX"
-                ]
+                "morph": {
+                    "camel-morph-msa-nom-other-test": "MSA-Nom-MORPH"
+                },
+                "exclude": [],
+                "lexicon": {
+                    "camel-morph-msa-nom-other-test": [
+                        "MSA-Nom-LEX"
+                    ]
+                }
             },
             "db": "XYZ_msa_kayofa_v1.0.db",
             "pos_type": "nominal"
         }
-
     }
 }

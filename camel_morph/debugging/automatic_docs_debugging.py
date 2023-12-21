@@ -32,6 +32,8 @@ import gspread
 import pandas as pd
 from numpy import nan
 
+from camel_morph.utils.utils import Config
+
 COND_S = 'CLASS'
 VARIANT = 'VAR'
 ROW_TYPE = 'Entry'
@@ -265,35 +267,28 @@ if __name__ == "__main__":
                         type=str, help="Path of the JSON file containing the information about the service account used for the Google API.")
     args = parser.parse_args()
 
-    with open(args.config_file) as f:
-        config = json.load(f)
-    config_local = config['local'][args.config_name]
-    config_global = config['global']
+    config = Config(args.config_file, args.config_name)
 
     if args.camel_tools == 'local':
-        camel_tools_dir = config_global['camel_tools']
+        camel_tools_dir = config.camel_tools
         sys.path.insert(0, camel_tools_dir)
-        
-    from camel_tools.morphology.utils import strip_lex
     
-    bank_dir = args.bank_dir if args.bank_dir else os.path.join(
-        config_global['debugging'], config_global['docs_banks_dir'], f"camel-morph-{config_local['dialect']}")
+    bank_dir = args.bank_dir if args.bank_dir else config.get_docs_banks_dir_path()
     os.makedirs(bank_dir, exist_ok=True)
-    bank_name = args.bank_name if args.bank_name else config_local['docs_debugging']['bank']
+    bank_name = args.bank_name if args.bank_name else config.debugging.docs_bank
     bank_path = os.path.join(bank_dir, bank_name)
 
-    output_dir = args.output_dir if args.output_dir else os.path.join(
-        config_global['debugging'], config_global['docs_debugging_dir'], f"camel-morph-{config_local['dialect']}")
+    output_dir = args.output_dir if args.output_dir else config.get_docs_debugging_dir_path()
     os.makedirs(output_dir, exist_ok=True)
-    output_name = args.output_name if args.output_name else config_local['docs_debugging']['output_name']
+    output_name = args.output_name if args.output_name else config.debugging.docs_output_name
     output_path = os.path.join(output_dir, output_name)
 
-    service_account = args.service_account if args.service_account else config_global['service_account']
+    service_account = args.service_account if args.service_account else config.service_account
     sa = gspread.service_account(service_account)
-    spreadsheet = args.spreadsheet if args.spreadsheet else config_local['docs_debugging']['debugging_spreadsheet']
+    spreadsheet = args.spreadsheet if args.spreadsheet else config.debugging.docs_debugging_spreadsheet
     sh = sa.open(spreadsheet)
 
-    gsheet = args.gsheet if args.gsheet else config_local['docs_debugging']['debugging_sheet']
+    gsheet = args.gsheet if args.gsheet else config.debugging.docs_debugging_sheet
     worksheet = sh.worksheet(title=gsheet)
     annotated_paradigms = pd.DataFrame(worksheet.get_all_records())
     annotated_paradigms.to_csv(output_path)
@@ -301,10 +296,9 @@ if __name__ == "__main__":
     if args.new_docs:
         new_docs_path = args.new_docs
     else:
-        new_docs_dir = os.path.join(config_global['debugging'], config_global['docs_tables_dir'],
-                                     f"camel-morph-{config_local['dialect']}")
+        new_docs_dir = config.get_docs_tables_dir_path()
         os.makedirs(new_docs_dir, exist_ok=True)
-        new_docs_path = os.path.join(new_docs_dir, config_local['docs_debugging']['docs_tables'])
+        new_docs_path = os.path.join(new_docs_dir, config.debugging.docs_tables)
     
     new_docs_tables = pd.read_csv(new_docs_path, delimiter='\t')
     new_docs_tables = new_docs_tables.replace(nan, '', regex=True)

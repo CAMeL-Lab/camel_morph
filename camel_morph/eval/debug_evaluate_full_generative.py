@@ -13,6 +13,14 @@ import numpy as np
 
 import eval_utils
 
+try:
+    from ..utils.utils import Config
+except:
+    file_path = os.path.abspath(__file__).split('/')
+    package_path = '/'.join(file_path[:len(file_path) - 1 - file_path[::-1].index('camel_morph')])
+    sys.path.insert(0, package_path)
+    from camel_morph.utils.utils import Config
+
 # Custom objects know their class.
 # Function objects seem to know way too much, including modules.
 # Exclude modules as well.
@@ -21,7 +29,7 @@ BLACKLIST = type, ModuleType, FunctionType
 feat2index = {k: i for i, k in enumerate(eval_utils.essential_keys_no_lex_pos)}
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-config_file", default='configs/config.json',
+parser.add_argument("-config_file", default='config_default.json',
                     type=str, help="Config file specifying which sheets to use.")
 parser.add_argument("-db_dir", default='databases',
                         type=str, help="Path of the directory to load the DB from.")
@@ -53,14 +61,10 @@ args = parser.parse_args()
 
 random.seed(42)
 
-with open(args.config_file) as f:
-    config = json.load(f)
-    config_local = config['local']
-    config_msa = config_local[args.msa_config_name]
+config_msa = Config(args.config_file, args.msa_config_name)
 
 if args.camel_tools == 'local':
-    camel_tools_dir = config['global']['camel_tools']
-    sys.path.insert(0, camel_tools_dir)
+    sys.path.insert(0, config_msa.camel_tools)
 
 from camel_tools.morphology.database import MorphologyDB
 from camel_tools.morphology.generator import Generator
@@ -168,8 +172,7 @@ path_db_baseline = args.msa_baseline_db
 db_baseline_gen = MorphologyDB(path_db_baseline, flags='g')
 generator_baseline = Generator(db_baseline_gen)
 
-path_db_camel = os.path.join(args.db_dir, config_msa['db'])
-db_camel_gen = MorphologyDB(path_db_camel, flags='g')
+db_camel_gen = MorphologyDB(config_msa.get_db_path(), flags='g')
 generator_camel = Generator(db_camel_gen)
 
 DEFINES = {k: v if v is None else [vv for vv in v if vv != 'na']

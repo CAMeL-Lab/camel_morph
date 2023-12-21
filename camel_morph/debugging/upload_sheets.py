@@ -33,19 +33,19 @@ import pandas as pd
 from numpy import nan
 
 try:
-    from ..utils.utils import get_config_file
+    from ..utils.utils import Config
 except:
     file_path = os.path.abspath(__file__).split('/')
     package_path = '/'.join(file_path[:len(file_path) - 1 - file_path[::-1].index('camel_morph')])
     sys.path.insert(0, package_path)
-    from camel_morph.utils.utils import get_config_file
+    from camel_morph.utils.utils import Config
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-input_dir", default='tables_dir', choices=['banks_dir', 'paradigm_debugging_dir', 'tables_dir', 'docs_banks_dir', 'docs_debugging_dir', 'docs_tables_dir'],
                     type=str, help="Directory in which local sheet is contained (in CSV format).")
 parser.add_argument("-dir", default='',
                     type=str, help="Directory in which local sheet is contained (in CSV format).")
-parser.add_argument("-config_file", default='configs/config_default.json',
+parser.add_argument("-config_file", default='config_default.json',
                     type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
 parser.add_argument("-config_name", default='default_config',
                     type=str, help="Name of the configuration to load from the config file.")
@@ -66,12 +66,8 @@ parser.add_argument("-service_account", default='',
 args, _ = parser.parse_known_args()
 
 
-def upload_sheet(config, config_name, feats, input_dir, mode, sa, sheet=None):
-    config_local = config['local'][config_name]
-    config_global = config['global']
-
-    spreadsheet_name, gsheet_name = setup(
-        config_local, config_global, feats, input_dir, sheet)
+def upload_sheet(config, input_dir, mode, sa, sheet=None):
+    spreadsheet_name, gsheet_name = setup(config, input_dir, sheet)
 
     sh = sa.open(spreadsheet_name)
 
@@ -139,49 +135,49 @@ def upload_sheet(config, config_name, feats, input_dir, mode, sa, sheet=None):
         worksheet.freeze(rows=1)
 
 
-def setup(config_local, config_global, feats, input_dir, sheet):
-    if 'debugging' in config_local:
+def setup(config:Config, input_dir, sheet):
+    if config.debugging is not None:
         spreadsheet_name = args.spreadsheet_name if args.spreadsheet_name \
-            else config_local['debugging']['debugging_spreadsheet']
+            else config.debugging.debugging_spreadsheet
         gsheet_name = args.gsheet_name if args.gsheet_name \
-            else config_local['debugging']['feats'][feats]['debugging_sheet']
-    elif 'docs_debugging' in config_local:
+            else config.debugging.debugging_feats.debugging_sheet
+    elif config.debugging.docs_debugging_spreadsheet is not None:
         spreadsheet_name = args.spreadsheet_name if args.spreadsheet_name \
-            else config_local['docs_debugging']['debugging_spreadsheet']
+            else config.debugging.docs_debugging_spreadsheet
         gsheet_name = args.gsheet_name if args.gsheet_name \
-            else config_local['docs_debugging']['debugging_sheet']
+            else config.debugging.docs_debugging_sheet
 
     if args.file_name:
         file_name = args.file_name
     elif input_dir == 'banks_dir':
-        file_name = config_local['debugging']['feats'][feats]['bank']
+        file_name = config.debugging.debugging_feats.bank
         gsheet_name = args.gsheet_name if args.gsheet_name \
-            else config_local['debugging']['feats'][feats]['bank'].split('.')[0]
+            else config.debugging.debugging_feats.bank.split('.')[0]
         spreadsheet_name = args.spreadsheet_name if args.spreadsheet_name \
-            else config_global['banks_spreadsheet']
+            else config.banks_spreadsheet
     elif input_dir == 'docs_banks_dir':
-        file_name = config_local['docs_debugging']['bank']
+        file_name = config.debugging.docs_bank
         gsheet_name = args.gsheet_name if args.gsheet_name \
-            else config_local['docs_debugging']['bank'].split('.')[0]
+            else config.debugging.docs_bank.split('.')[0]
         spreadsheet_name = args.spreadsheet_name if args.spreadsheet_name \
-            else config_global['banks_spreadsheet']
+            else config.banks_spreadsheet
     elif input_dir == 'paradigm_debugging_dir':
-        file_name = config_local['debugging']['feats'][feats]['paradigm_debugging']
+        file_name = config.debugging.debugging_feats.paradigm_debugging
     elif input_dir == 'docs_debugging_dir':
-        file_name = config_local['docs_debugging']['output_name']
+        file_name = config.debugging.docs_output_name
     elif input_dir == 'tables_dir':
-        file_name = config_local['debugging']['feats'][feats]['conj_tables']
+        file_name = config.debugging.debugging_feats.conj_tables
     elif input_dir == 'docs_tables_dir':
-        file_name = config_local['docs_debugging']['docs_tables']
+        file_name = config.debugging.docs_tables
     
     if sheet is None:
         input_dir = args.dir if args.dir \
-            else os.path.join(config_global['debugging'], config_global[input_dir],
-                            f"camel-morph-{config_local['dialect']}")
+            else os.path.join(config.debugging_dir, getattr(config, input_dir),
+                config.get_dialect_project_dir_path())
         sheet = pd.read_csv(os.path.join(input_dir, file_name), sep='\t')
         sheet = sheet.replace(nan, '', regex=True)
         insert_index = args.insert_index if args.insert_index \
-            else config_global['docs_debugging'].get('insert_index')
+            else config.debugging.insert_index
         if insert_index:
             sheet.insert(0, 'Index', range(len(sheet)))
 
@@ -189,17 +185,12 @@ def setup(config_local, config_global, feats, input_dir, sheet):
 
 
 if __name__ == "__main__":
-    config = get_config_file(args.config_file)
-    config_name = args.config_name
-    config_global = config['global']
-    config_local = config['local'][config_name]
+    config = Config(args.config_file, args.config_name)
     
-    service_account = args.service_account if args.service_account else config_global['service_account']
+    service_account = args.service_account if args.service_account else config.service_account
     sa = gspread.service_account(service_account)
 
     upload_sheet(config=config,
-                 config_name=config_name,
-                 feats=args.feats,
                  input_dir=args.input_dir,
                  mode=args.mode,
                  sa=sa)

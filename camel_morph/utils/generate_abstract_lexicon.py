@@ -34,14 +34,14 @@ import pandas as pd
 
 try:
     from ..debugging.download_sheets import download_sheets
-    from utils import add_check_mark_online, consonants_bw, get_config_file
+    from utils import add_check_mark_online, consonants_bw, Config
 except:
     file_path = os.path.abspath(__file__).split('/')
     package_path = '/'.join(file_path[:len(file_path) -
                                       1 - file_path[::-1].index('camel_morph')])
     sys.path.insert(0, package_path)
     from camel_morph.debugging.download_sheets import download_sheets
-    from camel_morph.utils.utils import add_check_mark_online, consonants_bw, get_config_file
+    from camel_morph.utils.utils import add_check_mark_online, consonants_bw, Config
 
 header = ['PATTERN_ABSTRACT', 'PATTERN_DEF', 'ROOT', 'ROOT_SUB', 'DEFINE', 'CLASS', 'PATTERN',
           'LEMMA', 'LEMMA_SUB', 'FORM', 'FORM_SUB', 'BW', 'BW_SUB', 'GLOSS', 'FEAT', 'COND-T', 'COND-F', 'COND-S',
@@ -338,12 +338,10 @@ def generate_abstract_lexicon(lexicon, spreadsheet=None, sheet=None):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-config_file", default='camel_morph/configs/config.json',
+    parser.add_argument("-config_file", default='config_default.json',
                         type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
     parser.add_argument("-config_name", default='default_config',
                         type=str, help="Name of the configuration to load from the config file.")
-    parser.add_argument("-data_dir", default='',
-                        type=str, help="Path of the directory where the sheets are.")
     parser.add_argument("-get_patterns_from_sheet", default=False,
                         action='store_true', help="Get patterns from sheet instead of generating them on the fly.")
     parser.add_argument("-output_name", default='',
@@ -354,25 +352,20 @@ if __name__ == "__main__":
 
     import camel_morph.db_maker_utils as db_maker_utils
 
-    config = get_config_file(args.config_file)
-    config_local = config['local'][args.config_name]
-    config_global = config['global']
+    config = Config(args.config_file, args.config_name)
 
-    data_dir = args.data_dir if args.data_dir else config_global['data_dir']
-    output_name = args.output_name if args.output_name else \
-        (next(iter(config_local['backoff'].values())) if config_local.get('backoff') else 'ABSTRACT-LEX.csv')
+    output_path = args.output_name if args.output_name \
+        else config.get_sheets_list('backoff')[0]
 
     sa = gspread.service_account(args.service_account)
-    sh = sa.open(config_local['lexicon']['spreadsheet'])
-    download_sheets(save_dir=data_dir,
-                    config=config,
-                    config_name=args.config_name,
+    sh = sa.open(next(config.lexicon))
+    download_sheets(config=config,
                     service_account=sa)
 
-    SHEETS, _ = db_maker_utils.read_morph_specs(config, args.config_name)
+    SHEETS, _ = db_maker_utils.read_morph_specs(config)
     lexicon = SHEETS['lexicon']
 
-    abstract_lexicon = generate_abstract_lexicon(lexicon,
-                                                 sh, config_local['lexicon']['sheets'][0])
+    abstract_lexicon = generate_abstract_lexicon(
+        lexicon, sh, config.get_sheets_list('lexicon')[0])
 
-    abstract_lexicon.to_csv(os.path.join(data_dir, output_name))
+    abstract_lexicon.to_csv(output_path)

@@ -42,7 +42,7 @@ file_path = os.path.abspath(__file__).split('/')
 package_path = '/'.join(file_path[:len(file_path) - 1 - file_path[::-1].index('camel_morph')])
 sys.path.insert(0, package_path)
 
-from camel_morph.utils.utils import index2col_letter
+from camel_morph.utils.utils import index2col_letter, Config
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-egy_magold_path", default='eval_files/ARZ-All-train.113012.magold',
@@ -53,7 +53,7 @@ parser.add_argument("-camel_tb_path", default='eval_files/camel_tb_uniq_types.tx
                     type=str, help="Path of the file containing the MSA CAMeLTB data to evaluate on.")
 parser.add_argument("-output_dir", default='eval_files',
                     type=str, help="Path of the directory to output evaluation results.")
-parser.add_argument("-config_file", default='camel_morph/configs/config_default.json',
+parser.add_argument("-config_file", default='config_default.json',
                     type=str, help="Config file specifying which sheets to use.")
 parser.add_argument("-egy_config_name", default='all_aspects_egy',
                     type=str, help="Config name which specifies the path of the EGY Camel DB.")
@@ -92,16 +92,11 @@ np.random.seed(42)
 
 args, _ = parser.parse_known_args()
 
-with open(args.config_file) as f:
-    config = json.load(f)
-    configs = config['local']
-
-    config_local_egy = configs.get(args.egy_config_name)
-    config_local_msa = configs.get(args.msa_config_name)
+config_egy = Config(args.config_file, args.egy_config_name)
+config_msa = Config(args.config_file, args.msa_config_name)
 
 if args.camel_tools == 'local':
-    camel_tools_dir = config['global']['camel_tools']
-    sys.path.insert(0, camel_tools_dir)
+    sys.path.insert(0, config_msa.camel_tools)
 
 from camel_tools.morphology.database import MorphologyDB
 from camel_tools.morphology.analyzer import Analyzer
@@ -914,14 +909,12 @@ def compare_stats(compare_results):
     return stats
 
 
-def load_required_pos(config_local):
-    POS_TYPE = config_local.get('pos_type')
+def load_required_pos(pos, pos_type):
+    POS_TYPE = pos_type
     if args.pos_or_type:
         POS_OR_TYPE = [args.pos_or_type]
-    elif config_local.get('pos'):
-        POS_OR_TYPE = (config_local['pos']
-                       if type(config_local['pos']) is list
-                       else [config_local['pos']])
+    elif pos is not None:
+        POS_OR_TYPE = (pos if type(pos) is list else [pos])
     else:
         if POS_TYPE:
             POS_OR_TYPE = POS_TYPE if type(POS_TYPE) is list else [POS_TYPE]
@@ -954,9 +947,9 @@ def load_required_pos(config_local):
         return atb_pos, camel_pos
 
     ATB_POS, CAMEL_POS = _load_required_pos(POS_OR_TYPE)
-    for pos_type in ['nominal', 'verbal', 'other']:
-        atb_pos_, camel_pos_ = _load_required_pos([pos_type])
-        ATB_POS_ALL[pos_type], CAMEL_POS_ALL[pos_type] = atb_pos_, camel_pos_
+    for pos_type_ in ['nominal', 'verbal', 'other']:
+        atb_pos_, camel_pos_ = _load_required_pos([pos_type_])
+        ATB_POS_ALL[pos_type_], CAMEL_POS_ALL[pos_type_] = atb_pos_, camel_pos_
     
     return ATB_POS, CAMEL_POS, POS_OR_TYPE
 
@@ -986,7 +979,7 @@ def upload(df, sheet_name, template_sheet_name):
 
 if __name__ == "__main__":
     if args.spreadsheet:
-        sa = gspread.service_account(config['global']['service_account'])
+        sa = gspread.service_account(config_msa.service_account)
         sh = sa.open(args.spreadsheet)
     else:
         sh = None
@@ -995,17 +988,18 @@ if __name__ == "__main__":
     print('Eval mode:', args.eval_mode)
     if 'msa' in args.eval_mode and 'egy' not in args.eval_mode:
         DIALECT = 'MSA'
-        config_local = config_local_msa
-        camel_db_path = os.path.join('databases/camel-morph-msa', config_local['db'])
+        config_local_ = config_msa
+        camel_db_path = config_msa.get_db_path()
 
     elif 'egy' in args.eval_mode:
         DIALECT = 'EGY'
-        config_local = config_local_egy
-        camel_db_path = os.path.join('databases/camel-morph-egy', config_local_egy['db'])
+        config_local_ = config_egy
+        camel_db_path = config_egy.get_db_path()
     else:
         raise NotImplementedError
     
-    ATB_POS, CAMEL_POS, POS_OR_TYPE = load_required_pos(config_local)
+    ATB_POS, CAMEL_POS, POS_OR_TYPE = load_required_pos(
+        config_local_.pos, config_local_.pos_type)
 
     output_dir = os.path.join(args.output_dir, '_'.join(POS_OR_TYPE))
     os.makedirs(output_dir, exist_ok=True)
@@ -1067,8 +1061,7 @@ if __name__ == "__main__":
         msa_camel_analyzer = None
         if 'egy_union_msa' in args.eval_mode and args.msa_config_name:
             print('Using union of EGY and MSA analyses.')
-            msa_camel_db = MorphologyDB(os.path.join(
-                'databases/camel-morph-msa', config_local_msa['db']))
+            msa_camel_db = MorphologyDB(config_msa.get_db_path())
             msa_camel_analyzer = Analyzer(msa_camel_db)
 
         evaluate_recall(data, args.n_limit, args.eval_mode, output_path,

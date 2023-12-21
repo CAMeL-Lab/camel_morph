@@ -355,18 +355,12 @@ MigrationBackup/
 !sigmorphon2022_release/requirements.txt
 
 data/
-!data/camel-morph-msa/default_config/Header-v2.csv
 databases/
-debugging_output/tables
-debugging_output/tables_docs
-debugging_output/docs_debugging
-debugging_output/paradigm_debugging
-debugging_output/repr_lemmas
+debugging_output/
+eval_files/
 sandbox_files/
-camel_morph/db_maker.py
 *.zip
 *.code-workspace
 camel_morph.egg-info
 build
 dist
-camel_morph/configs/config_test.json

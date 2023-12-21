@@ -9,10 +9,9 @@ from tqdm import tqdm
 from numpy import nan
 import pandas as pd
 
-from camel_morph.utils.utils import add_check_mark_online
+from camel_morph.utils.utils import add_check_mark_online, Config
 from camel_morph.debugging.create_repr_lemmas_list import create_repr_lemmas_list
 from camel_morph.debugging.download_sheets import download_sheets
-from camel_morph.utils.utils import get_config_file
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-config_file", default='config_default.json',
@@ -66,12 +65,8 @@ def _split_field(field):
     return field_split
 
 
-def well_formedness_check(config, config_name):
-    config_local = config['local'][config_name]
-    sheet_name = config_local['lexicon']['sheets'][0]
-    dialect = config_local['dialect']
-    data_path = os.path.join(
-        f'data/camel-morph-{dialect}', config_name, f'{sheet_name}.csv')
+def well_formedness_check(config:Config):
+    data_path = config.get_sheets_paths('lexicon')[0]
     nom_lex = pd.read_csv(data_path)
     nom_lex = nom_lex.replace(nan, '')
     essential_columns = ['ROOT', 'LEMMA', 'FORM', 'GLOSS', 'FEAT', 'COND-T', 'COND-S']
@@ -111,9 +106,10 @@ def well_formedness_check(config, config_name):
                 (index2message[i] if i in index2message else '')
                 for i in range(len(nom_lex.index))]
 
+    spreadsheet_name = list(config.get_spreadsheet2sheets('lexicon'))[0]
     if set(messages) != {''}:
         add_check_mark_online(rows=nom_lex,
-                              spreadsheet=config_local['lexicon']['spreadsheet'],
+                              spreadsheet=spreadsheet_name,
                               worksheet=sheet_name,
                               status_col_name='STATUS_CHRIS',
                               write='overwrite',
@@ -157,7 +153,7 @@ def generate_lex_rows(repr_lemmas):
     return rows
 
 
-def regenerate_signature_lex_rows(config, config_name,
+def regenerate_signature_lex_rows(config,
                                   sheet=None, sh=None,
                                   lexicon_specs=None):
     if sheet is not None:
@@ -174,10 +170,9 @@ def regenerate_signature_lex_rows(config, config_name,
         raise NotImplementedError
     
     repr_lemmas = create_repr_lemmas_list(config=config,
-                                          config_name=config_name,
                                           lexicon=sheet_df,
                                           lexicon_is_processed=lexicon_is_processed)
-
+    test = set()
     lemma_pos2signature = {}
     for lemmas_info in repr_lemmas.values():
         for lemma_info in lemmas_info['lemmas']:
@@ -186,6 +181,8 @@ def regenerate_signature_lex_rows(config, config_name,
                             if 'stem' in info][0]
             stem_mask_str = stem_mask
             stem_mask = stem_mask.split(':')[1].split('-')
+            if stem_mask != sorted(stem_mask):
+                test.add(stem_mask_str)
             if lemma_pos in lemma_pos2signature:
                 continue
             for _ in range(len(stem_mask)):
@@ -213,37 +210,31 @@ def regenerate_signature_lex_rows(config, config_name,
 
 
 if __name__ == "__main__":
-    config = get_config_file(args.config_file)
-    config_global = config['global']
-
-    sa = gspread.service_account(config_global['service_account'])
+    config = Config(args.config_file)
+    sa = gspread.service_account(config.service_account)
 
     if args.mode == 'generate_lex':
         assert len(args.config_name) == 1
         config_name = args.config_name[0]
-        config_local = config['local'][config_name]
-        
+        config = Config(args.config_file, config_name)
 
         if args.well_formedness:
             well_formedness_check(config, config_name)
 
-        POS = args.pos if args.pos else config_local['pos']
+        POS = args.pos if args.pos else config.pos
         POS = POS if type(POS) is list else [POS]
-        sheet_name = args.sheet if args.sheet else config_local['debugging']['sheets'][0]
-        spreadsheet = args.spreadsheet if args.spreadsheet else config_local['debugging']['debugging_spreadsheet']
+        sheet_name = args.sheet if args.sheet else config.debugging.sheets[0]
+        spreadsheet = args.spreadsheet if args.spreadsheet else config.debugging.debugging_spreadsheet
         sh = sa.open(spreadsheet)
         sheets = sh.worksheets()
 
-        data_dir = os.path.join(config_global['data_dir'],
-                                f"camel-morph-{config_local['dialect']}",
-                                config_name)
+        data_dir = config.get_data_dir_path()
         if args.download or not os.path.exists(data_dir):
             download_sheets(config=config,
                             config_name=config_name,
                             service_account=sa)
 
-        repr_lemmas = create_repr_lemmas_list(config=config,
-                                              config_name=config_name)
+        repr_lemmas = create_repr_lemmas_list(config)
         rows = generate_lex_rows(repr_lemmas)
         repr_lemmas = pd.DataFrame(rows)
         repr_lemmas = repr_lemmas.replace(nan, '', regex=True)
@@ -259,12 +250,12 @@ if __name__ == "__main__":
     elif args.mode == 'regenerate_sig':
         for config_name_ in (pbar := tqdm(args.config_name)):
             pbar.set_description(config_name_)
-            config_local_ = config['local'][config_name_]
-            POS = args.pos if args.pos else config_local_['pos']
+            config_ = Config(args.config_file, config_name_)
+            POS = args.pos if args.pos else config_.pos
             POS = POS if type(POS) is list else [POS]
-            spreadsheet = args.spreadsheet if args.spreadsheet else config_local_['debugging']['debugging_spreadsheet']
-            sheet_name = args.sheet if args.sheet else config_local_['debugging']['sheets'][0]
+            spreadsheet = args.spreadsheet if args.spreadsheet else config_.debugging.debugging_spreadsheet
+            sheet_name = args.sheet if args.sheet else config_.debugging.sheets[0]
             sh = sa.open(spreadsheet)
             sheets = sh.worksheets()
             sheet = [sheet for sheet in sheets if sheet.title == sheet_name][0]
-            regenerate_signature_lex_rows(config, config_name_, sheet=sheet, sh=sh)
+            regenerate_signature_lex_rows(config, sheet=sheet, sh=sh)

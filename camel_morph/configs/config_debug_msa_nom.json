@@ -2,14 +2,15 @@
     "global": {
         "data_dir": "data",
         "specs": {
-            "spreadsheet": "camel-morph-common",
-            "sheets": {
-                "about": "About",
-                "header": "Header-v2"
+            "about": {
+                "camel-morph-common": "About"
+            },
+            "header": {
+                "camel-morph-common": "Header-v2"
             }
         },
         "db_dir": "databases",
-        "debugging": "debugging_output",
+        "debugging_dir": "debugging_output",
         "repr_lemmas_dir": "repr_lemmas",
         "tables_dir": "tables",
         "paradigm_debugging_dir": "paradigm_debugging",
@@ -24,20 +25,20 @@
             "split_or": true,
             "pruning": true,
             "specs": {
-                "spreadsheet": "camel-morph-msa-nom-other",
-                "sheets": {
-                    "order": "MSA-Nom-ORDER",
-                    "morph": "MSA-Nom-MORPH"
+                "order": {
+                    "camel-morph-msa-nom-other": "MSA-Nom-ORDER"
                 },
-                "exclude": []
-            },
-            "lexicon": {
-                "spreadsheet": "camel-morph-msa-nom",
-                "sheets": [
-                    "MSA-Noun-LEX",
-                    "Lemma-Paradigm-Debugging-Adj-v2",
-                    "Lemma-Paradigm-Debugging-Adj_comp"
-                ]
+                "morph": {
+                    "camel-morph-msa-nom-other": "MSA-Nom-MORPH"
+                },
+                "exclude": [],
+                "lexicon": {
+                    "camel-morph-msa-nom": [
+                        "MSA-Noun-LEX",
+                        "Lemma-Paradigm-Debugging-Adj-v2",
+                        "Lemma-Paradigm-Debugging-Adj_comp"
+                    ]
+                }
             },
             "dialect": "msa",
             "db": "XYZ_msa_nom_v1.0.db",
@@ -75,22 +76,22 @@
             "split_or": true,
             "pruning": true,
             "specs": {
-                "spreadsheet": "camel-morph-msa-nom-other",
-                "sheets": {
-                    "order": "MSA-Nom-ORDER",
-                    "morph": "MSA-Nom-MORPH"
+                "order": {
+                    "camel-morph-msa-nom-other": "MSA-Nom-ORDER"
+                },
+                "morph": {
+                    "camel-morph-msa-nom-other": "MSA-Nom-MORPH"
                 },
                 "exclude": [
                     "RED"
-                ]
-            },
-            "lexicon": {
-                "spreadsheet": "camel-morph-msa-nom",
-                "sheets": [
-                    "MSA-Noun-LEX",
-                    "Lemma-Paradigm-Debugging-Adj-v2",
-                    "Lemma-Paradigm-Debugging-Adj_comp"
-                ]
+                ],
+                "lexicon": {
+                    "camel-morph-msa-nom": [
+                        "MSA-Noun-LEX",
+                        "Lemma-Paradigm-Debugging-Adj-v2",
+                        "Lemma-Paradigm-Debugging-Adj_comp"
+                    ]
+                }
             },
             "dialect": "msa",
             "db": "XYZ_msa_nom_v1.0_red.db",
@@ -128,20 +129,20 @@
             "split_or": true,
             "pruning": true,
             "specs": {
-                "spreadsheet": "camel-morph-msa-nom-other",
-                "sheets": {
-                    "order": "MSA-Nom-ORDER",
-                    "morph": "MSA-Nom-MORPH"
+                "order": {
+                    "camel-morph-msa-nom-other": "MSA-Nom-ORDER"
+                },
+                "morph": {
+                    "camel-morph-msa-nom-other": "MSA-Nom-MORPH"
                 },
                 "exclude": [
                     "RED"
-                ]
-            },
-            "lexicon": {
-                "spreadsheet": "camel-morph-msa-nom-other",
-                "sheets": [
-                    "MSA-Nom-Prop-LEX"
-                ]
+                ],
+                "lexicon": {
+                    "camel-morph-msa-nom-other": [
+                        "MSA-Nom-Prop-LEX"
+                    ]
+                }
             },
             "dialect": "msa",
             "db": "XYZ_msa_nom_v1.0_red.db",
@@ -180,20 +181,20 @@
             "split_or": true,
             "pruning": true,
             "specs": {
-                "spreadsheet": "camel-morph-msa-nom-other",
-                "sheets": {
-                    "order": "MSA-Nom-ORDER",
-                    "morph": "MSA-Nom-MORPH"
+                "order": {
+                    "camel-morph-msa-nom-other": "MSA-Nom-ORDER"
+                },
+                "morph": {
+                    "camel-morph-msa-nom-other": "MSA-Nom-MORPH"
                 },
                 "exclude": [
                     "RED"
-                ]
-            },
-            "lexicon": {
-                "spreadsheet": "camel-morph-msa-nom-other",
-                "sheets": [
-                    "MSA-Nom-LEX"
-                ]
+                ],
+                "lexicon": {
+                    "camel-morph-msa-nom-other": [
+                        "MSA-Nom-LEX"
+                    ]
+                }
             },
             "dialect": "msa",
             "db": "XYZ_msa_nom_v1.0_red.db",
@@ -233,18 +234,18 @@
             "pruning": false,
             "clean_conditions": false,
             "specs": {
-                "spreadsheet": "camel-morph-msa-nom-other",
-                "sheets": {
-                    "order": "MSA-Nom-ORDER",
-                    "morph": "MSA-Nom-MORPH"
+                "order": {
+                    "camel-morph-msa-nom-other": "MSA-Nom-ORDER"
                 },
-                "exclude": []
-            },
-            "lexicon": {
-                "spreadsheet": "Nominals-Sandbox",
-                "sheets": [
-                    "MSA-Other-LEX"
-                ]
+                "morph": {
+                    "camel-morph-msa-nom-other": "MSA-Nom-MORPH"
+                },
+                "exclude": [],
+                "lexicon": {
+                    "Nominals-Sandbox": [
+                        "MSA-Other-LEX"
+                    ]
+                }
             },
             "dialect": "msa",
             "db": "XYZ_msa_other_v1.0_red.db",

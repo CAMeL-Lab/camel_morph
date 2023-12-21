@@ -11,7 +11,7 @@ file_path = os.path.abspath(__file__).split('/')
 package_path = '/'.join(file_path[:len(file_path) - 1 - file_path[::-1].index('camel_morph')])
 sys.path.insert(0, package_path)
 
-from camel_morph.utils.utils import get_config_file, get_db_path
+from camel_morph.utils.utils import Config
 from camel_morph import db_maker, db_maker_utils
 from camel_morph.debugging.download_sheets import download_sheets
 from camel_morph.eval.evaluate_camel_morph_stats import get_analysis_counts
@@ -32,23 +32,19 @@ parser.add_argument("-camel_tools", default='local', choices=['local', 'official
 args = parser.parse_args([] if "__file__" not in globals() else None)
 
 if __name__ == "__main__":
-    config = get_config_file(args.config_file_main)
-    config_name = args.config_name_main
-    config_local = config['local'][config_name]
-    config_global = config['global']
+    config = Config(args.config_file_main, args.config_name_main)
 
     if args.camel_tools == 'local':
-        camel_tools_dir = config['global']['camel_tools']
-        sys.path.insert(0, camel_tools_dir)
+        sys.path.insert(0, config.camel_tools)
 
     from camel_tools.morphology.database import MorphologyDB
     from camel_tools.utils.normalize import normalize_alef_ar, \
         normalize_alef_maksura_ar, normalize_teh_marbuta_ar
     from camel_tools.utils.dediac import dediac_ar
 
-    sa = gspread.service_account(config_global['service_account'])
+    sa = gspread.service_account(config.service_account)
 
-    with open(config_local['class_map']) as f:
+    with open(config.class_map) as f:
         CLASS_MAP = json.load(f)
         class_map_rev = {class_: complx_morph_type
                         for complx_morph_type, classes in CLASS_MAP.items()
@@ -57,17 +53,15 @@ if __name__ == "__main__":
     if not args.no_download:
             print()
             download_sheets(config=config,
-                            config_name=config_name,
                             service_account=sa)
     if not args.no_build_db:
         print('Building DB...')
-        SHEETS = db_maker.make_db(config, config_name)
+        SHEETS = db_maker.make_db(config)
         print()
     else:
-        SHEETS, _ = db_maker_utils.read_morph_specs(
-            config, config_name, lexicon_cond_f=False)
+        SHEETS, _ = db_maker_utils.read_morph_specs(config, lexicon_cond_f=False)
         
-    db = MorphologyDB(get_db_path(config, config_name), 'dag')
+    db = MorphologyDB(config.get_db_path(), 'dag')
 
     info = get_analysis_counts(db, forms=True, ids=True)
     forms, ids = info['forms'], info['ids']

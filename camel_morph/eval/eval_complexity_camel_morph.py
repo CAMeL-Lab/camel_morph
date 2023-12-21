@@ -18,7 +18,7 @@ package_path = '/'.join(file_path[:len(file_path) - 1 - file_path[::-1].index('c
 sys.path.insert(0, package_path)
 
 from camel_morph.debugging.download_sheets import download_sheets
-from camel_morph.utils.utils import get_config_file, get_db_path
+from camel_morph.utils.utils import Config
 from camel_morph import db_maker
 from camel_morph.eval.eval_utils import getsize
 from camel_morph.eval.evaluate_camel_morph import _preprocess_camel_tb_data
@@ -46,18 +46,11 @@ args = parser.parse_args([] if "__file__" not in globals() else None)
 
 
 if __name__ == "__main__":
-    config_name = args.config_name_main
-    config = get_config_file(args.config_file_main)
-    config_local = config['local'][config_name]
-    config_global = config['global']
-
-    config_name_factored = args.config_name_factored
-    config_factored = get_config_file(args.config_file_factored)
-    config_local_factored = config_factored['local'][config_name_factored]
+    config = Config(args.config_file_main, args.config_name_main)
+    config_factored = Config(args.config_file_factored, args.config_name_factored)
 
     if args.camel_tools == 'local':
-        camel_tools_dir = config_global['camel_tools']
-        sys.path.insert(0, camel_tools_dir)
+        sys.path.insert(0, config.camel_tools)
 
     from camel_tools.morphology.database import MorphologyDB
     from camel_tools.utils.charmap import CharMapper
@@ -66,16 +59,16 @@ if __name__ == "__main__":
     bw2ar = CharMapper.builtin_mapper('bw2ar')
     ar2bw = CharMapper.builtin_mapper('ar2bw')
 
-    sa = gspread.service_account(config_global['service_account'])
+    sa = gspread.service_account(config.service_account)
     
     if not args.no_download:
-        download_sheets(config=config, config_name=config_name, service_account=sa)
-        download_sheets(config=config_factored, config_name=config_name_factored, service_account=sa)
+        download_sheets(config=config, service_account=sa)
+        download_sheets(config=config_factored, service_account=sa)
 
     if not args.no_build_db:
         print('Building DBs...')
-        db_maker.make_db(config, config_name)
-        db_maker.make_db(config_factored, config_name_factored)
+        db_maker.make_db(config)
+        db_maker.make_db(config_factored)
         print()
 
     with open('eval_files/camel_tb_uniq_types.txt') as f:
@@ -83,10 +76,9 @@ if __name__ == "__main__":
     data = {k: int(v) for k, v in list(_preprocess_camel_tb_data(data).items())}
 
     t0 = time()
-    db_camel_unfactored = MorphologyDB(get_db_path(config, config_name), 'dag')
+    db_camel_unfactored = MorphologyDB(config.get_db_path(), 'dag')
     t1 = time()
-    db_camel_factored = MorphologyDB(
-        get_db_path(config_factored, config_name_factored), 'dag')
+    db_camel_factored = MorphologyDB(config_factored.get_db_path(), 'dag')
     t2 = time()
     db_calima = MorphologyDB(args.msa_baseline_db, 'dag')
     t3 = time()

@@ -34,15 +34,15 @@ import pandas as pd
 from numpy import nan
 
 try:
-    from ..utils.utils import get_config_file
+    from ..utils.utils import Config
 except:
     file_path = os.path.abspath(__file__).split('/')
     package_path = '/'.join(file_path[:len(file_path) - 1 - file_path[::-1].index('camel_morph')])
     sys.path.insert(0, package_path)
-    from camel_morph.utils.utils import get_config_file
+    from camel_morph.utils.utils import Config
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-config_file", default='camel_morph/configs/config_default.json',
+parser.add_argument("-config_file", default='config_default.json',
                     type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
 parser.add_argument("-config_name", default='default_config',
                     type=str, help="Name of the configuration to load from the config file.")
@@ -99,22 +99,22 @@ class AnnotationBank:
                  bank_path,
                  annotated_paradigms=None,
                  gsheet_info=None,
-                 download_bank=False,
                  sa=None):
         self._bank_path = bank_path
+        self.sa = sa
+        self._bank, self._unkowns = OrderedDict(), OrderedDict()
+        
         if gsheet_info is not None:
             self._gsheet_name = gsheet_info['gsheet_name']
             self._spreadsheet = gsheet_info['spreadsheet']
-        self._bank, self._unkowns = OrderedDict(), OrderedDict()
-
-        if not download_bank:
-            if os.path.exists(bank_path):
-                self._read_bank_from_tsv()
-        else:
-            sh = sa.open(self._spreadsheet)
+            self.sa = gsheet_info['sa']
+            sh = self.sa.open(self._spreadsheet)
             worksheet = sh.worksheet(title=self._gsheet_name)
             bank = pd.DataFrame(worksheet.get_all_records())
             self._read_bank_from_df(bank)
+        else:
+            if os.path.exists(bank_path):
+                self._read_bank_from_tsv()
 
         if annotated_paradigms is not None:
             self._update_bank(annotated_paradigms)
@@ -159,15 +159,14 @@ class AnnotationBank:
             writer.writerows([[k for k in key] + [self._bank[key].get(h, '') for h in AnnotationBank.HEADER_INFO]
                                 for key in self._bank])
 
-    def _upload_gsheet(self, df=None):
-        sa = gspread.service_account(
-            "/Users/chriscay/.config/gspread/service_account.json")
-        sh = sa.open(self._spreadsheet)
-        worksheet = sh.worksheet(title=self._gsheet_name)
+    def _upload_gsheet(self, df=None, sh=None, sheet=None):
+        
+        sh = self.sa.open(sh if sh is not None else self._spreadsheet)
+        worksheet = sh.worksheet(title=sheet if sheet is not None else self._gsheet_name)
         worksheet.clear()
         bank = df if df is not None else self.to_df()
         worksheet.update(
-            [df.columns.values.tolist()] + df.values.tolist())
+            [bank.columns.values.tolist()] + bank.values.tolist())
 
     def _read_bank_from_tsv(self):
         bank = pd.read_csv(self._bank_path, delimiter='\t')
@@ -204,29 +203,22 @@ def _process_key(key, mode):
     return key
 
 def automatic_bank_annotation(config,
-                              config_name,
-                              feats,
                               new_conj_table,
                               sa,
+                              mode='debugging',
                               process_key=None,
                               HEADER=HEADER):
-    config_local = config['local'][config_name]
-    config_global = config['global']
-    bank_path, annotated_paradigms = setup(
-        config_local, config_global, feats, sa)
+    bank_path, annotated_paradigms = setup(config, sa, mode)
     if annotated_paradigms is None:
         annotated_paradigms = new_conj_table
     bank = AnnotationBank(bank_path, annotated_paradigms, sa=sa)
-    lemmas = [entry[1] for entry in bank._bank]
-    strip = True if not any(['-' in lemma for lemma in lemmas]) else False
     partial_keys = {}
     for k, info in bank._bank.items():
         partial_keys.setdefault(k[:-1], []).append({**info, **{'DIAC': k[-1]}})
 
     outputs = []
     for _, row in new_conj_table.iterrows():
-        lemma = row['LEMMA'] if not strip else strip_lex(row['LEMMA'])
-        key = (row['SIGNATURE'], lemma, row['DIAC'])
+        key = (row['SIGNATURE'], row['LEMMA'], row['DIAC'])
         if process_key is not None:
             key = _process_key(key, process_key)
         row = row.to_dict()
@@ -262,54 +254,62 @@ def automatic_bank_annotation(config,
         outputs.append(output_ordered)
 
     outputs.insert(0, OrderedDict((i, x) for i, x in enumerate(map(str.upper, HEADER))))
-    return outputs
+    return outputs, bank
 
-def bank_cleanup_checker(bank_path, gsheet_info):
+def bank_cleanup_checker(bank_path, gsheet_info, mode, annotated_paradigms=None):
+    mode_ = ''
+    if len(mode.split('_')) > 2:
+        mode_ = '_'.join(mode.split('_')[2:])
     def fetch_bank():
-        bank = AnnotationBank(bank_path, gsheet_info=gsheet_info, download_bank=True)
+        bank = AnnotationBank(bank_path, gsheet_info=gsheet_info)
         bank_partial_key = {}
         for key, info in bank._bank.items():
             bank_partial_key.setdefault(key[:-1], {}).setdefault(key[-1], []).append(info)
         return bank, bank_partial_key
-
-    print('\nBeginning cleanup...')
-    fixed = False
-    while not fixed:
-        bank, bank_partial_key = fetch_bank()
-        over_generations = {}
-        for partial_key, diacs in bank_partial_key.items():
-            for diac, infos in diacs.items():
-                if len(infos) > 1:
-                    over_generations[partial_key + (diac,)] = infos
-        
-        _add_check_mark_online(bank, over_generations)
-        if len(over_generations) != 0:
-            input('Inspect CHECK instances in Google Sheets then press Enter to reevaluate:')
-        else:
-            print('Overgeneration: OK')
-            fixed = True
-
-    fixed = False
-    while not fixed:
-        bank, bank_partial_key = fetch_bank()
-        conflicting_annotations = {}
-        bank_mt1_diac = {partial_key: diacs for partial_key, diacs in bank_partial_key.items() if len(diacs) > 1}
-        for partial_key, diacs in bank_mt1_diac.items():
-            if [diac[0]['QC'] for diac in diacs.values()].count('OK') > 1:
+    
+    if mode_ == 'freeze_table_as_bank':
+        bank = AnnotationBank(bank_path)
+        bank._bank = OrderedDict()
+        bank._update_bank(annotated_paradigms)
+    else:
+        print('\nBeginning cleanup...')
+        fixed = False
+        while not fixed:
+            bank, bank_partial_key = fetch_bank()
+            over_generations = {}
+            for partial_key, diacs in bank_partial_key.items():
                 for diac, infos in diacs.items():
-                    conflicting_annotations[partial_key + (diac,)] = infos[0]
-        
-        _add_check_mark_online(bank, conflicting_annotations)
-        if len(conflicting_annotations) != 0:
-            input('Inspect CHECK instances in Google Sheets then press Enter to reevaluate:')
-        else:
-            print('Conflicting annotations: OK')
-            fixed = True
+                    if len(infos) > 1:
+                        over_generations[partial_key + (diac,)] = infos
+            
+            if len(over_generations) != 0:
+                _add_check_mark_online(bank, over_generations)
+                input('Inspect CHECK instances in Google Sheets then press Enter to reevaluate:')
+            else:
+                print('Overgeneration: OK')
+                fixed = True
 
-    bank = AnnotationBank(bank_path, gsheet_info=gsheet_info, download_bank=True)
-    bank._save_bank()
+        fixed = False
+        while not fixed:
+            bank, bank_partial_key = fetch_bank()
+            conflicting_annotations = {}
+            bank_mt1_diac = {partial_key: diacs for partial_key, diacs in bank_partial_key.items() if len(diacs) > 1}
+            for partial_key, diacs in bank_mt1_diac.items():
+                if [diac[0]['QC'] for diac in diacs.values()].count('OK') > 1:
+                    for diac, infos in diacs.items():
+                        conflicting_annotations[partial_key + (diac,)] = infos[0]
+            
+            _add_check_mark_online(bank, conflicting_annotations)
+            if len(conflicting_annotations) != 0:
+                input('Inspect CHECK instances in Google Sheets then press Enter to reevaluate:')
+            else:
+                print('Conflicting annotations: OK')
+                fixed = True
 
-    print('Cleanup completed.\n')
+        bank = AnnotationBank(bank_path, gsheet_info=gsheet_info, download_bank=True)
+        bank._save_bank()
+
+        print('Cleanup completed.\n')
 
 
 def _add_check_mark_online(bank, error_cases):
@@ -323,78 +323,67 @@ def _add_check_mark_online(bank, error_cases):
     bank._upload_gsheet(bank_df)
 
 
-def setup(config_local, config_global, feats, sa):
-    bank_dir = args.bank_dir if args.bank_dir else os.path.join(
-        config_global['debugging'], config_global['banks_dir'],
-        f"camel-morph-{config_local['dialect']}")
+def setup(config:Config, sa, mode):
+    bank_dir = args.bank_dir if args.bank_dir else config.get_banks_dir_path()
     os.makedirs(bank_dir, exist_ok=True)
     bank_name = args.bank_name if args.bank_name \
-        else config_local['debugging']['feats'][feats]['bank']
+        else config.debugging.debugging_feats.bank
     bank_path = os.path.join(bank_dir, bank_name)
-
-    if args.mode == 'bank_cleanup':
-        bank_spreadsheet = args.bank_spreadsheet if args.bank_spreadsheet \
-            else config_global['banks_spreadsheet']
-        gsheet_info = {
-            'gsheet_name': bank_path.split('/')[-1].split('.')[0],
-            'spreadsheet': bank_spreadsheet}
-        bank_cleanup_checker(bank_path, gsheet_info)
-        sys.exit()
     
     spreadsheet = args.spreadsheet if args.spreadsheet \
-        else config_local['debugging']['debugging_spreadsheet']
+        else config.debugging.debugging_spreadsheet
     sh = sa.open(spreadsheet)
 
     gsheet = args.gsheet if args.gsheet \
-        else config_local['debugging']['feats'][feats]['debugging_sheet']
+        else config.debugging.debugging_feats.debugging_sheet
     worksheets = sh.worksheets()
     worksheet = [sheet for sheet in worksheets if sheet.title == gsheet]
     annotated_paradigms = None
     if worksheet:
         annotated_paradigms = pd.DataFrame(worksheet[0].get_all_records())
 
+    if mode.startswith('bank_cleanup'):
+        bank_spreadsheet = args.bank_spreadsheet if args.bank_spreadsheet \
+            else config.banks_spreadsheet
+        gsheet_info = {
+            'gsheet_name': bank_path.split('/')[-1].split('.')[0],
+            'spreadsheet': bank_spreadsheet,
+            'sa': sa}
+        bank_cleanup_checker(bank_path, gsheet_info, mode, annotated_paradigms)
+        sys.exit()
+
     return bank_path, annotated_paradigms
 
 
 if __name__ == "__main__":
-    config = get_config_file(args.config_file)
-    config_name = args.config_name
-    config_global = config['global']
-    config_local = config['local'][config_name]
+    config = Config(args.config_file, args.config_name, args.feats)
 
-    output_dir = args.output_dir if args.output_dir else os.path.join(
-        config_global['debugging'], config_global['paradigm_debugging_dir'],
-        f"camel-morph-{config_local['dialect']}")
+    output_dir = args.output_dir if args.output_dir else config.get_paradigm_debugging_dir_path()
     os.makedirs(output_dir, exist_ok=True)
 
     output_name = args.output_name if args.output_name \
-        else config_local['debugging']['feats'][args.feats]['paradigm_debugging']
+        else config.debugging.debugging_feats.paradigm_debugging
     output_path = os.path.join(output_dir, output_name)
 
-    service_account = args.service_account if args.service_account \
-            else config_global['service_account']
+    service_account = args.service_account if args.service_account else config.service_account
     sa = gspread.service_account(service_account)
 
     if args.new_conj:
         new_conj_path = args.new_conj
     else:
+        new_conj_path = config.get_tables_dir_path()
         new_conj_path = os.path.join(
-            config_global['debugging'], config_global['tables_dir'],
-            f"camel-morph-{config_local['dialect']}")
-        new_conj_path = os.path.join(
-            new_conj_path, config_local['debugging']['feats'][args.feats]['conj_tables'])
+            new_conj_path, config.debugging.debugging_feats.conj_tables)
 
         new_conj_table = pd.read_csv(new_conj_path, delimiter='\t')
         new_conj_table = new_conj_table.replace(nan, '', regex=True)
 
     #FIXME: do something about process_key (which is used from debugging
     # command energetic and extra energetic)
-    outputs = automatic_bank_annotation(config=config,
-                                        config_name=config_name,
-                                        process_key=args.process_key,
-                                        feats=args.feats,
-                                        new_conj_table=new_conj_table,
-                                        sa=sa)
+    outputs, bank = automatic_bank_annotation(config=config,
+                                              process_key=args.process_key,
+                                              new_conj_table=new_conj_table,
+                                              sa=sa)
 
     with open(output_path, 'w') as f:
         for output in outputs:

@@ -2,14 +2,15 @@
     "global": {
         "data_dir": "data",
         "specs": {
-            "spreadsheet": "camel-morph-common",
-            "sheets": {
-                "about": "About",
-                "header": "Header-v2"
+            "about": {
+                "camel-morph-common": "About"
+            },
+            "header": {
+                "camel-morph-common": "Header-v2"
             }
         },
         "db_dir": "databases",
-        "debugging": "debugging_output",
+        "debugging_dir": "debugging_output",
         "repr_lemmas_dir": "repr_lemmas",
         "tables_dir": "tables",
         "paradigm_debugging_dir": "paradigm_debugging",
@@ -26,21 +27,23 @@
             "clean_conditions": false,
             "pruning": false,
             "specs": {
-                "spreadsheet": "camel-morph-egy-nom-other",
-                "sheets": {
-                    "order": "EGY-Nom-ORDER",
-                    "morph": "EGY-Nom-MORPH",
-                    "postregex": "PostRegex"
+                "order": {
+                    "camel-morph-egy-nom-other": "EGY-Nom-ORDER"
+                },
+                "morph": {
+                    "camel-morph-egy-nom-other": "EGY-Nom-MORPH"
+                },
+                "postregex": {
+                    "camel-morph-egy-nom-other": "PostRegex"
                 },
                 "exclude": [
                     "RED"
-                ]
-            },
-            "lexicon": {
-                "spreadsheet": "camel-morph-egy-nom-other",
-                "sheets": [
-                    "EGY-Nom-LEX"
-                ]
+                ],
+                "lexicon": {
+                    "camel-morph-egy-nom-other": [
+                        "EGY-Nom-LEX"
+                    ]
+                }
             },
             "db": "XYZ_egy_nom_v1.0_red.db",
             "debugging": {
@@ -55,7 +58,7 @@
                     }
                 }
             },
-            "lexprob": "misc_files/egy_lexprob.tsv",
+            "logprob": "misc_files/egy_lexprob.tsv",
             "pos_type": "nominal",
             "pos": "adj",
             "class_keys": [
@@ -79,21 +82,23 @@
             "clean_conditions": false,
             "pruning": false,
             "specs": {
-                "spreadsheet": "camel-morph-egy-nom-other",
-                "sheets": {
-                    "order": "EGY-Nom-ORDER",
-                    "morph": "EGY-Nom-MORPH",
-                    "postregex": "PostRegex"
+                "order": {
+                    "camel-morph-egy-nom-other": "EGY-Nom-ORDER"
+                },
+                "morph": {
+                    "camel-morph-egy-nom-other": "EGY-Nom-MORPH"
+                },
+                "postregex": {
+                    "camel-morph-egy-nom-other": "PostRegex"
                 },
                 "exclude": [
                     "RED"
-                ]
-            },
-            "lexicon": {
-                "spreadsheet": "camel-morph-egy-nom-other",
-                "sheets": [
-                    "EGY-Nom-LEX"
-                ]
+                ],
+                "lexicon": {
+                    "camel-morph-egy-nom-other": [
+                        "EGY-Nom-LEX"
+                    ]
+                }
             },
             "db": "XYZ_egy_nom_v1.0_red.db",
             "debugging": {
@@ -108,7 +113,7 @@
                     }
                 }
             },
-            "lexprob": "misc_files/egy_lexprob.tsv",
+            "logprob": "misc_files/egy_lexprob.tsv",
             "pos_type": "nominal",
             "pos": "noun",
             "class_keys": [
@@ -132,21 +137,23 @@
             "clean_conditions": false,
             "pruning": false,
             "specs": {
-                "spreadsheet": "camel-morph-egy-nom-other",
-                "sheets": {
-                    "order": "EGY-Nom-ORDER",
-                    "morph": "EGY-Nom-MORPH",
-                    "postregex": "PostRegex"
+                "order": {
+                    "camel-morph-egy-nom-other": "EGY-Nom-ORDER"
+                },
+                "morph": {
+                    "camel-morph-egy-nom-other": "EGY-Nom-MORPH"
+                },
+                "postregex": {
+                    "camel-morph-egy-nom-other": "PostRegex"
                 },
                 "exclude": [
                     "RED"
-                ]
-            },
-            "lexicon": {
-                "spreadsheet": "camel-morph-egy-nom-other",
-                "sheets": [
-                    "EGY-Nom-Prop-LEX"
-                ]
+                ],
+                "lexicon": {
+                    "camel-morph-egy-nom-other": [
+                        "EGY-Nom-Prop-LEX"
+                    ]
+                }
             },
             "db": "XYZ_egy_nom_v1.0_red.db",
             "debugging": {
@@ -161,7 +168,7 @@
                     }
                 }
             },
-            "lexprob": "misc_files/egy_lexprob.tsv",
+            "logprob": "misc_files/egy_lexprob.tsv",
             "pos_type": "nominal",
             "pos": "noun_prop",
             "class_keys": [
@@ -185,21 +192,23 @@
             "clean_conditions": false,
             "pruning": false,
             "specs": {
-                "spreadsheet": "camel-morph-egy-nom-other",
-                "sheets": {
-                    "order": "EGY-Nom-ORDER",
-                    "morph": "EGY-Nom-MORPH",
-                    "postregex": "PostRegex"
+                "order": {
+                    "camel-morph-egy-nom-other": "EGY-Nom-ORDER"
+                },
+                "morph": {
+                    "camel-morph-egy-nom-other": "EGY-Nom-MORPH"
+                },
+                "postregex": {
+                    "camel-morph-egy-nom-other": "PostRegex"
                 },
                 "exclude": [
                     "RED"
-                ]
-            },
-            "lexicon": {
-                "spreadsheet": "camel-morph-egy-nom-other",
-                "sheets": [
-                    "EGY-Other-LEX"
-                ]
+                ],
+                "lexicon": {
+                    "camel-morph-egy-nom-other": [
+                        "EGY-Other-LEX"
+                    ]
+                }
             },
             "db": "XYZ_egy_other_v1.0_red.db",
             "debugging": {
@@ -214,7 +223,7 @@
                     }
                 }
             },
-            "lexprob": "misc_files/egy_lexprob.tsv",
+            "logprob": "misc_files/egy_lexprob.tsv",
             "pos_type": "other",
             "class_keys": [
                 "cond_t",
@@ -227,74 +236,28 @@
                 "index"
             ]
         },
-        "msa_cam_ready_sigmorphon2022": {
-            "dialect": "msa",
-            "pruning": true,
-            "specs": {
-                "spreadsheet": "camel-morph-msa-verbs-cam-ready",
-                "sheets": {
-                    "order": "MSA-Verb-ORDER",
-                    "morph": "MSA-Verb-MORPH"
-                }
-            },
-            "lexicon": {
-                "spreadsheet": "camel-morph-msa-verbs-cam-ready",
-                "sheets": [
-                    "MSA-Verb-LEX-PV",
-                    "MSA-Verb-LEX-IV",
-                    "MSA-Verb-LEX-CV"
-                ]
-            },
-            "db": "XYZ_msa_cr_v1.0.db",
-            "pos_type": "verbal",
-            "extended_lemma_keys": [
-                "lemma",
-                "gloss"
-            ]
-        },
         "egy_cam_ready_sigmorphon2022": {
             "dialect": "egy",
             "pruning": true,
             "specs": {
-                "spreadsheet": "camel-morph-egy-verbs-cam-ready",
-                "sheets": {
-                    "order": "EGY-Verb-ORDER",
-                    "morph": "EGY-Verb-MORPH",
-                    "postregex": "PostRegex"
+                "order": {
+                    "camel-morph-egy-verbs-cam-ready": "EGY-Verb-ORDER"
+                },
+                "morph": {
+                    "camel-morph-egy-verbs-cam-ready": "EGY-Verb-MORPH"
+                },
+                "postregex": {
+                    "camel-morph-egy-verbs-cam-ready": "PostRegex"
+                },
+                "lexicon": {
+                    "camel-morph-egy-verbs-cam-ready": [
+                        "EGY-Verb-LEX-PV",
+                        "EGY-Verb-LEX-IV",
+                        "EGY-Verb-LEX-CV"
+                    ]
                 }
-            },
-            "lexicon": {
-                "spreadsheet": "camel-morph-egy-verbs-cam-ready",
-                "sheets": [
-                    "EGY-Verb-LEX-PV",
-                    "EGY-Verb-LEX-IV",
-                    "EGY-Verb-LEX-CV"
-                ]
             },
             "db": "XYZ_egy_cr_v1.0.db",
-            "extended_lemma_keys": [
-                "lemma",
-                "gloss"
-            ]
-        },
-        "msa_example_sigmorphon2022": {
-            "dialect": "msa",
-            "pruning": true,
-            "specs": {
-                "spreadsheet": "camel-morph-msa-verbs-example",
-                "sheets": {
-                    "order": "MSA-Verb-ORDER",
-                    "morph": "MSA-Verb-MORPH"
-                }
-            },
-            "lexicon": {
-                "spreadsheet": "camel-morph-msa-verbs-example",
-                "sheets": [
-                    "MSA-Verb-LEX-PV"
-                ]
-            },
-            "db": "msa_example_v1.0.db",
-            "pos_type": "verbal",
             "extended_lemma_keys": [
                 "lemma",
                 "gloss"

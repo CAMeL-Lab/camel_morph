@@ -9,6 +9,9 @@ from tqdm import tqdm
 
 try:
     from .. import db_maker_utils
+    from ..debugging.create_repr_lemmas_list import get_lemma2prob
+    from ..debugging.generate_conj_table import parse_signature
+    from ..utils.utils import Config
 except:
     file_path = os.path.abspath(__file__).split('/')
     package_path = '/'.join(file_path[:len(file_path) - 1 - file_path[::-1].index('camel_morph')])
@@ -16,6 +19,7 @@ except:
     from camel_morph import db_maker_utils
     from camel_morph.debugging.create_repr_lemmas_list import get_lemma2prob
     from camel_morph.debugging.generate_conj_table import parse_signature
+    from camel_morph.utils.utils import Config
 
 COND_T_CLASSES = ['MS', 'MD', 'MP', 'FS', 'FD', 'FP']
 FUNC_GEN_FROM_FORM_RE = re.compile(r'([MF])[SDP](?=$|\|| )')
@@ -507,50 +511,39 @@ if __name__ == "__main__":
                         type=str, help="Path of the directory containing the camel_tools modules.")
     args = parser.parse_args([] if "__file__" not in globals() else None)
 
-    with open(args.config_file) as f:
-        config = json.load(f)
-    config_name = args.config_name[0]
-    config_local = config['local'][config_name]
-    config_global = config['global']
+    config = Config(args.config_file, args.config_name)
 
     if args.camel_tools == 'local':
-        camel_tools_dir = config_global['camel_tools']
-        sys.path.insert(0, camel_tools_dir)
+        sys.path.insert(0, config.camel_tools)
 
-    with open(config_global['paradigms_config']) as f:
-        PARADIGMS = json.load(f)[config_local['dialect']]
+    with open(config.paradigms_config) as f:
+        PARADIGMS = json.load(f)[config.dialect]
 
     from camel_tools.morphology.database import MorphologyDB
     from camel_tools.morphology.generator import Generator
-    from camel_tools.morphology.analyzer import Analyzer
     from camel_tools.utils.charmap import CharMapper
     from camel_tools.morphology.utils import strip_lex
 
     ar2bw = CharMapper.builtin_mapper('ar2bw')
     bw2ar = CharMapper.builtin_mapper('bw2ar')
 
-    output_dir = args.output_dir if args.output_dir \
-        else os.path.join(config_global['debugging'], config_global['docs_tables_dir'])
-    output_dir = os.path.join(output_dir, f"camel-morph-{config_local['dialect']}")
+    output_dir = args.output_dir if args.output_dir else config.get_docs_tables_dir_path()
     os.makedirs(output_dir, exist_ok=True)
 
-    db_name = config_local['db']
-    db_dir = config_global['db_dir']
-    db_dir = os.path.join(db_dir, f"camel-morph-{config_local['dialect']}")
-    db = MorphologyDB(os.path.join(db_dir, db_name), flags='gd')
+    db = MorphologyDB(config.get_db_path(), flags='gd')
     generator = Generator(db)
 
     SHEETS, _ = db_maker_utils.read_morph_specs(
-        config, config_name, process_morph=False, lexicon_cond_f=False)
+        config, process_morph=False, lexicon_cond_f=False)
     lexicon = SHEETS['lexicon']
     lexicon['LEMMA'] = lexicon.apply(lambda row: re.sub('lex:', '', row['LEMMA']), axis=1)
 
-    pos_type = args.pos_type if args.pos_type else config_local['pos_type']
+    pos_type = args.pos_type if args.pos_type else config.pos_type
     if pos_type == 'verbal':
         POS = 'verb'
         lexicon['COND-S'] = lexicon['COND-S'].replace(r'ditrans', '', regex=True)
     elif pos_type == 'nominal':
-        POS = args.pos if args.pos else config_local.get('pos')
+        POS = args.pos if args.pos else config.pos
         lexicon['COND-S'] = lexicon['COND-S'].replace(r'L#', '', regex=True)
         assert lexicon['COND-T'].str.contains(
             r'((MS|MD|MP|FS|FD|FP)(\|\|)?)+', regex=True).values.tolist()
@@ -567,8 +560,8 @@ if __name__ == "__main__":
 
     pos2lemma2prob, db_lexprob = None, None
     if args.most_prob_lemma:
-        if config_local.get('lexprob'):
-            with open(config_local['lexprob']) as f:
+        if config.logprob:
+            with open(config.logprob) as f:
                 freq_list_raw = f.readlines()
                 if len(freq_list_raw[0].split('\t')) == 2:
                     pos2lemma2prob = dict(map(lambda x: (x[0], int(x[1])),
@@ -594,13 +587,12 @@ if __name__ == "__main__":
 
     if pos_type == 'nominal':
         outputs = generate_table_nom(
-            lexicon, POS, config_local['dialect'].upper(), pos2lemma2prob, db_lexprob)
+            lexicon, POS, config.dialect.upper(), pos2lemma2prob, db_lexprob)
     elif pos_type == 'verbal':
         outputs = generate_table_verb(
-            lexicon, config_local['dialect'].upper(), pos2lemma2prob, db_lexprob, PARADIGMS)
+            lexicon, config.dialect.upper(), pos2lemma2prob, db_lexprob, PARADIGMS)
 
-    output_name = args.output_name if args.output_name else \
-        config_local['docs_debugging']['docs_tables']
+    output_name = args.output_name if args.output_name else config.debugging.docs_tables
     output_path = os.path.join(output_dir, output_name)
     with open(output_path, 'w') as f:
         for output in outputs:

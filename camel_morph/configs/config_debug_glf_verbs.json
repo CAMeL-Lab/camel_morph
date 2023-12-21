@@ -1,0 +1,157 @@
+{
+    "global": {
+        "data_dir": "data",
+        "specs": {
+            "about": {
+                "camel-morph-common": "About"
+            },
+            "header": {
+                "camel-morph-common": "Header-v2"
+            }
+        },
+        "db_dir": "databases",
+        "debugging_dir": "debugging_output",
+        "repr_lemmas_dir": "repr_lemmas",
+        "tables_dir": "tables",
+        "paradigm_debugging_dir": "paradigm_debugging",
+        "banks_dir": "banks",
+        "camel_tools": "./camel_morph/camel_tools",
+        "service_account": "/Users/chriscay/.config/gspread/service_account.json",
+        "paradigms_config": "misc_files/config_paradigms.json",
+        "banks_spreadsheet": "Paradigm-Banks"
+    },
+    "local": {
+        "pv_glf_red": {
+            "dialect": "glf",
+            "pruning": true,
+            "specs": {
+                "order": {
+                    "camel-morph-glf-verbs": "GLF-Verb-ORDER"
+                },
+                "morph": {
+                    "camel-morph-glf-verbs": "GLF-Verb-MORPH"
+                },
+                "postregex": {
+                    "camel-morph-glf-verbs": "PostRegex"
+                },
+                "exclude": [
+                    "RED",
+                    "IV",
+                    "CV"
+                ],
+                "lexicon": {
+                    "camel-morph-glf-verbs": [
+                        "GLF-Verb-LEX-PV"
+                    ]
+                }
+            },
+            "db": "XYZ_glf_pv_v1.0_red.db",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
+                "display_format": "unique",
+                "feats": {
+                    "asp:p mod:i": {
+                        "conj_tables": "conj_pv_glf_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_pv_glf_v1.0.tsv",
+                        "bank": "GLF-PV-Bank.tsv",
+                        "debugging_sheet": "GLF-PV"
+                    }
+                }
+            },
+            "logprob": "misc_files/glf_verbs_lexprob.tsv",
+            "pos_type": "verbal",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        },
+        "iv_glf_red": {
+            "dialect": "glf",
+            "pruning": true,
+            "specs": {
+                "order": {
+                    "camel-morph-glf-verbs": "GLF-Verb-ORDER"
+                },
+                "morph": {
+                    "camel-morph-glf-verbs": "GLF-Verb-MORPH"
+                },
+                "postregex": {
+                    "camel-morph-glf-verbs": "PostRegex"
+                },
+                "exclude": [
+                    "RED",
+                    "PV",
+                    "CV"
+                ],
+                "lexicon": {
+                    "camel-morph-glf-verbs": [
+                        "GLF-Verb-LEX-IV"
+                    ]
+                }
+            },
+            "db": "XYZ_glf_iv_v1.0_red.db",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
+                "display_format": "unique",
+                "feats": {
+                    "asp:i mod:i": {
+                        "conj_tables": "conj_iv_glf_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_iv_glf_v1.0.tsv",
+                        "bank": "GLF-IV-Bank.tsv",
+                        "debugging_sheet": "GLF-IV"
+                    }
+                }
+            },
+            "logprob": "misc_files/glf_verbs_lexprob.tsv",
+            "pos_type": "verbal",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        },
+        "cv_glf_red": {
+            "dialect": "glf",
+            "pruning": true,
+            "specs": {
+                "order": {
+                    "camel-morph-glf-verbs": "GLF-Verb-ORDER"
+                },
+                "morph": {
+                    "camel-morph-glf-verbs": "GLF-Verb-MORPH"
+                },
+                "postregex": {
+                    "camel-morph-glf-verbs": "PostRegex"
+                },
+                "exclude": [
+                    "RED",
+                    "PV",
+                    "IV"
+                ],
+                "lexicon": {
+                    "camel-morph-glf-verbs": [
+                        "GLF-Verb-LEX-CV"
+                    ]
+                }
+            },
+            "db": "XYZ_glf_cv_v1.0_red.db",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
+                "display_format": "unique",
+                "feats": {
+                    "asp:c mod:i": {
+                        "conj_tables": "conj_cv_glf_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_cv_glf_v1.0.tsv",
+                        "bank": "GLF-CV-Bank.tsv",
+                        "debugging_sheet": "GLF-CV"
+                    }
+                }
+            },
+            "logprob": "misc_files/glf_verbs_lexprob.tsv",
+            "pos_type": "verbal",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        }
+    }
+}

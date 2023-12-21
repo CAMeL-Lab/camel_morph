@@ -2,14 +2,15 @@
     "global": {
         "data_dir": "data",
         "specs": {
-            "spreadsheet": "camel-morph-common",
-            "sheets": {
-                "about": "About",
-                "header": "Header-v2"
+            "about": {
+                "camel-morph-common": "About"
+            },
+            "header": {
+                "camel-morph-common": "Header-v2"
             }
         },
         "db_dir": "databases",
-        "debugging": "debugging_output",
+        "debugging_dir": "debugging_output",
         "repr_lemmas_dir": "repr_lemmas",
         "tables_dir": "tables",
         "paradigm_debugging_dir": "paradigm_debugging",
@@ -24,56 +25,25 @@
             "pruning": true,
             "reindex": true,
             "specs": {
-                "spreadsheet": [
-                    "camel-morph-msa-nom-other",
-                    "camel-morph-msa-verbs"
-                ],
-                "sheets": {
-                    "order": [
-                        {
-                            "MSA-Nom-ORDER": "N"
-                        },
-                        {
-                            "MSA-Verb-ORDER": "V"
-                        }
-                    ],
-                    "morph": [
-                        {
-                            "MSA-Nom-MORPH": "N"
-                        },
-                        {
-                            "MSA-Verb-MORPH": "V"
-                        }
-                    ]
+                "order": {
+                    "camel-morph-msa-nom-other": {
+                        "MSA-Nom-ORDER": "N"
+                    },
+                    "camel-morph-msa-verbs": {
+                        "MSA-Verb-ORDER": "V"
+                    }
                 },
-                "exclude": []
-            },
-            "passive": {
-                "spreadsheet": "camel-morph-msa-verbs",
-                "sheets": {
-                    "MSA-Verb-LEX-PV": "MSA-Verb-PV-Passive-Patterns",
-                    "MSA-Verb-LEX-IV": "MSA-Verb-IV-Passive-Patterns"
-                }
-            },
-            "debugging": {
-                "stats_spreadsheet": "CamelMorph-Full-Paper-Assets",
-                "stats_sheet": "Statistics-v1.0",
-                "table_start_cell": "O86",
-                "pos_display": [
-                    "verbal.lex",
-                    "nominal.lex",
-                    "other.lex",
-                    "noun_prop.wiki"
-                ]
-            },
-            "lexicon": {
-                "spreadsheet": [
-                    "camel-morph-msa-nom-other",
-                    "camel-morph-msa-annex",
-                    "camel-morph-msa-verbs"
-                ],
-                "sheets": [
-                    {
+                "morph": {
+                    "camel-morph-msa-nom-other": {
+                        "MSA-Nom-MORPH": "N"
+                    },
+                    "camel-morph-msa-verbs": {
+                        "MSA-Verb-MORPH": "V"
+                    }
+                },
+                "exclude": [],
+                "lexicon": {
+                    "camel-morph-msa-nom-other": {
                         "MSA-Noun-LEX": "N",
                         "MSA-Adj-LEX": "N",
                         "MSA-Adj-Comp-LEX": "N",
@@ -84,19 +54,36 @@
                         "MSA-Other-LEX": "N",
                         "MSA-Nom-LEX-Backoff": "N"
                     },
-                    {
+                    "camel-morph-msa-annex": {
                         "MSA-Noun-Prop-Annex-LEX": "N"
                     },
-                    {
+                    "camel-morph-msa-verbs": {
                         "MSA-Verb-LEX-PV": "V",
                         "MSA-Verb-LEX-IV": "V",
                         "MSA-Verb-LEX-CV": "V",
                         "MSA-Verb-LEX-Backoff": "V"
                     }
+                },
+                "passive": {
+                    "camel-morph-msa-verbs": {
+                        "MSA-Verb-LEX-PV": "MSA-Verb-PV-Passive-Patterns",
+                        "MSA-Verb-LEX-IV": "MSA-Verb-IV-Passive-Patterns"
+                    }
+                }
+            },
+            "debugging": {
+                "stats_spreadsheet": "CamelMorph-Full-Paper-Assets",
+                "stats_sheet": "Statistics-v1.0",
+                "table_start_cell": "O104",
+                "pos_display": [
+                    "verbal.lex",
+                    "nominal.lex",
+                    "other.lex",
+                    "noun_prop.wiki"
                 ]
             },
             "dialect": "msa",
-            "db": "XYZ_msa_full_factored_wiki_v1.3.db",
+            "db": "XYZ_msa_full_factored_wiki_v1.6.db",
             "pos_type": "any",
             "class_map": "misc_files/class2complx_morpheme_type.json",
             "caphi": "camel_morph.scratch.SBWtoPhon",
@@ -107,35 +94,50 @@
             "cat2id": true,
             "caphi": "camel_morph.scratch.SBWtoPhon",
             "specs": {
-                "spreadsheet": [
-                    "camel-morph-msa-nom-other",
-                    "camel-morph-msa-verbs"
-                ],
-                "sheets": {
-                    "order": [
-                        {
-                            "MSA-Nom-ORDER": "N"
-                        },
-                        {
-                            "MSA-Verb-ORDER": "V"
-                        }
-                    ],
-                    "morph": [
-                        {
-                            "MSA-Nom-MORPH": "N"
-                        },
-                        {
-                            "MSA-Verb-MORPH": "V"
-                        }
-                    ]
+                "order": {
+                    "camel-morph-msa-nom-other": {
+                        "MSA-Nom-ORDER": "N"
+                    },
+                    "camel-morph-msa-verbs": {
+                        "MSA-Verb-ORDER": "V"
+                    }
                 },
-                "exclude": []
-            },
-            "passive": {
-                "spreadsheet": "camel-morph-msa-verbs",
-                "sheets": {
-                    "MSA-Verb-LEX-PV": "MSA-Verb-PV-Passive-Patterns",
-                    "MSA-Verb-LEX-IV": "MSA-Verb-IV-Passive-Patterns"
+                "morph": {
+                    "camel-morph-msa-nom-other": {
+                        "MSA-Nom-MORPH": "N"
+                    },
+                    "camel-morph-msa-verbs": {
+                        "MSA-Verb-MORPH": "V"
+                    }
+                },
+                "exclude": [],
+                "lexicon": {
+                    "camel-morph-msa-nom-other": {
+                        "MSA-Noun-LEX": "N",
+                        "MSA-Adj-LEX": "N",
+                        "MSA-Adj-Comp-LEX": "N",
+                        "MSA-Noun-Num-LEX": "N",
+                        "MSA-Noun-Quant-LEX": "N",
+                        "MSA-Adj-Num-LEX": "N",
+                        "MSA-Noun-Prop-LEX": "N",
+                        "MSA-Other-LEX": "N",
+                        "MSA-Nom-LEX-Backoff": "N"
+                    },
+                    "camel-morph-msa-annex": {
+                        "MSA-Noun-Prop-Annex-LEX": "N"
+                    },
+                    "camel-morph-msa-verbs": {
+                        "MSA-Verb-LEX-PV": "V",
+                        "MSA-Verb-LEX-IV": "V",
+                        "MSA-Verb-LEX-CV": "V",
+                        "MSA-Verb-LEX-Backoff": "V"
+                    }
+                },
+                "passive": {
+                    "camel-morph-msa-verbs": {
+                        "MSA-Verb-LEX-PV": "MSA-Verb-PV-Passive-Patterns",
+                        "MSA-Verb-LEX-IV": "MSA-Verb-IV-Passive-Patterns"
+                    }
                 }
             },
             "debugging": {
@@ -149,36 +151,6 @@
                     "noun_prop.wiki"
                 ]
             },
-            "lexicon": {
-                "spreadsheet": [
-                    "camel-morph-msa-nom",
-                    "Nominals-Sandbox",
-                    "Wiki-Names-Extraction",
-                    "camel-morph-msa-verbs"
-                ],
-                "sheets": [
-                    {
-                        "MSA-Noun-LEX": "N",
-                        "MSA-Adj-LEX": "N",
-                        "MSA-Adj-Comp-LEX": "N"
-                    },
-                    {
-                        "MSA-Noun-Num-LEX": "N",
-                        "MSA-Noun-Quant-LEX": "N",
-                        "MSA-Adj-Num-LEX": "N",
-                        "MSA-Other-LEX": "N",
-                        "MSA-Noun-Prop-LEX": "N"
-                    },
-                    {
-                        "MSA-Noun-Prop-Annex-LEX": "N"
-                    },
-                    {
-                        "MSA-Verb-LEX-PV": "V",
-                        "MSA-Verb-LEX-IV": "V",
-                        "MSA-Verb-LEX-CV": "V"
-                    }
-                ]
-            },
             "dialect": "msa",
             "db": "XYZ_msa_full_unfactored_wiki_v1.0.db",
             "pos_type": "any",
@@ -188,35 +160,42 @@
             "pruning": true,
             "reindex": true,
             "specs": {
-                "spreadsheet": [
-                    "camel-morph-msa-nom-other",
-                    "camel-morph-msa-verbs"
-                ],
-                "sheets": {
-                    "order": [
-                        {
-                            "MSA-Nom-ORDER": ""
-                        },
-                        {
-                            "MSA-Verb-ORDER": ""
-                        }
+                "order": {
+                    "camel-morph-msa-nom-other": "MSA-Nom-ORDER",
+                    "camel-morph-msa-verbs": "MSA-Verb-ORDER"
+                },
+                "morph": {
+                    "camel-morph-msa-nom-other": "MSA-Nom-MORPH",
+                    "camel-morph-msa-verbs": "MSA-Verb-MORPH"
+                },
+                "exclude": [],
+                "lexicon": {
+                    "camel-morph-msa-nom": [
+                        "MSA-Noun-LEX",
+                        "MSA-Adj-LEX",
+                        "MSA-Adj-Comp-LEX"
                     ],
-                    "morph": [
-                        {
-                            "MSA-Nom-MORPH": ""
-                        },
-                        {
-                            "MSA-Verb-MORPH": ""
-                        }
+                    "Nominals-Sandbox": [
+                        "MSA-Noun-Num-LEX",
+                        "MSA-Noun-Quant-LEX",
+                        "MSA-Adj-Num-LEX",
+                        "MSA-Other-LEX",
+                        "MSA-Noun-Prop-LEX"
+                    ],
+                    "Wiki-Names-Extraction": [
+                        "MSA-Noun-Prop-Annex-LEX"
+                    ],
+                    "camel-morph-msa-verbs": [
+                        "MSA-Verb-LEX-PV",
+                        "MSA-Verb-LEX-IV",
+                        "MSA-Verb-LEX-CV"
                     ]
                 },
-                "exclude": []
-            },
-            "passive": {
-                "spreadsheet": "camel-morph-msa-verbs",
-                "sheets": {
-                    "MSA-Verb-LEX-PV": "MSA-Verb-PV-Passive-Patterns",
-                    "MSA-Verb-LEX-IV": "MSA-Verb-IV-Passive-Patterns"
+                "passive": {
+                    "camel-morph-msa-verbs": {
+                        "MSA-Verb-LEX-PV": "MSA-Verb-PV-Passive-Patterns",
+                        "MSA-Verb-LEX-IV": "MSA-Verb-IV-Passive-Patterns"
+                    }
                 }
             },
             "debugging": {
@@ -228,36 +207,6 @@
                     "nominal.lex",
                     "other.lex",
                     "noun_prop.wiki"
-                ]
-            },
-            "lexicon": {
-                "spreadsheet": [
-                    "camel-morph-msa-nom",
-                    "Nominals-Sandbox",
-                    "Wiki-Names-Extraction",
-                    "camel-morph-msa-verbs"
-                ],
-                "sheets": [
-                    {
-                        "MSA-Noun-LEX": "",
-                        "MSA-Adj-LEX": "",
-                        "MSA-Adj-Comp-LEX": ""
-                    },
-                    {
-                        "MSA-Noun-Num-LEX": "",
-                        "MSA-Noun-Quant-LEX": "",
-                        "MSA-Adj-Num-LEX": "",
-                        "MSA-Other-LEX": "",
-                        "MSA-Noun-Prop-LEX": ""
-                    },
-                    {
-                        "MSA-Noun-Prop-Annex-LEX": ""
-                    },
-                    {
-                        "MSA-Verb-LEX-PV": "",
-                        "MSA-Verb-LEX-IV": "",
-                        "MSA-Verb-LEX-CV": ""
-                    }
                 ]
             },
             "dialect": "msa",

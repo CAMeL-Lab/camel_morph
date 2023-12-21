@@ -2,10 +2,11 @@
     "global": {
         "data_dir": "data",
         "specs": {
-            "spreadsheet": "camel-morph-common",
-            "sheets": {
-                "about": "About",
-                "header": "Header-v2"
+            "about": {
+                "camel-morph-common": "About"
+            },
+            "header": {
+                "camel-morph-common": "Header-v2"
             }
         },
         "db_dir": "databases",
@@ -16,17 +17,17 @@
             "dialect": "msa",
             "pruning": true,
             "specs": {
-                "spreadsheet": "camel-morph-msa-verbs",
-                "sheets": {
-                    "order": "MSA-Verb-ORDER",
-                    "morph": "MSA-Verb-MORPH"
+                "order": {
+                    "camel-morph-msa-verbs": "MSA-Verb-ORDER"
+                },
+                "morph": {
+                    "camel-morph-msa-verbs": "MSA-Verb-MORPH"
+                },
+                "lexicon": {
+                    "camel-morph-msa-verbs": [
+                        "MSA-Verb-LEX-PV"
+                    ]
                 }
-            },
-            "lexicon": {
-                "spreadsheet": "camel-morph-msa-verbs",
-                "sheets": [
-                    "MSA-Verb-LEX-PV"
-                ]
             },
             "db": "XYZ_msa_cr_v1.0.db",
             "pos_type": "verbal"

@@ -26,6 +26,7 @@ import sys
 from collections import Counter
 from math import log
 import pickle
+import re
 
 file_path = os.path.abspath(__file__).split('/')
 package_path = '/'.join(file_path[:len(file_path) - 1 - file_path[::-1].index('camel_morph')])
@@ -43,6 +44,13 @@ parser.add_argument("-output_dir", default='eval_files',
 
 args, _ = parser.parse_known_args()
 
+
+def _preprocess_lex(lex):
+    lex = strip_lex(lex)
+    lex = re.sub(r'([^a])A', r'\1aA', lex)
+    return lex
+
+
 if __name__ == "__main__":
     data_path = args.magold_path
     with open(data_path) as f:
@@ -57,7 +65,7 @@ if __name__ == "__main__":
         feat_freq_ = Counter()
         feat_freq_.update([
             tuple(example['analysis'][feat_]
-                  if feat_ != 'lex' else strip_lex(example['analysis'][feat_])
+                  if feat_ != 'lex' else _preprocess_lex(example['analysis'][feat_])
                   for feat_ in feat.split('_'))
             for example in data])
         feat_freq[feat] = feat_freq_
