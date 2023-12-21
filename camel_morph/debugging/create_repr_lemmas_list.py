@@ -81,6 +81,9 @@ from camel_tools.morphology.database import MorphologyDB
 ar2bw = CharMapper.builtin_mapper('ar2bw')
 bw2ar = CharMapper.builtin_mapper('bw2ar')
 
+aA_regex = re.compile(bw2ar('([^a])A'))
+aA_re_sub = bw2ar('\\1aA')
+
 POS_NOMINAL = utils.POS_NOMINAL
 
 cond_t_sort_order = {'MS':0, 'MD':1, 'MP':2, 'FS':3, 'FD':4, 'FP':5}
@@ -274,16 +277,21 @@ def get_extended_lemmas(lexicon, extended_lemma_keys):
     return lemmas_uniq, lemmas_stripped_uniq
 
 
+def _preprocess_lex(lex):
+    return aA_regex.sub(aA_re_sub, strip_lex(lex))
+
 def get_lemma2prob(POS, db, uniq_lemma_classes, lemma2prob):
     if lemma2prob is None:
         lemma2prob = {}
         for lemmas_info in uniq_lemma_classes.values():
             for info in lemmas_info['lemmas']:
                 lemma_stripped = strip_lex(info['lemma'])
-                lemma_ar = bw2ar(lemma_stripped)
-                analyses = db.lemma_hash.get(lemma_ar, [])
-                analyses_filtered = [a  for a in analyses
-                    if strip_lex(a['lex']) == lemma_ar and a['pos'] in POS]
+                lemma_stripped_ar = bw2ar(lemma_stripped)
+                lemma_stripped_unpreproc_ar = bw2ar(re.sub('aA', 'A', lemma_stripped))
+                analyses = db.lemma_hash.get(lemma_stripped_unpreproc_ar, [])
+                analyses_filtered = [
+                    a  for a in analyses
+                    if _preprocess_lex(a['lex']) == lemma_stripped_ar and a['pos'] in POS]
                 if len(analyses_filtered) >= 1:
                     lemma2prob[lemma_stripped] = max(
                         [float(a['pos_lex_logprob']) for a in analyses_filtered])
