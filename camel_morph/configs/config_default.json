@@ -16,6 +16,7 @@
         "default_config": {
             "dialect": "msa",
             "pruning": true,
+            "reindex": true,
             "specs": {
                 "order": {
                     "camel-morph-msa-verbs": "MSA-Verb-ORDER"
@@ -23,14 +24,69 @@
                 "morph": {
                     "camel-morph-msa-verbs": "MSA-Verb-MORPH"
                 },
+                "exclude": [
+                    "IV",
+                    "CV"
+                ],
                 "lexicon": {
                     "camel-morph-msa-verbs": [
                         "MSA-Verb-LEX-PV"
                     ]
                 }
             },
-            "db": "XYZ_msa_cr_v1.0.db",
-            "pos_type": "verbal"
+            "db": "XYZ_msa_pv_v1.0.db",
+            "pos_type": "verbal",
+            "class_map": "misc_files/class2complx_morpheme_type.json"
+        },
+        "msa_cam_ready_pv_sigmorphon2022": {
+            "dialect": "msa",
+            "pruning": true,
+            "reindex": true,
+            "specs": {
+                "order": {
+                    "camel-morph-msa-verbs": "MSA-Verb-ORDER"
+                },
+                "morph": {
+                    "camel-morph-msa-verbs": "MSA-Verb-MORPH"
+                },
+                "exclude": [
+                    "IV",
+                    "CV"
+                ],
+                "lexicon": {
+                    "camel-morph-msa-verbs": [
+                        "MSA-Verb-LEX-PV"
+                    ]
+                }
+            },
+            "db": "XYZ_msa_pv_v1.0.db",
+            "pos_type": "verbal",
+            "class_map": "misc_files/class2complx_morpheme_type.json"
+        },
+        "msa_example": {
+            "dialect": "msa",
+            "pruning": true,
+            "reindex": true,
+            "specs": {
+                "order": {
+                    "camel-morph-msa-verbs": "MSA-Verb-ORDER"
+                },
+                "morph": {
+                    "camel-morph-msa-verbs": "MSA-Verb-MORPH"
+                },
+                "exclude": [
+                    "IV",
+                    "CV"
+                ],
+                "lexicon": {
+                    "camel-morph-msa-verbs": [
+                        "MSA-Verb-LEX-PV"
+                    ]
+                }
+            },
+            "db": "XYZ_msa_pv_v1.0.db",
+            "pos_type": "verbal",
+            "class_map": "misc_files/class2complx_morpheme_type.json"
         }
     }
 }

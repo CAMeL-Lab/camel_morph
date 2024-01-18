@@ -48,8 +48,7 @@ except:
 
 EMPTY_ROW = dict(DEFINE=['MORPH'], CLASS=['[EMPTY]'], LINE=-1) #, FEAT='prc0:0 prc1:0 prc1.5:0 prc2:0 prc3:0 enc0:0 enc1:0')
 SPECS_HEADER_REQUIRED = dict(
-    order=['EXCLUDE', 'DEFINE', 'CLASS', 'PREFIX', 'STEM',
-           'SUFFIX', 'PREFIX-SHORT', 'STEM-SHORT', 'SUFFIX-SHORT'],
+    order=['EXCLUDE', 'DEFINE', 'CLASS', 'PREFIX', 'STEM', 'SUFFIX'],
     morph=['EXCLUDE', 'DEFINE', 'CLASS', 'FUNC', 'FORM',
            'BW', 'GLOSS', 'FEAT', 'COND-T', 'COND-S',
            'CLASS', 'FUNC', 'FORM', 'BW', 'GLOSS']
@@ -110,12 +109,14 @@ def read_morph_specs(config:Config,
                 specs_ = pd.read_csv(specs_path, na_filter=False)
                 assert set(SPECS_HEADER_REQUIRED[specs_type]) - set(specs_.columns) == set()
                 if specs_type == 'order':
+                    order_fields_short_ = [
+                        f for f in ORDER_FIELDS_SHORT if f in specs_.columns]
                     unique_order_lines_ = Counter(map(tuple,
-                        [line for line in specs_[ORDER_FIELDS_SHORT].values.tolist()
+                        [line for line in specs_[order_fields_short_].values.tolist()
                         if line != ['', '', '']]))
                     assert sum(unique_order_lines_.values()) == len(unique_order_lines_)
                 if specs_type == 'order':
-                    columns = ORDER_FIELDS + ORDER_FIELDS_SHORT
+                    columns = ORDER_FIELDS + order_fields_short_
                 elif specs_type == 'morph':
                     columns = ['CLASS']
                 for col in columns:

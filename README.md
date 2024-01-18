@@ -40,34 +40,33 @@ The following data is not accessile publicly from the Google Sheets interface bu
 
 ## Folder Hierarchy
 
-Below, you will find a table describing the function of each directory contained in the repository.
+The following table describes the function of each directory contained in the repository.
 
 | Directory | Description |
 | ----------- | ----------- |
 | `./camel_morph` | Directory (in package format) containing all the necessary files to build, debug, test, and evaluate the Camel Morph DB Maker. |
-| `./configs` | Contains configuration files which make running the scripts in the above directory easier.
-| `./data` | Contains, for each different configuration, the set of morphological specification files necessary to run the different scripts.
+| `./camel_morph/configs` | Contains configuration files which make running the scripts in the above directory easier.
+| `./data` | Contains, for each different configuration, the set of morphological specification files necessary to run the different scripts. This directory is mandatorily (as per the data reader code) organized into project directories as described in [Configuration File Structure](#configuration-file-structure) section.
 | `./databases` | Contains the output DB files resulting from the DB Making process.
-|`./debugging_output` | Contains all DB debugging files which are usually uploaded (automatically) to and analyzed in Google Sheets.
-| `./eval_files` | Contains files necessary to carry out evalutation of generated DBs and analyzable evaluation output files (generally analyzed on Google Sheets).
 | `./misc_files` | Contains miscellaneous files used by scripts inside `./camel_morph`.
-| `./sandbox` | Contains various standalone files that are not used in `./camel_morph`.
-| `./sigmorphon2022_release` | Standalone environment allowing users to run the DB Maker and Camel Tools engines without installing Camel Tools, in the same version used for the SIGMORPHON 2022 paper. Also contains the data that was used to get the results described in the paper[^1].
+| `./sigmorphon2022_release` | Standalone environment[^2] allowing users to run the DB Maker and Camel Tools engines without installing Camel Tools, in the same version used for the SIGMORPHON 2022 paper. Also contains the data that was used to get the results described in the paper[^1].
 
 ## Instructions
 
-To generate databases, paradigm-specific inflection (conjugation/declension) tables, or evaluation tables, follow the below instructions. Note that the adjoining `Makefile` can be used to reproduce the experiments which were ran in-house by providing the (pipelines of) instructions that were used to carry them out. But first, it is important to understand the structure of the configuration file. Also, a default configuration file is included in the `./configs` directory for direct usage.
+To compile databases, paradigm-specific inflection (conjugation/declension) tables, or evaluation tables, follow the below instructions. A default configuration file is included in the `./camel_morph/configs` directory for direct usage.
 
 ### Installation
 
-To start working with the Camel Morph environment:
+To start working with the Camel Morph environment and compiling Mordern Standard Arabic (MSA) databases:
 
 1. Clone (download) this repository and unzip in a directory of your choice.
 2. Make sure that you are running **Python 3.8** or **Python 3.9** (this release was tested on these two versions, but it is likely that it will work on other versions).
 3. Run the following command to install all needed libraries: `pip install -r requirements.txt`.
 4. Run all commands/scripts from the outer `camel_morph` directory.
 
-**For development purposes only:**
+#### For development purposes only
+
+To debug and evaluate databases (MSA or Dialectal Arabic), and for other utilities:
 
 1. Clone (download) a [fork](https://github.com/christios/camel_tools) of the Camel Tools repository. The Camel Morph databases will currently only function using the latter instance of Camel Tools. The changes in this fork will eventually be integrated to the main Camel Tools library. Unzip in a directory of your choice.
 2. Set the `CAMEL_TOOLS_PATH` value to the path of the Camel Tools fork repository in the configuration file that you will be using (default configuration file `./camel_morph/configs/config_default.json` provided; see [Configuration File Structure](#configuration-file-structure) section).
@@ -76,7 +75,7 @@ For instructions on how to run the different scripts, see the below sections.
 
 ### Compiling a Database (DB Maker)
 
-The below command compiles an ALMOR-style database starting from a set of morphological specification files referenced in the specific configuration mentioned as an argument.
+The below command compiles an ALMOR-style database starting from a set of morphological specification files referenced in the specific configuration mentioned as an argument. Before starting compilation, the specifications should be downloaded from the links provided in the data section.
 
 #### Usage
 
@@ -93,15 +92,21 @@ usage: db_maker.py [-h] [-config_file CONFIG_FILE]
 |short|default|help|
 | :--- | :--- | :--- |
 | `-h` | | Show this help message and exit.|
-|`-config_file`|`config_default.json`|Path of the configuration file which contains different configurations to run the DB on. Some pre-compiled configurations already exist in `./camel_morph/configs/config.json`, but new ones could be easily added. See [here](#configuration-file-structure) for an overview of the configuration file format. Defaults to `./configs/config_default.json`.|
+|`-config_file`|`config_default.json`|Path of the configuration file which contains different configurations to run the DB on. Some pre-compiled configurations already exist in `./camel_morph/configs/config.json`, but new ones could be easily added. See [here](#configuration-file-structure) for an overview of the configuration file format. Defaults to `config_default.json`.|
 |`-config_name`|`default_config`|Configuration name of one of the configurations contained in `CONFIG_FILE`. It contains script parameters, sheet paths, etc.|
 |`-output_dir`||Overrides path of the directory to output the DBs to (specified in the global section of `CONFIG_FILE`).|
 |`-run_profiling`||To generate an execution time profile of the specific configuration.|
-|`-camel_tools`|`local`|Path of directory containing the CAMeL Tools modules (should be cloned as described [here](#installation-1)).|
+|`-camel_tools`|`local`|Path of directory containing the CAMeL Tools modules (should be cloned as described [here](#for-development-purposes-only)).|
+
+### Utilities
+
+There are various scripts in the suite which are meant to make the debugging/evaluation experience more efficient. To be able to make use of those, many require a (free) service account to be created using Google Cloud, to get an API key (service account) to add to our internal configuration files for use. Google Cloud will generate a JSON file which should be stored locally, and the path of which should be specified in the `global` section of the [configuration](#default-configuration-file) as follows: `"service_account": $SERVICE_ACCOUNT_PATH`.
+
+Follow the instructions until minute 2:00 of [this](https://www.youtube.com/watch?v=fxGeppjO0Mg) video to first create a service account and API key to use with the Google Sheets API, and then [this](https://www.youtube.com/watch?v=rWcLDax-VmM) video to generate the JSON object referred to in the previous paragraph.
 
 ### Configuration File Structure
 
-In its most basic format, the configuration file should look like the example below in order to successfully run the scripts described in this guide. Unless otherwise stated, variables (beginning with `$`) are double quoted strings. See [here](camel_morph/configs/) for a list of configuration files used.
+In its most basic format, the configuration file should look like the example below in order to successfully run the scripts described in this guide. Unless otherwise stated, variables (beginning with `$`) are double quoted strings. See [here](camel_morph/configs/) for a list of configuration files used. Also, note that the configuration file can include many other keys/values that are useful for debugging purposes, as specified by the `Config` reader [class](https://github.com/CAMeL-Lab/camel_morph/blob/fe3242037ea45b348e9950c6e6cf9aa46cf9209d/camel_morph/utils/utils.py#L527).
 
 #### Default Configuration File
 
@@ -109,10 +114,12 @@ In its most basic format, the configuration file should look like the example be
         "global": {
             "data_dir": $DATA_DIR_PATH,
             "specs": {
-                "sheets": [
-                    $ABOUT_SHEET,
-                    $HEADER_SHEET
-                ]
+                "about": {
+                    $SPREADSHEET_X: $ABOUT_SHEET,
+                },
+                "header": {
+                    $SPREADSHEET_X: $HEADER_SHEET,
+                }
             },
             "db_dir": $DB_OUTPUT_DIR,
             "camel_tools": $CAMEL_TOOLS_PATH
@@ -121,41 +128,51 @@ In its most basic format, the configuration file should look like the example be
             $CONFIG_NAME: {
                 "dialect": $DIALECT,
                 "cat2id": $CAT2ID,
+                "reindex": $REINDEX,
                 "pruning": $PRUNING,
                 "specs": {
-                    "sheets": {
-                        "order": $ORDER_SHEET,
-                        "morph": $MORPH_SHEET
+                    "order": {
+                        $SPREADSHEET_X: $ORDER_SHEET_1,
+                        $SPREADSHEET_X: $ORDER_SHEET_2,
+                        ...
+                    },
+                    "morph": {
+                        $SPREADSHEET_X: $MORPH_SHEET_1,
+                        $SPREADSHEET_X: $MORPH_SHEET_2,
+                        ...
+                    },
+                    "lexicon": {
+                        $SPREADSHEET_X: $LEXICON_SHEET_1,
+                        $SPREADSHEET_X: $LEXICON_SHEET_2,
+                        ...
                     }
                 },
-                "lexicon": {
-                    "sheets": [
-                        $LEX_SHEET_1,
-                        ...
-                    ]
-                },
                 "db": $DB_NAME,
-                "pos_type": $POS_TYPE
+                "pos_type": $POS_TYPE,
+                "class_map": $CLASS_MAP
             }
         }
     }
 
 where:
 
-- `$DATA_DIR_PATH`: path of the outermost data directory where all sheets are kept (e.g., `data`; referenced from the main repository directory). Sheets for this configuration should be kept inside a folder which has the name of the configuration (`$CONFIG_NAME`) which is itself contained in a directory called `camel-morph-$DIALECT` (where `$DIALECT` is specified below). So for example, if `$DATA_DIR_PATH=data`, `$DIALECT=msa`, and `$CONFIG_NAME=pv_msa`, then sheets for this configuration should be in a directory with the path `./data/camel-morph-msa/pv_msa`.
-- `$ABOUT_SHEET`: name of the sheet containing the *About* section which will go in the DB (e.g., `About`). Downloaded as specified in the [Google Sheets](#google-sheets) section.
+- `$DATA_DIR_PATH`: path of the outermost data directory where all sheets are kept (e.g., `data`; referenced from the main repository directory). Sheets for this configuration should be kept inside a folder which has the name as the configuration (`$CONFIG_NAME`) which is itself contained in a directory called `camel-morph-$DIALECT` (where `$DIALECT` is specified below). So for example, if `$DATA_DIR_PATH=data`, `$DIALECT=msa`, and `$CONFIG_NAME=pv_msa`, then sheets for this configuration should be in a directory with the path `./data/camel-morph-msa/pv_msa`.
+- `$SPREADSHEET_X`: name of the the spreadsheet on Google Sheets containing the sheet which is assigned to it as a value. If no spreadsheet is associated with the sheet, just keep blank.
+- `$ABOUT_SHEET`: name of the sheet containing the *About* section which will go in the DB (e.g., `About`). Either downloaded automatically as specified in the [Utilities](#utilities) section or manually.
 - `$HEADER_SHEET`: same as `$ABOUT_SHEET` (e.g., `Header`)
 - `$DB_OUTPUT_DIR`: name of the directory to which the compiled DBs will be output.
 - `$CAMEL_TOOLS_PATH`: path of the Camel Tools repository fork that should be cloned/downloaded as described in [Installation](#installation) section.
 - `$CONFIG_NAME`: name of the configuration in the `local` section of the config file, to choose between a number of different configurations (e.g., `default_config`). This is also the name of the folder which contains the sheets that are specified for that configuration and the global section.
 - `$DIALECT`: dialect being worked with (i.e., `msa` or `egy`). This is specified to further organize the configuration-specific data into high-level projects (i.e., `./data/camel-morph-msa` or `./data/camel-morph-egy`).
-- `$CAT2ID`: boolean (`true` or `false`). Specifies the format in which to output the category names. If set to true, then category names are IDs, otherwise, they contain condition information.
+- `$CAT2ID`: boolean (`true` or `false`). Specifies the format in which to output the ALMOR morpheme category names. If set to true, then category names are IDs, otherwise, they contain condition information.
 - `$PRUNING`: boolean (`true` or `false`). Used in the DB making process to speed up DB compilation. For this to be set to `true`, the Morph sheet must contain condition definitions (organization of conditions into categories).
+- `$REINDEX`: boolean (`true` or `false`). Used in the DB making process to collapse categories after the entries are compiled. This heavily reduces the size of the compatibility tables, and turns category names into compact unique IDs (basically, doing what `cat2id` does and more).
 - `$ORDER_SHEET`: same as `$ABOUT_SHEET` (e.g., `MSA-Verb-ORDER`).
 - `$MORPH_SHEET`: same as `$ABOUT_SHEET` (e.g., `MSA-Verb-MORPH`).
 - `$LEX_SHEET_1`: same as `$ABOUT_SHEET` (e.g., `MSA-Verb-LEX-PV`). At least one lexicon sheet can be specified; the latter will be concatenated in pre-processing.
 - `$DB_NAME`: name of the output DB.
-- `$POS_TYPE`: type of the POS for which we are building the DB. Can either be `verbal` or `nominal`.
+- `$POS_TYPE`: type of the POS for which we are building the DB. Can either be `verbal`, `nominal` or `any`. As far as the DB Maker is concerned this controls what MADA features are output to the DB file in each line.
+- `$CLASS_MAP`: dictionary containing the morpheme classes and which complex morpheme type they map to.
 
 ## Code License
 
@@ -164,6 +181,7 @@ All the code contained in this repository is available under the MIT license. Se
 ## Contributors
 
 - [Christian Khairallah (Cayralat)](https://github.com/christios)
+- [Muhammed AbuOdeh](https://github.com/muhammed-abuodeh)
 - [Salam Khalifa](https://github.com/slkh)
 - [Nizar Habash](https://github.com/nizarhabash1)
 

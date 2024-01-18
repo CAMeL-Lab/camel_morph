@@ -322,7 +322,8 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
             cmplx_stem_memoize = {}
             order_stem_prev = ''
             for _, order in ORDER.iterrows():
-                pbar.set_description(order['SUFFIX-SHORT'])
+                col = 'SUFFIX-SHORT' if 'SUFFIX-SHORT' in ORDER.columns else 'SUFFIX'
+                pbar.set_description(order[col])
                 if order['STEM'] != order_stem_prev:
                     cmplx_stem_memoize = {}
                     order_stem_prev = order['STEM']

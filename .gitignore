@@ -354,7 +354,6 @@ MigrationBackup/
 !requirements.txt
 !sigmorphon2022_release/requirements.txt
 
-data/
 databases/
 debugging_output/
 eval_files/
@@ -364,3 +363,10 @@ sandbox_files/
 camel_morph.egg-info
 build
 dist
+
+data/*
+!data/camel-morph-msa/
+
+data/camel-morph-msa/*
+!data/camel-morph-msa/default_config/
+!data/camel-morph-msa/msa_example/
