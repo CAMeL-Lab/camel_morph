@@ -66,8 +66,13 @@ parser.add_argument("-service_account", default='',
 args, _ = parser.parse_known_args()
 
 
-def upload_sheet(config, input_dir, mode, sa, sheet=None):
-    spreadsheet_name, gsheet_name = setup(config, input_dir, sheet)
+def upload_sheet(config, mode, sa,
+                 input_dir=None,
+                 sheet=None,
+                 spreadsheet_name=None,
+                 gsheet_name=None):
+    spreadsheet_name, gsheet_name, sheet = setup(
+        config, input_dir, sheet, spreadsheet_name, gsheet_name)
 
     sh = sa.open(spreadsheet_name)
 
@@ -135,17 +140,21 @@ def upload_sheet(config, input_dir, mode, sa, sheet=None):
         worksheet.freeze(rows=1)
 
 
-def setup(config:Config, input_dir, sheet):
+def setup(config:Config, input_dir, sheet, spreadsheet_name, gsheet_name):
     if config.debugging is not None:
-        spreadsheet_name = args.spreadsheet_name if args.spreadsheet_name \
-            else config.debugging.debugging_spreadsheet
-        gsheet_name = args.gsheet_name if args.gsheet_name \
-            else config.debugging.debugging_feats.debugging_sheet
+        if spreadsheet_name is None:
+            spreadsheet_name = args.spreadsheet_name if args.spreadsheet_name \
+                else config.debugging.debugging_spreadsheet
+        if gsheet_name is None:
+            gsheet_name = args.gsheet_name if args.gsheet_name \
+                else config.debugging.debugging_feats.debugging_sheet
     elif config.debugging.docs_debugging_spreadsheet is not None:
-        spreadsheet_name = args.spreadsheet_name if args.spreadsheet_name \
-            else config.debugging.docs_debugging_spreadsheet
-        gsheet_name = args.gsheet_name if args.gsheet_name \
-            else config.debugging.docs_debugging_sheet
+        if spreadsheet_name is None:
+            spreadsheet_name = args.spreadsheet_name if args.spreadsheet_name \
+                else config.debugging.docs_debugging_spreadsheet
+        if gsheet_name is None:
+            gsheet_name = args.gsheet_name if args.gsheet_name \
+                else config.debugging.docs_debugging_sheet
 
     if args.file_name:
         file_name = args.file_name
@@ -169,19 +178,21 @@ def setup(config:Config, input_dir, sheet):
         file_name = config.debugging.debugging_feats.conj_tables
     elif input_dir == 'docs_tables_dir':
         file_name = config.debugging.docs_tables
+    else:
+        assert input_dir is None
     
     if sheet is None:
         input_dir = args.dir if args.dir \
             else os.path.join(config.debugging_dir, getattr(config, input_dir),
                 config.get_dialect_project_dir_path())
-        sheet = pd.read_csv(os.path.join(input_dir, file_name), sep='\t')
-        sheet = sheet.replace(nan, '', regex=True)
+        sheet = pd.read_csv(os.path.join(input_dir, file_name),
+                            sep='\t', na_filter=False)
         insert_index = args.insert_index if args.insert_index \
             else config.debugging.insert_index
         if insert_index:
             sheet.insert(0, 'Index', range(len(sheet)))
 
-    return spreadsheet_name, gsheet_name
+    return spreadsheet_name, gsheet_name, sheet
 
 
 if __name__ == "__main__":

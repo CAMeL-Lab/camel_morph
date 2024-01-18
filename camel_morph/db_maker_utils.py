@@ -216,7 +216,7 @@ def read_morph_specs(config:Config,
             lambda x: x.str.strip() if x.dtype == 'object' and x.dtype not in [float, int] else x)
         LEXICON[lex_type].reset_index(drop=True, inplace=True)
         LEXICON[lex_type] = LEXICON[lex_type].apply(
-            lambda x: x.str.strip() if x.dtype == "object" else x)
+            lambda x: x.str.strip() if x.dtype == 'object' else x)
         if 'BW' not in LEXICON[lex_type].columns:
             LEXICON[lex_type]['BW'] = LEXICON[lex_type]['FEAT'].str.extract(
                 r'pos:(\S+)')[0].apply(str.upper)
@@ -247,9 +247,8 @@ def read_morph_specs(config:Config,
     # Compiles the regex match expression from the sheet into a regex match expression that is
     # suitable for storing into the DB in Arabic script. Expects Safe BW transliteration in the sheet.
     POSTREGEX = None
-    postregex_path: Optional[str] = config.postregex
-    if postregex_path:
-        POSTREGEX = pd.read_csv(config.get_sheets_paths(postregex_path)[0], na_filter=False)
+    if config.postregex is not None:
+        POSTREGEX = pd.read_csv(config.get_sheets_paths('postregex')[0], na_filter=False)
         POSTREGEX = POSTREGEX[(POSTREGEX.DEFINE == 'POSTREGEX') &
                               (POSTREGEX.VARIANT == config.dialect.upper())]
         for i, row in POSTREGEX.iterrows():

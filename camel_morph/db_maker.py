@@ -24,7 +24,6 @@
 import re
 import os
 from tqdm import tqdm
-import json
 import argparse
 import itertools
 from time import strftime, gmtime, process_time
@@ -55,6 +54,8 @@ parser.add_argument("-config_name", default='default_config',
                     type=str, help="Name of the configuration to load from the config file.")
 parser.add_argument("-output_dir", default='',
                     type=str, help="Path of the directory to output the DBs to.")
+parser.add_argument("-debug_lemma", default='',
+                    type=str, help="Only keep specified lemma in the lexicon (for debugging).")
 parser.add_argument("-download", default=False,
                     action='store_true', help="Whether or not to download the data before doing anything. This should be done in case data was changed in Google Sheets since last time this script was ran.")
 parser.add_argument("-run_profiling", default=False,
@@ -71,6 +72,7 @@ if args.camel_tools == 'local':
 from camel_tools.utils.normalize import normalize_alef_bw, normalize_alef_maksura_bw, normalize_teh_marbuta_bw
 from camel_tools.utils.charmap import CharMapper
 from camel_tools.utils.dediac import dediac_bw
+from camel_tools.morphology.utils import strip_lex
 
 
 normalize_map = CharMapper({
@@ -92,6 +94,8 @@ _clitic_feats = ['enc0', 'enc1', 'enc2', 'prc0', 'prc1', 'prc1.5', 'prc2', 'prc3
 PRE_POST_REGEX_SYMBOL = re.compile(r'[#@]')
 PRE_POST_REGEX_SYMBOL_SMARTBACKOFF = re.compile(r'^\^|\$$|[#@]')
 HAMZA_WASL_RE = re.compile(r'\{')
+CAPHI_UNDERSCORE_RE_1 = re.compile(r'_+')
+CAPHI_UNDERSCORE_RE_2 = re.compile(r'^_|_$')
 SEG_TOK_SCHEMES = ['D3SEG', 'D3TOK', 'ATBSEG', 'ATBTOK']
 
 """
@@ -165,6 +169,10 @@ def make_db(config:Config, output_path:Optional[str]=None):
     
     print("\nLoading and processing sheets... [1/4]")
     SHEETS, cond2class = db_maker_utils.read_morph_specs(config)
+
+    if args.debug_lemma:
+        SHEETS['lexicon'] = SHEETS['lexicon'][
+            SHEETS['lexicon']['LEMMA'] == f'lex:{args.debug_lemma}']
     
     print("\nValidating combinations... [2/4]")
     cat2id: bool = config.cat2id if config.cat2id is not None else False
@@ -181,6 +189,7 @@ def make_db(config:Config, output_path:Optional[str]=None):
     print("\nGenerating DB file... [4/4]")
     if output_path is None:
         output_path = config.get_db_path()
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
     print_almor_db(output_path, db)
     
     c1 = process_time()
@@ -280,7 +289,7 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
         if not cmplx_prefix_classes: cmplx_type_empty.add('Prefix')
         if cmplx_type_empty:
             cmplx_type_empty = '/'.join(cmplx_type_empty)
-            tqdm.write((f"{order['SUFFIX-SHORT']}: {cmplx_type_empty} class " 
+            tqdm.write((f"WARNING: {order['SUFFIX-SHORT']}: {cmplx_type_empty} class " 
                         'is empty; proceeding to process next order line.'))
             return db
         
@@ -592,6 +601,31 @@ def _generate_match_field(diac):
     diac_ = normalize_alef_bw(diac_)
     return diac_
 
+
+def _generate_caphi(morpheme, caphi_list, caphi_copy, morph2caphi, cmplx_morpheme_type):
+    copy_list = [m[caphi_copy] for m in morpheme]
+    if len(set(caphi_list)) > 1 and '' in caphi_list:
+        raise NotImplementedError
+    # TODO: implemented but not debugged
+    value = []
+    if set(caphi_list) == {''} and morph2caphi is not None:
+        value.append(morph2caphi[cmplx_morpheme_type](''.join(copy_list)))
+    else:
+        for i, v in enumerate(caphi_list):
+            if v == '_':
+                continue
+            elif v:
+                value.append(v)
+            else:
+                if copy_list[i] and copy_list[i] != '_':
+                    if morph2caphi is not None:
+                        value.append(morph2caphi[cmplx_morpheme_type](copy_list[i]))
+    value = ' '.join(value).strip().replace(' ', '_')
+    value = CAPHI_UNDERSCORE_RE_1.sub('_', value)
+    value = CAPHI_UNDERSCORE_RE_2.sub('', value)
+    return value
+
+
 def _generate_affix(affix_type: str,
                     cmplx_morph_seq: str,
                     required_feats: List[str],
@@ -638,9 +672,18 @@ def _generate_affix(affix_type: str,
                        affix_cond_f, short_cat_map, cat2id)
     analysis['bw'] = _convert_bw_tag(analysis['bw'])
     affix_type_ = 'DBPrefix' if affix_type == 'P' else 'DBSuffix'
-    if morph2caphi is not None and 'caphi' not in analysis:
-        analysis['caphi'] = morph2caphi[affix_type_](
-            PRE_POST_REGEX_SYMBOL.sub('', analysis['diac']))
+    
+    for col in SEG_TOK_SCHEMES:
+        col = col.lower()
+        tok_copy = defaults['tokenization'][col]
+        value = ''.join(
+            v if v else (affix[i][tok_copy] if affix[i][tok_copy] != '_' else '')
+            for i, v in enumerate(analysis[col]))
+        analysis[col] = value
+    
+    analysis['caphi'] = _generate_caphi(
+        affix, analysis['caphi'], defaults['transcription']['caphi'], morph2caphi, affix_type_)
+    
     for f in ['diac', 'd3seg', 'd3tok', 'atbseg', 'atbtok']:
         analysis[f] = bw2ar(analysis[f])
 
@@ -687,6 +730,14 @@ def _generate_stem(cmplx_morph_seq: str,
         for f in required_feats + _clitic_feats:
             if f not in analysis or analysis[f] == '_':
                 analysis[f] = defaults['defaults'][analysis['pos']][f]
+
+    if '-' in analysis['lex'] and analysis['pos'] == 'verb':
+        part1, part2 = analysis['lex'].split('-')
+        mid_root_diac, underscore = None, None
+        if '_' in part2:
+            mid_root_diac, underscore = part2.split('_')
+        analysis['lex'] = part1 + f'_{underscore}'
+        analysis['mid_root_diac'] = mid_root_diac
     
     if backoff == 'smart':
         match = db_maker_utils._bw2ar_regex(stem_match, bw2ar)
@@ -701,12 +752,25 @@ def _generate_stem(cmplx_morph_seq: str,
                                stem_cond_f, short_cat_map, cat2id)
     
     if not backoff:
-        if morph2caphi is not None and 'caphi' not in analysis:
-            analysis['caphi'] = morph2caphi['DBStem'](
-                PRE_POST_REGEX_SYMBOL.sub('', analysis['diac']))
+        for col in SEG_TOK_SCHEMES:
+            col = col.lower()
+            tok_copy = defaults['tokenization'][col]
+            value = ''.join(
+                v if v else (stem[i][tok_copy] if stem[i][tok_copy] != '_' else '')
+                for i, v in enumerate(analysis[col]))
+            if value != analysis['diac']:
+                analysis[col] = value
+            else:
+                del analysis[col]
+        
+        analysis['caphi'] = _generate_caphi(
+            stem, analysis['caphi'], defaults['transcription']['caphi'], morph2caphi, 'DBStem')
+        
         if logprob is not None:
             for f in ['lex', 'pos_lex']:
-                lex_ = tuple(analysis[f_] for f_ in f.split('_'))
+                lex_ = tuple(analysis[f_]
+                             if f_ != 'lex' else strip_lex(analysis[f_])
+                             for f_ in f.split('_'))
                 logprob_ = f'{logprob[f][lex_]:.6f}' if lex_ in logprob[f] else '-99'
                 analysis[f'{f}_logprob'] = logprob_
 
@@ -737,21 +801,17 @@ def _read_affix(affix: List[Dict], affix_type: str) -> Tuple[str, Dict]:
         Tuple[str, Dict]: information to store in the DB.
     """
     analysis = {}
-    analysis['bw'] = '+'.join(m['BW'] for m in affix if m['BW'] != '_').strip()
-    analysis['diac'] = ''.join(m['FORM'] for m in affix if m['FORM'] != '_').strip()
-    affix_gloss = '+'.join(m['GLOSS'] for m in affix if m['GLOSS'] != '_').strip()
+    analysis['bw'] = '+'.join(m['BW'] for m in affix if m['BW'] != '_')
+    affix_gloss = '+'.join(m['GLOSS'] for m in affix if m['GLOSS'] != '_')
     analysis['gloss'] = affix_gloss if affix_gloss else '_'
     affix_feat = {feat.split(':')[0]: feat.split(':')[1]
                   for m in affix for feat in m['FEAT'].split()}
     analysis = {**analysis, **affix_feat}
-    for col in ['D3SEG', 'D3TOK', 'ATBSEG', 'ATBTOK', 'CAPHI']:
-        if col in SEG_TOK_SCHEMES:
-            value = [m[col] if m.get(col) else m['FORM'].strip() for m in affix]
-        else:
-            value = [m[col] for m in affix if m.get(col)]
-        value = ''.join(t for t in value)
-        if col != 'CAPHI' or col == 'CAPHI' and value:
-            analysis[col.lower()] = value
+
+    analysis['diac'] = ''.join(m['FORM'] for m in affix if m['FORM'] != '_')
+    
+    for col in SEG_TOK_SCHEMES + ['CAPHI']:
+        analysis[col.lower()] = [m.get(col, '') for m in affix]
     
     source = [m['SOURCE'] for m in affix if m.get('SOURCE')]
     if source and any(source):
@@ -777,25 +837,16 @@ def _read_stem(stem: List[Dict]) -> Tuple[str, Dict]:
         Tuple[str, Dict]: information to store in the DB
     """
     analysis = {}
-    analysis['bw'] = '+'.join(s['BW'] for s in stem if s['BW'] != '_').strip()
-    stem_gloss = '+'.join(s['GLOSS'] for s in stem if 'LEMMA' in s).strip()
+    analysis['bw'] = '+'.join(s['BW'] for s in stem if s['BW'] != '_')
+    stem_gloss = '+'.join(s['GLOSS'] for s in stem if 'LEMMA' in s)
     analysis['gloss'] = stem_gloss if stem_gloss else '_'
     analysis['lex'] = '+'.join(
-        s['LEMMA'].split(':')[1] for s in stem if 'LEMMA' in s).strip()
+        s['LEMMA'].split(':')[1] for s in stem if 'LEMMA' in s)
     stem_feat = {feat.split(':')[0]: feat.split(':')[1]
                 for s in stem for feat in s['FEAT'].split()}
     analysis = {**analysis, **stem_feat}
 
-    analysis['diac'] = ''.join(
-        s['FORM'] for s in stem if s['FORM'] != '_').strip()
-    
-    for col in SEG_TOK_SCHEMES + ['CAPHI']:
-        value = [s[col] if s.get(col) else s['FORM'].strip() for s in stem]
-        value = ''.join(t for t in value)
-        if col in SEG_TOK_SCHEMES:
-            value = HAMZA_WASL_RE.sub('A', value)
-        if value and value != analysis['diac']:
-            analysis[col.lower()] = value
+    analysis['diac'] = ''.join(s['FORM'] for s in stem if s['FORM'] != '_')
     
     for col in ['ROOT', 'PATTERN_ABSTRACT', 'PATTERN', 'SOURCE']:
         feat = [s[col] for s in stem if s.get(col)]
@@ -833,6 +884,8 @@ def _read_stem(stem: List[Dict]) -> Tuple[str, Dict]:
     else:
         backoff = None
         stem_match = _generate_match_field(analysis['diac'])
+        for col in SEG_TOK_SCHEMES + ['CAPHI']:
+            analysis[col.lower()] = [s.get(col, '') for s in stem]
 
     return stem_match, analysis, backoff
 
@@ -1048,6 +1101,8 @@ def collapse_and_reindex_categories(db, collapse_morphemes):
             suffixes_ = _reindex_morpheme_table_cats(suffixes_, suffix_cat_map, equivalences)
             backoff_stems_ = _reindex_backoff_stem_cats(backoff_stems_, stem_cat_map, equivalences)
         #TODO: deal with backoff stems here also
+        # TODO: the following collapsing is still unstable and is not being
+        # used for the moment. Should be debugged.
         if collapse_morphemes:
             collapsed = collapse_and_reindex_morphemes(
                 prefixes_, stems_, suffixes_,
@@ -1100,6 +1155,10 @@ def print_almor_db(output_path, db):
             print('###POSTREGEX###', file=f)
             for x in postregex:
                 print(x, file=f)
+
+        for section in ['PREFIXES', 'STEMS', 'SUFFIXES']:
+            assert f'OUT:###{section}###' in db, (
+                f'Empty {section} section. Something might be wrong with the sheets.')     
 
         print('###PREFIXES###', file=f)
         for x in db['OUT:###PREFIXES###']:
@@ -1157,12 +1216,20 @@ def _get_short_cat_name_maps(ORDER: pd.DataFrame) -> Dict:
         p_short, x_short, s_short = row['PREFIX-SHORT'], row['STEM-SHORT'], row['SUFFIX-SHORT']
         p_short = '[EMPTY]' if p_short == '' else p_short
         s_short = '[EMPTY]' if s_short == '' else s_short
+        def check_soundness(x, map_x, x_short):
+            if x in map_x:
+                assert map_x[x] == x_short, 'Every complex morpheme class sequence should have a unique short cat name.'
+            else:
+                assert x_short not in map_x.values(), 'Clashing short cats.'
+        check_soundness(p, map_p, p_short)
+        check_soundness(x, map_x, x_short)
+        check_soundness(s, map_s, s_short)
         map_p[p], map_x[x], map_s[s] = p_short, x_short, s_short
         map_word.setdefault((p_short, x_short, s_short), 0)
         map_word[(p_short, x_short, s_short)] += 1
     short_cat_maps = dict(prefix=map_p, stem=map_x, suffix=map_s)
     # Make sure that the short order names are unique
-    assert sum(map_word.values()) == len(map_word), "Short order names are not unique."
+    assert sum(map_word.values()) == len(map_word), 'Short order names are not unique.'
     return short_cat_maps
 
 
@@ -1353,25 +1420,6 @@ def check_compatibility (cond_s: str, cond_t: str, cond_f: str,
     return valid                     
 
 
-def _process_defaults(header: str):
-    """Parse the default feature values per POS and store them in a dictionary.
-
-    Args:
-        header (str): String parsed from the sheets containing all the defaults and defines.
-
-    Returns:
-        Dict[str, Dict]: Dictionary containing the default feature values per POS.
-    """
-    _order = [line.split()[1:] for line in header
-                if line.startswith('ORDER')][0]
-    _defaults = [{f: d for f, d in [f.split(':') for f in line.split()[1:]]}
-                    for line in header if line.startswith('DEFAULT')]
-    _defaults = {d['pos']: d for d in _defaults}
-    for pos in _defaults:
-        _defaults[pos]['enc1'] = _defaults[pos]['enc0']
-    defaults = {'defaults': _defaults, 'order': _order}
-    return defaults
-
 def _choose_required_feats(pos_type):
     if pos_type == 'verbal':
         required_feats = _required_verb_stem_feats
@@ -1412,19 +1460,25 @@ def _read_header_file(header:pd.DataFrame):
     header_.append('###ORDER###')
     header_.append('ORDER ' + ' '.join(order))
 
-    tokenizations = {}
+    tokenization = {}
     for _, row in header[header['DEFINE'] == 'TOKENIZATION'].iterrows():
         for feat in order:
             if row[feat]:
-                tokenizations.setdefault(feat, row[feat])
+                tokenization.setdefault(feat, row[feat])
     
     header_.append('###TOKENIZATIONS###')
-    header_.append('TOKENIZATION ' + ' '.join(o for o in order if o in tokenizations))
+    header_.append('TOKENIZATION ' + ' '.join(o for o in order if o in tokenization))
 
-    defaults = {'defaults': defaults, 'order': order, 'tokenizations': tokenizations}
+    transcription = {}
+    for _, row in header[header['DEFINE'] == 'TRANSCRIPTION'].iterrows():
+        for feat in order:
+            if row[feat]:
+                transcription.setdefault(feat, row[feat])
+
+    defaults = {'defaults': defaults, 'order': order,
+                'tokenization': tokenization, 'transcription': transcription}
 
     return header_, defaults
-
 
 
 if __name__ == "__main__":
@@ -1437,7 +1491,7 @@ if __name__ == "__main__":
         os.mkdir(output_dir)
     output_path = os.path.join(output_dir, config.db)
 
-    make_db(config, output_dir)
+    make_db(config, output_path)
     
     if args.run_profiling:
         profiler.disable()
