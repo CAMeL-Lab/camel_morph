@@ -128,7 +128,7 @@
         "msa_safiyr": {
             "dialect": "msa",
             "cat2id": true,
-            "caphi": "camel_morph.scratch.SBWtoPhon",
+            "caphi": "camel_morph.sandbox.SBWtoPhon",
             "pruning": true,
             "class_map": "misc_files/class2complx_morpheme_type.json",
             "specs": {
@@ -191,6 +191,74 @@
             },
             "db": "XYZ_msa_kayofa_v1.0.db",
             "pos_type": "nominal"
+        },
+        "caphi_debug": {
+            "specs": {
+                "order": "",
+                "morph": "",
+                "lexicon": ""
+            },
+            "debugging": {
+                "debugging_spreadsheet": "Caphi-Seg-Tok-Debugging",
+                "display_format": "unique",
+                "lexprob_db": "eval_files/calima-msa-s31_0.4.2.utf8.db",
+                "feats": {
+                    "caphi_debug": {
+                        "bank": "Caphi-Debug-Bank.tsv",
+                        "debugging_sheet": "CAPHI-DB-Code-Compare"
+                    }
+                }
+            }
+        },
+        "nominals_caphi_test": {
+            "pruning": true,
+            "reindex": true,
+            "specs": {
+                "order": {
+                    "camel-morph-msa-nom-other": {
+                        "MSA-Nom-ORDER": "N"
+                    }
+                },
+                "morph": {
+                    "camel-morph-msa-nom-other": {
+                        "MSA-Nom-MORPH": "N"
+                    }
+                },
+                "exclude": [],
+                "lexicon": {
+                    "camel-morph-msa-nom-other": {
+                        "MSA-Noun-LEX": "N",
+                        "MSA-Adj-LEX": "N",
+                        "MSA-Adj-Comp-LEX": "N",
+                        "MSA-Noun-Num-LEX": "N",
+                        "MSA-Noun-Quant-LEX": "N",
+                        "MSA-Adj-Num-LEX": "N",
+                        "MSA-Noun-Prop-LEX": "N",
+                        "MSA-Other-LEX": "N",
+                        "MSA-Nom-LEX-Backoff": "N"
+                    },
+                    "camel-morph-msa-annex": {
+                        "MSA-Noun-Prop-Annex-LEX": "N"
+                    }
+                }
+            },
+            "debugging": {
+                "stats_spreadsheet": "CamelMorph-Full-Paper-Assets",
+                "stats_sheet": "Statistics-v1.0",
+                "table_start_cell": "O104",
+                "pos_display": [
+                    "verbal.lex",
+                    "nominal.lex",
+                    "other.lex",
+                    "noun_prop.wiki"
+                ]
+            },
+            "dialect": "msa",
+            "db": "XYZ_msa_nominals_caphi_test_v1.0.db",
+            "pos_type": "nominal",
+            "class_map": "misc_files/class2complx_morpheme_type.json",
+            "caphi": "camel_morph.sandbox.SBWtoPhon",
+            "logprob": "misc_files/logprob_atb_camel_v1.0.pkl"
         }
     }
 }

@@ -76,7 +76,7 @@ def generate_examples(index2lemmas_pos, index2analysis,
         example_forms_system = ''
     try:
         example_forms_baseline = generator_baseline.generate(
-            lemma, eval_utils.construct_feats(feats, pos), legacy=True)
+            lemma, eval_utils.construct_feats(feats, pos))
         example_forms_baseline = ','.join(
             set(eval_utils.preprocess_lex_features(form, True)['diac']
                 for form in example_forms_baseline))

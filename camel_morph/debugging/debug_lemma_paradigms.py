@@ -49,7 +49,7 @@ FIELDS_MAP = dict(
 
 COLUMNS_OUTPUT = ['LINE', 'STEM_COUNT', 'META_INFO', 'FREQ', 'LEMMA',
                   'FORM', 'COND-T', 'COND-S', 'GLOSS', 'POS', 'GEN',
-                  'NUM', 'RAT', 'CAS', 'SIGNATURE', 'FLAGS']
+                  'NUM', 'RAT', 'CAS', 'SIGNATURE_LEMMA', 'FLAGS']
 
 def _strip_brackets(info):
     if info[0] == '[':
@@ -138,7 +138,7 @@ def generate_lex_rows(repr_lemmas):
             
             signature = f"{lemma_info['cond_t']} {lemma_info['gen']} {lemma_info['num']}"
             for _ in range(len(stem_mask)):
-                rows.setdefault('SIGNATURE', []).append(signature)
+                rows.setdefault('SIGNATURE_LEMMA', []).append(signature)
                 rows.setdefault('META_INFO', []).append(lemma_info['meta_info'])
                 rows.setdefault('FREQ', []).append(lemmas_info['freq'])
 
@@ -204,7 +204,7 @@ def regenerate_signature_lex_rows(config,
     add_check_mark_online(rows=sheet_df,
                           spreadsheet=sh,
                           worksheet=sheet,
-                          status_col_name='SIGNATURE',
+                          status_col_name='SIGNATURE_LEMMA',
                           write='overwrite',
                           messages=signatures)
 
@@ -258,4 +258,4 @@ if __name__ == "__main__":
             sh = sa.open(spreadsheet)
             sheets = sh.worksheets()
             sheet = [sheet for sheet in sheets if sheet.title == sheet_name][0]
-            regenerate_signature_lex_rows(config, sheet=sheet, sh=sh)
+            regenerate_signature_lex_rows(config_, sheet=sheet, sh=sh)

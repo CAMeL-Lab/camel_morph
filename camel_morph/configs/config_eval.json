@@ -23,42 +23,6 @@
     "local": {
         "nom_msa_stats": {
             "pruning": true,
-            "specs": {
-                "order": {
-                    "camel-morph-msa-nom-other": "MSA-Nom-ORDER"
-                },
-                "morph": {
-                    "camel-morph-msa-nom-other": "MSA-Nom-MORPH"
-                },
-                "exclude": [
-                    "STATS"
-                ],
-                "lexicon": {
-                    "camel-morph-msa-nom": [
-                        "MSA-Noun-LEX",
-                        "Lemma-Paradigm-Debugging-Adj-v2",
-                        "Lemma-Paradigm-Debugging-Adj_comp"
-                    ]
-                }
-            },
-            "debugging": {
-                "display_format": "expanded",
-                "stats_spreadsheet": "CamelMorph-Nominals-Paper-Assets",
-                "stats_sheet": "Statistics-v1.0",
-                "table_start_cell": ""
-            },
-            "logprob": "return_all",
-            "dialect": "msa",
-            "db": "XYZ_msa_nom_stats_v1.0.db",
-            "pos": [
-                "noun",
-                "adj",
-                "adj_comp"
-            ],
-            "class_map": "misc_files/class2complx_morpheme_type.json"
-        },
-        "nom_msa_stats_reindex": {
-            "pruning": true,
             "reindex": true,
             "specs": {
                 "order": {
@@ -71,25 +35,37 @@
                     "STATS"
                 ],
                 "lexicon": {
-                    "camel-morph-msa-nom": [
+                    "camel-morph-msa-nom-other": [
                         "MSA-Noun-LEX",
-                        "Lemma-Paradigm-Debugging-Adj-v2",
-                        "Lemma-Paradigm-Debugging-Adj_comp"
+                        "MSA-Adj-LEX",
+                        "MSA-Adj-Comp-LEX"
                     ]
                 }
             },
             "debugging": {
-                "display_format": "expanded"
+                "display_format": "expanded",
+                "stats_spreadsheet": "CamelMorph-Nominals-Paper-Assets",
+                "stats_sheet": "Statistics-v2.0",
+                "table_start_cell": "P36",
+                "pos_display": [
+                    "noun.lex",
+                    "adj.lex",
+                    "adj_comp.lex"
+                ]
             },
             "logprob": "return_all",
             "dialect": "msa",
-            "db": "XYZ_msa_nom_stats_reindex_v1.0.db",
+            "db": "XYZ_msa_nom_stats_v1.0.db",
             "pos": [
                 "noun",
                 "adj",
                 "adj_comp"
             ],
-            "class_map": "misc_files/class2complx_morpheme_type.json"
+            "class_map": "misc_files/class2complx_morpheme_type.json",
+            "extended_lemma_keys": [
+                "lemma",
+                "pos"
+            ]
         },
         "nom_eval": {
             "pruning": true,
@@ -102,22 +78,21 @@
                 },
                 "exclude": [],
                 "lexicon": {
-                    "camel-morph-msa-nom": [
+                    "camel-morph-msa-nom-other": [
                         "MSA-Noun-LEX",
-                        "Lemma-Paradigm-Debugging-Adj-v2",
-                        "Lemma-Paradigm-Debugging-Adj_comp"
-                    ],
-                    "Nominals-Sandbox": [
-                        "Lemma-Paradigm-Debugging-Noun_num",
-                        "Lemma-Paradigm-Debugging-Noun_quant",
-                        "Lemma-Paradigm-Debugging-Adj_num",
+                        "MSA-Adj-LEX",
+                        "MSA-Adj-Comp-LEX",
+                        "MSA-Noun-Num-LEX",
+                        "MSA-Noun-Quant-LEX",
+                        "MSA-Adj-Num-LEX",
+                        "MSA-Noun-Prop-LEX",
                         "MSA-Other-LEX",
-                        "MSA-Nom-Prop-LEX"
+                        "MSA-Nom-LEX-Backoff"
                     ]
                 }
             },
             "dialect": "msa",
-            "db": "XYZ_msa_nom_v1.0_test.db",
+            "db": "XYZ_msa_nom_stats_v1.0.db",
             "class_map": "misc_files/class2complx_morpheme_type.json",
             "pos_type": [
                 "nominal",

@@ -35,15 +35,6 @@ parser.add_argument("-camel_tools", default='local', choices=['local', 'official
 args = parser.parse_args([] if "__file__" not in globals() else None)
 
 
-def _get_df(table):
-    table_ = {}
-    for row in table[1:]:
-        for h, value in row.items():
-            table_.setdefault(h, []).append(value)
-    table = pd.DataFrame(table_)
-    return table
-
-
 if __name__ == "__main__":
     config = Config(args.config_file_main, args.config_name_main)
 
@@ -79,23 +70,21 @@ if __name__ == "__main__":
         ]
 
         print('Building inflection table...', end=' ')
-        conj_table = create_conjugation_tables(config=config,
+        conj_table_df = create_conjugation_tables(config=config,
                                                paradigm_key=feats_,
                                                repr_lemmas=repr_lemmas,
                                                HEADER=HEADER)
-        conj_table = _get_df(conj_table)
         print('Done.\n')
         
         print('Querying bank and automatically quality checking inflection table...', end=' ')
-        outputs, bank = automatic_bank_annotation(config=config,
-                                                  new_conj_table=conj_table,
+        outputs_df, bank = automatic_bank_annotation(config=config,
+                                                  new_system_results=conj_table_df,
                                                   sa=sa,
-                                                  HEADER=HEADER)
-        outputs = _get_df(outputs)
+                                                  header=HEADER)
         print('Done.\n')
         
         upload_sheet(config=config,
-                     sheet=outputs,
+                     sheet=outputs_df,
                      input_dir='paradigm_debugging_dir',
                      mode='backup',
                      sa=sa)

@@ -264,7 +264,8 @@ def get_extended_lemmas(lexicon, extended_lemma_keys):
                     gloss=row['GLOSS'],
                     bw=row['BW'],
                     index=row['index'],
-                    line=row.get('LINE'))
+                    line=row.get('LINE'),
+                    hashes=row['FORM'].count('#'))
         info.update(feats)
         extended_lemma = tuple([lemma] + [info.get(k, '')
                                           for k in extended_lemma_keys[1:]])
@@ -388,7 +389,7 @@ def setup(config:utils.Config, lemma2prob):
         exclusions = []
 
     bank = None
-    if config.debugging.feats is not None:
+    if config.debugging.feats:
         banks_dir = args.banks_dir if args.banks_dir else config.get_banks_dir_path()
         bank = args.bank if args.bank else config.debugging.debugging_feats.bank
     lexprob_db = args.db if args.db else config.debugging.lexprob_db

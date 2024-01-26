@@ -428,7 +428,10 @@ class SystemInfoUnsharedFeats:
             queries_valie_slots = self.diac_mat[:, queries]
             feat_value2slots[(feat, value)] = np.sum(queries_valie_slots)
         # Contains all the feat_combs in which the feat:value pairs participate
-        feat_combs_group_1_indexes = set.union(*map(set, feat_value2queries.values()))
+        if feat_value2queries:
+            feat_combs_group_1_indexes = set.union(*map(set, feat_value2queries.values()))
+        else:
+            feat_combs_group_1_indexes = set()
         # Contains all the feat_combs which do not have any of these feat:value pairs
         # but which are still unique to that system. These might either be invalid OR
         # mappable to one(s) in that of another system.

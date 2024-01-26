@@ -89,19 +89,18 @@ def download_sheets(specs=None, save_dir=None, config:Config=None, service_accou
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-specs", nargs='+', action='append', default=[],
-                        type=str, help="Name of the specs spreadsheet to download followed by the desired individual sheets.")
+                        type=str, help="Name of the specs spreadsheet to download followed by the desired individual sheets. Either use this argument, or -config_file and -config_name. The former and the two latter are mutually exclusive.")
     parser.add_argument("-save_dir", default='',
                         type=str, help="Path of the directory to save the csv files to.")
     parser.add_argument("-config_file", default='config_default.json',
-                        type=str, help="Config file specifying which sheets to use.")
+                        type=str, help="Config file specifying which sheets to use. This must be used in conjunction with -config_name, and cannot be used at the same time with -specs.")
     parser.add_argument("-config_name", default='default_config',
-                        type=str, help="Name of the configuration to load from the config file.")
+                        type=str, help="Name of the configuration to load from the config file. This must be used in conjunction with with -config_file, and cannot be used at the same time with -specs.")
     parser.add_argument("-service_account", default='',
                         type=str, help="Path of the JSON file containing the information about the service account used for the Google API.")
     args = parser.parse_args()
 
     print(args.specs)
-    sys.exit()
     config = None
     if args.config_file and args.config_name:
         config = Config(args.config_file, args.config_name)

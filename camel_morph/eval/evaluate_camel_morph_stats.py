@@ -33,9 +33,15 @@ parser.add_argument("-no_build_db", default=False,
                     action='store_true', help="Do not the DB.")
 parser.add_argument("-msa_baseline_db", default='eval_files/calima-msa-s31_0.4.2.utf8.db',
                     type=str, help="Path of the MSA baseline DB file we will be comparing against.")
+parser.add_argument("-lemma_paradigm_sheet", default='',
+                    type=str, help="Google sheet containing basic lemma paradigm with a column called `ID` providing the basic lemma paradigm ID in the following format: BPxx.")
+parser.add_argument("-lemma_paradigm_sheet_paper_asset", default='',
+                    type=str, help="Same as -lemma_paradigm_sheet with an ID column called `ID`, and should reflect the IDs to retrieve from the latter.")
+parser.add_argument("-bp_print_range", default='',
+                    type=str, help="Range in the paper asset sheet to print the BPs in.")
 parser.add_argument("-camel_tools", default='local', choices=['local', 'official'],
                         type=str, help="Path of the directory containing the camel_tools modules.")
-args = parser.parse_args([] if "__file__" not in globals() else None)
+args, _ = parser.parse_known_args([] if "__file__" not in globals() else None)
 
 lex_keys = ['diac', 'lex']
 lex_pos_keys = [*lex_keys, 'pos']
@@ -50,15 +56,29 @@ essential_keys_form_feats = essential_keys + form_keys
 essential_keys_form_feats_no_lex_pos = essential_keys_no_lex_pos + form_keys
 essential_keys_form_feats_no_clitics = lex_pos_keys + feats_oblig + form_keys
 
+CAMEL_POS = None
 
-def get_analysis_counts(db, forms=False, ids=False):
+config = Config(args.config_file_main, args.config_name_main)
+
+if args.camel_tools == 'local':
+    sys.path.insert(0, config.camel_tools)
+
+from camel_tools.morphology.database import MorphologyDB
+from camel_tools.utils.charmap import CharMapper
+from camel_tools.morphology.utils import merge_features
+
+bw2ar = CharMapper.builtin_mapper('bw2ar')
+ar2bw = CharMapper.builtin_mapper('ar2bw')
+
+
+def get_analysis_counts(db, forms=False, ids=False, camel_pos=CAMEL_POS):
     stem_cat_hash, stem_cat_hash_diac_only, stem_cat_hash_diac_only_no_wiki = {}, {}, {}
     for match in db.stem_hash:
         if match == 'NOAN':
             continue
         for cat_analysis in db.stem_hash[match]:
             cat, analysis = cat_analysis
-            if CAMEL_POS and analysis['pos'] not in CAMEL_POS:
+            if camel_pos and analysis['pos'] not in camel_pos:
                 continue
             stem_cat_hash.setdefault(cat, []).append(analysis)
             stem_cat_hash_diac_only.setdefault(cat, []).append(analysis.get('diac', ''))
@@ -230,7 +250,10 @@ def _aggregate_results(lex_specs, lex_db_camel, lex_db_calima,
     lex_counts = {}
     for system, lexs_ in systems:
         for pos_or_type_source in POS_DISPLAY:
-            pos_or_type, source = pos_or_type_source.split('.')
+            if '.' not in pos_or_type_source:
+                pos_or_type, source = pos_or_type_source, 'lex'
+            else:
+                pos_or_type, source = pos_or_type_source.split('.')
             lex_counts.setdefault(pos_or_type_source, {}).setdefault(system, 0)
             for feats in lexs_:
                 if feats[source_index] == source:
@@ -246,7 +269,8 @@ def get_number_of_lemmas(lexicon_specs, db_camel, db_calima):
     lemmas_specs = _get_lex_specs(lexicon_specs, ['LEMMA', 'POS', 'SOURCE'])
     lemmas_db_camel = _get_lex_db(db_camel, ['lex', 'pos', 'source'])
     lemmas_db_calima = _get_lex_db_calima(db_calima, ['lex', 'pos', 'source'])
-    diff = abs(len(lemmas_specs) - len(lemmas_db_camel))
+    diff = abs(len([l for l in lemmas_specs if l[0] != 'NOAN']) - len(
+        [l for l in lemmas_db_camel if l[0] != 'NOAN']))
     if diff:
         print(('\nWARNING: The number of lemmas between the specs and the DB '
                f'is not the same ({diff} difference)'))
@@ -300,8 +324,9 @@ def get_specs_stats(morph_specs, lexicon_specs, order_specs):
     conditions_morph = get_conds_from_specs(morph_specs)
     conditions_lexicon = get_conds_from_specs(lexicon_specs)
     print()
-    print(('WARNING: There are conditions in the lexicon that are not in morph: '
-           f"{' '.join(conditions_lexicon - conditions_morph)}"))
+    if conditions_lexicon - conditions_morph:
+        print(('WARNING: There are conditions in the lexicon that are not in morph: '
+            f"{' '.join(conditions_lexicon - conditions_morph)}"))
 
     
     order_lines = []
@@ -328,11 +353,11 @@ def get_specs_stats(morph_specs, lexicon_specs, order_specs):
     return specs_stats
 
 
-def get_db_stats(db_camel, db_calima):
+def get_db_stats(db_camel, db_calima, camel_pos):
     cmplx_morph_count, compat_count, analysis_counts = {}, {}, {}
     unique_analyses_no_clitics_ = {}
     for system, db in [('calima', db_calima), ('camel', db_camel)]:
-        info = get_analysis_counts(db)
+        info = get_analysis_counts(db, camel_pos=camel_pos)
         unique_analyses_no_clitics = info['unique_analyses_no_clitics']
         analysis_counts_ = info['analysis_counts']
         compat_entries = info['compat_entries']
@@ -406,7 +431,7 @@ def create_stats_table(lemma_counts, stem_counts, specs_stats,
     sheet.batch_update([{'range': range_, 'values': table}])
 
 
-def get_stem_count_per_lemma(db_camel, db_calima):
+def _get_stem_count_per_lemma(db_camel, db_calima):
     stem_counts = {}
     for system, db in [('camel', db_camel), ('calima', db_calima)]:
         for analyses in db.stem_hash.values():
@@ -424,8 +449,11 @@ def get_stem_count_per_lemma(db_camel, db_calima):
 
 def get_basic_lemma_paradigms(lexicon_specs):
     """Get frequencies of basic paradigms (bp)"""
-    sh = sa.open('camel-morph-msa-nom')
-    sheet = sh.worksheet('Lemma-Paradigm-Reference-Nom')
+    lemma_paradigm_sheet = args.lemma_paradigm_sheet.split()
+    assert len(lemma_paradigm_sheet) == 2
+    sh_name, sheet_name = lemma_paradigm_sheet
+    sh = sa.open(sh_name)
+    sheet = sh.worksheet(sheet_name)
     reference_bp = pd.DataFrame(sheet.get_all_records())
 
     def _parse_signature(signature):
@@ -434,8 +462,8 @@ def get_basic_lemma_paradigms(lexicon_specs):
 
     signature2bp = {}
     for _, row in reference_bp.iterrows():
-        if row['id']:
-            signature2bp[_parse_signature(row['signature'])] = row['id']
+        if row['ID']:
+            signature2bp[_parse_signature(row['SIGNATURE'])] = row['ID']
     
     lemma_pos2signature = regenerate_signature_lex_rows(
         config, lexicon_specs=lexicon_specs)
@@ -462,32 +490,23 @@ def get_basic_lemma_paradigms(lexicon_specs):
                 bp_freq.update(['else'])
         lemma_pos_used.add(lemma_pos)
     
-    sh = sa.open('CamelMorph-Nominals-Paper-Assets')
-    sheet = sh.worksheet('Lemma-Paradigms-Index')
+    lemma_paradigm_sheet_paper_asset = args.lemma_paradigm_sheet_paper_asset.split()
+    assert len(lemma_paradigm_sheet_paper_asset) == 2
+    sh_name, sheet_name = lemma_paradigm_sheet_paper_asset
+    sh = sa.open(sh_name)
+    sheet = sh.worksheet(sheet_name)
     table_paper = pd.DataFrame(sheet.get_all_records())
     table = []
-    for bp in [bp_id for bp_id in table_paper['id'].tolist() if bp_id]:
+    for bp in [bp_id for bp_id in table_paper['ID'].tolist() if bp_id]:
         row = [pos2bp_freq[pos].get(bp, 0) for pos in CAMEL_POS]
         row.append(sum(row))
         table.append(row)
-    sheet.batch_update([{'range': 'K2:N33', 'values': table}])
+    sheet.batch_update([{'range': args.bp_print_range, 'values': table}])
 
     pass
 
 
 if __name__ == "__main__":
-    config = Config(args.config_file_main, args.config_name_main)
-
-    if args.camel_tools == 'local':
-        sys.path.insert(0, config.camel_tools)
-
-    from camel_tools.morphology.database import MorphologyDB
-    from camel_tools.utils.charmap import CharMapper
-    from camel_tools.morphology.utils import merge_features
-
-    bw2ar = CharMapper.builtin_mapper('bw2ar')
-    ar2bw = CharMapper.builtin_mapper('ar2bw')
-
     sa = gspread.service_account(config.service_account)
 
     ATB_POS, CAMEL_POS, POS_OR_TYPE = load_required_pos(config.pos, config.pos_type)
@@ -517,8 +536,6 @@ if __name__ == "__main__":
 
     db_camel = MorphologyDB(config.get_db_path(), 'dag')
     db_calima = MorphologyDB(args.msa_baseline_db, 'dag')
-
-    # stem_counts = get_stem_count_per_lemma(db_camel, db_calima)
     
     if not args.no_download:
         print()
@@ -535,8 +552,8 @@ if __name__ == "__main__":
     lexicon_specs = lexicon_specs.replace(nan, '', regex=True)
     morph_specs = morph_specs.replace(nan, '', regex=True)
     order_specs = order_specs.replace(nan, '', regex=True)
-
-    # get_basic_lemma_paradigms(lexicon_specs)
+    if args.lemma_paradigm_sheet and args.lemma_paradigm_sheet_paper_asset and args.bp_print_range:
+        get_basic_lemma_paradigms(lexicon_specs)
 
     lemma_counts = get_number_of_lemmas(
         lexicon_specs, db_camel, db_calima)
@@ -547,7 +564,7 @@ if __name__ == "__main__":
     specs_stats = get_specs_stats(morph_specs, lexicon_specs, order_specs)
 
     cmplx_morph_count, compat_count, analyses_count = get_db_stats(
-        db_camel, db_calima)
+        db_camel, db_calima, CAMEL_POS)
 
     stats_table = create_stats_table(lemma_counts, stem_counts, specs_stats,
                                      cmplx_morph_count, compat_count, analyses_count)

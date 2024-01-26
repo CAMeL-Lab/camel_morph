@@ -605,5 +605,55 @@
                 ]
             }
         }
+    },
+    "pal": {
+        "verbal": {
+            "asp:p mod:i": {
+                "proclitics": false,
+                "enclitics": true,
+                "passive": false,
+                "paradigm": [
+                    "VERB.P1S.AI",
+                    "VERB.P1Q.AI",
+                    "VERB.P2MS.AI",
+                    "VERB.P2FS.AI",
+                    "VERB.P2UQ.AI",
+                    "VERB.P2FQ.AI",
+                    "VERB.P3MS.AI",
+                    "VERB.P3FS.AI",
+                    "VERB.P3UQ.AI",
+                    "VERB.P3FQ.AI"
+                ]
+            },
+            "asp:i mod:i": {
+                "proclitics": false,
+                "enclitics": true,
+                "passive": false,
+                "paradigm": [
+                    "VERB.I1S.AI",
+                    "VERB.I1Q.AI",
+                    "VERB.I2MS.AI",
+                    "VERB.I2FS.AI",
+                    "VERB.I2UQ.AI",
+                    "VERB.I2FQ.AI",
+                    "VERB.I3MS.AI",
+                    "VERB.I3FS.AI",
+                    "VERB.I3UQ.AI",
+                    "VERB.I3FQ.AI"
+                ]
+            },
+            "asp:c mod:i": {
+                "proclitics": false,
+                "enclitics": true,
+                "passive": false,
+                "paradigm": [
+                    "VERB.C2MS.AI",
+                    "VERB.C2FS.AI",
+                    "VERB.C2UQ.AI",
+                    "VERB.C2FQ.AI"
+                ]
+            }
+        },
+        "nominal": {}
     }
 }

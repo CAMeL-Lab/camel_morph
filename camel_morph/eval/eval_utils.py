@@ -10,8 +10,6 @@ from collections import Counter
 from types import ModuleType, FunctionType
 from gc import get_referents
 
-import eval_utils
-
 # Custom objects know their class.
 # Function objects seem to know way too much, including modules.
 # Exclude modules as well.
@@ -99,7 +97,7 @@ def get_all_lemmas_from_db(db):
     lemmas_pos = set()
     for match, analyses in db.stem_hash.items():
         for cat, analysis in analyses:
-            eval_utils.preprocess_lex_features(analysis)
+            preprocess_lex_features(analysis)
             lemmas_pos.add((analysis['lex'], analysis['pos']))
     return lemmas_pos
 
@@ -457,7 +455,10 @@ def get_pos2cliticfeats(pos2possible_feat_combs, POS):
             clitic_feats_dict = {f: clitic_feats_[i] for i, f in enumerate(clitic_keys)}
             clitic_feats_dict = {**clitic_feats_dict, **{'pos': pos}}
             pos2cliticfeats.setdefault(pos, []).append(clitic_feats_dict)
-    
+        
+        if len(clitic_feats) == 0:
+            pos2cliticfeats.setdefault(pos, [])
+
     return pos2cliticfeats
 
 

@@ -135,7 +135,7 @@ def read_morph_specs(config:Config,
     
     lexicon_sheet_names: List[Union[str, pd.DataFrame]] = None
     if lexicon_df is not None:
-        lexicon_sheet_names = {None: lexicon_df}
+        lexicon_sheet_names = {None: lexicon_df}.items()
     else:
         lexicon_sheet_names = config.get_sheets_list('lexicon', with_labels=True)
 
@@ -438,7 +438,7 @@ def process_morph_specs(MORPH:pd.DataFrame, exclusions: List[str]) -> pd.DataFra
     5   CLS1    F1      else    else    else    x1 x4 x5
     
     The above table represents the scope of a dummy morpheme in the MORPH sheet. Rows 1 to 5 belong to
-    the same morpheme because they have the same CLASS and FUNC values. The rows are actual
+    the same morpheme becaus they have the same CLASS and FUNC values. The rows are actual
     rows in the sheet. Columns X and Y are actual columns in the sheet, whereas A, B, and C are not
     actual sheet columns; the conditions in the COND-T column are written in such a way as to emulate
     a table structure. To understand how the `else` markers populates the COND-F column, we define the

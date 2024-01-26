@@ -1,0 +1,286 @@
+{
+    "global": {
+        "data_dir": "data",
+        "specs": {
+            "about": {
+                "camel-morph-common": "About"
+            },
+            "header": {
+                "camel-morph-common": "Header-v2"
+            }
+        },
+        "db_dir": "databases",
+        "debugging_dir": "debugging_output",
+        "repr_lemmas_dir": "repr_lemmas",
+        "tables_dir": "tables",
+        "paradigm_debugging_dir": "paradigm_debugging",
+        "banks_dir": "banks",
+        "camel_tools": "./camel_morph/camel_tools",
+        "service_account": "/Users/chriscay/.config/gspread/service_account.json",
+        "paradigms_config": "misc_files/config_paradigms.json",
+        "banks_spreadsheet": "Paradigm-Banks"
+    },
+    "local": {
+        "all_aspects_pal": {
+            "dialect": "pal",
+            "pruning": true,
+            "specs": {
+                "order": {
+                    "camel-morph-pal-verbs": "PAL-Verb-ORDER"
+                },
+                "morph": {
+                    "camel-morph-pal-verbs": "PAL-Verb-MORPH"
+                },
+                "postregex": {
+                    "camel-morph-pal-verbs": "PostRegex"
+                },
+                "lexicon": {
+                    "camel-morph-pal-verbs": [
+                        "PAL-Verb-LEX-PV",
+                        "PAL-Verb-LEX-IV",
+                        "PAL-Verb-LEX-CV"
+                    ]
+                },
+                "backoff": {
+                    "camel-morph-pal-verbs": {
+                        "PAL-Verb-LEX-PV": "PAL-Verb-LEX-PV-ABSTRACT",
+                        "PAL-Verb-LEX-IV": "PAL-Verb-LEX-IV-ABSTRACT",
+                        "PAL-Verb-LEX-CV": "PAL-Verb-LEX-CV-ABSTRACT"
+                    }
+                }
+            },
+            "db": "XYZ_pal_all_v1.0.db",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        },
+        "pv_pal": {
+            "dialect": "pal",
+            "reindex": true,
+            "pruning": true,
+            "specs": {
+                "order": {
+                    "camel-morph-pal-verbs": "PAL-Verb-ORDER"
+                },
+                "morph": {
+                    "camel-morph-pal-verbs": "PAL-Verb-MORPH"
+                },
+                "postregex": {
+                    "camel-morph-pal-verbs": "PostRegex"
+                },
+                "exclude": [
+                    "IV",
+                    "CV"
+                ],
+                "lexicon": {
+                    "camel-morph-pal-verbs": [
+                        "PAL-Verb-LEX-PV"
+                    ]
+                }
+            },
+            "db": "XYZ_pal_pv_v1.0.db",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
+                "display_format": "unique",
+                "feats": {
+                    "asp:p mod:i": {
+                        "conj_tables": "conj_pv_pal_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_pv_pal_v1.0.tsv",
+                        "bank": "PAL-PV-Bank.tsv",
+                        "debugging_sheet": "PAL-PV"
+                    }
+                }
+            },
+            "pos_type": "verbal",
+            "class_keys": [
+                "cond_t",
+                "cond_s",
+                "hashes"
+            ],
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        },
+        "pv_pal_red": {
+            "dialect": "pal",
+            "pruning": true,
+            "specs": {
+                "order": {
+                    "camel-morph-pal-verbs": "PAL-Verb-ORDER"
+                },
+                "morph": {
+                    "camel-morph-pal-verbs": "PAL-Verb-MORPH"
+                },
+                "postregex": {
+                    "camel-morph-pal-verbs": "PostRegex"
+                },
+                "exclude": [
+                    "RED",
+                    "IV",
+                    "CV"
+                ],
+                "lexicon": {
+                    "camel-morph-pal-verbs": [
+                        "PAL-Verb-LEX-PV"
+                    ]
+                }
+            },
+            "db": "XYZ_pal_pv_v1.0_red.db",
+            "pos_type": "verbal",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        },
+        "iv_pal": {
+            "dialect": "pal",
+            "pruning": true,
+            "specs": {
+                "order": {
+                    "camel-morph-pal-verbs": "PAL-Verb-ORDER"
+                },
+                "morph": {
+                    "camel-morph-pal-verbs": "PAL-Verb-MORPH"
+                },
+                "postregex": {
+                    "camel-morph-pal-verbs": "PostRegex"
+                },
+                "exclude": [
+                    "PV",
+                    "CV"
+                ],
+                "lexicon": {
+                    "camel-morph-pal-verbs": [
+                        "PAL-Verb-LEX-IV"
+                    ]
+                }
+            },
+            "db": "XYZ_pal_iv_v1.0.db",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
+                "display_format": "unique",
+                "feats": {
+                    "asp:i mod:i": {
+                        "conj_tables": "conj_iv_pal_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_iv_pal_v1.0.tsv",
+                        "bank": "PAL-IV-Bank.tsv",
+                        "debugging_sheet": "PAL-IV"
+                    }
+                }
+            },
+            "pos_type": "verbal",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        },
+        "iv_pal_red": {
+            "dialect": "pal",
+            "pruning": true,
+            "specs": {
+                "order": {
+                    "camel-morph-pal-verbs": "PAL-Verb-ORDER"
+                },
+                "morph": {
+                    "camel-morph-pal-verbs": "PAL-Verb-MORPH"
+                },
+                "postregex": {
+                    "camel-morph-pal-verbs": "PostRegex"
+                },
+                "exclude": [
+                    "RED",
+                    "IV",
+                    "CV"
+                ],
+                "lexicon": {
+                    "camel-morph-pal-verbs": [
+                        "PAL-Verb-LEX-IV"
+                    ]
+                }
+            },
+            "db": "XYZ_pal_iv_v1.0_red.db",
+            "pos_type": "verbal",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        },
+        "cv_pal": {
+            "dialect": "pal",
+            "pruning": true,
+            "specs": {
+                "order": {
+                    "camel-morph-pal-verbs": "PAL-Verb-ORDER"
+                },
+                "morph": {
+                    "camel-morph-pal-verbs": "PAL-Verb-MORPH"
+                },
+                "postregex": {
+                    "camel-morph-pal-verbs": "PostRegex"
+                },
+                "exclude": [
+                    "PV",
+                    "IV"
+                ],
+                "lexicon": {
+                    "camel-morph-pal-verbs": [
+                        "PAL-Verb-LEX-CV"
+                    ]
+                }
+            },
+            "db": "XYZ_pal_cv_v1.0.db",
+            "debugging": {
+                "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
+                "display_format": "unique",
+                "feats": {
+                    "asp:c mod:i": {
+                        "conj_tables": "conj_cv_pal_v1.0.tsv",
+                        "paradigm_debugging": "paradigm_debug_cv_pal_v1.0.tsv",
+                        "bank": "PAL-CV-Bank.tsv",
+                        "debugging_sheet": "PAL-CV"
+                    }
+                }
+            },
+            "pos_type": "verbal",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        },
+        "cv_pal_red": {
+            "dialect": "pal",
+            "pruning": true,
+            "specs": {
+                "order": {
+                    "camel-morph-pal-verbs": "PAL-Verb-ORDER"
+                },
+                "morph": {
+                    "camel-morph-pal-verbs": "PAL-Verb-MORPH"
+                },
+                "postregex": {
+                    "camel-morph-pal-verbs": "PostRegex"
+                },
+                "exclude": [
+                    "RED",
+                    "PV",
+                    "IV"
+                ],
+                "lexicon": {
+                    "camel-morph-pal-verbs": [
+                        "PAL-Verb-LEX-CV"
+                    ]
+                }
+            },
+            "db": "XYZ_pal_cv_v1.0_red.db",
+            "conj_tables": "conj_cv_pal_v1.0.tsv",
+            "pos_type": "verbal",
+            "debugging_spreadsheet": "Paradigm-Debugging-Dialects",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ]
+        }
+    }
+}

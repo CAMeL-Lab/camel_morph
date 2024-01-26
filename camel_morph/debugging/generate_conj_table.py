@@ -31,6 +31,8 @@ import pickle
 import sys
 from itertools import product
 
+import pandas as pd
+
 try:
     from ..utils.utils import strip_brackets, Config, POS_NOMINAL
 except:
@@ -116,7 +118,7 @@ sig2feat = {
     'feats1': {
         'asp': ['P', 'I', 'C'],
         'per': ['1', '2', '3'], 
-        'gen': ['M', 'F'], 
+        'gen': ['M', 'F', 'U'], 
         'num': ['S', 'D', 'Q']},
     'feats2': {
         'stt': ['D', 'I', 'C'],
@@ -429,8 +431,13 @@ def create_conjugation_tables(config,
         lemmas_conj.append(outputs)
 
     outputs = process_outputs(lemmas_conj, pos_type, HEADER)
-    
-    return outputs
+    outputs_ = {}
+    for row in outputs[1:]:
+        for h, value in row.items():
+            outputs_.setdefault(h, []).append(value)
+    outputs_df = pd.DataFrame(outputs_)
+
+    return outputs_df
 
 def process_nom_gen_num_(feat, form_feat,
                          form=None, cond_t=None, cond_s=None, gloss=None,
@@ -574,7 +581,7 @@ def process_outputs(lemmas_conj, pos_type, HEADER):
 
 def setup(config:Config, feats, repr_lemmas):
     db = MorphologyDB(config.get_db_path(), flags='gd')
-    generator = Generator(db)
+    generator = Generator(db, variant=config.dialect)
     
     paradigms = args.paradigms if args.paradigms else config.paradigms_config
     dialect = args.dialect if args.dialect else config.dialect
@@ -624,13 +631,11 @@ if __name__ == "__main__":
     output_dir = args.output_dir if args.output_dir else config.get_docs_tables_dir_path()
     os.makedirs(output_dir, exist_ok=True)
         
-    outputs = create_conjugation_tables(config=config,
+    outputs_df = create_conjugation_tables(config=config,
                                         paradigm_key=args.feats)
     
     if not args.lemma_debug:
         output_name = args.output_name if args.output_name \
             else config.debugging.debugging_feats.conj_tables
         output_path = os.path.join(output_dir, output_name)
-        with open(output_path, 'w') as f:
-            for output in outputs:
-                print(*output.values(), sep='\t', file=f)
+        outputs_df.to_csv(output_path, sep='\t')

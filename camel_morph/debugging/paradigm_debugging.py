@@ -52,7 +52,7 @@ parser.add_argument("-gsheet", default='',
                     type=str, help="Name of the manually annotated paradigms gsheet, the annotations of which will go in the bank.")
 parser.add_argument("-spreadsheet", default='',
                     type=str, help="Name of the spreadsheet in which that sheet is.")
-parser.add_argument("-new_conj",  default='',
+parser.add_argument("-new_system_results",  default='',
                     type=str, help="Path of the conjugation tables file generated after fixes were made to the specification sheets. This file will be automatically annotated using the information in the bank.")
 parser.add_argument("-bank_dir",  default='',
                     type=str, help="Directory in which the annotation banks are.")
@@ -74,35 +74,41 @@ parser.add_argument("-service_account", default='',
                     type=str, help="Path of the JSON file containing the information about the service account used for the Google API.")
 args, _ = parser.parse_known_args()
 
-if args.camel_tools == 'local':
-    camel_tools_dir = 'camel_morph/camel_tools'
-    sys.path.insert(0, camel_tools_dir)
+feats = args.feats if args.feats else None
+config = Config(args.config_file, args.config_name, feats)
 
-from camel_tools.morphology.utils import strip_lex
+if args.camel_tools == 'local':
+    sys.path.insert(0, config.camel_tools)
 
 HEADER = [
     'line', 'status', 'count', 'signature', 'lemma', 'diac_ar', 'diac', 'freq',
     'qc', 'comments', 'pattern', 'stem', 'bw', 'gloss', 'cond-s', 'cond-t',
     'pref-cat', 'stem-cat', 'suff-cat', 'feats', 'debug', 'color'
 ]
+QUERY_KEYS = ['SIGNATURE', 'LEMMA']
+VALUE_KEY = 'DIAC'
 
 class AnnotationBank:
     UNKOWN = 'UNK'
     GOOD = 'OK'
     PROBLEM = 'PROB'
     TAGS = {UNKOWN, GOOD, PROBLEM}
-    HEADER_KEY = ['SIGNATURE', 'LEMMA', 'DIAC']
     HEADER_INFO = ['QC', 'COMMENTS', 'STATUS']
-    HEADER = HEADER_KEY + HEADER_INFO
 
     def __init__(self,
                  bank_path,
-                 annotated_paradigms=None,
+                 query_keys=QUERY_KEYS,
+                 value_key=VALUE_KEY,
+                 annotated_sheet=None,
                  gsheet_info=None,
                  sa=None):
         self._bank_path = bank_path
         self.sa = sa
         self._bank, self._unkowns = OrderedDict(), OrderedDict()
+        self.query_keys, self.value_key = query_keys, value_key
+        self.header_key = self.query_keys + [self.value_key]
+        self.header = self.header_key + AnnotationBank.HEADER_INFO
+        self.key2index = {k: i for i, k in enumerate(self.header_key)}
         
         if gsheet_info is not None:
             self._gsheet_name = gsheet_info['gsheet_name']
@@ -116,8 +122,8 @@ class AnnotationBank:
             if os.path.exists(bank_path):
                 self._read_bank_from_tsv()
 
-        if annotated_paradigms is not None:
-            self._update_bank(annotated_paradigms)
+        if annotated_sheet is not None:
+            self._update_bank(annotated_sheet)
 
     def get(self, key, default=None):
         return self._bank[key] if key in self._bank else default
@@ -132,35 +138,42 @@ class AnnotationBank:
     def __getitem__(self, key):
         return self._bank[key]
 
-    def _update_bank(self, annotated_paradigms):
-        annotated_paradigms['QC'] = annotated_paradigms['QC'].replace(
+    def _update_bank(self, annotated_sheet):
+        annotated_sheet['QC'] = annotated_sheet['QC'].replace(
             '', AnnotationBank.UNKOWN, regex=True)
-        annotated_paradigms['QC'] = annotated_paradigms['QC'].str.strip()
-        annotated_paradigms['QC'] = annotated_paradigms['QC'].str.upper()
-        annotated_paradigms['LEMMA'] = annotated_paradigms['LEMMA'].replace(r'_\d', '', regex=True)
-        assert all([qc in AnnotationBank.TAGS for qc in annotated_paradigms['QC'].values.tolist()]), \
-            f"Get rid of all tags not belonging to {AnnotationBank.TAGS}"
-        assert set(AnnotationBank.HEADER).issubset(annotated_paradigms.columns)
+        annotated_sheet['QC'] = annotated_sheet['QC'].str.strip()
+        annotated_sheet['QC'] = annotated_sheet['QC'].str.upper()
+        if 'LEMMA' in annotated_sheet.columns:
+            annotated_sheet['LEMMA'] = annotated_sheet['LEMMA'].replace(
+                r'_\d', '', regex=True)
+        assert all([qc in AnnotationBank.TAGS
+                    for qc in annotated_sheet['QC'].values.tolist()]), \
+            f'Get rid of all tags not belonging to {AnnotationBank.TAGS}'
+        assert set(self.header).issubset(annotated_sheet.columns)
         
-        for _, row in annotated_paradigms.iterrows():
-            key_annot = tuple([row[h] for h in AnnotationBank.HEADER_KEY])
+        for _, row in annotated_sheet.iterrows():
+            key_annot = tuple([row[h] for h in self.header_key])
             if row['QC'] != AnnotationBank.UNKOWN:
-                self._bank[key_annot] = {h: row.get(h, '') for h in [h for h in AnnotationBank.HEADER_INFO if h != 'STATUS']}
+                self._bank[key_annot] = {
+                    h: row.get(h, '') for h in [h for h in AnnotationBank.HEADER_INFO
+                                                if h != 'STATUS']}
                 self._bank[key_annot]['STATUS'] = ''
             else:
-                self._unkowns[key_annot] = {h: row.get(h, '') for h in [h for h in AnnotationBank.HEADER_INFO if h != 'STATUS']}
+                self._unkowns[key_annot] = {
+                    h: row.get(h, '') for h in [h for h in AnnotationBank.HEADER_INFO
+                                                if h != 'STATUS']}
 
         self._save_bank()
 
     def _save_bank(self):
         with open(self._bank_path, 'w', newline='') as f:
             writer = csv.writer(f, delimiter='\t')
-            writer.writerow(AnnotationBank.HEADER)
-            writer.writerows([[k for k in key] + [self._bank[key].get(h, '') for h in AnnotationBank.HEADER_INFO]
+            writer.writerow(self.header)
+            writer.writerows([[k for k in key] + [self._bank[key].get(h, '')
+                                                  for h in AnnotationBank.HEADER_INFO]
                                 for key in self._bank])
 
     def _upload_gsheet(self, df=None, sh=None, sheet=None):
-        
         sh = self.sa.open(sh if sh is not None else self._spreadsheet)
         worksheet = sh.worksheet(title=sheet if sheet is not None else self._gsheet_name)
         worksheet.clear()
@@ -171,9 +184,10 @@ class AnnotationBank:
     def _read_bank_from_tsv(self):
         bank = pd.read_csv(self._bank_path, delimiter='\t')
         bank = bank.replace(nan, '', regex=True)
-        bank['LEMMA'] = bank['LEMMA'].replace(r'_\d', '', regex=True)
+        if 'LEMMA' in bank.columns:
+            bank['LEMMA'] = bank['LEMMA'].replace(r'_\d', '', regex=True)
         self._bank = OrderedDict(
-            (tuple([row[h] for h in AnnotationBank.HEADER_KEY]), 
+            (tuple([row[h] for h in self.header_key]), 
                 {h: row.get(h, '') for h in AnnotationBank.HEADER_INFO})
             for _, row in bank.iterrows())
 
@@ -182,13 +196,17 @@ class AnnotationBank:
             df = df[df['STATUS'] != 'DELETE']
         for _, row in df.iterrows():
             info = {h: row.get(h, '') for h in AnnotationBank.HEADER_INFO}
-            self._bank[tuple([row[h] for h in AnnotationBank.HEADER_KEY])] = info
+            self._bank[tuple([row[h] for h in self.header_key])] = info
 
     def to_df(self):
-        bank = pd.DataFrame([list(k) + [v[k] for k in AnnotationBank.HEADER_INFO]
-                                for k, v in self._bank.items()])
-        bank.columns = AnnotationBank.HEADER
-        return bank
+        columns = self.header_key + [h for h in AnnotationBank.HEADER_INFO]
+        if self._bank:
+            bank_df = pd.DataFrame([
+                list(k) + [v[k] for k in AnnotationBank.HEADER_INFO]
+                for k, v in self._bank.items()], columns=columns)
+        else:
+            bank_df = pd.DataFrame(columns=columns)
+        return bank_df
 
 def _process_key(key, mode):
     if mode == 'extra_energetic':
@@ -202,23 +220,36 @@ def _process_key(key, mode):
     
     return key
 
-def automatic_bank_annotation(config,
-                              new_conj_table,
-                              sa,
+def automatic_bank_annotation(config:Config,
+                              new_system_results:pd.DataFrame,
+                              sa=None,
                               mode='debugging',
+                              query_keys=QUERY_KEYS,
+                              value_key=VALUE_KEY,
+                              bank_dir=None,
                               process_key=None,
-                              HEADER=HEADER):
-    bank_path, annotated_paradigms = setup(config, sa, mode)
-    if annotated_paradigms is None:
-        annotated_paradigms = new_conj_table
-    bank = AnnotationBank(bank_path, annotated_paradigms, sa=sa)
+                              header=HEADER,
+                              header_upper=True):
+    bank_path, annotated_sheet = setup(config, sa, mode, bank_dir)
+    if annotated_sheet is None:
+        annotated_sheet = new_system_results
+    bank = AnnotationBank(bank_path, annotated_sheet=annotated_sheet,
+                          sa=sa, query_keys=query_keys, value_key=value_key)
+    if header is None:
+        header = bank.header
+    
+    indexes_query = set(index for key, index in bank.key2index.items()
+                        if key in bank.query_keys)
     partial_keys = {}
     for k, info in bank._bank.items():
-        partial_keys.setdefault(k[:-1], []).append({**info, **{'DIAC': k[-1]}})
+        query_keys = tuple(k_ for i, k_ in enumerate(k) if i in indexes_query)
+        value_key = k[bank.key2index[bank.value_key]]
+        partial_keys.setdefault(query_keys, []).append(
+            {**info, **{bank.value_key: value_key}})
 
     outputs = []
-    for _, row in new_conj_table.iterrows():
-        key = (row['SIGNATURE'], row['LEMMA'], row['DIAC'])
+    for _, row in new_system_results.iterrows():
+        key = tuple(row[k] for k in bank.header_key)
         if process_key is not None:
             key = _process_key(key, process_key)
         row = row.to_dict()
@@ -227,36 +258,49 @@ def automatic_bank_annotation(config,
             row['QC'] = info['QC']
             if info['QC'] == AnnotationBank.PROBLEM:
                 pass
-            key_ = key[:-1]
-            if len(partial_keys[key_]) > 1:
-                warnings = [f"{AnnotationBank.GOOD}-MULT:{info['DIAC']}" for info in partial_keys[key_]
-                                if info['QC'] == AnnotationBank.GOOD and key[-1] != info['DIAC']]
+            key_partial = tuple(row[k] for k in bank.query_keys)
+            if len(partial_keys[key_partial]) > 1:
+                warnings = [
+                    f"{AnnotationBank.GOOD}-MULT:{info[bank.value_key]}"
+                    for info in partial_keys[key_partial]
+                    if info['QC'] == AnnotationBank.GOOD and
+                    key[bank.key2index[bank.value_key]] != info[bank.value_key]]
                 if warnings:
                     row['WARNINGS'] = ' '.join(warnings)
         else:
             for k, info in bank._bank.items():
-                if key[:-1] == k[:-1]:
-                    row['QC'] = f"({k[-1]})[{info['QC']}]>({row['DIAC']})[{AnnotationBank.UNKOWN}]"
+                key_partial = tuple(key[bank.key2index[k_]] for k_ in bank.query_keys)
+                k_partial = tuple(k[bank.key2index[k_]] for k_ in bank.query_keys)
+                if key_partial == k_partial:
+                    row['QC'] = f"({k[-1]})[{info['QC']}]>({row[bank.value_key]})[{AnnotationBank.UNKOWN}]"
                     break
             else:
                 row['QC'] = AnnotationBank.UNKOWN
         comment = bank._unkowns.get(key)
         if comment is None:
-            comment = info['COMMENTS']
+            comment = info['COMMENTS'] if info is not None else ''
         else:
             comment = comment['COMMENTS']
         row['COMMENTS'] = comment
 
         output_ordered = OrderedDict()
-        for k in HEADER:
-            output_ordered[k.upper()] = row.get(k.upper(), '')
+        for k in header:
+            if header_upper:
+                k = k.upper()
+            output_ordered[k] = row.get(k, '')
         
         outputs.append(output_ordered)
 
-    outputs.insert(0, OrderedDict((i, x) for i, x in enumerate(map(str.upper, HEADER))))
-    return outputs, bank
+    outputs_ = {}
+    for row in outputs[1:]:
+        for h, value in row.items():
+            outputs_.setdefault(h, []).append(value)
+    columns = map(str.upper, header) if header_upper else header
+    outputs_df = pd.DataFrame(outputs_, columns=columns)
 
-def bank_cleanup_checker(bank_path, gsheet_info, mode, annotated_paradigms=None):
+    return outputs_df, bank
+
+def bank_cleanup_checker(bank_path, gsheet_info, mode, annotated_sheet=None):
     mode_ = ''
     if len(mode.split('_')) > 2:
         mode_ = '_'.join(mode.split('_')[2:])
@@ -270,7 +314,7 @@ def bank_cleanup_checker(bank_path, gsheet_info, mode, annotated_paradigms=None)
     if mode_ == 'freeze_table_as_bank':
         bank = AnnotationBank(bank_path)
         bank._bank = OrderedDict()
-        bank._update_bank(annotated_paradigms)
+        bank._update_bank(annotated_sheet)
     else:
         print('\nBeginning cleanup...')
         fixed = False
@@ -317,14 +361,16 @@ def _add_check_mark_online(bank, error_cases):
 
     bank_df['STATUS'] = ''
     for i, row in bank_df.iterrows():
-        if (row['SIGNATURE'], row['LEMMA'], row['DIAC']) in error_cases:
+        key = tuple(row[k] for k in bank.header_key)
+        if key in error_cases:
             bank_df.loc[i, 'STATUS'] = 'CHECK'
 
     bank._upload_gsheet(bank_df)
 
 
-def setup(config:Config, sa, mode):
-    bank_dir = args.bank_dir if args.bank_dir else config.get_banks_dir_path()
+def setup(config:Config, sa, mode, bank_dir):
+    if bank_dir is None:
+        bank_dir = args.bank_dir if args.bank_dir else config.get_banks_dir_path()
     os.makedirs(bank_dir, exist_ok=True)
     bank_name = args.bank_name if args.bank_name \
         else config.debugging.debugging_feats.bank
@@ -332,15 +378,17 @@ def setup(config:Config, sa, mode):
     
     spreadsheet = args.spreadsheet if args.spreadsheet \
         else config.debugging.debugging_spreadsheet
+    if sa is None:
+        sa = gspread.service_account(config.service_account)
     sh = sa.open(spreadsheet)
 
     gsheet = args.gsheet if args.gsheet \
         else config.debugging.debugging_feats.debugging_sheet
     worksheets = sh.worksheets()
     worksheet = [sheet for sheet in worksheets if sheet.title == gsheet]
-    annotated_paradigms = None
+    annotated_sheet = None
     if worksheet:
-        annotated_paradigms = pd.DataFrame(worksheet[0].get_all_records())
+        annotated_sheet = pd.DataFrame(worksheet[0].get_all_records())
 
     if mode.startswith('bank_cleanup'):
         bank_spreadsheet = args.bank_spreadsheet if args.bank_spreadsheet \
@@ -349,15 +397,13 @@ def setup(config:Config, sa, mode):
             'gsheet_name': bank_path.split('/')[-1].split('.')[0],
             'spreadsheet': bank_spreadsheet,
             'sa': sa}
-        bank_cleanup_checker(bank_path, gsheet_info, mode, annotated_paradigms)
+        bank_cleanup_checker(bank_path, gsheet_info, mode, annotated_sheet)
         sys.exit()
 
-    return bank_path, annotated_paradigms
+    return bank_path, annotated_sheet
 
 
 if __name__ == "__main__":
-    config = Config(args.config_file, args.config_name, args.feats)
-
     output_dir = args.output_dir if args.output_dir else config.get_paradigm_debugging_dir_path()
     os.makedirs(output_dir, exist_ok=True)
 
@@ -368,23 +414,20 @@ if __name__ == "__main__":
     service_account = args.service_account if args.service_account else config.service_account
     sa = gspread.service_account(service_account)
 
-    if args.new_conj:
-        new_conj_path = args.new_conj
+    if args.new_system_results:
+        new_sys_results_path = args.new_system_results
     else:
-        new_conj_path = config.get_tables_dir_path()
-        new_conj_path = os.path.join(
-            new_conj_path, config.debugging.debugging_feats.conj_tables)
+        new_sys_results_path = config.get_tables_dir_path()
+        new_sys_results_path = os.path.join(
+            new_sys_results_path, config.debugging.debugging_feats.conj_tables)
 
-        new_conj_table = pd.read_csv(new_conj_path, delimiter='\t')
-        new_conj_table = new_conj_table.replace(nan, '', regex=True)
+        new_sys_results_table = pd.read_csv(new_sys_results_path, delimiter='\t')
+        new_sys_results_table = new_sys_results_table.replace(nan, '', regex=True)
 
     #FIXME: do something about process_key (which is used from debugging
     # command energetic and extra energetic)
-    outputs, bank = automatic_bank_annotation(config=config,
-                                              process_key=args.process_key,
-                                              new_conj_table=new_conj_table,
-                                              sa=sa)
-
-    with open(output_path, 'w') as f:
-        for output in outputs:
-            print(*output.values(), sep='\t', file=f)
+    outputs_df, bank = automatic_bank_annotation(config=config,
+                                                 process_key=args.process_key,
+                                                 new_system_results=new_sys_results_table,
+                                                 sa=sa)
+    outputs_df.to_csv(output_path, sep='\t')
