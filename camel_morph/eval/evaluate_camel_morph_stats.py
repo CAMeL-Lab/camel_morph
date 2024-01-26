@@ -8,6 +8,7 @@ import pickle
 import json
 
 import gspread
+from tabulate import tabulate
 from numpy import nan
 import pandas as pd
 from tqdm import tqdm
@@ -425,10 +426,16 @@ def create_stats_table(lemma_counts, stem_counts, specs_stats,
         count_calima = analyses_count['calima'][count_type]
         table.append(['', f'{count_camel} ({count_no_wiki})', count_calima])
     
-    sh = sa.open(config.debugging.stats_spreadsheet)
-    sheet = sh.worksheet(config.debugging.stats_sheet)
-    range_ = get_range(table, config.debugging.table_start_cell)
-    sheet.batch_update([{'range': range_, 'values': table}])
+    
+    if sa is not None:
+        sh = sa.open(config.debugging.stats_spreadsheet)
+        sheet = sh.worksheet(config.debugging.stats_sheet)
+        range_ = get_range(table, config.debugging.table_start_cell)
+        sheet.batch_update([{'range': range_, 'values': table}])
+    else:
+        tabulate(table, tablefmt='fancy_grid',
+                 headers=['Camel Specs', 'Camel DB', 'Calima DB'])
+
 
 
 def _get_stem_count_per_lemma(db_camel, db_calima):
@@ -449,12 +456,16 @@ def _get_stem_count_per_lemma(db_camel, db_calima):
 
 def get_basic_lemma_paradigms(lexicon_specs):
     """Get frequencies of basic paradigms (bp)"""
-    lemma_paradigm_sheet = args.lemma_paradigm_sheet.split()
-    assert len(lemma_paradigm_sheet) == 2
-    sh_name, sheet_name = lemma_paradigm_sheet
-    sh = sa.open(sh_name)
-    sheet = sh.worksheet(sheet_name)
-    reference_bp = pd.DataFrame(sheet.get_all_records())
+    if sa is not None:
+        lemma_paradigm_sheet = args.lemma_paradigm_sheet.split()
+        assert len(lemma_paradigm_sheet) == 2
+        sh_name, sheet_name = lemma_paradigm_sheet
+        sh = sa.open(sh_name)
+        sheet = sh.worksheet(sheet_name)
+        reference_bp = pd.DataFrame(sheet.get_all_records())
+    else:
+        reference_bp = pd.read_csv(
+            args.lemma_paradigm_sheet, na_filter=False)
 
     def _parse_signature(signature):
         return tuple(zip(*[[_strip_brackets(s_) for s_ in s.split(']-[')]
@@ -490,24 +501,40 @@ def get_basic_lemma_paradigms(lexicon_specs):
                 bp_freq.update(['else'])
         lemma_pos_used.add(lemma_pos)
     
-    lemma_paradigm_sheet_paper_asset = args.lemma_paradigm_sheet_paper_asset.split()
-    assert len(lemma_paradigm_sheet_paper_asset) == 2
-    sh_name, sheet_name = lemma_paradigm_sheet_paper_asset
-    sh = sa.open(sh_name)
-    sheet = sh.worksheet(sheet_name)
-    table_paper = pd.DataFrame(sheet.get_all_records())
-    table = []
-    for bp in [bp_id for bp_id in table_paper['ID'].tolist() if bp_id]:
-        row = [pos2bp_freq[pos].get(bp, 0) for pos in CAMEL_POS]
-        row.append(sum(row))
-        table.append(row)
-    sheet.batch_update([{'range': args.bp_print_range, 'values': table}])
+    if sa is not None:
+        lemma_paradigm_sheet_paper_asset = args.lemma_paradigm_sheet_paper_asset.split()
+        assert len(lemma_paradigm_sheet_paper_asset) == 2
+        sh_name, sheet_name = lemma_paradigm_sheet_paper_asset
+        sh = sa.open(sh_name)
+        sheet = sh.worksheet(sheet_name)
+        table_paper = pd.DataFrame(sheet.get_all_records())
+        table = []
+        for bp in [bp_id for bp_id in table_paper['ID'].tolist() if bp_id]:
+            row = [pos2bp_freq[pos].get(bp, 0) for pos in CAMEL_POS]
+            row.append(sum(row))
+            table.append(row)
+        sheet.batch_update([{'range': args.bp_print_range, 'values': table}])
+    else:
+        table_paper = pd.read_csv(
+            args.lemma_paradigm_sheet_paper_asset, na_filter=False)
+        table = []
+        header_start = ['Stems', 'ms', 'md', 'mp', 'fs', 'fd', 'fp', 'Example']
+        for _, row in table_paper.iterrows():
+            row_counts = [pos2bp_freq[pos].get(row['ID'], 0) for pos in CAMEL_POS]
+            row = [*row[header_start].tolist(), *row_counts]
+            row.append(sum(row_counts))
+            table.append([ar2bw(str(cell)) for cell in row])
+        print(tabulate(table, tablefmt='fancy_grid',
+                       headers=header_start + ['Noun', 'Adj.', 'Comp. Adj.', 'Total']))
 
     pass
 
 
 if __name__ == "__main__":
-    sa = gspread.service_account(config.service_account)
+    if config.service_account:
+        sa = gspread.service_account(config.service_account)
+    else:
+        sa = None
 
     ATB_POS, CAMEL_POS, POS_OR_TYPE = load_required_pos(config.pos, config.pos_type)
     with open('misc_files/atb2camel_pos.json') as f:
@@ -535,9 +562,9 @@ if __name__ == "__main__":
         is not None else CAMEL_POS
 
     db_camel = MorphologyDB(config.get_db_path(), 'dag')
-    db_calima = MorphologyDB(args.msa_baseline_db, 'dag')
     
     if not args.no_download:
+        assert sa is not None, 'Provide a Google API key to run this utility'
         print()
         download_sheets(config=config, service_account=sa)
 
@@ -554,6 +581,9 @@ if __name__ == "__main__":
     order_specs = order_specs.replace(nan, '', regex=True)
     if args.lemma_paradigm_sheet and args.lemma_paradigm_sheet_paper_asset and args.bp_print_range:
         get_basic_lemma_paradigms(lexicon_specs)
+        sys.exit()
+
+    db_calima = MorphologyDB(args.msa_baseline_db, 'dag')
 
     lemma_counts = get_number_of_lemmas(
         lexicon_specs, db_camel, db_calima)

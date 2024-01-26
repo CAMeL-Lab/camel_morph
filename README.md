@@ -16,6 +16,10 @@ The following sections provide useful usage information about the repository. Fo
 
 For instructions related to inspecting, making use of, replicating the results obtained for the SIGMORPHON 2022 Camel Morph paper[^1], and the data, see the [official_releases/sigmorphon2022_release/](./official_releases/sigmorphon2022_release/) folder.
 
+## Camel Morph Nominals EACL 2024
+
+For instructions related to inspecting, making use of, replicating the results obtained for the EACL 2024 Camel Morph Nominals paper, and the data, see the [official_releases/eacl2024_release/](./official_releases/eacl2024_release/) folder.
+
 ## Data
 
 [![License](https://mirrors.creativecommons.org/presskit/buttons/80x15/svg/by.svg)](https://creativecommons.org/licenses/by/4.0/)
@@ -30,6 +34,7 @@ The data files accessed through the below links are licensed under a [Creative C
 
 - [MSA Verbs Specifications](https://docs.google.com/spreadsheets/d/1thVU-IP-I-XnOmy5XfdUr39eNgDldZfMeTI75EH1TjQ/edit?usp=sharing)
 - [EGY Verbs Specifications](https://docs.google.com/spreadsheets/d/1NBK_UPl2799GRBkOrd9Eub_yLn2U2ccbJqYETKdCcbw/edit?usp=sharing)
+- [MSA Nominal Specifications](https://docs.google.com/spreadsheets/d/1QsIZ8ToFovoltyfIrUtStxrB_G8jWbj01aHgQQ9IIwE/edit#gid=337793670)
 
 ### SIGMORPHON 2022 Data (frozen)
 
@@ -37,6 +42,12 @@ The following data is not accessile publicly from the Google Sheets interface bu
 
 - [MSA Verbs Specifications (Camera Ready)](https://docs.google.com/spreadsheets/d/1v9idxctnr6IsqG4c7bHs7lGx7GzbnTa2s4ghQCmLoPY/edit#gid=524706154)
 - [EGY Verbs Specifications (Camera Ready)](https://docs.google.com/spreadsheets/d/1OCqHIdeZpm9BNa-BiC7Xy6bAT_wkLnhuvKdo7X3-RtE/edit#gid=424095452)
+
+### EACL 2024 Data (frozen)
+
+The following data is not accessile publicly from the Google Sheets interface but is available in `csv` format (the way it was at submission time) in the following [folder](./official_releases/eacl2024_release/data/).
+
+- [MSA Nominal Specifications (Camera Ready)](https://docs.google.com/spreadsheets/d/1T5-tY_bfvCW579P-NY7nOxxlq4P2MQ7vmWg_IWn_35Q/edit#gid=1109514510)
 
 ## Folder Hierarchy
 

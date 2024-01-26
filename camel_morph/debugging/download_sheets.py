@@ -45,18 +45,18 @@ def download_sheets(specs=None, save_dir=None, config:Config=None, service_accou
         sa = service_account
 
     specs_ = {}
-    if specs is not None:
+    if specs:
         for s in specs:
             assert len(s) >= 2
             spreadsheet = s[0]
             specs_.setdefault(spreadsheet, OrderedDict()).update(
                 {sheet: None for sheet in s[1:]})
-
-    for spreadsheet, sheets in config.get_spreadsheet2sheets().items():
-        specs_.setdefault(spreadsheet, OrderedDict()).update(
-            {sheet: None for sheet in sheets})
+    else:
+        for spreadsheet, sheets in config.get_spreadsheet2sheets().items():
+            specs_.setdefault(spreadsheet, OrderedDict()).update(
+                {sheet: None for sheet in sheets})
     
-    if save_dir is not None and not os.path.exists(save_dir):
+    if save_dir and not os.path.exists(save_dir):
         os.mkdir(save_dir)
 
     for spreadsheet_name, sheets in specs_.items():
@@ -75,7 +75,7 @@ def download_sheets(specs=None, save_dir=None, config:Config=None, service_accou
                     else:
                         raise NotImplementedError
             sheet = pd.DataFrame(sheet.get_all_records())
-            if save_dir is not None:
+            if save_dir:
                 output_dir = save_dir
             else:
                 output_dir = config.get_data_dir_path()
@@ -100,10 +100,8 @@ if __name__ == "__main__":
                         type=str, help="Path of the JSON file containing the information about the service account used for the Google API.")
     args = parser.parse_args()
 
-    print(args.specs)
     config = None
     if args.config_file and args.config_name:
         config = Config(args.config_file, args.config_name)
-        assert not args.save_dir
 
     download_sheets(args.specs, args.save_dir, config, args.service_account)
