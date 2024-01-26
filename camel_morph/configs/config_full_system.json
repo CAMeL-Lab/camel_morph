@@ -74,7 +74,7 @@
             "debugging": {
                 "stats_spreadsheet": "CamelMorph-Full-Paper-Assets",
                 "stats_sheet": "Statistics-v1.0",
-                "table_start_cell": "O104",
+                "table_start_cell": "O139",
                 "pos_display": [
                     "verbal.lex",
                     "nominal.lex",
@@ -83,16 +83,16 @@
                 ]
             },
             "dialect": "msa",
-            "db": "XYZ_msa_full_factored_wiki_v1.6.db",
+            "db": "XYZ_msa_full_factored_wiki_v1.9.db",
             "pos_type": "any",
             "class_map": "misc_files/class2complx_morpheme_type.json",
-            "caphi": "camel_morph.scratch.SBWtoPhon",
-            "logprob": "misc_files/logprob_atb.pkl"
+            "caphi": "camel_morph.sandbox.SBWtoPhon",
+            "logprob": "scratch_files/logprob_debugging/logprob_atb_camel_v1.0.pkl"
         },
         "full_system_unfactored_wiki": {
             "pruning": true,
             "cat2id": true,
-            "caphi": "camel_morph.scratch.SBWtoPhon",
+            "caphi": "camel_morph.sandbox.SBWtoPhon",
             "specs": {
                 "order": {
                     "camel-morph-msa-nom-other": {
@@ -213,8 +213,8 @@
             "db": "XYZ_msa_full_factored_wiki_same_proclitics_v1.0.db",
             "pos_type": "any",
             "class_map": "misc_files/class2complx_morpheme_type.json",
-            "caphi": "camel_morph.scratch.SBWtoPhon",
-            "logprob": "misc_files/logprob_atb.pkl"
+            "caphi": "camel_morph.sandbox.SBWtoPhon",
+            "logprob": "misc_files/logprob_atb_camel_v1.0.pkl"
         }
     }
 }

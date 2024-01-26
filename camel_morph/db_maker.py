@@ -153,7 +153,7 @@ def make_db(config:Config, output_path:Optional[str]=None):
                        for morph_type in ['DBPrefix', 'DBStem', 'DBSuffix']}
     
     logprob: Dict[str] = config.logprob
-    if logprob is not None:
+    if logprob is not None and logprob != 'return_all':
         with open(logprob, 'rb') as f:
             logprob = pickle.load(f)
         pos2lex2logprob = {}
@@ -164,6 +164,8 @@ def make_db(config:Config, output_path:Optional[str]=None):
             pos2lex2logprob[pos] = dict(sorted(
                 lex2logprob.items(), key=lambda x: x[1], reverse=True))
         logprob['pos2lex2logprob'] = pos2lex2logprob
+    elif logprob == 'return_all':
+        logprob = None
     
     c0 = process_time()
     
@@ -406,6 +408,15 @@ def cross_cmplx_morph_validation(cmplx_morph_classes: Dict,
         stem_cond_f = ' '.join([f['COND-F'] for f in cmplx_stems[0]])
 
         for cmplx_prefix_cls, cmplx_prefixes in cmplx_prefix_classes.items():
+            #TODO: should probably move this loop to be the outermost one (instead of stem) 
+            # and should check if there are interactions between morpheme class/condition
+            # pairs between prefix and the stem/suffix. If there are none, then there would
+            # be no need to loop multiple times to validate. The idea is to reduce the number
+            # of complex morpheme classes we are looping over. If adding a condition which
+            # is internal classes to one complex morpheme category, i.e., only appears in
+            # in morpheme classes that appear in only one of complex prefix, suffix, or stem,
+            # then this condition should not have interactions with the other two complex
+            # morpheme categories.
             prefix_cond_s = ' '.join([f['COND-S'] for f in cmplx_prefixes[0]])
             prefix_cond_t = ' '.join([f['COND-T'] for f in cmplx_prefixes[0]])
             prefix_cond_f = ' '.join([f['COND-F'] for f in cmplx_prefixes[0]])
@@ -604,10 +615,9 @@ def _generate_match_field(diac):
 
 
 def _generate_caphi(morpheme, caphi_list, caphi_copy, morph2caphi, cmplx_morpheme_type):
-    copy_list = [m[caphi_copy] for m in morpheme]
+    copy_list = [m[caphi_copy] if m[caphi_copy] != '_' else '' for m in morpheme]
     if len(set(caphi_list)) > 1 and '' in caphi_list:
         raise NotImplementedError
-    # TODO: implemented but not debugged
     value = []
     if set(caphi_list) == {''} and morph2caphi is not None:
         value.append(morph2caphi[cmplx_morpheme_type](''.join(copy_list)))
@@ -733,11 +743,8 @@ def _generate_stem(cmplx_morph_seq: str,
                 analysis[f] = defaults['defaults'][analysis['pos']][f]
 
     if '-' in analysis['lex'] and analysis['pos'] == 'verb':
-        part1, part2 = analysis['lex'].split('-')
-        mid_root_diac, underscore = None, None
-        if '_' in part2:
-            mid_root_diac, underscore = part2.split('_')
-        analysis['lex'] = part1 + f'_{underscore}'
+        part2 = analysis['lex'].split('-')[1]
+        mid_root_diac = part2.split('_')[0] if '_' in part2 else part2
         analysis['mid_root_diac'] = mid_root_diac
     
     if backoff == 'smart':
@@ -803,8 +810,8 @@ def _read_affix(affix: List[Dict], affix_type: str) -> Tuple[str, Dict]:
     """
     analysis = {}
     analysis['bw'] = '+'.join(m['BW'] for m in affix if m['BW'] != '_')
-    affix_gloss = '+'.join(m['GLOSS'] for m in affix if m['GLOSS'] != '_')
-    analysis['gloss'] = affix_gloss if affix_gloss else '_'
+    analysis['gloss'] = '+'.join(m['GLOSS'] for m in affix
+                                 if m['GLOSS'] and m['GLOSS'] != '_')
     affix_feat = {feat.split(':')[0]: feat.split(':')[1]
                   for m in affix for feat in m['FEAT'].split()}
     analysis = {**analysis, **affix_feat}
@@ -839,8 +846,8 @@ def _read_stem(stem: List[Dict]) -> Tuple[str, Dict]:
     """
     analysis = {}
     analysis['bw'] = '+'.join(s['BW'] for s in stem if s['BW'] != '_')
-    stem_gloss = '+'.join(s['GLOSS'] for s in stem if 'LEMMA' in s)
-    analysis['gloss'] = stem_gloss if stem_gloss else '_'
+    analysis['gloss'] = '+'.join(s['GLOSS'] for s in stem
+                                 if s['GLOSS'] and s['GLOSS'] != '_')
     analysis['lex'] = '+'.join(
         s['LEMMA'].split(':')[1] for s in stem if 'LEMMA' in s)
     stem_feat = {feat.split(':')[0]: feat.split(':')[1]
@@ -1102,8 +1109,10 @@ def collapse_and_reindex_categories(db, collapse_morphemes):
             suffixes_ = _reindex_morpheme_table_cats(suffixes_, suffix_cat_map, equivalences)
             backoff_stems_ = _reindex_backoff_stem_cats(backoff_stems_, stem_cat_map, equivalences)
         #TODO: deal with backoff stems here also
-        # TODO: the following collapsing is still unstable and is not being
-        # used for the moment. Should be debugged.
+        #TODO: the following (morpheme) collapsing is still unstable and is not being
+        # used for the moment. Should be debugged. Its purpose is to be ran after
+        # category collapsing/reindexing and collapse redundant entries based on the
+        # new categories.
         if collapse_morphemes:
             collapsed = collapse_and_reindex_morphemes(
                 prefixes_, stems_, suffixes_,
@@ -1296,8 +1305,12 @@ def gen_cmplx_morph_combs(cmplx_morph_seq: str,
     cmplx_morphs = [list(t) for t in itertools.product(*[mc for mc in cmplx_morph_classes if mc])]
     cmplx_morph_categorized = {}
     for seq in cmplx_morphs:
-        seq_cond_cat = [(morph['COND-S'], morph['COND-T'], morph['COND-F']) for morph in seq]
-        cmplx_morph_categorized.setdefault(tuple(seq_cond_cat), []).append(seq)
+        #TODO: maybe can reduce number of classes by uniquing and sorting?
+        # Maybe there is even no need for a 3-tuple, they could all be in one string
+        # (and thus reducing compilation time). I don't really know if this
+        # is conceptually possible. Should try it, and see if the same DB is produced
+        cmplx_morph_class = [(morph['COND-S'], morph['COND-T'], morph['COND-F']) for morph in seq]
+        cmplx_morph_categorized.setdefault(tuple(cmplx_morph_class), []).append(seq)
     
     # Performing partial compatibility tests to prune out incoherent combinations
     if pruning_cond_s_f or pruning_same_class_incompat:

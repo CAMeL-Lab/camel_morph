@@ -103,7 +103,7 @@
         "pv_msa": {
             "dialect": "msa",
             "pruning": true,
-            "caphi": "camel_morph.scratch.SBWtoPhon",
+            "caphi": "camel_morph.sandbox.SBWtoPhon",
             "specs": {
                 "order": {
                     "camel-morph-msa-verbs": "MSA-Verb-ORDER"

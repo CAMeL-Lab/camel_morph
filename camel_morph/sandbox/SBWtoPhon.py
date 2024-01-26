@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 __author__ = "Salam Khalifa"
-__email__ = "sk6184@nyu.edu"
 
 import re
 from collections import OrderedDict
@@ -21,14 +20,16 @@ ar2bw = CharMapper.builtin_mapper('ar2bw')
 
 
 def caphi_DBPrefix(bw_word):
-    # print(bw_word)
-    if bw_word == 'Al':
-        Phon_word = '2 a l'
+    Phon_word = re.sub(r'^(ka)[A{]l', r'\1 l', bw_word)  # NOTE: Christian addition
+    Phon_word = re.sub(r'^([fw]a)((?:ka)?)[A{]l', r'\1 \2 l', Phon_word)  # NOTE: Christian addition
+    Phon_word = re.sub(r'aA', 'A', Phon_word)
+    if Phon_word == 'Al#' or Phon_word == '{l#':  # NOTE: edited by Christian
+        Phon_word = '2 a l-'
     else:
-        Phon_word = re.sub(r'o', ' ', bw_word)  # NOTE: Christian addition
+        Phon_word = re.sub(r'o', ' ', Phon_word)  # NOTE: Christian addition
         Phon_word = re.sub(r'[><&\}\']', ' 2 ', Phon_word)  # turn all hamzas to glottal stop /2/
         Phon_word = re.sub(r'\|', ' 2 aa ', Phon_word)  # turn all hamzas to glottal stop /2/
-        Phon_word = re.sub(r'([aiu])A', r' \1 ', Phon_word)  # if there is a vowel before the ta marbuta or Alif maqsura or Alif, replace with vowel
+        Phon_word = re.sub(r'([aiu])[A{]', r' \1 ', Phon_word)  #NOTE: edited by Christian
         Phon_word = re.sub(r'^A', '2', Phon_word)  # replace initial 'A' with glottal stop /2/ NOT IN SUFF
 
         Phon_word = re.sub(r"A", r' aa ', Phon_word)  # replace 'A' with long vowel 'aa'
@@ -45,7 +46,9 @@ def caphi_DBPrefix(bw_word):
         Phon_word = re.sub(r'x', ' kh ', Phon_word)
         Phon_word = Phon_word.replace('#', '-') # NOTE: Christian addition
 
-        Phon_word = re.sub(r"(d\.|t\.|s\.|sh|kh|gh|dh[.]*|th|tsh|[^iuaoe-])", r' \1 ', Phon_word)
+        Phon_word = re.sub(r"(d\.|t\.|s\.|sh|kh|gh|dh[.]*|th|tsh|[^iuaoe])", r' \1 ', Phon_word)
+        Phon_word = re.sub(r'^ *- *(.)', r'-\1', Phon_word) #NOTE: added by Christian
+        Phon_word = re.sub(r'(.) *- *$', r'\1-', Phon_word) #NOTE: added by Christian
 
         Phon_word = re.sub(' +', ' ', Phon_word)
 
@@ -55,10 +58,9 @@ def caphi_DBPrefix(bw_word):
     return Phon_word
 
 def caphi_DBSuffix(bw_word):
+    bw_word = re.sub(r'aA', 'A', bw_word)
     Phon_word = re.sub(r'[><&\}\']', ' 2 ', bw_word)  # turn all hamzas to glottal stop /2/
     Phon_word = re.sub(r'\|', ' 2 aa ', Phon_word)  # turn all hamzas to glottal stop /2/
-
-    Phon_word = re.sub(r'o', ' ', Phon_word)  # remove sukun
 
     Phon_word = re.sub(r'([aiu])p$', r' \1 ',
                        Phon_word)  # if there is a vowel before the ta marbuta or Alif maqsura or Alif, replace with vowel
@@ -78,15 +80,16 @@ def caphi_DBSuffix(bw_word):
     Phon_word = re.sub(r'([aiu])A', r' \1 ',
                        Phon_word)  # if there is a vowel before the ta marbuta or Alif maqsura or Alif, replace with vowel
 
-    Phon_word = re.sub(r'aY', r' aa ',
-                       Phon_word)  # if there is a vowel before the ta marbuta or Alif maqsura or Alif, replace with vowel
+    Phon_word = re.sub(r'a?Y', r' aa ', Phon_word) # NOTE: edited by Christian
 
-    Phon_word = re.sub(r'([iua])wA', r'\1 w', Phon_word)
-    Phon_word = re.sub(r'([^iua])wA', r' uu ', Phon_word)
+    Phon_word = re.sub(r'awoA', r'a w', Phon_word) #NOTE: edited by Christian
+    Phon_word = re.sub(r'uwA', r' uu ', Phon_word) #NOTE: edited by Christian
+
+    Phon_word = re.sub(r'iy$', ' ii', Phon_word)  #NOTE: added by Christian
 
     Phon_word = re.sub(r'[A]*F$', r' a n ', Phon_word)
     # Phon_word = re.sub(r'[A]*F(\s*#)', r' a n\1', Phon_word)
-    Phon_word = re.sub(r'K$', r' a n ', Phon_word)
+    Phon_word = re.sub(r'K$', r' i n ', Phon_word) #NOTE: edited by Christian
     # Phon_word = re.sub(r'K(\s*#)', r' i n\1', Phon_word)
     Phon_word = re.sub(r'N$', r' u n ', Phon_word)
     # Phon_word = re.sub(r'N(\s*#)', r' u n\1', Phon_word)
@@ -109,7 +112,9 @@ def caphi_DBSuffix(bw_word):
     Phon_word = re.sub(r'D', ' d. ', Phon_word)
     Phon_word = re.sub(r'x', ' kh ', Phon_word)
 
-    Phon_word = re.sub(r"(d\.|t\.|s\.|sh|kh|gh|dh[.]*|th|tsh|[^iuaoe])", r' \1 ', Phon_word)
+    Phon_word = re.sub(r'o', ' ', Phon_word)  #NOTE: moved from beginning to end by Christian
+
+    Phon_word = re.sub(r"(d\.|t\.|s\.|sh|kh|gh|dh[.]*|th|tsh|[^iuaoe-])", r' \1 ', Phon_word) #NOTE: edited by Christian
 
     Phon_word = re.sub(' +', ' ', Phon_word)
 
@@ -122,15 +127,18 @@ def caphi_DBSuffix(bw_word):
 
 
 def caphi_DBStem(bw_word):
+    Phon_word = re.sub(r'([aiA])All~a?`h', r' \1 l l aa h', bw_word)  # NOTE: Christian addition
+    Phon_word = re.sub(r'^([kfw]a)Al~a([t\*])iy', r'\1 l l a \2iy', Phon_word)  # NOTE: Christian addition
+    Phon_word = re.sub(r'aA', 'A', Phon_word)
+    Phon_word = re.sub(r'^lA{', 'l aa 2 ', Phon_word)
+    Phon_word = re.sub(r'^All~`h', '-2 a l l aa h', Phon_word)  # NOTE: Christian addition
+    Phon_word = re.sub(r'^Al(l?)', r'-2 a l \1', Phon_word)  # NOTE: Christian addition
     # Phon_word = SBW_word
     # Phon_word = re.sub(r' ', '#', SBW_word)  # turn all hamzas to glottal stop /2/
-    Phon_word = re.sub(r'[><&\}\']', ' 2 ', bw_word)  # turn all hamzas to glottal stop /2/
+    Phon_word = re.sub(r'[><&\}\']', ' 2 ', Phon_word)  # turn all hamzas to glottal stop /2/
     Phon_word = re.sub(r'\|', ' 2 aa ', Phon_word)  # turn all hamzas to glottal stop /2/
-    Phon_word = re.sub(r'(^A|^{)', ' 2 ', Phon_word)  # turn all hamzas to glottal stop /2/
+    Phon_word = re.sub(r'(^A|^{)', ' -2 ', Phon_word)  #NOTE: edited by Christian
 
-    Phon_word = re.sub(r'o', ' ', Phon_word)  # remove sukun
-
-    Phon_word = Phon_word.replace('All~`h', ' aa')  # NOTE: Christian addition
     Phon_word = Phon_word.replace('`', ' aa')  # NOTE: Christian addition
 
     Phon_word = re.sub(r'([aiu])p$', r' \1 ',
@@ -152,8 +160,8 @@ def caphi_DBStem(bw_word):
     Phon_word = re.sub(r'([aiu])A', r' \1 ',
                        Phon_word)  # if there is a vowel before the ta marbuta or Alif maqsura or Alif, replace with vowel
 
-    Phon_word = re.sub(r'aY', r' aa ',
-                       Phon_word)  # if there is a vowel before the ta marbuta or Alif maqsura or Alif, replace with vowel
+    Phon_word = re.sub(r'uwY', r' u w aa', Phon_word)  # NOTE: edited by Christian
+    Phon_word = re.sub(r'a?Y', r' aa ', Phon_word)  # NOTE: edited by Christian
 
     # Phon_word = re.sub(r'([aiu])A(\s*#)', r' \1\2 ',
     #                    Phon_word)  # if there is a vowel before the ta marbuta, replace with vowel
@@ -164,7 +172,7 @@ def caphi_DBStem(bw_word):
     # Phon_word = re.sub(r'uA', r' oo ', Phon_word)
     # Phon_word = re.sub(r'iA', r' ee ', Phon_word)
 
-    Phon_word = re.sub(r'[u]w$', ' uu ', Phon_word)  # replace ending long vowel with short 'w' with 'u'
+    Phon_word = re.sub(r'uw$', ' u w- ', Phon_word)  #NOTE: edited by Christian
     # Phon_word = re.sub(r'[u]w(\s*#)', r' u\1 ',
     #                    Phon_word)  # replace ending long vowel with short 'w' with 'u' (in a multi word expression)
 
@@ -174,7 +182,7 @@ def caphi_DBStem(bw_word):
 
     # Phon_word = re.sub(r'([^iau]) *X', r'\1\1', Phon_word)  # double the letter when shadda
 
-    Phon_word = re.sub(r'[i]y$', ' ii ', Phon_word)  # replace ending long vowel with short 'y' with 'i'
+    Phon_word = re.sub(r'iy$', ' i y- ', Phon_word)  #NOTE: edited by Christian
     # Phon_word = re.sub(r'[i]y(\s*#)', ' i\1 ', Phon_word)  # replace ending long vowel with short 'y' with 'i'
 
 
@@ -182,7 +190,7 @@ def caphi_DBStem(bw_word):
     Phon_word = re.sub(r'([iua])wA', r'\1 w aa', Phon_word) # NOT IN SUFF
     Phon_word = re.sub(r'[A]*F$', r' a n ', Phon_word)
     # Phon_word = re.sub(r'[A]*F(\s*#)', r' a n\1', Phon_word)
-    Phon_word = re.sub(r'K$', r' a n ', Phon_word)
+    Phon_word = re.sub(r'K$', r' i n ', Phon_word) #NOTE: edited by Christian
     # Phon_word = re.sub(r'K(\s*#)', r' i n\1', Phon_word)
     Phon_word = re.sub(r'N$', r' u n ', Phon_word)
     # Phon_word = re.sub(r'N(\s*#)', r' u n\1', Phon_word)
@@ -206,14 +214,18 @@ def caphi_DBStem(bw_word):
     Phon_word = re.sub(r'D', ' d. ', Phon_word)
     Phon_word = re.sub(r'x', ' kh ', Phon_word)
 
+    Phon_word = re.sub(r'o', ' ', Phon_word)  # NOTE: Christian addition
+
     # Phon_word = re.sub(r'P', ' p ', Phon_word)
     # Phon_word = re.sub(r'G', ' g ', Phon_word)
     # Phon_word = re.sub(r'B', ' v ', Phon_word)
     # Phon_word = re.sub(r'J', ' tsh ', Phon_word)
 
     #Phon_word = re.sub(r"(d\.|t\.|s\.|sh|kh|gh|dh|dh\.|th|tsh|[^iuaoe])", r' \1 ', Phon_word)
-    Phon_word = re.sub(r"(d\.|t\.|s\.|sh|kh|gh|dh[.]*|th|tsh|[^iuaoe])", r' \1 ', Phon_word)
-
+    Phon_word = re.sub(r"(d\.|t\.|s\.|sh|kh|gh|dh[.]*|th|tsh|[^iuaoe])",
+                       r' \1 ', Phon_word) #NOTE: edited by Christian
+    Phon_word = re.sub(r'^ *- *(.)', r'-\1', Phon_word) #NOTE: added by Christian
+    Phon_word = re.sub(r'(.) *- *$', r'\1-', Phon_word) #NOTE: added by Christian
     Phon_word = re.sub(' +', ' ', Phon_word)
 
     Phon_word = re.sub(' +', ' ', Phon_word)
@@ -241,7 +253,8 @@ def generate_new_caphi_df():
                 if not m or 'diac' not in m:
                     continue
                 diac = ar2bw(m['diac'])
-                output[(m_type, diac, fn(diac), m.get('caphi', ''))] = 1
+                generated_caphi = fn(diac)
+                output[(m_type, diac, generated_caphi, m.get('caphi', ''))] = 1
 
     header = ['Type', 'diac', 'Generated CAPHI', 'Original CAPHI']
     with open('scratch_files/caphi/caphi_debug_output.tsv', 'w') as f:
