@@ -1,0 +1,6 @@
+,LINE,DEFINE,CLASS,LEMMA,FORM,GLOSS,COND-S,COND-T,FEAT,COMMENTS,NOTES
+0,1,BACKOFF,[STEM-NOM],ALL PROP,NOAN,NO_ANALYSIS,#dip,MS||FS,pos:noun_prop gen:- num:- stt:i cas:u rat:i,,
+1,2,BACKOFF,[STEM-NOM],ALL,NOAN,NO_ANALYSIS,,MS||MD||MP||FS||FD||FP,pos:noun gen:- num:- stt:i cas:u rat:i,,
+2,3,BACKOFF,[STEM-ADJ],ALL,NOAN,NO_ANALYSIS,,MS||MD||MP||FS||FD||FP,pos:adj gen:- num:- stt:i cas:u rat:n,,
+3,4,BACKOFF,[STEM-NOM],ALL,NOAN,NO_ANALYSIS,,MS||MD||MP||FP,pos:adj_comp gen:- num:- stt:i cas:u rat:i,,
+4,5,BACKOFF,[STEM-CONJ-PREP],ALL,NOAN,NO_ANALYSIS,,,pos:abbrev,,

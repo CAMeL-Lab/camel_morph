@@ -1,0 +1,5 @@
+,LINE,DEFINE,CLASS,LEMMA,FORM,GLOSS,COND-S,COND-T,FEAT,COMMENTS,NOTES
+0,1,BACKOFF,[STEM-PV],ALL,NOAN,NO_ANALYSIS,trans,,pos:verb asp:p vox:a mod:u,,
+1,2,BACKOFF,[STEM-IV],ALL,NOAN,NO_ANALYSIS,a-# trans,,pos:verb asp:i vox:a mod:u,,
+2,2,BACKOFF,[STEM-IV],ALL,NOAN,NO_ANALYSIS,u-# trans,,pos:verb asp:i vox:a mod:u,,
+3,3,BACKOFF,[STEM-CV],ALL,NOAN,NO_ANALYSIS,trans,,pos:verb per:2 asp:c vox:a mod:u,,

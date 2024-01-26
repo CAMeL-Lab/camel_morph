@@ -87,7 +87,7 @@
             "pos_type": "any",
             "class_map": "misc_files/class2complx_morpheme_type.json",
             "caphi": "camel_morph.sandbox.SBWtoPhon",
-            "logprob": "scratch_files/logprob_debugging/logprob_atb_camel_v1.0.pkl"
+            "logprob": "misc_files/logprob_atb_camel_v1.0.pkl"
         },
         "full_system_unfactored_wiki": {
             "pruning": true,

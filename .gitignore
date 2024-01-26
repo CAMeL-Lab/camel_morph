@@ -354,7 +354,12 @@ MigrationBackup/
 !requirements.txt
 !sigmorphon2022_release/requirements.txt
 
-databases/
+databases/*
+!official_releases/sigmorphon2022_release/databases/
+!official_releases/eacl2024_release/databases/
+!official_releases/lrec-coling2024_release/databases/
+
+
 debugging_output/
 eval_files/
 sandbox_files/
