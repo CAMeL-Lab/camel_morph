@@ -1,0 +1,8 @@
+numpy>=1.19.0
+pandas==1.4.4
+tqdm
+emoji
+gspread==5.1.1
+gspread-formatting==1.0.5
+nltk==3.7
+tabulate

@@ -1,0 +1,659 @@
+{
+    "msa": {
+        "verbal": {
+            "asp:p mod:i": {
+                "proclitics": false,
+                "enclitics": true,
+                "passive": true,
+                "paradigm": [
+                    "VERB.P1S.AI",
+                    "VERB.P1Q.AI",
+                    "VERB.P2MS.AI",
+                    "VERB.P2FS.AI",
+                    "VERB.P2D.AI",
+                    "VERB.P2MQ.AI",
+                    "VERB.P2FQ.AI",
+                    "VERB.P3MS.AI",
+                    "VERB.P3FS.AI",
+                    "VERB.P3MD.AI",
+                    "VERB.P3FD.AI",
+                    "VERB.P3MQ.AI",
+                    "VERB.P3FQ.AI"
+                ]
+            },
+            "asp:i mod:i": {
+                "proclitics": false,
+                "enclitics": true,
+                "passive": true,
+                "paradigm": [
+                    "VERB.I1S.AI",
+                    "VERB.I1Q.AI",
+                    "VERB.I2MS.AI",
+                    "VERB.I2FS.AI",
+                    "VERB.I2D.AI",
+                    "VERB.I2MQ.AI",
+                    "VERB.I2FQ.AI",
+                    "VERB.I3MS.AI",
+                    "VERB.I3FS.AI",
+                    "VERB.I3MD.AI",
+                    "VERB.I3FD.AI",
+                    "VERB.I3MQ.AI",
+                    "VERB.I3FQ.AI"
+                ]
+            },
+            "asp:i mod:s": {
+                "proclitics": false,
+                "enclitics": true,
+                "passive": true,
+                "paradigm": [
+                    "VERB.I1S.AS",
+                    "VERB.I1Q.AS",
+                    "VERB.I2MS.AS",
+                    "VERB.I2FS.AS",
+                    "VERB.I2D.AS",
+                    "VERB.I2MQ.AS",
+                    "VERB.I2FQ.AS",
+                    "VERB.I3MS.AS",
+                    "VERB.I3FS.AS",
+                    "VERB.I3MD.AS",
+                    "VERB.I3FD.AS",
+                    "VERB.I3MQ.AS",
+                    "VERB.I3FQ.AS"
+                ]
+            },
+            "asp:i mod:j": {
+                "proclitics": false,
+                "enclitics": true,
+                "passive": true,
+                "paradigm": [
+                    "VERB.I1S.AJ",
+                    "VERB.I1Q.AJ",
+                    "VERB.I2MS.AJ",
+                    "VERB.I2FS.AJ",
+                    "VERB.I2D.AJ",
+                    "VERB.I2MQ.AJ",
+                    "VERB.I2FQ.AJ",
+                    "VERB.I3MS.AJ",
+                    "VERB.I3FS.AJ",
+                    "VERB.I3MD.AJ",
+                    "VERB.I3FD.AJ",
+                    "VERB.I3MQ.AJ",
+                    "VERB.I3FQ.AJ"
+                ]
+            },
+            "asp:i mod:e": {
+                "proclitics": false,
+                "enclitics": true,
+                "passive": true,
+                "paradigm": [
+                    "VERB.I1S.AE",
+                    "VERB.I1Q.AE",
+                    "VERB.I2MS.AE",
+                    "VERB.I2FS.AE",
+                    "VERB.I2D.AE",
+                    "VERB.I2MQ.AE",
+                    "VERB.I2FQ.AE",
+                    "VERB.I3MS.AE",
+                    "VERB.I3FS.AE",
+                    "VERB.I3MD.AE",
+                    "VERB.I3FD.AE",
+                    "VERB.I3MQ.AE",
+                    "VERB.I3FQ.AE"
+                ]
+            },
+            "asp:i mod:x": {
+                "proclitics": false,
+                "enclitics": true,
+                "passive": true,
+                "paradigm": [
+                    "VERB.I1S.AX",
+                    "VERB.I1Q.AX",
+                    "VERB.I2MS.AX",
+                    "VERB.I2FS.AX",
+                    "VERB.I2D.AX",
+                    "VERB.I2MQ.AX",
+                    "VERB.I2FQ.AX",
+                    "VERB.I3MS.AX",
+                    "VERB.I3FS.AX",
+                    "VERB.I3MD.AX",
+                    "VERB.I3FD.AX",
+                    "VERB.I3MQ.AX",
+                    "VERB.I3FQ.AX"
+                ]
+            },
+            "asp:c mod:i": {
+                "proclitics": false,
+                "enclitics": true,
+                "passive": true,
+                "paradigm": [
+                    "VERB.C1S.AI",
+                    "VERB.C1Q.AI",
+                    "VERB.C2MS.AI",
+                    "VERB.C2FS.AI",
+                    "VERB.C2D.AI",
+                    "VERB.C2MQ.AI",
+                    "VERB.C2FQ.AI",
+                    "VERB.C3MS.AI",
+                    "VERB.C3FS.AI",
+                    "VERB.C3MD.AI",
+                    "VERB.C3FD.AI",
+                    "VERB.C3MQ.AI",
+                    "VERB.C3FQ.AI"
+                ]
+            },
+            "asp:c mod:e": {
+                "proclitics": false,
+                "enclitics": true,
+                "passive": true,
+                "paradigm": [
+                    "VERB.C1S.AE",
+                    "VERB.C1Q.AE",
+                    "VERB.C2MS.AE",
+                    "VERB.C2FS.AE",
+                    "VERB.C2D.AE",
+                    "VERB.C2MQ.AE",
+                    "VERB.C2FQ.AE",
+                    "VERB.C3MS.AE",
+                    "VERB.C3FS.AE",
+                    "VERB.C3MD.AE",
+                    "VERB.C3FD.AE",
+                    "VERB.C3MQ.AE",
+                    "VERB.C3FQ.AE"
+                ]
+            },
+            "asp:c mod:x": {
+                "proclitics": false,
+                "enclitics": true,
+                "passive": true,
+                "paradigm": [
+                    "VERB.C1S.AX",
+                    "VERB.C1Q.AX",
+                    "VERB.C2MS.AX",
+                    "VERB.C2FS.AX",
+                    "VERB.C2D.AX",
+                    "VERB.C2MQ.AX",
+                    "VERB.C2FQ.AX",
+                    "VERB.C3MS.AX",
+                    "VERB.C3FS.AX",
+                    "VERB.C3MD.AX",
+                    "VERB.C3FD.AX",
+                    "VERB.C3MQ.AX",
+                    "VERB.C3FQ.AX"
+                ]
+            }
+        },
+        "nominal": {
+            "gen:m num:s": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "NOM.MS.DN.P0",
+                    "NOM.MS.DG.P0",
+                    "NOM.MS.DA.P0",
+                    "NOM.MS.DU.P0",
+                    "NOM.MS.IN",
+                    "NOM.MS.IG",
+                    "NOM.MS.IA",
+                    "NOM.MS.IU",
+                    "NOM.MS.CN",
+                    "NOM.MS.CG",
+                    "NOM.MS.CA",
+                    "NOM.MS.CU",
+                    "NOM.MS.DN.P0.E0",
+                    "NOM.MS.DG.P0.E0",
+                    "NOM.MS.DA.P0.E0",
+                    "NOM.MS.DU.P0.E0",
+                    "NOM.MS.CN.E0",
+                    "NOM.MS.CG.E0",
+                    "NOM.MS.CA.E0",
+                    "NOM.MS.CU.E0"
+                ]
+            },
+            "gen:f num:s": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "NOM.FS.DN.P0",
+                    "NOM.FS.DG.P0",
+                    "NOM.FS.DA.P0",
+                    "NOM.FS.DU.P0",
+                    "NOM.FS.IN",
+                    "NOM.FS.IG",
+                    "NOM.FS.IA",
+                    "NOM.FS.IU",
+                    "NOM.FS.CN",
+                    "NOM.FS.CG",
+                    "NOM.FS.CA",
+                    "NOM.FS.CU",
+                    "NOM.FS.DN.P0.E0",
+                    "NOM.FS.DG.P0.E0",
+                    "NOM.FS.DA.P0.E0",
+                    "NOM.FS.DU.P0.E0",
+                    "NOM.FS.CN.E0",
+                    "NOM.FS.CG.E0",
+                    "NOM.FS.CA.E0",
+                    "NOM.FS.CU.E0"
+                ]
+            },
+            "gen:m num:d": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "NOM.MD.DN.P0",
+                    "NOM.MD.DG.P0",
+                    "NOM.MD.DA.P0",
+                    "NOM.MD.DU.P0",
+                    "NOM.MD.IN",
+                    "NOM.MD.IG",
+                    "NOM.MD.IA",
+                    "NOM.MD.IU",
+                    "NOM.MD.CN",
+                    "NOM.MD.CG",
+                    "NOM.MD.CA",
+                    "NOM.MD.CU",
+                    "NOM.MD.DN.P0.E0",
+                    "NOM.MD.DG.P0.E0",
+                    "NOM.MD.DA.P0.E0",
+                    "NOM.MD.DU.P0.E0",
+                    "NOM.MD.CN.E0",
+                    "NOM.MD.CG.E0",
+                    "NOM.MD.CA.E0",
+                    "NOM.MD.CU.E0"
+                ]
+            },
+            "gen:f num:d": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "NOM.FD.DN.P0",
+                    "NOM.FD.DG.P0",
+                    "NOM.FD.DA.P0",
+                    "NOM.FD.DU.P0",
+                    "NOM.FD.IN",
+                    "NOM.FD.IG",
+                    "NOM.FD.IA",
+                    "NOM.FD.IU",
+                    "NOM.FD.CN",
+                    "NOM.FD.CG",
+                    "NOM.FD.CA",
+                    "NOM.FD.CU",
+                    "NOM.FD.DN.P0.E0",
+                    "NOM.FD.DG.P0.E0",
+                    "NOM.FD.DA.P0.E0",
+                    "NOM.FD.DU.P0.E0",
+                    "NOM.FD.CN.E0",
+                    "NOM.FD.CG.E0",
+                    "NOM.FD.CA.E0",
+                    "NOM.FD.CU.E0"
+                ]
+            },
+            "gen:m num:p": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "NOM.MQ.DN.P0",
+                    "NOM.MQ.DG.P0",
+                    "NOM.MQ.DA.P0",
+                    "NOM.MQ.DU.P0",
+                    "NOM.MQ.IN",
+                    "NOM.MQ.IG",
+                    "NOM.MQ.IA",
+                    "NOM.MQ.IU",
+                    "NOM.MQ.CN",
+                    "NOM.MQ.CG",
+                    "NOM.MQ.CA",
+                    "NOM.MQ.CU",
+                    "NOM.MQ.DN.P0.E0",
+                    "NOM.MQ.DG.P0.E0",
+                    "NOM.MQ.DA.P0.E0",
+                    "NOM.MQ.DU.P0.E0",
+                    "NOM.MQ.CN.E0",
+                    "NOM.MQ.CG.E0",
+                    "NOM.MQ.CA.E0",
+                    "NOM.MQ.CU.E0"
+                ]
+            },
+            "gen:f num:p": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "NOM.FQ.DN.P0",
+                    "NOM.FQ.DG.P0",
+                    "NOM.FQ.DA.P0",
+                    "NOM.FQ.DU.P0",
+                    "NOM.FQ.IN",
+                    "NOM.FQ.IG",
+                    "NOM.FQ.IA",
+                    "NOM.FQ.IU",
+                    "NOM.FQ.CN",
+                    "NOM.FQ.CG",
+                    "NOM.FQ.CA",
+                    "NOM.FQ.CU",
+                    "NOM.FQ.DN.P0.E0",
+                    "NOM.FQ.DG.P0.E0",
+                    "NOM.FQ.DA.P0.E0",
+                    "NOM.FQ.DU.P0.E0",
+                    "NOM.FQ.CN.E0",
+                    "NOM.FQ.CG.E0",
+                    "NOM.FQ.CA.E0",
+                    "NOM.FQ.CU.E0"
+                ]
+            },
+            "gen:u num:s": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "NOM.S.DN.P0",
+                    "NOM.S.DG.P0",
+                    "NOM.S.DA.P0",
+                    "NOM.S.DU.P0",
+                    "NOM.S.IN",
+                    "NOM.S.IG",
+                    "NOM.S.IA",
+                    "NOM.S.IU",
+                    "NOM.S.CN",
+                    "NOM.S.CG",
+                    "NOM.S.CA",
+                    "NOM.S.CU",
+                    "NOM.S.DN.P0.E0",
+                    "NOM.S.DG.P0.E0",
+                    "NOM.S.DA.P0.E0",
+                    "NOM.S.DU.P0.E0",
+                    "NOM.S.CN.E0",
+                    "NOM.S.CG.E0",
+                    "NOM.S.CA.E0",
+                    "NOM.S.CU.E0"
+                ]
+            },
+            "gen:u num:p": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "NOM.Q.DN.P0",
+                    "NOM.Q.DG.P0",
+                    "NOM.Q.DA.P0",
+                    "NOM.Q.DU.P0",
+                    "NOM.Q.IN",
+                    "NOM.Q.IG",
+                    "NOM.Q.IA",
+                    "NOM.Q.IU",
+                    "NOM.Q.CN",
+                    "NOM.Q.CG",
+                    "NOM.Q.CA",
+                    "NOM.Q.CU",
+                    "NOM.Q.DN.P0.E0",
+                    "NOM.Q.DG.P0.E0",
+                    "NOM.Q.DA.P0.E0",
+                    "NOM.Q.DU.P0.E0",
+                    "NOM.Q.CN.E0",
+                    "NOM.Q.CG.E0",
+                    "NOM.Q.CA.E0",
+                    "NOM.Q.CU.E0"
+                ]
+            }
+        },
+        "other": {
+            "": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "OTHER....",
+                    "OTHER...P1",
+                    "OTHER...P2",
+                    "OTHER...P12",
+                    "OTHER...E0",
+                    "OTHER...P1.E0",
+                    "OTHER...P2.E0",
+                    "OTHER...P12.E0"
+                ]
+            }
+        }
+    },
+    "glf": {
+        "verbal": {
+            "asp:p mod:i": {
+                "proclitics": false,
+                "enclitics": true,
+                "passive": false,
+                "paradigm": [
+                    "VERB.P1S.AI",
+                    "VERB.P1Q.AI",
+                    "VERB.P2MS.AI",
+                    "VERB.P2FS.AI",
+                    "VERB.P2Q.AI",
+                    "VERB.P2FQ.AI",
+                    "VERB.P3MS.AI",
+                    "VERB.P3FS.AI",
+                    "VERB.P3Q.AI"
+                ]
+            },
+            "asp:i mod:i": {
+                "proclitics": false,
+                "enclitics": true,
+                "passive": false,
+                "paradigm": [
+                    "VERB.I1S.AI",
+                    "VERB.I1Q.AI",
+                    "VERB.I2MS.AI",
+                    "VERB.I2FS.AI",
+                    "VERB.I2Q.AI",
+                    "VERB.I2FQ.AI",
+                    "VERB.I3MS.AI",
+                    "VERB.I3FS.AI",
+                    "VERB.I3Q.AI"
+                ]
+            },
+            "asp:c mod:i": {
+                "proclitics": false,
+                "enclitics": true,
+                "passive": false,
+                "paradigm": [
+                    "VERB.C2MS.AI",
+                    "VERB.C2FS.AI",
+                    "VERB.C2Q.AI"
+                ]
+            }
+        },
+        "nominal": {}
+    },
+    "egy": {
+        "verbal": {
+            "asp:p mod:i": {
+                "proclitics": false,
+                "enclitics": true,
+                "passive": false,
+                "paradigm": [
+                    "VERB.P1S.AI",
+                    "VERB.P1Q.AI",
+                    "VERB.P2MS.AI",
+                    "VERB.P2FS.AI",
+                    "VERB.P2Q.AI",
+                    "VERB.P3MS.AI",
+                    "VERB.P3FS.AI",
+                    "VERB.P3Q.AI"
+                ]
+            },
+            "asp:i mod:i": {
+                "proclitics": false,
+                "enclitics": true,
+                "passive": false,
+                "paradigm": [
+                    "VERB.I1S.AI",
+                    "VERB.I1Q.AI",
+                    "VERB.I2MS.AI",
+                    "VERB.I2FS.AI",
+                    "VERB.I2Q.AI",
+                    "VERB.I3MS.AI",
+                    "VERB.I3FS.AI",
+                    "VERB.I3Q.AI"
+                ]
+            },
+            "asp:c mod:i": {
+                "proclitics": false,
+                "enclitics": true,
+                "passive": false,
+                "paradigm": [
+                    "VERB.C2MS.AI",
+                    "VERB.C2FS.AI",
+                    "VERB.C2Q.AI"
+                ]
+            }
+        },
+        "nominal": {
+            "gen:m num:s": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "NOM.MS.D.P0",
+                    "NOM.MS.I",
+                    "NOM.MS.C",
+                    "NOM.MS.D.P0.E0",
+                    "NOM.MS.C.E0"
+                ]
+            },
+            "gen:f num:s": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "NOM.FS.D.P0",
+                    "NOM.FS.I",
+                    "NOM.FS.C",
+                    "NOM.FS.D.P0.E0",
+                    "NOM.FS.C.E0"
+                ]
+            },
+            "gen:m num:d": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "NOM.MD.D.P0",
+                    "NOM.MD.I",
+                    "NOM.MD.C",
+                    "NOM.MD.D.P0.E0",
+                    "NOM.MD.C.E0"
+                ]
+            },
+            "gen:f num:d": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "NOM.FD.D.P0",
+                    "NOM.FD.I",
+                    "NOM.FD.C",
+                    "NOM.FD.D.P0.E0",
+                    "NOM.FD.C.E0"
+                ]
+            },
+            "gen:m num:p": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "NOM.MQ.D.P0",
+                    "NOM.MQ.I",
+                    "NOM.MQ.C",
+                    "NOM.MQ.D.P0.E0",
+                    "NOM.MQ.C.E0"
+                ]
+            },
+            "gen:f num:p": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "NOM.FQ.D.P0",
+                    "NOM.FQ.I",
+                    "NOM.FQ.C",
+                    "NOM.FQ.D.P0.E0",
+                    "NOM.FQ.C.E0"
+                ]
+            },
+            "gen:u num:s": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "NOM.S.D.P0",
+                    "NOM.S.I",
+                    "NOM.S.C",
+                    "NOM.S.D.P0.E0",
+                    "NOM.S.C.E0"
+                ]
+            },
+            "gen:u num:p": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "NOM.Q.D.P0",
+                    "NOM.Q.I",
+                    "NOM.Q.C",
+                    "NOM.Q.D.P0.E0",
+                    "NOM.Q.C.E0"
+                ]
+            }
+        },
+        "other": {
+            "": {
+                "proclitics": false,
+                "enclitics": null,
+                "paradigm": [
+                    "OTHER....",
+                    "OTHER...P1",
+                    "OTHER...P2",
+                    "OTHER...P12",
+                    "OTHER...E0",
+                    "OTHER...P1.E0",
+                    "OTHER...P2.E0",
+                    "OTHER...P12.E0"
+                ]
+            }
+        }
+    },
+    "pal": {
+        "verbal": {
+            "asp:p mod:i": {
+                "proclitics": false,
+                "enclitics": true,
+                "passive": false,
+                "paradigm": [
+                    "VERB.P1S.AI",
+                    "VERB.P1Q.AI",
+                    "VERB.P2MS.AI",
+                    "VERB.P2FS.AI",
+                    "VERB.P2UQ.AI",
+                    "VERB.P2FQ.AI",
+                    "VERB.P3MS.AI",
+                    "VERB.P3FS.AI",
+                    "VERB.P3UQ.AI",
+                    "VERB.P3FQ.AI"
+                ]
+            },
+            "asp:i mod:i": {
+                "proclitics": false,
+                "enclitics": true,
+                "passive": false,
+                "paradigm": [
+                    "VERB.I1S.AI",
+                    "VERB.I1Q.AI",
+                    "VERB.I2MS.AI",
+                    "VERB.I2FS.AI",
+                    "VERB.I2UQ.AI",
+                    "VERB.I2FQ.AI",
+                    "VERB.I3MS.AI",
+                    "VERB.I3FS.AI",
+                    "VERB.I3UQ.AI",
+                    "VERB.I3FQ.AI"
+                ]
+            },
+            "asp:c mod:i": {
+                "proclitics": false,
+                "enclitics": true,
+                "passive": false,
+                "paradigm": [
+                    "VERB.C2MS.AI",
+                    "VERB.C2FS.AI",
+                    "VERB.C2UQ.AI",
+                    "VERB.C2FQ.AI"
+                ]
+            }
+        },
+        "nominal": {}
+    }
+}

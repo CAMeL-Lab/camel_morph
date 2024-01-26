@@ -4,4 +4,5 @@ tqdm
 emoji
 gspread==5.1.1
 gspread-formatting==1.0.5
-camel_tools
+camel-tools
+tabulate

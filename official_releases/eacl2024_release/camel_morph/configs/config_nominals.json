@@ -1,0 +1,103 @@
+{
+    "global": {
+        "data_dir": "data",
+        "specs": {
+            "about": {
+                "camel-morph-common": "About"
+            },
+            "header": {
+                "camel-morph-common": "Header-v2"
+            }
+        },
+        "db_dir": "databases",
+        "debugging_dir": "debugging_output",
+        "repr_lemmas_dir": "repr_lemmas",
+        "tables_dir": "tables",
+        "paradigm_debugging_dir": "paradigm_debugging",
+        "banks_dir": "banks",
+        "camel_tools": "./camel_morph/camel_tools",
+        "service_account": "",
+        "paradigms_config": "misc_files/config_paradigms.json",
+        "banks_spreadsheet": "Paradigm-Banks"
+    },
+    "local": {
+        "nominals_msa": {
+            "pruning": true,
+            "reindex": true,
+            "specs": {
+                "order": {
+                    "camel-morph-msa-nom-other": "MSA-Nom-ORDER"
+                },
+                "morph": {
+                    "camel-morph-msa-nom-other": "MSA-Nom-MORPH"
+                },
+                "exclude": [
+                    "STATS"
+                ],
+                "lexicon": {
+                    "camel-morph-msa-nom-other": [
+                        "MSA-Noun-LEX",
+                        "MSA-Adj-LEX",
+                        "MSA-Adj-Comp-LEX"
+                    ]
+                }
+            },
+            "debugging": {
+                "display_format": "expanded",
+                "stats_spreadsheet": "CamelMorph-Nominals-Paper-Assets",
+                "stats_sheet": "Statistics-v2.0",
+                "table_start_cell": "P36",
+                "pos_display": [
+                    "noun.lex",
+                    "adj.lex",
+                    "adj_comp.lex"
+                ]
+            },
+            "logprob": "return_all",
+            "dialect": "msa",
+            "db": "msa_nom_eacl2024.db",
+            "pos": [
+                "noun",
+                "adj",
+                "adj_comp"
+            ],
+            "class_map": "misc_files/class2complx_morpheme_type.json",
+            "extended_lemma_keys": [
+                "lemma",
+                "pos"
+            ]
+        },
+        "nominals_msa_eval": {
+            "pruning": true,
+            "specs": {
+                "order": {
+                    "camel-morph-msa-nom-other": "MSA-Nom-ORDER"
+                },
+                "morph": {
+                    "camel-morph-msa-nom-other": "MSA-Nom-MORPH"
+                },
+                "exclude": [],
+                "lexicon": {
+                    "camel-morph-msa-nom-other": [
+                        "MSA-Noun-LEX",
+                        "MSA-Adj-LEX",
+                        "MSA-Adj-Comp-LEX",
+                        "MSA-Noun-Num-LEX",
+                        "MSA-Noun-Quant-LEX",
+                        "MSA-Adj-Num-LEX",
+                        "MSA-Noun-Prop-LEX",
+                        "MSA-Other-LEX",
+                        "MSA-Nom-LEX-Backoff"
+                    ]
+                }
+            },
+            "dialect": "msa",
+            "db": "msa_nom_eacl2024.db",
+            "class_map": "misc_files/class2complx_morpheme_type.json",
+            "pos_type": [
+                "nominal",
+                "other"
+            ]
+        }
+    }
+}
