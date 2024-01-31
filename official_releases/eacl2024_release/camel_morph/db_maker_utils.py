@@ -111,11 +111,12 @@ def read_morph_specs(config:Config,
                 if specs_type == 'order':
                     order_fields_short_ = [
                         f for f in ORDER_FIELDS_SHORT if f in specs_.columns]
-                    unique_order_lines_ = Counter(map(tuple,
-                        [line for line in specs_[order_fields_short_].values.tolist()
-                        if line != ['', '', '']]))
+                    order_fields = order_fields_short_ if order_fields_short_ else ORDER_FIELDS
+                    unique_order_lines_ = Counter()
+                    for line in specs_[order_fields].values.tolist():
+                        if all(c.strip() for c in line):
+                            unique_order_lines_.update([tuple(line)])
                     assert sum(unique_order_lines_.values()) == len(unique_order_lines_)
-                if specs_type == 'order':
                     columns = ORDER_FIELDS + order_fields_short_
                 elif specs_type == 'morph':
                     columns = ['CLASS']

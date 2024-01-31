@@ -6,3 +6,4 @@ gspread==5.1.1
 gspread-formatting==1.0.5
 nltk==3.7
 tabulate
+camel-tools

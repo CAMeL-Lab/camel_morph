@@ -16,7 +16,6 @@
         "paradigm_debugging_dir": "paradigm_debugging",
         "banks_dir": "banks",
         "camel_tools": "./camel_morph/camel_tools",
-        "service_account": "",
         "paradigms_config": "misc_files/config_paradigms.json",
         "banks_spreadsheet": "Paradigm-Banks"
     },
@@ -26,16 +25,13 @@
             "reindex": true,
             "specs": {
                 "order": {
-                    "camel-morph-msa-nom-other": "MSA-Nom-ORDER"
+                    "camel-morph-msa-nom-camera-ready": "MSA-Nom-ORDER"
                 },
                 "morph": {
-                    "camel-morph-msa-nom-other": "MSA-Nom-MORPH"
+                    "camel-morph-msa-nom-camera-ready": "MSA-Nom-MORPH"
                 },
-                "exclude": [
-                    "STATS"
-                ],
                 "lexicon": {
-                    "camel-morph-msa-nom-other": [
+                    "camel-morph-msa-nom-camera-ready": [
                         "MSA-Noun-LEX",
                         "MSA-Adj-LEX",
                         "MSA-Adj-Comp-LEX"
@@ -44,9 +40,6 @@
             },
             "debugging": {
                 "display_format": "expanded",
-                "stats_spreadsheet": "CamelMorph-Nominals-Paper-Assets",
-                "stats_sheet": "Statistics-v2.0",
-                "table_start_cell": "P36",
                 "pos_display": [
                     "noun.lex",
                     "adj.lex",
@@ -71,14 +64,14 @@
             "pruning": true,
             "specs": {
                 "order": {
-                    "camel-morph-msa-nom-other": "MSA-Nom-ORDER"
+                    "camel-morph-msa-nom-camera-ready": "MSA-Nom-ORDER"
                 },
                 "morph": {
-                    "camel-morph-msa-nom-other": "MSA-Nom-MORPH"
+                    "camel-morph-msa-nom-camera-ready": "MSA-Nom-MORPH"
                 },
                 "exclude": [],
                 "lexicon": {
-                    "camel-morph-msa-nom-other": [
+                    "camel-morph-msa-nom-camera-ready": [
                         "MSA-Noun-LEX",
                         "MSA-Adj-LEX",
                         "MSA-Adj-Comp-LEX",

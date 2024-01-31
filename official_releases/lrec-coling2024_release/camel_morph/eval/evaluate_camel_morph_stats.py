@@ -73,12 +73,12 @@ ar2bw = CharMapper.builtin_mapper('ar2bw')
 
 
 def get_analysis_counts(db, forms=False, ids=False, camel_pos=CAMEL_POS):
-    stem_cat_hash, stem_cat_hash_diac_only, stem_cat_hash_diac_only_no_wiki = {}, {}, {}
+    stem_cat_hash, stem_cat_hash_diac_only  = {}, {}
+    stem_cat_hash_diac_only_no_wiki = {}
     for match in db.stem_hash:
         if match == 'NOAN':
             continue
-        for cat_analysis in db.stem_hash[match]:
-            cat, analysis = cat_analysis
+        for cat, analysis in db.stem_hash[match]:
             if camel_pos and analysis['pos'] not in camel_pos:
                 continue
             stem_cat_hash.setdefault(cat, []).append(analysis)
@@ -95,11 +95,19 @@ def get_analysis_counts(db, forms=False, ids=False, camel_pos=CAMEL_POS):
                 if all(analysis.get(k, '0') == '0' for k in clitic_keys_):
                     X_cat_hash_no_clitics.setdefault(morph_type, {}).setdefault(
                         cat, []).append(analysis)
-        
-        for cat, analyses in getattr(db, f'{morph_type}_cat_hash').items():
-            for analysis in analyses:
                 X_hash_diac_only.setdefault(morph_type, {}).setdefault(
                     cat, []).append(analysis.get('diac', ''))
+    
+    for cat_A in db.prefix_suffix_compat:
+        for cat_C in db.prefix_suffix_compat[cat_A]:
+            if cat_A in db.prefix_stem_compat and cat_A in X_cat_hash_no_clitics['prefix']:
+                for cat_B in db.prefix_stem_compat[cat_A]:
+                    if cat_B in db.stem_suffix_compat and cat_B in stem_cat_hash:
+                        if cat_C in db.stem_suffix_compat[cat_B] and cat_C in X_cat_hash_no_clitics['suffix']:
+                            for analysis in stem_cat_hash[cat_B]:
+                                X_cat_hash_no_clitics.setdefault('stem', {}).setdefault(
+                                    cat_B, []).append(analysis)
+
                 
     def _get_feats_dict(feats, morpheme_type):
         if morpheme_type in memoize and feats in memoize[morpheme_type]:
@@ -113,7 +121,7 @@ def get_analysis_counts(db, forms=False, ids=False, camel_pos=CAMEL_POS):
         return feats_
 
     memoize = {}
-    unique_analyses_no_clitics = set()
+    unique_analyses_no_clitics = Counter()
     analysis_counts, compat_entries, cmplx_morphs = {}, {}, {}
     forms, ids = set() if forms else None, {} if ids else None
     for cat_A in tqdm(db.prefix_suffix_compat):
@@ -173,7 +181,8 @@ def get_analysis_counts(db, forms=False, ids=False, camel_pos=CAMEL_POS):
                                     ids.setdefault('suffix', {}).setdefault('not_split', set()).update(
                                         set(a['cm_suff_ids'] for a in db.suffix_cat_hash[cat_C]))
 
-                                if cat_A in X_cat_hash_no_clitics['prefix'] and cat_C in X_cat_hash_no_clitics['suffix']:
+                                if cat_A in X_cat_hash_no_clitics['prefix'] and cat_C in X_cat_hash_no_clitics['suffix'] \
+                                        and cat_B in X_cat_hash_no_clitics['stem']:
                                     A_counts_no_clitics = len(X_cat_hash_no_clitics['prefix'][cat_A])
                                     C_counts_no_clitics = len(X_cat_hash_no_clitics['suffix'][cat_C])
                                     analysis_counts.setdefault('no_clitics', {}).setdefault(
@@ -188,6 +197,7 @@ def get_analysis_counts(db, forms=False, ids=False, camel_pos=CAMEL_POS):
                                     feat_combs_C = [tuple(a.get(k, 'N/A') for k in essential_keys_form_feats_no_clitics)
                                                     for a in X_cat_hash_no_clitics['suffix'][cat_C]]
                                     product_ = product(feat_combs_A, feat_combs_B, feat_combs_C)
+                                    unique_analyses_no_clitics_ = set()
                                     for feats_A, feats_B, feats_C in product_:
                                         feats_A_ = _get_feats_dict(feats_A, 'A')
                                         feats_B_ = _get_feats_dict(feats_B, 'B')
@@ -196,7 +206,8 @@ def get_analysis_counts(db, forms=False, ids=False, camel_pos=CAMEL_POS):
                                         merged = merge_features(db, feats_A_, feats_B_, feats_C_)
                                         feat_comb = tuple([merged.get(feat, db.defaults[pos_B][feat])
                                                            for feat in essential_keys_form_feats_no_clitics])
-                                        unique_analyses_no_clitics.add(feat_comb)
+                                        unique_analyses_no_clitics_.add(feat_comb)
+                                    unique_analyses_no_clitics.update(unique_analyses_no_clitics_)
 
                                 compat_entries.setdefault('AB', set()).add((cat_A, cat_B))
                                 compat_entries.setdefault('BC', set()).add((cat_B, cat_C))
@@ -354,7 +365,7 @@ def get_specs_stats(morph_specs, lexicon_specs, order_specs):
     return specs_stats
 
 
-def get_db_stats(db_camel, db_calima, camel_pos):
+def get_db_stats(db_camel, db_calima, camel_pos, debug=False):
     cmplx_morph_count, compat_count, analysis_counts = {}, {}, {}
     unique_analyses_no_clitics_ = {}
     for system, db in [('calima', db_calima), ('camel', db_camel)]:
@@ -375,6 +386,10 @@ def get_db_stats(db_camel, db_calima, camel_pos):
         compat_count[system] = sum(len(compats) for compats in compat_entries.values())
 
         unique_analyses_no_clitics_[system] = unique_analyses_no_clitics
+    
+    if debug:
+        with open('unique_analyses_no_clitics.pkl', 'wb') as f:
+            pickle.dump(unique_analyses_no_clitics_, f)
 
     return cmplx_morph_count, compat_count, analysis_counts
 
@@ -427,14 +442,16 @@ def create_stats_table(lemma_counts, stem_counts, specs_stats,
         table.append(['', f'{count_camel} ({count_no_wiki})', count_calima])
     
     
-    if sa is not None:
+    if sa is not None and \
+        config.debugging.stats_spreadsheet and \
+        config.debugging.stats_sheet and config.debugging.table_start_cell:
         sh = sa.open(config.debugging.stats_spreadsheet)
         sheet = sh.worksheet(config.debugging.stats_sheet)
         range_ = get_range(table, config.debugging.table_start_cell)
         sheet.batch_update([{'range': range_, 'values': table}])
     else:
-        tabulate(table, tablefmt='fancy_grid',
-                 headers=['Camel Specs', 'Camel DB', 'Calima DB'])
+        print(tabulate(table, tablefmt='fancy_grid',
+                 headers=['Camel Specs', 'Camel DB', 'Calima DB']))
 
 
 

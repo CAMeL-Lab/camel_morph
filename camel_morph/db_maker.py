@@ -291,7 +291,8 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
         if not cmplx_prefix_classes: cmplx_type_empty.add('Prefix')
         if cmplx_type_empty:
             cmplx_type_empty = '/'.join(cmplx_type_empty)
-            tqdm.write((f"WARNING: {order['SUFFIX-SHORT']}: {cmplx_type_empty} class " 
+            order_key = 'SUFFIX-SHORT' if 'SUFFIX-SHORT' in order.columns else 'SUFFIX'
+            tqdm.write((f"WARNING: {order[order_key]}: {cmplx_type_empty} class "
                         'is empty; proceeding to process next order line.'))
             return db
         
@@ -1108,12 +1109,16 @@ def collapse_and_reindex_categories(db, collapse_morphemes):
             stems_ = _reindex_morpheme_table_cats(stems_, stem_cat_map, equivalences)
             suffixes_ = _reindex_morpheme_table_cats(suffixes_, suffix_cat_map, equivalences)
             backoff_stems_ = _reindex_backoff_stem_cats(backoff_stems_, stem_cat_map, equivalences)
-        #TODO: deal with backoff stems here also
-        #TODO: the following (morpheme) collapsing is still unstable and is not being
-        # used for the moment. Should be debugged. Its purpose is to be ran after
-        # category collapsing/reindexing and collapse redundant entries based on the
-        # new categories.
+        #TODO: (1) deal with backoff stems here also
+        #TODO: (2) restricting essential keys to just the obligatory features might be errorneous
+        #TODO might have to also include everything else (caphi, tok, seg, etc.)
         if collapse_morphemes:
+            # TODO: the following (morpheme) collapsing is still unstable and is not being
+            # used for the moment. Should be debugged. Its purpose is to be ran after
+            # category collapsing/reindexing and collapse redundant morpheme entries based
+            # on the new categories. If this is not done, then counting number of unique
+            # analyses that the DB can generate based on combinatorics will be erronous
+            # and will have a large error margin, as is currently the case.
             collapsed = collapse_and_reindex_morphemes(
                 prefixes_, stems_, suffixes_,
                 prefix_stem_compat_, stem_suffix_compat_, prefix_suffix_compat_)

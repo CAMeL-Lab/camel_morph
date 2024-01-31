@@ -291,6 +291,7 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
         if not cmplx_prefix_classes: cmplx_type_empty.add('Prefix')
         if cmplx_type_empty:
             cmplx_type_empty = '/'.join(cmplx_type_empty)
+            order_key = 'SUFFIX-SHORT' if 'SUFFIX-SHORT' in order.columns else 'SUFFIX'
             tqdm.write((f"WARNING: {order['SUFFIX-SHORT']}: {cmplx_type_empty} class " 
                         'is empty; proceeding to process next order line.'))
             return db

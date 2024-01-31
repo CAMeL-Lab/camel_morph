@@ -34,7 +34,7 @@ The data files accessed through the below links are licensed under a [Creative C
 
 - [MSA Verbs Specifications](https://docs.google.com/spreadsheets/d/1thVU-IP-I-XnOmy5XfdUr39eNgDldZfMeTI75EH1TjQ/edit?usp=sharing)
 - [EGY Verbs Specifications](https://docs.google.com/spreadsheets/d/1NBK_UPl2799GRBkOrd9Eub_yLn2U2ccbJqYETKdCcbw/edit?usp=sharing)
-- [MSA Nominal Specifications](https://docs.google.com/spreadsheets/d/1QsIZ8ToFovoltyfIrUtStxrB_G8jWbj01aHgQQ9IIwE/edit#gid=337793670)
+- [MSA Nominals and Others Specifications](https://docs.google.com/spreadsheets/d/1QsIZ8ToFovoltyfIrUtStxrB_G8jWbj01aHgQQ9IIwE/edit#gid=337793670)
 
 ### SIGMORPHON 2022 Data (frozen)
 
@@ -48,6 +48,14 @@ The following data is not accessile publicly from the Google Sheets interface bu
 The following data is not accessile publicly from the Google Sheets interface but is available in `csv` format (the way it was at submission time) in the following [folder](./official_releases/eacl2024_release/data/).
 
 - [MSA Nominal Specifications (Camera Ready)](https://docs.google.com/spreadsheets/d/1T5-tY_bfvCW579P-NY7nOxxlq4P2MQ7vmWg_IWn_35Q/edit#gid=1109514510)
+
+<!-- ### LREC-COLING 2024 Data (frozen)
+
+The following data is not accessile publicly from the Google Sheets interface but is available in `csv` format (the way it was at submission time) in the following [folder](./official_releases/lrec-coling2024_release/data/).
+
+- [MSA Verbs Specifications (Camera Ready)](https://docs.google.com/spreadsheets/d/1V6TdCM6V5byu9HGCdmVY979MhQ2pyNQdO8XkRx3_n2M/edit#gid=210443809)
+- [MSA Nominals and Others Specifications (Camera Ready)](https://docs.google.com/spreadsheets/d/1s3nocf4bAxOsXjcvSMulJr5N9Yq1yUWyy5M6XkJk2_s/edit#gid=898723826)
+- [MSA Annex - Wiki Proper Nouns (Camera Ready)](https://docs.google.com/spreadsheets/d/1U_V8wNo5gHokTdxG5HaEaqcgjArgecRLiXEi5kMIlX4/edit#gid=1328530526) -->
 
 ## Folder Hierarchy
 

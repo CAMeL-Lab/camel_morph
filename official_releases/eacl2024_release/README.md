@@ -1,6 +1,6 @@
 # Camel Morph EACL 2024
 
-This section guides you through the process of inspecting, making use of, and replicating the results obtained for the EACL 2024 Camel Morph paper. All the data and code (including relevant Camel Tools modules) required to replicate the paper results are already contained in the standalone `camel_morph/official_releases/eacl2024_release/` directory. Furthermore, the generated DB can be read using the official [Camel Tools](https://github.com/CAMeL-Lab/camel_tools) release, but the evaluation/statistics scripts can only run using the Camel Tools modules included in the latter directory. To replicate the paper results, follow the below instructions.
+This section guides you through the process of inspecting, making use of, and replicating the results obtained for the EACL 2024 Camel Morph paper. All the data and code (including relevant Camel Tools modules) required to replicate the paper results are already contained in the standalone `camel_morph/official_releases/eacl2024_release/` directory. Furthermore, the generated DB can be read using the official [Camel Tools](https://github.com/CAMeL-Lab/camel_tools) release, but the evaluation/statistics scripts can only ran using the Camel Tools modules included in the latter directory. To replicate the paper results, follow the below instructions.
 
 ## Installation
 
@@ -32,16 +32,16 @@ The data files accessed through the below links are licensed under a [Creative C
 To generate the MSA nominals database, the results of which were described in the paper, run the following two commands from the main repository directory to output the resulting [DB](./databases/camel-morph-msa/msa_nom_eacl2024.db) into the `eacl2024_release/databases/camel-morph-msa` directory. From the main `camel_morph/` folder, run:
 
     >> cd eacl2024_release
-    >> python db_maker.py -config_file config_nominals.json -config_name nominals_msa 
+    >> python camel_morph/db_maker.py -config_file config_nominals.json -config_name nominals_msa 
 
 ### Generating the Paper Statistics
 
 To generate the statistics found in *Table 5* of the paper, run:
 
     >> cd eacl2024_release
-    >> python camel_morph/eval/evaluate_camel_morph_stats.py -config_file config_nominals.json -config_name nominals_msa -msa_baseline_db <calima_msa_db_path>
+    >> python camel_morph/eval/evaluate_camel_morph_stats.py -config_file config_nominals.json -config_name nominals_msa -msa_baseline_db <calima_msa_db_path> -no_download -no_build
 
-where you would need the `calima-msa-s31_0.4.2.utf8.db` DB file which is sotred [here](https://drive.google.com/file/d/1ggbUpaXJ_-jiGhmpGsMRpd9SwM0wZo17/view?usp=drive_link), but which is not publicly accessible because it is under copyrights.
+where you would need the `calima-msa-s31_0.4.2.utf8.db` DB file which is stored [here](https://drive.google.com/file/d/1ggbUpaXJ_-jiGhmpGsMRpd9SwM0wZo17/view?usp=drive_link), but which is not publicly accessible because it is under copyrights.
 
 Finally, to get the results in Appendix C (Nominal Lemmas Paradigm Index), run:
 
