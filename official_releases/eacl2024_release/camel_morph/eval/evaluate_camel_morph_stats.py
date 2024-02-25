@@ -450,6 +450,25 @@ def create_stats_table(lemma_counts, stem_counts, specs_stats,
         range_ = get_range(table, config.debugging.table_start_cell)
         sheet.batch_update([{'range': range_, 'values': table}])
     else:
+        row_header = [
+            'Lemmas (Stems)',
+            'Verbs',
+            'Nominals',
+            'Others',
+            'DBPrefix Morphemes (Allom.)',
+            'DBSuffix Morphs (Allom.)',
+            'Stem Buffers',
+            'Unique Condition Terms',
+            'Morph Order',
+            'Compatibility Tables',
+            'Complex Prefix Sequence',
+            'Complex Suffix Sequence',
+            'Unique Diacritized Forms (no wiki)',
+            'Unique Analyses (no wiki)',
+            'Unique Analyses w/o Clitics (no wiki)'
+        ]
+        for i, row in enumerate(table):
+            row.insert(0, row_header[i])
         print(tabulate(table, tablefmt='fancy_grid',
                  headers=['Camel Specs', 'Camel DB', 'Calima DB']))
 
@@ -600,7 +619,10 @@ if __name__ == "__main__":
         get_basic_lemma_paradigms(lexicon_specs)
         sys.exit()
 
-    db_calima = MorphologyDB(args.msa_baseline_db, 'dag')
+    try:
+        db_calima = MorphologyDB(args.msa_baseline_db, 'dag')
+    except:
+        db_calima = MorphologyDB.builtin_db('calima-msa-s31', 'dag')
 
     lemma_counts = get_number_of_lemmas(
         lexicon_specs, db_camel, db_calima)

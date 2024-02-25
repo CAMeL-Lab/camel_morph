@@ -88,7 +88,7 @@ To start working with the Camel Morph environment and compiling Mordern Standard
 To debug and evaluate databases (MSA or Dialectal Arabic), and for other utilities:
 
 1. Clone (download) a [fork](https://github.com/christios/camel_tools) of the Camel Tools repository. The Camel Morph databases will currently only function using the latter instance of Camel Tools. The changes in this fork will eventually be integrated to the main Camel Tools library. Unzip in a directory of your choice.
-2. Set the `CAMEL_TOOLS_PATH` value to the path of the Camel Tools fork repository in the configuration file that you will be using (default configuration file `./camel_morph/configs/config_default.json` provided; see [Configuration File Structure](#configuration-file-structure) section).
+2. Set the `$CAMEL_TOOLS_PATH` value to the path of the Camel Tools fork repository in the configuration file that you will be using (default configuration file `./camel_morph/configs/config_default.json` provided; see [Configuration File Structure](#configuration-file-structure) section).
 
 For instructions on how to run the different scripts, see the below sections.
 

@@ -26,24 +26,24 @@
             "reindex": true,
             "specs": {
                 "order": {
-                    "camel-morph-msa-nom-other": {
+                    "camel-morph-msa-nom-other-camera-ready": {
                         "MSA-Nom-ORDER": "N"
                     },
-                    "camel-morph-msa-verbs": {
+                    "camel-morph-msa-verbs-camera-ready": {
                         "MSA-Verb-ORDER": "V"
                     }
                 },
                 "morph": {
-                    "camel-morph-msa-nom-other": {
+                    "camel-morph-msa-nom-other-camera-ready": {
                         "MSA-Nom-MORPH": "N"
                     },
-                    "camel-morph-msa-verbs": {
+                    "camel-morph-msa-verbs-camera-ready": {
                         "MSA-Verb-MORPH": "V"
                     }
                 },
                 "exclude": [],
                 "lexicon": {
-                    "camel-morph-msa-nom-other": {
+                    "camel-morph-msa-nom-other-camera-ready": {
                         "MSA-Noun-LEX": "N",
                         "MSA-Adj-LEX": "N",
                         "MSA-Adj-Comp-LEX": "N",
@@ -54,10 +54,10 @@
                         "MSA-Other-LEX": "N",
                         "MSA-Nom-LEX-Backoff": "N"
                     },
-                    "camel-morph-msa-annex": {
+                    "camel-morph-msa-annex-camera-ready": {
                         "MSA-Noun-Prop-Annex-LEX": "N"
                     },
-                    "camel-morph-msa-verbs": {
+                    "camel-morph-msa-verbs-camera-ready": {
                         "MSA-Verb-LEX-PV": "V",
                         "MSA-Verb-LEX-IV": "V",
                         "MSA-Verb-LEX-CV": "V",
@@ -65,7 +65,7 @@
                     }
                 },
                 "passive": {
-                    "camel-morph-msa-verbs": {
+                    "camel-morph-msa-verbs-camera-ready": {
                         "MSA-Verb-LEX-PV": "MSA-Verb-PV-Passive-Patterns",
                         "MSA-Verb-LEX-IV": "MSA-Verb-IV-Passive-Patterns"
                     }

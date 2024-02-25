@@ -417,7 +417,8 @@ def cross_cmplx_morph_validation(cmplx_morph_classes: Dict,
             # is internal classes to one complex morpheme category, i.e., only appears in
             # in morpheme classes that appear in only one of complex prefix, suffix, or stem,
             # then this condition should not have interactions with the other two complex
-            # morpheme categories.
+            # morpheme categories. What needs to be done effectively is complex morpheme class
+            # collapsing based on condition dependencies between complex prefixes/stems/suffixes
             prefix_cond_s = ' '.join([f['COND-S'] for f in cmplx_prefixes[0]])
             prefix_cond_t = ' '.join([f['COND-T'] for f in cmplx_prefixes[0]])
             prefix_cond_f = ' '.join([f['COND-F'] for f in cmplx_prefixes[0]])
