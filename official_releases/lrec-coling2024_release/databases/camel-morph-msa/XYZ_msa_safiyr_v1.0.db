@@ -1,0 +1,944 @@
+###DEFINES###
+DEFINE diac diac:*open*
+DEFINE lex lex:*open*
+DEFINE caphi caphi:*open*
+DEFINE gloss gloss:*open*
+DEFINE bw bw:*open*
+DEFINE pos pos:noun pos:part_neg pos:pron_rel pos:noun_num pos:adv_interrog pos:part_voc pos:adj_comp pos:punc pos:conj_sub pos:part_fut pos:pron_exclam pos:part pos:part_verb pos:verb pos:digit pos:conj pos:pron_interrog pos:pron pos:abbrev pos:part_det pos:interj pos:adj_num pos:adv pos:part_restrict pos:adv_rel pos:adj pos:prep pos:part_interrog pos:verb_pseudo pos:verb_nom pos:noun_prop pos:part_focus pos:noun_quant pos:latin pos:pron_dem pos:part_connect
+DEFINE catib6 catib6:*open*
+DEFINE ud ud:*open*
+DEFINE root root:*open*
+DEFINE pattern pattern:*open*
+DEFINE pattern_abstract pattern_abstract:*open*
+DEFINE prc3 prc3:0 prc3:na prc3:>a_ques
+DEFINE prc2 prc2:fa_conn prc2:fa_rc prc2:0 prc2:na prc2:wa_part prc2:wa_sub prc2:fa_sub prc2:wa_conj prc2:fa_conj
+DEFINE prc1 prc1:0 prc1:laHa_rcfut prc1:laHa_emphfut prc1:li_jus prc1:<i$_interrog prc1:li_prep prc1:Ea_prep prc1:bi_prep prc1:bi_part prc1:Ha_fut prc1:ha_fut prc1:yA_voc prc1:la_prep prc1:na prc1:li_sub prc1:hA_dem prc1:ka_prep prc1:sa_fut prc1:wa_prep prc1:min_prep prc1:wA_voc prc1:bi_prog prc1:la_emph prc1:fiy_prep prc1:ta_prep prc1:la_rc prc1:libi_prep prc1:EalaY_prep prc1:$_interrog prc1:m_prep
+DEFINE prc1.5 prc1.5:prc1.5 prc1.5:mA_neg prc1.5:0 prc1.5:lA_neg prc1.5:na
+DEFINE prc0 prc0:0 prc0:mA_part prc0:ma_neg prc0:Al_det prc0:AlmA_detneg prc0:mA_rel prc0:na prc0:Aa_prondem prc0:hAl_det prc0:lA_neg prc0:mA_neg
+DEFINE per per:na per:3 per:2 per:1
+DEFINE asp asp:p asp:na asp:c asp:i
+DEFINE vox vox:p vox:na vox:u vox:a
+DEFINE mod mod:s mod:i mod:na mod:u mod:j mod:e mod:x
+DEFINE form_gen form_gen:na form_gen:m form_gen:f
+DEFINE gen gen:na gen:m gen:f gen:b gen:u
+DEFINE form_num form_num:s form_num:na form_num:d form_num:u form_num:p
+DEFINE num num:s num:na num:d num:u num:p num:b
+DEFINE stt stt:u stt:i stt:na stt:c stt:d
+DEFINE cas cas:u cas:n cas:na cas:a cas:g
+DEFINE enc0 enc0:2p_dobj enc0:3p_dobj enc0:3p_poss enc0:3mp_poss enc0:3d_dobj enc0:2p_poss enc0:2mp_poss enc0:3d_pron enc0:3ms_pron enc0:3ms_poss enc0:man_interrog enc0:3mp_pron enc0:2d_pron enc0:3mp_dobj enc0:2fp_pron enc0:lA_neg enc0:man_rel enc0:1s_dobj enc0:2ms_pron enc0:2mp_pron enc0:ma_interrog enc0:na enc0:3fs_dobj enc0:mA_rel enc0:0 enc0:2fs_pron enc0:2fp_poss enc0:1s_poss enc0:Ah_voc enc0:2d_dobj enc0:2mp_dobj enc0:3fp_pron enc0:1p_poss enc0:ma_rel enc0:2fs_poss enc0:3ms_dobj enc0:mA_interrog enc0:3d_poss enc0:3fp_poss enc0:ma_sub enc0:2fp_dobj enc0:2d_poss enc0:1s_pron enc0:3fs_pron enc0:3fs_poss enc0:3fp_dobj enc0:1p_pron enc0:2fs_dobj enc0:2ms_poss enc0:1p_dobj enc0:2ms_dobj enc0:mA_sub
+DEFINE enc1 enc1:0 enc1:1s_dobj enc1:1p_dobj enc1:2mp_dobj enc1:2fs_dobj enc1:2d_dobj enc1:2ms_dobj enc1:2fp_dobj enc1:3ms_dobj enc1:3fs_dobj enc1:3d_dobj enc1:3mp_dobj enc1:3fp_dobj enc1:1s_iobj enc1:1p_iobj enc1:2ms_iobj enc1:2fs_iobj enc1:2p_iobj enc1:3ms_iobj enc1:3fs_iobj enc1:3p_iobj enc1:part_neg
+DEFINE enc2 enc2:0 enc2:na enc2:part_neg
+DEFINE rat rat:n rat:na rat:y rat:i rat:r rat:b rat:u
+DEFINE source source:lex source:punct source:foreign source:spvar source:digit source:backoff source:wiki
+DEFINE stem stem:*open*
+DEFINE cm_stem cm_stem:*open*
+DEFINE cm_buffer cm_buffer:*open*
+DEFINE stemcat stemcat:*open*
+DEFINE stemgloss stemgloss:*open*
+DEFINE d1seg d1seg:*open*
+DEFINE d2seg d2seg:*open*
+DEFINE d3seg d3seg:*open*
+DEFINE atbseg atbseg:*open*
+DEFINE d1tok d1tok:*open*
+DEFINE d2tok d2tok:*open*
+DEFINE d3tok d3tok:*open*
+DEFINE atbtok atbtok:*open*
+DEFINE bwtok bwtok:*open*
+DEFINE pos_logprob pos_logprob:*open*
+DEFINE lex_logprob lex_logprob:*open*
+DEFINE pos_lex_logprob pos_lex_logprob:*open*
+DEFINE cm_stem_ids cm_stem_ids:*open*
+DEFINE cm_pref_ids cm_pref_ids:*open*
+DEFINE cm_suff_ids cm_suff_ids:*open*
+DEFINE correctness correctness:y correctness:n
+DEFINE mid_root_diac mid_root_diac:u mid_root_diac:i mid_root_diac:a mid_root_diac:na
+###DEFAULTS###
+DEFAULT pos:prep diac:* lex:* caphi:* gloss:* bw:* pos:prep catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:na gen:na form_num:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:verb diac:* lex:* caphi:* gloss:* bw:* pos:verb catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:3 asp:na vox:u mod:u form_gen:m gen:m form_num:s num:s stt:na cas:na enc0:0 enc1:0 enc2:0 rat:n source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:u
+DEFAULT pos:adj_num diac:* lex:* caphi:* gloss:* bw:* pos:adj_num catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:m gen:- form_num:s num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:n source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:pron_dem diac:* lex:* caphi:* gloss:* bw:* pos:pron_dem catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:m gen:- form_num:s num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:y source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:pron_rel diac:* lex:* caphi:* gloss:* bw:* pos:pron_rel catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:m gen:- form_num:s num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:y source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:latin diac:* lex:* caphi:* gloss:* bw:* pos:latin catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:na gen:na form_num:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:punc diac:* lex:* caphi:* gloss:* bw:* pos:punc catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:na gen:na form_num:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:conj_sub diac:* lex:* caphi:* gloss:* bw:* pos:conj_sub catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:na gen:na form_num:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:part_fut diac:* lex:* caphi:* gloss:* bw:* pos:part_fut catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:na gen:na form_num:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:noun_num diac:* lex:* caphi:* gloss:* bw:* pos:noun_num catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:m gen:- form_num:s num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:y source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:part_neg diac:* lex:* caphi:* gloss:* bw:* pos:part_neg catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:na gen:na form_num:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:abbrev diac:* lex:* caphi:* gloss:* bw:* pos:abbrev catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:na gen:na form_num:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:pron diac:* lex:* caphi:* gloss:* bw:* pos:pron catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:3 asp:na vox:na mod:na form_gen:m gen:- form_num:s num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:y source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:noun_prop diac:* lex:* caphi:* gloss:* bw:* pos:noun_prop catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:m gen:- form_num:s num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:r source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:pron_interrog diac:* lex:* caphi:* gloss:* bw:* pos:pron_interrog catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:m gen:- form_num:s num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:y source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:* diac:* lex:* caphi:* gloss:* bw:* pos:* catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:na gen:na form_num:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:part_verb diac:* lex:* caphi:* gloss:* bw:* pos:part_verb catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:na gen:na form_num:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:digit diac:* lex:* caphi:* gloss:* bw:* pos:digit catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:na gen:na form_num:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:part diac:* lex:* caphi:* gloss:* bw:* pos:part catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:na gen:na form_num:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:adv diac:* lex:* caphi:* gloss:* bw:* pos:adv catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:m gen:- form_num:s num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:y source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:part_det diac:* lex:* caphi:* gloss:* bw:* pos:part_det catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:na gen:na form_num:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:verb_pseudo diac:* lex:* caphi:* gloss:* bw:* pos:verb_pseudo catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:na gen:na form_num:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:n source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:verb_nom diac:* lex:* caphi:* gloss:* bw:* pos:verb_nom catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:na gen:na form_num:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:n source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:noun_quant diac:* lex:* caphi:* gloss:* bw:* pos:noun_quant catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:m gen:- form_num:s num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:n source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:adv_interrog diac:* lex:* caphi:* gloss:* bw:* pos:adv_interrog catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:m gen:- form_num:s num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:y source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:adj_comp diac:* lex:* caphi:* gloss:* bw:* pos:adj_comp catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:m gen:- form_num:s num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:n source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:interj diac:* lex:* caphi:* gloss:* bw:* pos:interj catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:na gen:na form_num:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:part_restrict diac:* lex:* caphi:* gloss:* bw:* pos:part_restrict catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:na gen:na form_num:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:adj diac:* lex:* caphi:* gloss:* bw:* pos:adj catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:m gen:- form_num:s num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:n source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:adv_rel diac:* lex:* caphi:* gloss:* bw:* pos:adv_rel catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:m gen:- form_num:s num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:y source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:conj diac:* lex:* caphi:* gloss:* bw:* pos:conj catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:na gen:na form_num:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:part_connect diac:* lex:* caphi:* gloss:* bw:* pos:part_connect catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:na gen:na form_num:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:noun diac:* lex:* caphi:* gloss:* bw:* pos:noun catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:m gen:- form_num:s num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:i source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:part_interrog diac:* lex:* caphi:* gloss:* bw:* pos:part_interrog catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:na gen:na form_num:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:part_voc diac:* lex:* caphi:* gloss:* bw:* pos:part_voc catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:na gen:na form_num:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:part_focus diac:* lex:* caphi:* gloss:* bw:* pos:part_focus catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:na gen:na form_num:na num:na stt:na cas:na enc0:0 enc1:0 enc2:0 rat:na source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+DEFAULT pos:pron_exclam diac:* lex:* caphi:* gloss:* bw:* pos:pron_exclam catib6:* ud:* root:* pattern:* pattern_abstract:* prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 per:na asp:na vox:na mod:na form_gen:m gen:- form_num:s num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:y source:lex stem:* cm_stem:* cm_buffer:* stemcat:* stemgloss:* d1seg:* d2seg:* d3seg:* atbseg:* d1tok:* d2tok:* d3tok:* atbtok:* bwtok:* pos_logprob:* lex_logprob:* pos_lex_logprob:* cm_stem_ids:* cm_pref_ids:* cm_suff_ids:* correctness:y mid_root_diac:na
+###ORDER###
+ORDER diac lex caphi gloss bw pos catib6 ud root pattern pattern_abstract prc3 prc2 prc1 prc1.5 prc0 per asp vox mod form_gen gen form_num num stt cas enc0 enc1 enc2 rat source stem cm_stem cm_buffer stemcat stemgloss d1seg d2seg d3seg atbseg d1tok d2tok d3tok atbtok bwtok pos_logprob lex_logprob pos_lex_logprob cm_stem_ids cm_pref_ids cm_suff_ids correctness mid_root_diac
+###TOKENIZATIONS###
+TOKENIZATION d1seg d2seg d3seg atbseg d1tok d2tok d3tok atbtok bwtok
+###STEMBACKOFF###
+###PREFIXES###
+	P00001	diac: caphi: gloss: bw: prc3:0 prc2:0 source:lex d3seg: atbseg: d3tok: atbtok: cm_pref_ids:[QUES]:1+[CONJ]:3
+ف	P00001	diac:فَ caphi:f_a gloss:so/and bw:فَ/CONJ prc3:0 prc2:fa_conj source:lex d3seg:فَ+_ atbseg:فَ+_ d3tok:فَ+_ atbtok:فَ+_ cm_pref_ids:[QUES]:1+[CONJ]:4
+ف	P00001	diac:فَ caphi:f_a gloss:so/then bw:فَ/CONNEC_PART prc3:0 prc2:fa_conn source:lex d3seg:فَ+_ atbseg:فَ+_ d3tok:فَ+_ atbtok:فَ+_ cm_pref_ids:[QUES]:1+[CONJ]:5
+ف	P00001	diac:فَ caphi:f_a gloss:so/then bw:فَ/RC_PART prc3:0 prc2:fa_rc source:lex d3seg:فَ+_ atbseg:فَ+_ d3tok:فَ+_ atbtok:فَ+_ cm_pref_ids:[QUES]:1+[CONJ]:6
+ف	P00001	diac:فَ caphi:f_a gloss:because/therefore/as_a_result bw:فَ/SUB_CONJ prc3:0 prc2:fa_sub source:lex d3seg:فَ+_ atbseg:فَ+_ d3tok:فَ+_ atbtok:فَ+_ cm_pref_ids:[QUES]:1+[CONJ]:7
+و	P00001	diac:وَ caphi:w_a gloss:and bw:وَ/CONJ prc3:0 prc2:wa_conj source:lex d3seg:وَ+_ atbseg:وَ+_ d3tok:وَ+_ atbtok:وَ+_ cm_pref_ids:[QUES]:1+[CONJ]:8
+و	P00001	diac:وَ caphi:w_a gloss:while bw:وَ/SUB_CONJ prc3:0 prc2:wa_sub source:lex d3seg:وَ+_ atbseg:وَ+_ d3tok:وَ+_ atbtok:وَ+_ cm_pref_ids:[QUES]:1+[CONJ]:9
+ا	P00001	diac:أَ caphi:2_a gloss:is/are bw:أَ/INTERROG_PART prc3:>a_ques prc2:0 source:lex d3seg:أَ+_ atbseg:أَ+_ d3tok:أَ+_ atbtok:أَ+_ cm_pref_ids:[QUES]:2+[CONJ]:3
+اف	P00001	diac:أَفَ caphi:2_a_f_a gloss:is/are+so/and bw:أَ/INTERROG_PART+فَ/CONJ prc3:>a_ques prc2:fa_conj source:lex d3seg:أَ+_فَ+_ atbseg:أَ+_فَ+_ d3tok:أَ+_فَ+_ atbtok:أَ+_فَ+_ cm_pref_ids:[QUES]:2+[CONJ]:4
+اف	P00001	diac:أَفَ caphi:2_a_f_a gloss:is/are+so/then bw:أَ/INTERROG_PART+فَ/CONNEC_PART prc3:>a_ques prc2:fa_conn source:lex d3seg:أَ+_فَ+_ atbseg:أَ+_فَ+_ d3tok:أَ+_فَ+_ atbtok:أَ+_فَ+_ cm_pref_ids:[QUES]:2+[CONJ]:5
+اف	P00001	diac:أَفَ caphi:2_a_f_a gloss:is/are+so/then bw:أَ/INTERROG_PART+فَ/RC_PART prc3:>a_ques prc2:fa_rc source:lex d3seg:أَ+_فَ+_ atbseg:أَ+_فَ+_ d3tok:أَ+_فَ+_ atbtok:أَ+_فَ+_ cm_pref_ids:[QUES]:2+[CONJ]:6
+اف	P00001	diac:أَفَ caphi:2_a_f_a gloss:is/are+because/therefore/as_a_result bw:أَ/INTERROG_PART+فَ/SUB_CONJ prc3:>a_ques prc2:fa_sub source:lex d3seg:أَ+_فَ+_ atbseg:أَ+_فَ+_ d3tok:أَ+_فَ+_ atbtok:أَ+_فَ+_ cm_pref_ids:[QUES]:2+[CONJ]:7
+او	P00001	diac:أَوَ caphi:2_a_w_a gloss:is/are+and bw:أَ/INTERROG_PART+وَ/CONJ prc3:>a_ques prc2:wa_conj source:lex d3seg:أَ+_وَ+_ atbseg:أَ+_وَ+_ d3tok:أَ+_وَ+_ atbtok:أَ+_وَ+_ cm_pref_ids:[QUES]:2+[CONJ]:8
+او	P00001	diac:أَوَ caphi:2_a_w_a gloss:is/are+while bw:أَ/INTERROG_PART+وَ/SUB_CONJ prc3:>a_ques prc2:wa_sub source:lex d3seg:أَ+_وَ+_ atbseg:أَ+_وَ+_ d3tok:أَ+_وَ+_ atbtok:أَ+_وَ+_ cm_pref_ids:[QUES]:2+[CONJ]:9
+	P00002	diac: caphi: gloss: bw: prc3:0 prc2:0 prc1:0 source:lex d3seg: atbseg: d3tok: atbtok: cm_pref_ids:[QUES]:1+[CONJ]:3+[PREP]:11
+ب	P00002	diac:بِ caphi:b_i gloss:with/by bw:بِ/PREP prc3:0 prc2:0 prc1:bi_prep source:lex d3seg:بِ+_ atbseg:بِ+_ d3tok:بِ+_ atbtok:بِ+_ cm_pref_ids:[QUES]:1+[CONJ]:3+[PREP]:12
+ك	P00002	diac:كَ caphi:k_a gloss:like/such_as bw:كَ/PREP prc3:0 prc2:0 prc1:ka_prep source:lex d3seg:كَ+_ atbseg:كَ+_ d3tok:كَ+_ atbtok:كَ+_ cm_pref_ids:[QUES]:1+[CONJ]:3+[PREP]:13
+و	P00002	diac:وَ caphi:w_a gloss:with/by bw:وَ/PREP prc3:0 prc2:0 prc1:wa_prep source:lex d3seg:وَ+_ atbseg:وَ+_ d3tok:وَ+_ atbtok:وَ+_ cm_pref_ids:[QUES]:1+[CONJ]:3+[PREP]:15
+ب	P00002	diac:بِ caphi:b_i gloss:[part.] bw:بِ/PART prc3:0 prc2:0 prc1:bi_part source:lex d3seg:بِ+_ atbseg:بِ+_ d3tok:بِ+_ atbtok:بِ+_ cm_pref_ids:[QUES]:1+[CONJ]:3+[PREP]:16
+ف	P00002	diac:فَ caphi:f_a gloss:so/and bw:فَ/CONJ prc3:0 prc2:fa_conj prc1:0 source:lex d3seg:فَ+_ atbseg:فَ+_ d3tok:فَ+_ atbtok:فَ+_ cm_pref_ids:[QUES]:1+[CONJ]:4+[PREP]:11
+فب	P00002	diac:فَبِ caphi:f_a_b_i gloss:so/and+with/by bw:فَ/CONJ+بِ/PREP prc3:0 prc2:fa_conj prc1:bi_prep source:lex d3seg:فَ+_بِ+_ atbseg:فَ+_بِ+_ d3tok:فَ+_بِ+_ atbtok:فَ+_بِ+_ cm_pref_ids:[QUES]:1+[CONJ]:4+[PREP]:12
+فك	P00002	diac:فَكَ caphi:f_a_k_a gloss:so/and+like/such_as bw:فَ/CONJ+كَ/PREP prc3:0 prc2:fa_conj prc1:ka_prep source:lex d3seg:فَ+_كَ+_ atbseg:فَ+_كَ+_ d3tok:فَ+_كَ+_ atbtok:فَ+_كَ+_ cm_pref_ids:[QUES]:1+[CONJ]:4+[PREP]:13
+فو	P00002	diac:فَوَ caphi:f_a_w_a gloss:so/and+with/by bw:فَ/CONJ+وَ/PREP prc3:0 prc2:fa_conj prc1:wa_prep source:lex d3seg:فَ+_وَ+_ atbseg:فَ+_وَ+_ d3tok:فَ+_وَ+_ atbtok:فَ+_وَ+_ cm_pref_ids:[QUES]:1+[CONJ]:4+[PREP]:15
+فب	P00002	diac:فَبِ caphi:f_a_b_i gloss:so/and+[part.] bw:فَ/CONJ+بِ/PART prc3:0 prc2:fa_conj prc1:bi_part source:lex d3seg:فَ+_بِ+_ atbseg:فَ+_بِ+_ d3tok:فَ+_بِ+_ atbtok:فَ+_بِ+_ cm_pref_ids:[QUES]:1+[CONJ]:4+[PREP]:16
+ف	P00002	diac:فَ caphi:f_a gloss:so/then bw:فَ/CONNEC_PART prc3:0 prc2:fa_conn prc1:0 source:lex d3seg:فَ+_ atbseg:فَ+_ d3tok:فَ+_ atbtok:فَ+_ cm_pref_ids:[QUES]:1+[CONJ]:5+[PREP]:11
+فب	P00002	diac:فَبِ caphi:f_a_b_i gloss:so/then+with/by bw:فَ/CONNEC_PART+بِ/PREP prc3:0 prc2:fa_conn prc1:bi_prep source:lex d3seg:فَ+_بِ+_ atbseg:فَ+_بِ+_ d3tok:فَ+_بِ+_ atbtok:فَ+_بِ+_ cm_pref_ids:[QUES]:1+[CONJ]:5+[PREP]:12
+فك	P00002	diac:فَكَ caphi:f_a_k_a gloss:so/then+like/such_as bw:فَ/CONNEC_PART+كَ/PREP prc3:0 prc2:fa_conn prc1:ka_prep source:lex d3seg:فَ+_كَ+_ atbseg:فَ+_كَ+_ d3tok:فَ+_كَ+_ atbtok:فَ+_كَ+_ cm_pref_ids:[QUES]:1+[CONJ]:5+[PREP]:13
+فو	P00002	diac:فَوَ caphi:f_a_w_a gloss:so/then+with/by bw:فَ/CONNEC_PART+وَ/PREP prc3:0 prc2:fa_conn prc1:wa_prep source:lex d3seg:فَ+_وَ+_ atbseg:فَ+_وَ+_ d3tok:فَ+_وَ+_ atbtok:فَ+_وَ+_ cm_pref_ids:[QUES]:1+[CONJ]:5+[PREP]:15
+فب	P00002	diac:فَبِ caphi:f_a_b_i gloss:so/then+[part.] bw:فَ/CONNEC_PART+بِ/PART prc3:0 prc2:fa_conn prc1:bi_part source:lex d3seg:فَ+_بِ+_ atbseg:فَ+_بِ+_ d3tok:فَ+_بِ+_ atbtok:فَ+_بِ+_ cm_pref_ids:[QUES]:1+[CONJ]:5+[PREP]:16
+ف	P00002	diac:فَ caphi:f_a gloss:so/then bw:فَ/RC_PART prc3:0 prc2:fa_rc prc1:0 source:lex d3seg:فَ+_ atbseg:فَ+_ d3tok:فَ+_ atbtok:فَ+_ cm_pref_ids:[QUES]:1+[CONJ]:6+[PREP]:11
+فب	P00002	diac:فَبِ caphi:f_a_b_i gloss:so/then+with/by bw:فَ/RC_PART+بِ/PREP prc3:0 prc2:fa_rc prc1:bi_prep source:lex d3seg:فَ+_بِ+_ atbseg:فَ+_بِ+_ d3tok:فَ+_بِ+_ atbtok:فَ+_بِ+_ cm_pref_ids:[QUES]:1+[CONJ]:6+[PREP]:12
+فك	P00002	diac:فَكَ caphi:f_a_k_a gloss:so/then+like/such_as bw:فَ/RC_PART+كَ/PREP prc3:0 prc2:fa_rc prc1:ka_prep source:lex d3seg:فَ+_كَ+_ atbseg:فَ+_كَ+_ d3tok:فَ+_كَ+_ atbtok:فَ+_كَ+_ cm_pref_ids:[QUES]:1+[CONJ]:6+[PREP]:13
+فو	P00002	diac:فَوَ caphi:f_a_w_a gloss:so/then+with/by bw:فَ/RC_PART+وَ/PREP prc3:0 prc2:fa_rc prc1:wa_prep source:lex d3seg:فَ+_وَ+_ atbseg:فَ+_وَ+_ d3tok:فَ+_وَ+_ atbtok:فَ+_وَ+_ cm_pref_ids:[QUES]:1+[CONJ]:6+[PREP]:15
+فب	P00002	diac:فَبِ caphi:f_a_b_i gloss:so/then+[part.] bw:فَ/RC_PART+بِ/PART prc3:0 prc2:fa_rc prc1:bi_part source:lex d3seg:فَ+_بِ+_ atbseg:فَ+_بِ+_ d3tok:فَ+_بِ+_ atbtok:فَ+_بِ+_ cm_pref_ids:[QUES]:1+[CONJ]:6+[PREP]:16
+ف	P00002	diac:فَ caphi:f_a gloss:because/therefore/as_a_result bw:فَ/SUB_CONJ prc3:0 prc2:fa_sub prc1:0 source:lex d3seg:فَ+_ atbseg:فَ+_ d3tok:فَ+_ atbtok:فَ+_ cm_pref_ids:[QUES]:1+[CONJ]:7+[PREP]:11
+فب	P00002	diac:فَبِ caphi:f_a_b_i gloss:because/therefore/as_a_result+with/by bw:فَ/SUB_CONJ+بِ/PREP prc3:0 prc2:fa_sub prc1:bi_prep source:lex d3seg:فَ+_بِ+_ atbseg:فَ+_بِ+_ d3tok:فَ+_بِ+_ atbtok:فَ+_بِ+_ cm_pref_ids:[QUES]:1+[CONJ]:7+[PREP]:12
+فك	P00002	diac:فَكَ caphi:f_a_k_a gloss:because/therefore/as_a_result+like/such_as bw:فَ/SUB_CONJ+كَ/PREP prc3:0 prc2:fa_sub prc1:ka_prep source:lex d3seg:فَ+_كَ+_ atbseg:فَ+_كَ+_ d3tok:فَ+_كَ+_ atbtok:فَ+_كَ+_ cm_pref_ids:[QUES]:1+[CONJ]:7+[PREP]:13
+فو	P00002	diac:فَوَ caphi:f_a_w_a gloss:because/therefore/as_a_result+with/by bw:فَ/SUB_CONJ+وَ/PREP prc3:0 prc2:fa_sub prc1:wa_prep source:lex d3seg:فَ+_وَ+_ atbseg:فَ+_وَ+_ d3tok:فَ+_وَ+_ atbtok:فَ+_وَ+_ cm_pref_ids:[QUES]:1+[CONJ]:7+[PREP]:15
+فب	P00002	diac:فَبِ caphi:f_a_b_i gloss:because/therefore/as_a_result+[part.] bw:فَ/SUB_CONJ+بِ/PART prc3:0 prc2:fa_sub prc1:bi_part source:lex d3seg:فَ+_بِ+_ atbseg:فَ+_بِ+_ d3tok:فَ+_بِ+_ atbtok:فَ+_بِ+_ cm_pref_ids:[QUES]:1+[CONJ]:7+[PREP]:16
+و	P00002	diac:وَ caphi:w_a gloss:and bw:وَ/CONJ prc3:0 prc2:wa_conj prc1:0 source:lex d3seg:وَ+_ atbseg:وَ+_ d3tok:وَ+_ atbtok:وَ+_ cm_pref_ids:[QUES]:1+[CONJ]:8+[PREP]:11
+وب	P00002	diac:وَبِ caphi:w_a_b_i gloss:and+with/by bw:وَ/CONJ+بِ/PREP prc3:0 prc2:wa_conj prc1:bi_prep source:lex d3seg:وَ+_بِ+_ atbseg:وَ+_بِ+_ d3tok:وَ+_بِ+_ atbtok:وَ+_بِ+_ cm_pref_ids:[QUES]:1+[CONJ]:8+[PREP]:12
+وك	P00002	diac:وَكَ caphi:w_a_k_a gloss:and+like/such_as bw:وَ/CONJ+كَ/PREP prc3:0 prc2:wa_conj prc1:ka_prep source:lex d3seg:وَ+_كَ+_ atbseg:وَ+_كَ+_ d3tok:وَ+_كَ+_ atbtok:وَ+_كَ+_ cm_pref_ids:[QUES]:1+[CONJ]:8+[PREP]:13
+وو	P00002	diac:وَوَ caphi:w_a_w_a gloss:and+with/by bw:وَ/CONJ+وَ/PREP prc3:0 prc2:wa_conj prc1:wa_prep source:lex d3seg:وَ+_وَ+_ atbseg:وَ+_وَ+_ d3tok:وَ+_وَ+_ atbtok:وَ+_وَ+_ cm_pref_ids:[QUES]:1+[CONJ]:8+[PREP]:15
+وب	P00002	diac:وَبِ caphi:w_a_b_i gloss:and+[part.] bw:وَ/CONJ+بِ/PART prc3:0 prc2:wa_conj prc1:bi_part source:lex d3seg:وَ+_بِ+_ atbseg:وَ+_بِ+_ d3tok:وَ+_بِ+_ atbtok:وَ+_بِ+_ cm_pref_ids:[QUES]:1+[CONJ]:8+[PREP]:16
+و	P00002	diac:وَ caphi:w_a gloss:while bw:وَ/SUB_CONJ prc3:0 prc2:wa_sub prc1:0 source:lex d3seg:وَ+_ atbseg:وَ+_ d3tok:وَ+_ atbtok:وَ+_ cm_pref_ids:[QUES]:1+[CONJ]:9+[PREP]:11
+وب	P00002	diac:وَبِ caphi:w_a_b_i gloss:while+with/by bw:وَ/SUB_CONJ+بِ/PREP prc3:0 prc2:wa_sub prc1:bi_prep source:lex d3seg:وَ+_بِ+_ atbseg:وَ+_بِ+_ d3tok:وَ+_بِ+_ atbtok:وَ+_بِ+_ cm_pref_ids:[QUES]:1+[CONJ]:9+[PREP]:12
+وك	P00002	diac:وَكَ caphi:w_a_k_a gloss:while+like/such_as bw:وَ/SUB_CONJ+كَ/PREP prc3:0 prc2:wa_sub prc1:ka_prep source:lex d3seg:وَ+_كَ+_ atbseg:وَ+_كَ+_ d3tok:وَ+_كَ+_ atbtok:وَ+_كَ+_ cm_pref_ids:[QUES]:1+[CONJ]:9+[PREP]:13
+وو	P00002	diac:وَوَ caphi:w_a_w_a gloss:while+with/by bw:وَ/SUB_CONJ+وَ/PREP prc3:0 prc2:wa_sub prc1:wa_prep source:lex d3seg:وَ+_وَ+_ atbseg:وَ+_وَ+_ d3tok:وَ+_وَ+_ atbtok:وَ+_وَ+_ cm_pref_ids:[QUES]:1+[CONJ]:9+[PREP]:15
+وب	P00002	diac:وَبِ caphi:w_a_b_i gloss:while+[part.] bw:وَ/SUB_CONJ+بِ/PART prc3:0 prc2:wa_sub prc1:bi_part source:lex d3seg:وَ+_بِ+_ atbseg:وَ+_بِ+_ d3tok:وَ+_بِ+_ atbtok:وَ+_بِ+_ cm_pref_ids:[QUES]:1+[CONJ]:9+[PREP]:16
+ا	P00002	diac:أَ caphi:2_a gloss:is/are bw:أَ/INTERROG_PART prc3:>a_ques prc2:0 prc1:0 source:lex d3seg:أَ+_ atbseg:أَ+_ d3tok:أَ+_ atbtok:أَ+_ cm_pref_ids:[QUES]:2+[CONJ]:3+[PREP]:11
+اب	P00002	diac:أَبِ caphi:2_a_b_i gloss:is/are+with/by bw:أَ/INTERROG_PART+بِ/PREP prc3:>a_ques prc2:0 prc1:bi_prep source:lex d3seg:أَ+_بِ+_ atbseg:أَ+_بِ+_ d3tok:أَ+_بِ+_ atbtok:أَ+_بِ+_ cm_pref_ids:[QUES]:2+[CONJ]:3+[PREP]:12
+اك	P00002	diac:أَكَ caphi:2_a_k_a gloss:is/are+like/such_as bw:أَ/INTERROG_PART+كَ/PREP prc3:>a_ques prc2:0 prc1:ka_prep source:lex d3seg:أَ+_كَ+_ atbseg:أَ+_كَ+_ d3tok:أَ+_كَ+_ atbtok:أَ+_كَ+_ cm_pref_ids:[QUES]:2+[CONJ]:3+[PREP]:13
+او	P00002	diac:أَوَ caphi:2_a_w_a gloss:is/are+with/by bw:أَ/INTERROG_PART+وَ/PREP prc3:>a_ques prc2:0 prc1:wa_prep source:lex d3seg:أَ+_وَ+_ atbseg:أَ+_وَ+_ d3tok:أَ+_وَ+_ atbtok:أَ+_وَ+_ cm_pref_ids:[QUES]:2+[CONJ]:3+[PREP]:15
+اب	P00002	diac:أَبِ caphi:2_a_b_i gloss:is/are+[part.] bw:أَ/INTERROG_PART+بِ/PART prc3:>a_ques prc2:0 prc1:bi_part source:lex d3seg:أَ+_بِ+_ atbseg:أَ+_بِ+_ d3tok:أَ+_بِ+_ atbtok:أَ+_بِ+_ cm_pref_ids:[QUES]:2+[CONJ]:3+[PREP]:16
+اف	P00002	diac:أَفَ caphi:2_a_f_a gloss:is/are+so/and bw:أَ/INTERROG_PART+فَ/CONJ prc3:>a_ques prc2:fa_conj prc1:0 source:lex d3seg:أَ+_فَ+_ atbseg:أَ+_فَ+_ d3tok:أَ+_فَ+_ atbtok:أَ+_فَ+_ cm_pref_ids:[QUES]:2+[CONJ]:4+[PREP]:11
+افب	P00002	diac:أَفَبِ caphi:2_a_f_a_b_i gloss:is/are+so/and+with/by bw:أَ/INTERROG_PART+فَ/CONJ+بِ/PREP prc3:>a_ques prc2:fa_conj prc1:bi_prep source:lex d3seg:أَ+_فَ+_بِ+_ atbseg:أَ+_فَ+_بِ+_ d3tok:أَ+_فَ+_بِ+_ atbtok:أَ+_فَ+_بِ+_ cm_pref_ids:[QUES]:2+[CONJ]:4+[PREP]:12
+افك	P00002	diac:أَفَكَ caphi:2_a_f_a_k_a gloss:is/are+so/and+like/such_as bw:أَ/INTERROG_PART+فَ/CONJ+كَ/PREP prc3:>a_ques prc2:fa_conj prc1:ka_prep source:lex d3seg:أَ+_فَ+_كَ+_ atbseg:أَ+_فَ+_كَ+_ d3tok:أَ+_فَ+_كَ+_ atbtok:أَ+_فَ+_كَ+_ cm_pref_ids:[QUES]:2+[CONJ]:4+[PREP]:13
+افو	P00002	diac:أَفَوَ caphi:2_a_f_a_w_a gloss:is/are+so/and+with/by bw:أَ/INTERROG_PART+فَ/CONJ+وَ/PREP prc3:>a_ques prc2:fa_conj prc1:wa_prep source:lex d3seg:أَ+_فَ+_وَ+_ atbseg:أَ+_فَ+_وَ+_ d3tok:أَ+_فَ+_وَ+_ atbtok:أَ+_فَ+_وَ+_ cm_pref_ids:[QUES]:2+[CONJ]:4+[PREP]:15
+افب	P00002	diac:أَفَبِ caphi:2_a_f_a_b_i gloss:is/are+so/and+[part.] bw:أَ/INTERROG_PART+فَ/CONJ+بِ/PART prc3:>a_ques prc2:fa_conj prc1:bi_part source:lex d3seg:أَ+_فَ+_بِ+_ atbseg:أَ+_فَ+_بِ+_ d3tok:أَ+_فَ+_بِ+_ atbtok:أَ+_فَ+_بِ+_ cm_pref_ids:[QUES]:2+[CONJ]:4+[PREP]:16
+اف	P00002	diac:أَفَ caphi:2_a_f_a gloss:is/are+so/then bw:أَ/INTERROG_PART+فَ/CONNEC_PART prc3:>a_ques prc2:fa_conn prc1:0 source:lex d3seg:أَ+_فَ+_ atbseg:أَ+_فَ+_ d3tok:أَ+_فَ+_ atbtok:أَ+_فَ+_ cm_pref_ids:[QUES]:2+[CONJ]:5+[PREP]:11
+افب	P00002	diac:أَفَبِ caphi:2_a_f_a_b_i gloss:is/are+so/then+with/by bw:أَ/INTERROG_PART+فَ/CONNEC_PART+بِ/PREP prc3:>a_ques prc2:fa_conn prc1:bi_prep source:lex d3seg:أَ+_فَ+_بِ+_ atbseg:أَ+_فَ+_بِ+_ d3tok:أَ+_فَ+_بِ+_ atbtok:أَ+_فَ+_بِ+_ cm_pref_ids:[QUES]:2+[CONJ]:5+[PREP]:12
+افك	P00002	diac:أَفَكَ caphi:2_a_f_a_k_a gloss:is/are+so/then+like/such_as bw:أَ/INTERROG_PART+فَ/CONNEC_PART+كَ/PREP prc3:>a_ques prc2:fa_conn prc1:ka_prep source:lex d3seg:أَ+_فَ+_كَ+_ atbseg:أَ+_فَ+_كَ+_ d3tok:أَ+_فَ+_كَ+_ atbtok:أَ+_فَ+_كَ+_ cm_pref_ids:[QUES]:2+[CONJ]:5+[PREP]:13
+افو	P00002	diac:أَفَوَ caphi:2_a_f_a_w_a gloss:is/are+so/then+with/by bw:أَ/INTERROG_PART+فَ/CONNEC_PART+وَ/PREP prc3:>a_ques prc2:fa_conn prc1:wa_prep source:lex d3seg:أَ+_فَ+_وَ+_ atbseg:أَ+_فَ+_وَ+_ d3tok:أَ+_فَ+_وَ+_ atbtok:أَ+_فَ+_وَ+_ cm_pref_ids:[QUES]:2+[CONJ]:5+[PREP]:15
+افب	P00002	diac:أَفَبِ caphi:2_a_f_a_b_i gloss:is/are+so/then+[part.] bw:أَ/INTERROG_PART+فَ/CONNEC_PART+بِ/PART prc3:>a_ques prc2:fa_conn prc1:bi_part source:lex d3seg:أَ+_فَ+_بِ+_ atbseg:أَ+_فَ+_بِ+_ d3tok:أَ+_فَ+_بِ+_ atbtok:أَ+_فَ+_بِ+_ cm_pref_ids:[QUES]:2+[CONJ]:5+[PREP]:16
+اف	P00002	diac:أَفَ caphi:2_a_f_a gloss:is/are+so/then bw:أَ/INTERROG_PART+فَ/RC_PART prc3:>a_ques prc2:fa_rc prc1:0 source:lex d3seg:أَ+_فَ+_ atbseg:أَ+_فَ+_ d3tok:أَ+_فَ+_ atbtok:أَ+_فَ+_ cm_pref_ids:[QUES]:2+[CONJ]:6+[PREP]:11
+افب	P00002	diac:أَفَبِ caphi:2_a_f_a_b_i gloss:is/are+so/then+with/by bw:أَ/INTERROG_PART+فَ/RC_PART+بِ/PREP prc3:>a_ques prc2:fa_rc prc1:bi_prep source:lex d3seg:أَ+_فَ+_بِ+_ atbseg:أَ+_فَ+_بِ+_ d3tok:أَ+_فَ+_بِ+_ atbtok:أَ+_فَ+_بِ+_ cm_pref_ids:[QUES]:2+[CONJ]:6+[PREP]:12
+افك	P00002	diac:أَفَكَ caphi:2_a_f_a_k_a gloss:is/are+so/then+like/such_as bw:أَ/INTERROG_PART+فَ/RC_PART+كَ/PREP prc3:>a_ques prc2:fa_rc prc1:ka_prep source:lex d3seg:أَ+_فَ+_كَ+_ atbseg:أَ+_فَ+_كَ+_ d3tok:أَ+_فَ+_كَ+_ atbtok:أَ+_فَ+_كَ+_ cm_pref_ids:[QUES]:2+[CONJ]:6+[PREP]:13
+افو	P00002	diac:أَفَوَ caphi:2_a_f_a_w_a gloss:is/are+so/then+with/by bw:أَ/INTERROG_PART+فَ/RC_PART+وَ/PREP prc3:>a_ques prc2:fa_rc prc1:wa_prep source:lex d3seg:أَ+_فَ+_وَ+_ atbseg:أَ+_فَ+_وَ+_ d3tok:أَ+_فَ+_وَ+_ atbtok:أَ+_فَ+_وَ+_ cm_pref_ids:[QUES]:2+[CONJ]:6+[PREP]:15
+افب	P00002	diac:أَفَبِ caphi:2_a_f_a_b_i gloss:is/are+so/then+[part.] bw:أَ/INTERROG_PART+فَ/RC_PART+بِ/PART prc3:>a_ques prc2:fa_rc prc1:bi_part source:lex d3seg:أَ+_فَ+_بِ+_ atbseg:أَ+_فَ+_بِ+_ d3tok:أَ+_فَ+_بِ+_ atbtok:أَ+_فَ+_بِ+_ cm_pref_ids:[QUES]:2+[CONJ]:6+[PREP]:16
+اف	P00002	diac:أَفَ caphi:2_a_f_a gloss:is/are+because/therefore/as_a_result bw:أَ/INTERROG_PART+فَ/SUB_CONJ prc3:>a_ques prc2:fa_sub prc1:0 source:lex d3seg:أَ+_فَ+_ atbseg:أَ+_فَ+_ d3tok:أَ+_فَ+_ atbtok:أَ+_فَ+_ cm_pref_ids:[QUES]:2+[CONJ]:7+[PREP]:11
+افب	P00002	diac:أَفَبِ caphi:2_a_f_a_b_i gloss:is/are+because/therefore/as_a_result+with/by bw:أَ/INTERROG_PART+فَ/SUB_CONJ+بِ/PREP prc3:>a_ques prc2:fa_sub prc1:bi_prep source:lex d3seg:أَ+_فَ+_بِ+_ atbseg:أَ+_فَ+_بِ+_ d3tok:أَ+_فَ+_بِ+_ atbtok:أَ+_فَ+_بِ+_ cm_pref_ids:[QUES]:2+[CONJ]:7+[PREP]:12
+افك	P00002	diac:أَفَكَ caphi:2_a_f_a_k_a gloss:is/are+because/therefore/as_a_result+like/such_as bw:أَ/INTERROG_PART+فَ/SUB_CONJ+كَ/PREP prc3:>a_ques prc2:fa_sub prc1:ka_prep source:lex d3seg:أَ+_فَ+_كَ+_ atbseg:أَ+_فَ+_كَ+_ d3tok:أَ+_فَ+_كَ+_ atbtok:أَ+_فَ+_كَ+_ cm_pref_ids:[QUES]:2+[CONJ]:7+[PREP]:13
+افو	P00002	diac:أَفَوَ caphi:2_a_f_a_w_a gloss:is/are+because/therefore/as_a_result+with/by bw:أَ/INTERROG_PART+فَ/SUB_CONJ+وَ/PREP prc3:>a_ques prc2:fa_sub prc1:wa_prep source:lex d3seg:أَ+_فَ+_وَ+_ atbseg:أَ+_فَ+_وَ+_ d3tok:أَ+_فَ+_وَ+_ atbtok:أَ+_فَ+_وَ+_ cm_pref_ids:[QUES]:2+[CONJ]:7+[PREP]:15
+افب	P00002	diac:أَفَبِ caphi:2_a_f_a_b_i gloss:is/are+because/therefore/as_a_result+[part.] bw:أَ/INTERROG_PART+فَ/SUB_CONJ+بِ/PART prc3:>a_ques prc2:fa_sub prc1:bi_part source:lex d3seg:أَ+_فَ+_بِ+_ atbseg:أَ+_فَ+_بِ+_ d3tok:أَ+_فَ+_بِ+_ atbtok:أَ+_فَ+_بِ+_ cm_pref_ids:[QUES]:2+[CONJ]:7+[PREP]:16
+او	P00002	diac:أَوَ caphi:2_a_w_a gloss:is/are+and bw:أَ/INTERROG_PART+وَ/CONJ prc3:>a_ques prc2:wa_conj prc1:0 source:lex d3seg:أَ+_وَ+_ atbseg:أَ+_وَ+_ d3tok:أَ+_وَ+_ atbtok:أَ+_وَ+_ cm_pref_ids:[QUES]:2+[CONJ]:8+[PREP]:11
+اوب	P00002	diac:أَوَبِ caphi:2_a_w_a_b_i gloss:is/are+and+with/by bw:أَ/INTERROG_PART+وَ/CONJ+بِ/PREP prc3:>a_ques prc2:wa_conj prc1:bi_prep source:lex d3seg:أَ+_وَ+_بِ+_ atbseg:أَ+_وَ+_بِ+_ d3tok:أَ+_وَ+_بِ+_ atbtok:أَ+_وَ+_بِ+_ cm_pref_ids:[QUES]:2+[CONJ]:8+[PREP]:12
+اوك	P00002	diac:أَوَكَ caphi:2_a_w_a_k_a gloss:is/are+and+like/such_as bw:أَ/INTERROG_PART+وَ/CONJ+كَ/PREP prc3:>a_ques prc2:wa_conj prc1:ka_prep source:lex d3seg:أَ+_وَ+_كَ+_ atbseg:أَ+_وَ+_كَ+_ d3tok:أَ+_وَ+_كَ+_ atbtok:أَ+_وَ+_كَ+_ cm_pref_ids:[QUES]:2+[CONJ]:8+[PREP]:13
+اوو	P00002	diac:أَوَوَ caphi:2_a_w_a_w_a gloss:is/are+and+with/by bw:أَ/INTERROG_PART+وَ/CONJ+وَ/PREP prc3:>a_ques prc2:wa_conj prc1:wa_prep source:lex d3seg:أَ+_وَ+_وَ+_ atbseg:أَ+_وَ+_وَ+_ d3tok:أَ+_وَ+_وَ+_ atbtok:أَ+_وَ+_وَ+_ cm_pref_ids:[QUES]:2+[CONJ]:8+[PREP]:15
+اوب	P00002	diac:أَوَبِ caphi:2_a_w_a_b_i gloss:is/are+and+[part.] bw:أَ/INTERROG_PART+وَ/CONJ+بِ/PART prc3:>a_ques prc2:wa_conj prc1:bi_part source:lex d3seg:أَ+_وَ+_بِ+_ atbseg:أَ+_وَ+_بِ+_ d3tok:أَ+_وَ+_بِ+_ atbtok:أَ+_وَ+_بِ+_ cm_pref_ids:[QUES]:2+[CONJ]:8+[PREP]:16
+او	P00002	diac:أَوَ caphi:2_a_w_a gloss:is/are+while bw:أَ/INTERROG_PART+وَ/SUB_CONJ prc3:>a_ques prc2:wa_sub prc1:0 source:lex d3seg:أَ+_وَ+_ atbseg:أَ+_وَ+_ d3tok:أَ+_وَ+_ atbtok:أَ+_وَ+_ cm_pref_ids:[QUES]:2+[CONJ]:9+[PREP]:11
+اوب	P00002	diac:أَوَبِ caphi:2_a_w_a_b_i gloss:is/are+while+with/by bw:أَ/INTERROG_PART+وَ/SUB_CONJ+بِ/PREP prc3:>a_ques prc2:wa_sub prc1:bi_prep source:lex d3seg:أَ+_وَ+_بِ+_ atbseg:أَ+_وَ+_بِ+_ d3tok:أَ+_وَ+_بِ+_ atbtok:أَ+_وَ+_بِ+_ cm_pref_ids:[QUES]:2+[CONJ]:9+[PREP]:12
+اوك	P00002	diac:أَوَكَ caphi:2_a_w_a_k_a gloss:is/are+while+like/such_as bw:أَ/INTERROG_PART+وَ/SUB_CONJ+كَ/PREP prc3:>a_ques prc2:wa_sub prc1:ka_prep source:lex d3seg:أَ+_وَ+_كَ+_ atbseg:أَ+_وَ+_كَ+_ d3tok:أَ+_وَ+_كَ+_ atbtok:أَ+_وَ+_كَ+_ cm_pref_ids:[QUES]:2+[CONJ]:9+[PREP]:13
+اوو	P00002	diac:أَوَوَ caphi:2_a_w_a_w_a gloss:is/are+while+with/by bw:أَ/INTERROG_PART+وَ/SUB_CONJ+وَ/PREP prc3:>a_ques prc2:wa_sub prc1:wa_prep source:lex d3seg:أَ+_وَ+_وَ+_ atbseg:أَ+_وَ+_وَ+_ d3tok:أَ+_وَ+_وَ+_ atbtok:أَ+_وَ+_وَ+_ cm_pref_ids:[QUES]:2+[CONJ]:9+[PREP]:15
+اوب	P00002	diac:أَوَبِ caphi:2_a_w_a_b_i gloss:is/are+while+[part.] bw:أَ/INTERROG_PART+وَ/SUB_CONJ+بِ/PART prc3:>a_ques prc2:wa_sub prc1:bi_part source:lex d3seg:أَ+_وَ+_بِ+_ atbseg:أَ+_وَ+_بِ+_ d3tok:أَ+_وَ+_بِ+_ atbtok:أَ+_وَ+_بِ+_ cm_pref_ids:[QUES]:2+[CONJ]:9+[PREP]:16
+ل	P00003	diac:لِ caphi:l_i gloss:for/to bw:لِ/PREP prc3:0 prc2:0 prc1:li_prep source:lex d3seg:لِ+_ atbseg:لِ+_ d3tok:لِ+_ atbtok:لِ+_ cm_pref_ids:[QUES]:1+[CONJ]:3+[PREP]:14
+فل	P00003	diac:فَلِ caphi:f_a_l_i gloss:so/and+for/to bw:فَ/CONJ+لِ/PREP prc3:0 prc2:fa_conj prc1:li_prep source:lex d3seg:فَ+_لِ+_ atbseg:فَ+_لِ+_ d3tok:فَ+_لِ+_ atbtok:فَ+_لِ+_ cm_pref_ids:[QUES]:1+[CONJ]:4+[PREP]:14
+فل	P00003	diac:فَلِ caphi:f_a_l_i gloss:so/then+for/to bw:فَ/CONNEC_PART+لِ/PREP prc3:0 prc2:fa_conn prc1:li_prep source:lex d3seg:فَ+_لِ+_ atbseg:فَ+_لِ+_ d3tok:فَ+_لِ+_ atbtok:فَ+_لِ+_ cm_pref_ids:[QUES]:1+[CONJ]:5+[PREP]:14
+فل	P00003	diac:فَلِ caphi:f_a_l_i gloss:so/then+for/to bw:فَ/RC_PART+لِ/PREP prc3:0 prc2:fa_rc prc1:li_prep source:lex d3seg:فَ+_لِ+_ atbseg:فَ+_لِ+_ d3tok:فَ+_لِ+_ atbtok:فَ+_لِ+_ cm_pref_ids:[QUES]:1+[CONJ]:6+[PREP]:14
+فل	P00003	diac:فَلِ caphi:f_a_l_i gloss:because/therefore/as_a_result+for/to bw:فَ/SUB_CONJ+لِ/PREP prc3:0 prc2:fa_sub prc1:li_prep source:lex d3seg:فَ+_لِ+_ atbseg:فَ+_لِ+_ d3tok:فَ+_لِ+_ atbtok:فَ+_لِ+_ cm_pref_ids:[QUES]:1+[CONJ]:7+[PREP]:14
+ول	P00003	diac:وَلِ caphi:w_a_l_i gloss:and+for/to bw:وَ/CONJ+لِ/PREP prc3:0 prc2:wa_conj prc1:li_prep source:lex d3seg:وَ+_لِ+_ atbseg:وَ+_لِ+_ d3tok:وَ+_لِ+_ atbtok:وَ+_لِ+_ cm_pref_ids:[QUES]:1+[CONJ]:8+[PREP]:14
+ول	P00003	diac:وَلِ caphi:w_a_l_i gloss:while+for/to bw:وَ/SUB_CONJ+لِ/PREP prc3:0 prc2:wa_sub prc1:li_prep source:lex d3seg:وَ+_لِ+_ atbseg:وَ+_لِ+_ d3tok:وَ+_لِ+_ atbtok:وَ+_لِ+_ cm_pref_ids:[QUES]:1+[CONJ]:9+[PREP]:14
+ال	P00003	diac:أَلِ caphi:2_a_l_i gloss:is/are+for/to bw:أَ/INTERROG_PART+لِ/PREP prc3:>a_ques prc2:0 prc1:li_prep source:lex d3seg:أَ+_لِ+_ atbseg:أَ+_لِ+_ d3tok:أَ+_لِ+_ atbtok:أَ+_لِ+_ cm_pref_ids:[QUES]:2+[CONJ]:3+[PREP]:14
+افل	P00003	diac:أَفَلِ caphi:2_a_f_a_l_i gloss:is/are+so/and+for/to bw:أَ/INTERROG_PART+فَ/CONJ+لِ/PREP prc3:>a_ques prc2:fa_conj prc1:li_prep source:lex d3seg:أَ+_فَ+_لِ+_ atbseg:أَ+_فَ+_لِ+_ d3tok:أَ+_فَ+_لِ+_ atbtok:أَ+_فَ+_لِ+_ cm_pref_ids:[QUES]:2+[CONJ]:4+[PREP]:14
+افل	P00003	diac:أَفَلِ caphi:2_a_f_a_l_i gloss:is/are+so/then+for/to bw:أَ/INTERROG_PART+فَ/CONNEC_PART+لِ/PREP prc3:>a_ques prc2:fa_conn prc1:li_prep source:lex d3seg:أَ+_فَ+_لِ+_ atbseg:أَ+_فَ+_لِ+_ d3tok:أَ+_فَ+_لِ+_ atbtok:أَ+_فَ+_لِ+_ cm_pref_ids:[QUES]:2+[CONJ]:5+[PREP]:14
+افل	P00003	diac:أَفَلِ caphi:2_a_f_a_l_i gloss:is/are+so/then+for/to bw:أَ/INTERROG_PART+فَ/RC_PART+لِ/PREP prc3:>a_ques prc2:fa_rc prc1:li_prep source:lex d3seg:أَ+_فَ+_لِ+_ atbseg:أَ+_فَ+_لِ+_ d3tok:أَ+_فَ+_لِ+_ atbtok:أَ+_فَ+_لِ+_ cm_pref_ids:[QUES]:2+[CONJ]:6+[PREP]:14
+افل	P00003	diac:أَفَلِ caphi:2_a_f_a_l_i gloss:is/are+because/therefore/as_a_result+for/to bw:أَ/INTERROG_PART+فَ/SUB_CONJ+لِ/PREP prc3:>a_ques prc2:fa_sub prc1:li_prep source:lex d3seg:أَ+_فَ+_لِ+_ atbseg:أَ+_فَ+_لِ+_ d3tok:أَ+_فَ+_لِ+_ atbtok:أَ+_فَ+_لِ+_ cm_pref_ids:[QUES]:2+[CONJ]:7+[PREP]:14
+اول	P00003	diac:أَوَلِ caphi:2_a_w_a_l_i gloss:is/are+and+for/to bw:أَ/INTERROG_PART+وَ/CONJ+لِ/PREP prc3:>a_ques prc2:wa_conj prc1:li_prep source:lex d3seg:أَ+_وَ+_لِ+_ atbseg:أَ+_وَ+_لِ+_ d3tok:أَ+_وَ+_لِ+_ atbtok:أَ+_وَ+_لِ+_ cm_pref_ids:[QUES]:2+[CONJ]:8+[PREP]:14
+اول	P00003	diac:أَوَلِ caphi:2_a_w_a_l_i gloss:is/are+while+for/to bw:أَ/INTERROG_PART+وَ/SUB_CONJ+لِ/PREP prc3:>a_ques prc2:wa_sub prc1:li_prep source:lex d3seg:أَ+_وَ+_لِ+_ atbseg:أَ+_وَ+_لِ+_ d3tok:أَ+_وَ+_لِ+_ atbtok:أَ+_وَ+_لِ+_ cm_pref_ids:[QUES]:2+[CONJ]:9+[PREP]:14
+ال	P00004	diac:ٱل# caphi:2_a_l- gloss:the bw:ال/DET prc3:0 prc2:0 prc0:Al_det source:lex d3seg:ٱل+_# atbseg:ٱل# d3tok:ٱل+_ atbtok:ٱل# cm_pref_ids:[QUES]:1+[CONJ]:3+[ART]:18
+فال	P00004	diac:فَٱل# caphi:f_a_l- gloss:so/and+the bw:فَ/CONJ+ال/DET prc3:0 prc2:fa_conj prc0:Al_det source:lex d3seg:فَ+_ٱل+_# atbseg:فَ+_ٱل# d3tok:فَ+_ٱل+_ atbtok:فَ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:4+[ART]:18
+فال	P00004	diac:فَٱل# caphi:f_a_l- gloss:so/then+the bw:فَ/CONNEC_PART+ال/DET prc3:0 prc2:fa_conn prc0:Al_det source:lex d3seg:فَ+_ٱل+_# atbseg:فَ+_ٱل# d3tok:فَ+_ٱل+_ atbtok:فَ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:5+[ART]:18
+فال	P00004	diac:فَٱل# caphi:f_a_l- gloss:so/then+the bw:فَ/RC_PART+ال/DET prc3:0 prc2:fa_rc prc0:Al_det source:lex d3seg:فَ+_ٱل+_# atbseg:فَ+_ٱل# d3tok:فَ+_ٱل+_ atbtok:فَ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:6+[ART]:18
+فال	P00004	diac:فَٱل# caphi:f_a_l- gloss:because/therefore/as_a_result+the bw:فَ/SUB_CONJ+ال/DET prc3:0 prc2:fa_sub prc0:Al_det source:lex d3seg:فَ+_ٱل+_# atbseg:فَ+_ٱل# d3tok:فَ+_ٱل+_ atbtok:فَ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:7+[ART]:18
+وال	P00004	diac:وَٱل# caphi:w_a_l- gloss:and+the bw:وَ/CONJ+ال/DET prc3:0 prc2:wa_conj prc0:Al_det source:lex d3seg:وَ+_ٱل+_# atbseg:وَ+_ٱل# d3tok:وَ+_ٱل+_ atbtok:وَ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:8+[ART]:18
+وال	P00004	diac:وَٱل# caphi:w_a_l- gloss:while+the bw:وَ/SUB_CONJ+ال/DET prc3:0 prc2:wa_sub prc0:Al_det source:lex d3seg:وَ+_ٱل+_# atbseg:وَ+_ٱل# d3tok:وَ+_ٱل+_ atbtok:وَ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:9+[ART]:18
+اال	P00004	diac:أَٱل# caphi:2_a_l- gloss:is/are+the bw:أَ/INTERROG_PART+ال/DET prc3:>a_ques prc2:0 prc0:Al_det source:lex d3seg:أَ+_ٱل+_# atbseg:أَ+_ٱل# d3tok:أَ+_ٱل+_ atbtok:أَ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:3+[ART]:18
+افال	P00004	diac:أَفَٱل# caphi:2_a_f_a_l- gloss:is/are+so/and+the bw:أَ/INTERROG_PART+فَ/CONJ+ال/DET prc3:>a_ques prc2:fa_conj prc0:Al_det source:lex d3seg:أَ+_فَ+_ٱل+_# atbseg:أَ+_فَ+_ٱل# d3tok:أَ+_فَ+_ٱل+_ atbtok:أَ+_فَ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:4+[ART]:18
+افال	P00004	diac:أَفَٱل# caphi:2_a_f_a_l- gloss:is/are+so/then+the bw:أَ/INTERROG_PART+فَ/CONNEC_PART+ال/DET prc3:>a_ques prc2:fa_conn prc0:Al_det source:lex d3seg:أَ+_فَ+_ٱل+_# atbseg:أَ+_فَ+_ٱل# d3tok:أَ+_فَ+_ٱل+_ atbtok:أَ+_فَ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:5+[ART]:18
+افال	P00004	diac:أَفَٱل# caphi:2_a_f_a_l- gloss:is/are+so/then+the bw:أَ/INTERROG_PART+فَ/RC_PART+ال/DET prc3:>a_ques prc2:fa_rc prc0:Al_det source:lex d3seg:أَ+_فَ+_ٱل+_# atbseg:أَ+_فَ+_ٱل# d3tok:أَ+_فَ+_ٱل+_ atbtok:أَ+_فَ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:6+[ART]:18
+افال	P00004	diac:أَفَٱل# caphi:2_a_f_a_l- gloss:is/are+because/therefore/as_a_result+the bw:أَ/INTERROG_PART+فَ/SUB_CONJ+ال/DET prc3:>a_ques prc2:fa_sub prc0:Al_det source:lex d3seg:أَ+_فَ+_ٱل+_# atbseg:أَ+_فَ+_ٱل# d3tok:أَ+_فَ+_ٱل+_ atbtok:أَ+_فَ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:7+[ART]:18
+اوال	P00004	diac:أَوَٱل# caphi:2_a_w_a_l- gloss:is/are+and+the bw:أَ/INTERROG_PART+وَ/CONJ+ال/DET prc3:>a_ques prc2:wa_conj prc0:Al_det source:lex d3seg:أَ+_وَ+_ٱل+_# atbseg:أَ+_وَ+_ٱل# d3tok:أَ+_وَ+_ٱل+_ atbtok:أَ+_وَ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:8+[ART]:18
+اوال	P00004	diac:أَوَٱل# caphi:2_a_w_a_l- gloss:is/are+while+the bw:أَ/INTERROG_PART+وَ/SUB_CONJ+ال/DET prc3:>a_ques prc2:wa_sub prc0:Al_det source:lex d3seg:أَ+_وَ+_ٱل+_# atbseg:أَ+_وَ+_ٱل# d3tok:أَ+_وَ+_ٱل+_ atbtok:أَ+_وَ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:9+[ART]:18
+ال	P00005	diac:ٱل# caphi:2_a_l- gloss:the bw:ال/DET prc3:0 prc2:0 prc1:0 prc0:Al_det source:lex d3seg:ٱل+_# atbseg:ٱل# d3tok:ٱل+_ atbtok:ٱل# cm_pref_ids:[QUES]:1+[CONJ]:3+[PREP]:11+[ART]:18
+بال	P00005	diac:بِٱل# caphi:b_i_l- gloss:with/by+the bw:بِ/PREP+ال/DET prc3:0 prc2:0 prc1:bi_prep prc0:Al_det source:lex d3seg:بِ+_ٱل+_# atbseg:بِ+_ٱل# d3tok:بِ+_ٱل+_ atbtok:بِ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:3+[PREP]:12+[ART]:18
+كال	P00005	diac:كَٱل# caphi:k_a_l- gloss:like/such_as+the bw:كَ/PREP+ال/DET prc3:0 prc2:0 prc1:ka_prep prc0:Al_det source:lex d3seg:كَ+_ٱل+_# atbseg:كَ+_ٱل# d3tok:كَ+_ٱل+_ atbtok:كَ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:3+[PREP]:13+[ART]:18
+وال	P00005	diac:وَٱل# caphi:w_a_l- gloss:with/by+the bw:وَ/PREP+ال/DET prc3:0 prc2:0 prc1:wa_prep prc0:Al_det source:lex d3seg:وَ+_ٱل+_# atbseg:وَ+_ٱل# d3tok:وَ+_ٱل+_ atbtok:وَ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:3+[PREP]:15+[ART]:18
+بال	P00005	diac:بِٱل# caphi:b_i_l- gloss:[part.]+the bw:بِ/PART+ال/DET prc3:0 prc2:0 prc1:bi_part prc0:Al_det source:lex d3seg:بِ+_ٱل+_# atbseg:بِ+_ٱل# d3tok:بِ+_ٱل+_ atbtok:بِ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:3+[PREP]:16+[ART]:18
+فال	P00005	diac:فَٱل# caphi:f_a_l- gloss:so/and+the bw:فَ/CONJ+ال/DET prc3:0 prc2:fa_conj prc1:0 prc0:Al_det source:lex d3seg:فَ+_ٱل+_# atbseg:فَ+_ٱل# d3tok:فَ+_ٱل+_ atbtok:فَ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:4+[PREP]:11+[ART]:18
+فبال	P00005	diac:فَبِٱل# caphi:f_a_b_i_l- gloss:so/and+with/by+the bw:فَ/CONJ+بِ/PREP+ال/DET prc3:0 prc2:fa_conj prc1:bi_prep prc0:Al_det source:lex d3seg:فَ+_بِ+_ٱل+_# atbseg:فَ+_بِ+_ٱل# d3tok:فَ+_بِ+_ٱل+_ atbtok:فَ+_بِ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:4+[PREP]:12+[ART]:18
+فكال	P00005	diac:فَكَٱل# caphi:f_a_k_a_l- gloss:so/and+like/such_as+the bw:فَ/CONJ+كَ/PREP+ال/DET prc3:0 prc2:fa_conj prc1:ka_prep prc0:Al_det source:lex d3seg:فَ+_كَ+_ٱل+_# atbseg:فَ+_كَ+_ٱل# d3tok:فَ+_كَ+_ٱل+_ atbtok:فَ+_كَ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:4+[PREP]:13+[ART]:18
+فوال	P00005	diac:فَوَٱل# caphi:f_a_w_a_l- gloss:so/and+with/by+the bw:فَ/CONJ+وَ/PREP+ال/DET prc3:0 prc2:fa_conj prc1:wa_prep prc0:Al_det source:lex d3seg:فَ+_وَ+_ٱل+_# atbseg:فَ+_وَ+_ٱل# d3tok:فَ+_وَ+_ٱل+_ atbtok:فَ+_وَ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:4+[PREP]:15+[ART]:18
+فبال	P00005	diac:فَبِٱل# caphi:f_a_b_i_l- gloss:so/and+[part.]+the bw:فَ/CONJ+بِ/PART+ال/DET prc3:0 prc2:fa_conj prc1:bi_part prc0:Al_det source:lex d3seg:فَ+_بِ+_ٱل+_# atbseg:فَ+_بِ+_ٱل# d3tok:فَ+_بِ+_ٱل+_ atbtok:فَ+_بِ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:4+[PREP]:16+[ART]:18
+فال	P00005	diac:فَٱل# caphi:f_a_l- gloss:so/then+the bw:فَ/CONNEC_PART+ال/DET prc3:0 prc2:fa_conn prc1:0 prc0:Al_det source:lex d3seg:فَ+_ٱل+_# atbseg:فَ+_ٱل# d3tok:فَ+_ٱل+_ atbtok:فَ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:5+[PREP]:11+[ART]:18
+فبال	P00005	diac:فَبِٱل# caphi:f_a_b_i_l- gloss:so/then+with/by+the bw:فَ/CONNEC_PART+بِ/PREP+ال/DET prc3:0 prc2:fa_conn prc1:bi_prep prc0:Al_det source:lex d3seg:فَ+_بِ+_ٱل+_# atbseg:فَ+_بِ+_ٱل# d3tok:فَ+_بِ+_ٱل+_ atbtok:فَ+_بِ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:5+[PREP]:12+[ART]:18
+فكال	P00005	diac:فَكَٱل# caphi:f_a_k_a_l- gloss:so/then+like/such_as+the bw:فَ/CONNEC_PART+كَ/PREP+ال/DET prc3:0 prc2:fa_conn prc1:ka_prep prc0:Al_det source:lex d3seg:فَ+_كَ+_ٱل+_# atbseg:فَ+_كَ+_ٱل# d3tok:فَ+_كَ+_ٱل+_ atbtok:فَ+_كَ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:5+[PREP]:13+[ART]:18
+فوال	P00005	diac:فَوَٱل# caphi:f_a_w_a_l- gloss:so/then+with/by+the bw:فَ/CONNEC_PART+وَ/PREP+ال/DET prc3:0 prc2:fa_conn prc1:wa_prep prc0:Al_det source:lex d3seg:فَ+_وَ+_ٱل+_# atbseg:فَ+_وَ+_ٱل# d3tok:فَ+_وَ+_ٱل+_ atbtok:فَ+_وَ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:5+[PREP]:15+[ART]:18
+فبال	P00005	diac:فَبِٱل# caphi:f_a_b_i_l- gloss:so/then+[part.]+the bw:فَ/CONNEC_PART+بِ/PART+ال/DET prc3:0 prc2:fa_conn prc1:bi_part prc0:Al_det source:lex d3seg:فَ+_بِ+_ٱل+_# atbseg:فَ+_بِ+_ٱل# d3tok:فَ+_بِ+_ٱل+_ atbtok:فَ+_بِ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:5+[PREP]:16+[ART]:18
+فال	P00005	diac:فَٱل# caphi:f_a_l- gloss:so/then+the bw:فَ/RC_PART+ال/DET prc3:0 prc2:fa_rc prc1:0 prc0:Al_det source:lex d3seg:فَ+_ٱل+_# atbseg:فَ+_ٱل# d3tok:فَ+_ٱل+_ atbtok:فَ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:6+[PREP]:11+[ART]:18
+فبال	P00005	diac:فَبِٱل# caphi:f_a_b_i_l- gloss:so/then+with/by+the bw:فَ/RC_PART+بِ/PREP+ال/DET prc3:0 prc2:fa_rc prc1:bi_prep prc0:Al_det source:lex d3seg:فَ+_بِ+_ٱل+_# atbseg:فَ+_بِ+_ٱل# d3tok:فَ+_بِ+_ٱل+_ atbtok:فَ+_بِ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:6+[PREP]:12+[ART]:18
+فكال	P00005	diac:فَكَٱل# caphi:f_a_k_a_l- gloss:so/then+like/such_as+the bw:فَ/RC_PART+كَ/PREP+ال/DET prc3:0 prc2:fa_rc prc1:ka_prep prc0:Al_det source:lex d3seg:فَ+_كَ+_ٱل+_# atbseg:فَ+_كَ+_ٱل# d3tok:فَ+_كَ+_ٱل+_ atbtok:فَ+_كَ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:6+[PREP]:13+[ART]:18
+فوال	P00005	diac:فَوَٱل# caphi:f_a_w_a_l- gloss:so/then+with/by+the bw:فَ/RC_PART+وَ/PREP+ال/DET prc3:0 prc2:fa_rc prc1:wa_prep prc0:Al_det source:lex d3seg:فَ+_وَ+_ٱل+_# atbseg:فَ+_وَ+_ٱل# d3tok:فَ+_وَ+_ٱل+_ atbtok:فَ+_وَ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:6+[PREP]:15+[ART]:18
+فبال	P00005	diac:فَبِٱل# caphi:f_a_b_i_l- gloss:so/then+[part.]+the bw:فَ/RC_PART+بِ/PART+ال/DET prc3:0 prc2:fa_rc prc1:bi_part prc0:Al_det source:lex d3seg:فَ+_بِ+_ٱل+_# atbseg:فَ+_بِ+_ٱل# d3tok:فَ+_بِ+_ٱل+_ atbtok:فَ+_بِ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:6+[PREP]:16+[ART]:18
+فال	P00005	diac:فَٱل# caphi:f_a_l- gloss:because/therefore/as_a_result+the bw:فَ/SUB_CONJ+ال/DET prc3:0 prc2:fa_sub prc1:0 prc0:Al_det source:lex d3seg:فَ+_ٱل+_# atbseg:فَ+_ٱل# d3tok:فَ+_ٱل+_ atbtok:فَ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:7+[PREP]:11+[ART]:18
+فبال	P00005	diac:فَبِٱل# caphi:f_a_b_i_l- gloss:because/therefore/as_a_result+with/by+the bw:فَ/SUB_CONJ+بِ/PREP+ال/DET prc3:0 prc2:fa_sub prc1:bi_prep prc0:Al_det source:lex d3seg:فَ+_بِ+_ٱل+_# atbseg:فَ+_بِ+_ٱل# d3tok:فَ+_بِ+_ٱل+_ atbtok:فَ+_بِ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:7+[PREP]:12+[ART]:18
+فكال	P00005	diac:فَكَٱل# caphi:f_a_k_a_l- gloss:because/therefore/as_a_result+like/such_as+the bw:فَ/SUB_CONJ+كَ/PREP+ال/DET prc3:0 prc2:fa_sub prc1:ka_prep prc0:Al_det source:lex d3seg:فَ+_كَ+_ٱل+_# atbseg:فَ+_كَ+_ٱل# d3tok:فَ+_كَ+_ٱل+_ atbtok:فَ+_كَ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:7+[PREP]:13+[ART]:18
+فوال	P00005	diac:فَوَٱل# caphi:f_a_w_a_l- gloss:because/therefore/as_a_result+with/by+the bw:فَ/SUB_CONJ+وَ/PREP+ال/DET prc3:0 prc2:fa_sub prc1:wa_prep prc0:Al_det source:lex d3seg:فَ+_وَ+_ٱل+_# atbseg:فَ+_وَ+_ٱل# d3tok:فَ+_وَ+_ٱل+_ atbtok:فَ+_وَ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:7+[PREP]:15+[ART]:18
+فبال	P00005	diac:فَبِٱل# caphi:f_a_b_i_l- gloss:because/therefore/as_a_result+[part.]+the bw:فَ/SUB_CONJ+بِ/PART+ال/DET prc3:0 prc2:fa_sub prc1:bi_part prc0:Al_det source:lex d3seg:فَ+_بِ+_ٱل+_# atbseg:فَ+_بِ+_ٱل# d3tok:فَ+_بِ+_ٱل+_ atbtok:فَ+_بِ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:7+[PREP]:16+[ART]:18
+وال	P00005	diac:وَٱل# caphi:w_a_l- gloss:and+the bw:وَ/CONJ+ال/DET prc3:0 prc2:wa_conj prc1:0 prc0:Al_det source:lex d3seg:وَ+_ٱل+_# atbseg:وَ+_ٱل# d3tok:وَ+_ٱل+_ atbtok:وَ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:8+[PREP]:11+[ART]:18
+وبال	P00005	diac:وَبِٱل# caphi:w_a_b_i_l- gloss:and+with/by+the bw:وَ/CONJ+بِ/PREP+ال/DET prc3:0 prc2:wa_conj prc1:bi_prep prc0:Al_det source:lex d3seg:وَ+_بِ+_ٱل+_# atbseg:وَ+_بِ+_ٱل# d3tok:وَ+_بِ+_ٱل+_ atbtok:وَ+_بِ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:8+[PREP]:12+[ART]:18
+وكال	P00005	diac:وَكَٱل# caphi:w_a_k_a_l- gloss:and+like/such_as+the bw:وَ/CONJ+كَ/PREP+ال/DET prc3:0 prc2:wa_conj prc1:ka_prep prc0:Al_det source:lex d3seg:وَ+_كَ+_ٱل+_# atbseg:وَ+_كَ+_ٱل# d3tok:وَ+_كَ+_ٱل+_ atbtok:وَ+_كَ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:8+[PREP]:13+[ART]:18
+ووال	P00005	diac:وَوَٱل# caphi:w_a_w_a_l- gloss:and+with/by+the bw:وَ/CONJ+وَ/PREP+ال/DET prc3:0 prc2:wa_conj prc1:wa_prep prc0:Al_det source:lex d3seg:وَ+_وَ+_ٱل+_# atbseg:وَ+_وَ+_ٱل# d3tok:وَ+_وَ+_ٱل+_ atbtok:وَ+_وَ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:8+[PREP]:15+[ART]:18
+وبال	P00005	diac:وَبِٱل# caphi:w_a_b_i_l- gloss:and+[part.]+the bw:وَ/CONJ+بِ/PART+ال/DET prc3:0 prc2:wa_conj prc1:bi_part prc0:Al_det source:lex d3seg:وَ+_بِ+_ٱل+_# atbseg:وَ+_بِ+_ٱل# d3tok:وَ+_بِ+_ٱل+_ atbtok:وَ+_بِ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:8+[PREP]:16+[ART]:18
+وال	P00005	diac:وَٱل# caphi:w_a_l- gloss:while+the bw:وَ/SUB_CONJ+ال/DET prc3:0 prc2:wa_sub prc1:0 prc0:Al_det source:lex d3seg:وَ+_ٱل+_# atbseg:وَ+_ٱل# d3tok:وَ+_ٱل+_ atbtok:وَ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:9+[PREP]:11+[ART]:18
+وبال	P00005	diac:وَبِٱل# caphi:w_a_b_i_l- gloss:while+with/by+the bw:وَ/SUB_CONJ+بِ/PREP+ال/DET prc3:0 prc2:wa_sub prc1:bi_prep prc0:Al_det source:lex d3seg:وَ+_بِ+_ٱل+_# atbseg:وَ+_بِ+_ٱل# d3tok:وَ+_بِ+_ٱل+_ atbtok:وَ+_بِ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:9+[PREP]:12+[ART]:18
+وكال	P00005	diac:وَكَٱل# caphi:w_a_k_a_l- gloss:while+like/such_as+the bw:وَ/SUB_CONJ+كَ/PREP+ال/DET prc3:0 prc2:wa_sub prc1:ka_prep prc0:Al_det source:lex d3seg:وَ+_كَ+_ٱل+_# atbseg:وَ+_كَ+_ٱل# d3tok:وَ+_كَ+_ٱل+_ atbtok:وَ+_كَ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:9+[PREP]:13+[ART]:18
+ووال	P00005	diac:وَوَٱل# caphi:w_a_w_a_l- gloss:while+with/by+the bw:وَ/SUB_CONJ+وَ/PREP+ال/DET prc3:0 prc2:wa_sub prc1:wa_prep prc0:Al_det source:lex d3seg:وَ+_وَ+_ٱل+_# atbseg:وَ+_وَ+_ٱل# d3tok:وَ+_وَ+_ٱل+_ atbtok:وَ+_وَ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:9+[PREP]:15+[ART]:18
+وبال	P00005	diac:وَبِٱل# caphi:w_a_b_i_l- gloss:while+[part.]+the bw:وَ/SUB_CONJ+بِ/PART+ال/DET prc3:0 prc2:wa_sub prc1:bi_part prc0:Al_det source:lex d3seg:وَ+_بِ+_ٱل+_# atbseg:وَ+_بِ+_ٱل# d3tok:وَ+_بِ+_ٱل+_ atbtok:وَ+_بِ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:9+[PREP]:16+[ART]:18
+اال	P00005	diac:أَٱل# caphi:2_a_l- gloss:is/are+the bw:أَ/INTERROG_PART+ال/DET prc3:>a_ques prc2:0 prc1:0 prc0:Al_det source:lex d3seg:أَ+_ٱل+_# atbseg:أَ+_ٱل# d3tok:أَ+_ٱل+_ atbtok:أَ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:3+[PREP]:11+[ART]:18
+ابال	P00005	diac:أَبِٱل# caphi:2_a_b_i_l- gloss:is/are+with/by+the bw:أَ/INTERROG_PART+بِ/PREP+ال/DET prc3:>a_ques prc2:0 prc1:bi_prep prc0:Al_det source:lex d3seg:أَ+_بِ+_ٱل+_# atbseg:أَ+_بِ+_ٱل# d3tok:أَ+_بِ+_ٱل+_ atbtok:أَ+_بِ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:3+[PREP]:12+[ART]:18
+اكال	P00005	diac:أَكَٱل# caphi:2_a_k_a_l- gloss:is/are+like/such_as+the bw:أَ/INTERROG_PART+كَ/PREP+ال/DET prc3:>a_ques prc2:0 prc1:ka_prep prc0:Al_det source:lex d3seg:أَ+_كَ+_ٱل+_# atbseg:أَ+_كَ+_ٱل# d3tok:أَ+_كَ+_ٱل+_ atbtok:أَ+_كَ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:3+[PREP]:13+[ART]:18
+اوال	P00005	diac:أَوَٱل# caphi:2_a_w_a_l- gloss:is/are+with/by+the bw:أَ/INTERROG_PART+وَ/PREP+ال/DET prc3:>a_ques prc2:0 prc1:wa_prep prc0:Al_det source:lex d3seg:أَ+_وَ+_ٱل+_# atbseg:أَ+_وَ+_ٱل# d3tok:أَ+_وَ+_ٱل+_ atbtok:أَ+_وَ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:3+[PREP]:15+[ART]:18
+ابال	P00005	diac:أَبِٱل# caphi:2_a_b_i_l- gloss:is/are+[part.]+the bw:أَ/INTERROG_PART+بِ/PART+ال/DET prc3:>a_ques prc2:0 prc1:bi_part prc0:Al_det source:lex d3seg:أَ+_بِ+_ٱل+_# atbseg:أَ+_بِ+_ٱل# d3tok:أَ+_بِ+_ٱل+_ atbtok:أَ+_بِ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:3+[PREP]:16+[ART]:18
+افال	P00005	diac:أَفَٱل# caphi:2_a_f_a_l- gloss:is/are+so/and+the bw:أَ/INTERROG_PART+فَ/CONJ+ال/DET prc3:>a_ques prc2:fa_conj prc1:0 prc0:Al_det source:lex d3seg:أَ+_فَ+_ٱل+_# atbseg:أَ+_فَ+_ٱل# d3tok:أَ+_فَ+_ٱل+_ atbtok:أَ+_فَ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:4+[PREP]:11+[ART]:18
+افبال	P00005	diac:أَفَبِٱل# caphi:2_a_f_a_b_i_l- gloss:is/are+so/and+with/by+the bw:أَ/INTERROG_PART+فَ/CONJ+بِ/PREP+ال/DET prc3:>a_ques prc2:fa_conj prc1:bi_prep prc0:Al_det source:lex d3seg:أَ+_فَ+_بِ+_ٱل+_# atbseg:أَ+_فَ+_بِ+_ٱل# d3tok:أَ+_فَ+_بِ+_ٱل+_ atbtok:أَ+_فَ+_بِ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:4+[PREP]:12+[ART]:18
+افكال	P00005	diac:أَفَكَٱل# caphi:2_a_f_a_k_a_l- gloss:is/are+so/and+like/such_as+the bw:أَ/INTERROG_PART+فَ/CONJ+كَ/PREP+ال/DET prc3:>a_ques prc2:fa_conj prc1:ka_prep prc0:Al_det source:lex d3seg:أَ+_فَ+_كَ+_ٱل+_# atbseg:أَ+_فَ+_كَ+_ٱل# d3tok:أَ+_فَ+_كَ+_ٱل+_ atbtok:أَ+_فَ+_كَ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:4+[PREP]:13+[ART]:18
+افوال	P00005	diac:أَفَوَٱل# caphi:2_a_f_a_w_a_l- gloss:is/are+so/and+with/by+the bw:أَ/INTERROG_PART+فَ/CONJ+وَ/PREP+ال/DET prc3:>a_ques prc2:fa_conj prc1:wa_prep prc0:Al_det source:lex d3seg:أَ+_فَ+_وَ+_ٱل+_# atbseg:أَ+_فَ+_وَ+_ٱل# d3tok:أَ+_فَ+_وَ+_ٱل+_ atbtok:أَ+_فَ+_وَ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:4+[PREP]:15+[ART]:18
+افبال	P00005	diac:أَفَبِٱل# caphi:2_a_f_a_b_i_l- gloss:is/are+so/and+[part.]+the bw:أَ/INTERROG_PART+فَ/CONJ+بِ/PART+ال/DET prc3:>a_ques prc2:fa_conj prc1:bi_part prc0:Al_det source:lex d3seg:أَ+_فَ+_بِ+_ٱل+_# atbseg:أَ+_فَ+_بِ+_ٱل# d3tok:أَ+_فَ+_بِ+_ٱل+_ atbtok:أَ+_فَ+_بِ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:4+[PREP]:16+[ART]:18
+افال	P00005	diac:أَفَٱل# caphi:2_a_f_a_l- gloss:is/are+so/then+the bw:أَ/INTERROG_PART+فَ/CONNEC_PART+ال/DET prc3:>a_ques prc2:fa_conn prc1:0 prc0:Al_det source:lex d3seg:أَ+_فَ+_ٱل+_# atbseg:أَ+_فَ+_ٱل# d3tok:أَ+_فَ+_ٱل+_ atbtok:أَ+_فَ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:5+[PREP]:11+[ART]:18
+افبال	P00005	diac:أَفَبِٱل# caphi:2_a_f_a_b_i_l- gloss:is/are+so/then+with/by+the bw:أَ/INTERROG_PART+فَ/CONNEC_PART+بِ/PREP+ال/DET prc3:>a_ques prc2:fa_conn prc1:bi_prep prc0:Al_det source:lex d3seg:أَ+_فَ+_بِ+_ٱل+_# atbseg:أَ+_فَ+_بِ+_ٱل# d3tok:أَ+_فَ+_بِ+_ٱل+_ atbtok:أَ+_فَ+_بِ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:5+[PREP]:12+[ART]:18
+افكال	P00005	diac:أَفَكَٱل# caphi:2_a_f_a_k_a_l- gloss:is/are+so/then+like/such_as+the bw:أَ/INTERROG_PART+فَ/CONNEC_PART+كَ/PREP+ال/DET prc3:>a_ques prc2:fa_conn prc1:ka_prep prc0:Al_det source:lex d3seg:أَ+_فَ+_كَ+_ٱل+_# atbseg:أَ+_فَ+_كَ+_ٱل# d3tok:أَ+_فَ+_كَ+_ٱل+_ atbtok:أَ+_فَ+_كَ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:5+[PREP]:13+[ART]:18
+افوال	P00005	diac:أَفَوَٱل# caphi:2_a_f_a_w_a_l- gloss:is/are+so/then+with/by+the bw:أَ/INTERROG_PART+فَ/CONNEC_PART+وَ/PREP+ال/DET prc3:>a_ques prc2:fa_conn prc1:wa_prep prc0:Al_det source:lex d3seg:أَ+_فَ+_وَ+_ٱل+_# atbseg:أَ+_فَ+_وَ+_ٱل# d3tok:أَ+_فَ+_وَ+_ٱل+_ atbtok:أَ+_فَ+_وَ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:5+[PREP]:15+[ART]:18
+افبال	P00005	diac:أَفَبِٱل# caphi:2_a_f_a_b_i_l- gloss:is/are+so/then+[part.]+the bw:أَ/INTERROG_PART+فَ/CONNEC_PART+بِ/PART+ال/DET prc3:>a_ques prc2:fa_conn prc1:bi_part prc0:Al_det source:lex d3seg:أَ+_فَ+_بِ+_ٱل+_# atbseg:أَ+_فَ+_بِ+_ٱل# d3tok:أَ+_فَ+_بِ+_ٱل+_ atbtok:أَ+_فَ+_بِ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:5+[PREP]:16+[ART]:18
+افال	P00005	diac:أَفَٱل# caphi:2_a_f_a_l- gloss:is/are+so/then+the bw:أَ/INTERROG_PART+فَ/RC_PART+ال/DET prc3:>a_ques prc2:fa_rc prc1:0 prc0:Al_det source:lex d3seg:أَ+_فَ+_ٱل+_# atbseg:أَ+_فَ+_ٱل# d3tok:أَ+_فَ+_ٱل+_ atbtok:أَ+_فَ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:6+[PREP]:11+[ART]:18
+افبال	P00005	diac:أَفَبِٱل# caphi:2_a_f_a_b_i_l- gloss:is/are+so/then+with/by+the bw:أَ/INTERROG_PART+فَ/RC_PART+بِ/PREP+ال/DET prc3:>a_ques prc2:fa_rc prc1:bi_prep prc0:Al_det source:lex d3seg:أَ+_فَ+_بِ+_ٱل+_# atbseg:أَ+_فَ+_بِ+_ٱل# d3tok:أَ+_فَ+_بِ+_ٱل+_ atbtok:أَ+_فَ+_بِ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:6+[PREP]:12+[ART]:18
+افكال	P00005	diac:أَفَكَٱل# caphi:2_a_f_a_k_a_l- gloss:is/are+so/then+like/such_as+the bw:أَ/INTERROG_PART+فَ/RC_PART+كَ/PREP+ال/DET prc3:>a_ques prc2:fa_rc prc1:ka_prep prc0:Al_det source:lex d3seg:أَ+_فَ+_كَ+_ٱل+_# atbseg:أَ+_فَ+_كَ+_ٱل# d3tok:أَ+_فَ+_كَ+_ٱل+_ atbtok:أَ+_فَ+_كَ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:6+[PREP]:13+[ART]:18
+افوال	P00005	diac:أَفَوَٱل# caphi:2_a_f_a_w_a_l- gloss:is/are+so/then+with/by+the bw:أَ/INTERROG_PART+فَ/RC_PART+وَ/PREP+ال/DET prc3:>a_ques prc2:fa_rc prc1:wa_prep prc0:Al_det source:lex d3seg:أَ+_فَ+_وَ+_ٱل+_# atbseg:أَ+_فَ+_وَ+_ٱل# d3tok:أَ+_فَ+_وَ+_ٱل+_ atbtok:أَ+_فَ+_وَ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:6+[PREP]:15+[ART]:18
+افبال	P00005	diac:أَفَبِٱل# caphi:2_a_f_a_b_i_l- gloss:is/are+so/then+[part.]+the bw:أَ/INTERROG_PART+فَ/RC_PART+بِ/PART+ال/DET prc3:>a_ques prc2:fa_rc prc1:bi_part prc0:Al_det source:lex d3seg:أَ+_فَ+_بِ+_ٱل+_# atbseg:أَ+_فَ+_بِ+_ٱل# d3tok:أَ+_فَ+_بِ+_ٱل+_ atbtok:أَ+_فَ+_بِ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:6+[PREP]:16+[ART]:18
+افال	P00005	diac:أَفَٱل# caphi:2_a_f_a_l- gloss:is/are+because/therefore/as_a_result+the bw:أَ/INTERROG_PART+فَ/SUB_CONJ+ال/DET prc3:>a_ques prc2:fa_sub prc1:0 prc0:Al_det source:lex d3seg:أَ+_فَ+_ٱل+_# atbseg:أَ+_فَ+_ٱل# d3tok:أَ+_فَ+_ٱل+_ atbtok:أَ+_فَ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:7+[PREP]:11+[ART]:18
+افبال	P00005	diac:أَفَبِٱل# caphi:2_a_f_a_b_i_l- gloss:is/are+because/therefore/as_a_result+with/by+the bw:أَ/INTERROG_PART+فَ/SUB_CONJ+بِ/PREP+ال/DET prc3:>a_ques prc2:fa_sub prc1:bi_prep prc0:Al_det source:lex d3seg:أَ+_فَ+_بِ+_ٱل+_# atbseg:أَ+_فَ+_بِ+_ٱل# d3tok:أَ+_فَ+_بِ+_ٱل+_ atbtok:أَ+_فَ+_بِ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:7+[PREP]:12+[ART]:18
+افكال	P00005	diac:أَفَكَٱل# caphi:2_a_f_a_k_a_l- gloss:is/are+because/therefore/as_a_result+like/such_as+the bw:أَ/INTERROG_PART+فَ/SUB_CONJ+كَ/PREP+ال/DET prc3:>a_ques prc2:fa_sub prc1:ka_prep prc0:Al_det source:lex d3seg:أَ+_فَ+_كَ+_ٱل+_# atbseg:أَ+_فَ+_كَ+_ٱل# d3tok:أَ+_فَ+_كَ+_ٱل+_ atbtok:أَ+_فَ+_كَ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:7+[PREP]:13+[ART]:18
+افوال	P00005	diac:أَفَوَٱل# caphi:2_a_f_a_w_a_l- gloss:is/are+because/therefore/as_a_result+with/by+the bw:أَ/INTERROG_PART+فَ/SUB_CONJ+وَ/PREP+ال/DET prc3:>a_ques prc2:fa_sub prc1:wa_prep prc0:Al_det source:lex d3seg:أَ+_فَ+_وَ+_ٱل+_# atbseg:أَ+_فَ+_وَ+_ٱل# d3tok:أَ+_فَ+_وَ+_ٱل+_ atbtok:أَ+_فَ+_وَ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:7+[PREP]:15+[ART]:18
+افبال	P00005	diac:أَفَبِٱل# caphi:2_a_f_a_b_i_l- gloss:is/are+because/therefore/as_a_result+[part.]+the bw:أَ/INTERROG_PART+فَ/SUB_CONJ+بِ/PART+ال/DET prc3:>a_ques prc2:fa_sub prc1:bi_part prc0:Al_det source:lex d3seg:أَ+_فَ+_بِ+_ٱل+_# atbseg:أَ+_فَ+_بِ+_ٱل# d3tok:أَ+_فَ+_بِ+_ٱل+_ atbtok:أَ+_فَ+_بِ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:7+[PREP]:16+[ART]:18
+اوال	P00005	diac:أَوَٱل# caphi:2_a_w_a_l- gloss:is/are+and+the bw:أَ/INTERROG_PART+وَ/CONJ+ال/DET prc3:>a_ques prc2:wa_conj prc1:0 prc0:Al_det source:lex d3seg:أَ+_وَ+_ٱل+_# atbseg:أَ+_وَ+_ٱل# d3tok:أَ+_وَ+_ٱل+_ atbtok:أَ+_وَ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:8+[PREP]:11+[ART]:18
+اوبال	P00005	diac:أَوَبِٱل# caphi:2_a_w_a_b_i_l- gloss:is/are+and+with/by+the bw:أَ/INTERROG_PART+وَ/CONJ+بِ/PREP+ال/DET prc3:>a_ques prc2:wa_conj prc1:bi_prep prc0:Al_det source:lex d3seg:أَ+_وَ+_بِ+_ٱل+_# atbseg:أَ+_وَ+_بِ+_ٱل# d3tok:أَ+_وَ+_بِ+_ٱل+_ atbtok:أَ+_وَ+_بِ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:8+[PREP]:12+[ART]:18
+اوكال	P00005	diac:أَوَكَٱل# caphi:2_a_w_a_k_a_l- gloss:is/are+and+like/such_as+the bw:أَ/INTERROG_PART+وَ/CONJ+كَ/PREP+ال/DET prc3:>a_ques prc2:wa_conj prc1:ka_prep prc0:Al_det source:lex d3seg:أَ+_وَ+_كَ+_ٱل+_# atbseg:أَ+_وَ+_كَ+_ٱل# d3tok:أَ+_وَ+_كَ+_ٱل+_ atbtok:أَ+_وَ+_كَ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:8+[PREP]:13+[ART]:18
+اووال	P00005	diac:أَوَوَٱل# caphi:2_a_w_a_w_a_l- gloss:is/are+and+with/by+the bw:أَ/INTERROG_PART+وَ/CONJ+وَ/PREP+ال/DET prc3:>a_ques prc2:wa_conj prc1:wa_prep prc0:Al_det source:lex d3seg:أَ+_وَ+_وَ+_ٱل+_# atbseg:أَ+_وَ+_وَ+_ٱل# d3tok:أَ+_وَ+_وَ+_ٱل+_ atbtok:أَ+_وَ+_وَ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:8+[PREP]:15+[ART]:18
+اوبال	P00005	diac:أَوَبِٱل# caphi:2_a_w_a_b_i_l- gloss:is/are+and+[part.]+the bw:أَ/INTERROG_PART+وَ/CONJ+بِ/PART+ال/DET prc3:>a_ques prc2:wa_conj prc1:bi_part prc0:Al_det source:lex d3seg:أَ+_وَ+_بِ+_ٱل+_# atbseg:أَ+_وَ+_بِ+_ٱل# d3tok:أَ+_وَ+_بِ+_ٱل+_ atbtok:أَ+_وَ+_بِ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:8+[PREP]:16+[ART]:18
+اوال	P00005	diac:أَوَٱل# caphi:2_a_w_a_l- gloss:is/are+while+the bw:أَ/INTERROG_PART+وَ/SUB_CONJ+ال/DET prc3:>a_ques prc2:wa_sub prc1:0 prc0:Al_det source:lex d3seg:أَ+_وَ+_ٱل+_# atbseg:أَ+_وَ+_ٱل# d3tok:أَ+_وَ+_ٱل+_ atbtok:أَ+_وَ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:9+[PREP]:11+[ART]:18
+اوبال	P00005	diac:أَوَبِٱل# caphi:2_a_w_a_b_i_l- gloss:is/are+while+with/by+the bw:أَ/INTERROG_PART+وَ/SUB_CONJ+بِ/PREP+ال/DET prc3:>a_ques prc2:wa_sub prc1:bi_prep prc0:Al_det source:lex d3seg:أَ+_وَ+_بِ+_ٱل+_# atbseg:أَ+_وَ+_بِ+_ٱل# d3tok:أَ+_وَ+_بِ+_ٱل+_ atbtok:أَ+_وَ+_بِ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:9+[PREP]:12+[ART]:18
+اوكال	P00005	diac:أَوَكَٱل# caphi:2_a_w_a_k_a_l- gloss:is/are+while+like/such_as+the bw:أَ/INTERROG_PART+وَ/SUB_CONJ+كَ/PREP+ال/DET prc3:>a_ques prc2:wa_sub prc1:ka_prep prc0:Al_det source:lex d3seg:أَ+_وَ+_كَ+_ٱل+_# atbseg:أَ+_وَ+_كَ+_ٱل# d3tok:أَ+_وَ+_كَ+_ٱل+_ atbtok:أَ+_وَ+_كَ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:9+[PREP]:13+[ART]:18
+اووال	P00005	diac:أَوَوَٱل# caphi:2_a_w_a_w_a_l- gloss:is/are+while+with/by+the bw:أَ/INTERROG_PART+وَ/SUB_CONJ+وَ/PREP+ال/DET prc3:>a_ques prc2:wa_sub prc1:wa_prep prc0:Al_det source:lex d3seg:أَ+_وَ+_وَ+_ٱل+_# atbseg:أَ+_وَ+_وَ+_ٱل# d3tok:أَ+_وَ+_وَ+_ٱل+_ atbtok:أَ+_وَ+_وَ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:9+[PREP]:15+[ART]:18
+اوبال	P00005	diac:أَوَبِٱل# caphi:2_a_w_a_b_i_l- gloss:is/are+while+[part.]+the bw:أَ/INTERROG_PART+وَ/SUB_CONJ+بِ/PART+ال/DET prc3:>a_ques prc2:wa_sub prc1:bi_part prc0:Al_det source:lex d3seg:أَ+_وَ+_بِ+_ٱل+_# atbseg:أَ+_وَ+_بِ+_ٱل# d3tok:أَ+_وَ+_بِ+_ٱل+_ atbtok:أَ+_وَ+_بِ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:9+[PREP]:16+[ART]:18
+لل	P00006	diac:لِل# caphi:l_i_l- gloss:for/to+the bw:لِ/PREP+ال/DET prc3:0 prc2:0 prc1:li_prep prc0:Al_det source:lex d3seg:لِ+_ل+_# atbseg:لِ+_ل# d3tok:لِ+_ٱل+_ atbtok:لِ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:3+[PREP]:14+[ART]:19
+فلل	P00006	diac:فَلِل# caphi:f_a_l_i_l- gloss:so/and+for/to+the bw:فَ/CONJ+لِ/PREP+ال/DET prc3:0 prc2:fa_conj prc1:li_prep prc0:Al_det source:lex d3seg:فَ+_لِ+_ل+_# atbseg:فَ+_لِ+_ل# d3tok:فَ+_لِ+_ٱل+_ atbtok:فَ+_لِ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:4+[PREP]:14+[ART]:19
+فلل	P00006	diac:فَلِل# caphi:f_a_l_i_l- gloss:so/then+for/to+the bw:فَ/CONNEC_PART+لِ/PREP+ال/DET prc3:0 prc2:fa_conn prc1:li_prep prc0:Al_det source:lex d3seg:فَ+_لِ+_ل+_# atbseg:فَ+_لِ+_ل# d3tok:فَ+_لِ+_ٱل+_ atbtok:فَ+_لِ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:5+[PREP]:14+[ART]:19
+فلل	P00006	diac:فَلِل# caphi:f_a_l_i_l- gloss:so/then+for/to+the bw:فَ/RC_PART+لِ/PREP+ال/DET prc3:0 prc2:fa_rc prc1:li_prep prc0:Al_det source:lex d3seg:فَ+_لِ+_ل+_# atbseg:فَ+_لِ+_ل# d3tok:فَ+_لِ+_ٱل+_ atbtok:فَ+_لِ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:6+[PREP]:14+[ART]:19
+فلل	P00006	diac:فَلِل# caphi:f_a_l_i_l- gloss:because/therefore/as_a_result+for/to+the bw:فَ/SUB_CONJ+لِ/PREP+ال/DET prc3:0 prc2:fa_sub prc1:li_prep prc0:Al_det source:lex d3seg:فَ+_لِ+_ل+_# atbseg:فَ+_لِ+_ل# d3tok:فَ+_لِ+_ٱل+_ atbtok:فَ+_لِ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:7+[PREP]:14+[ART]:19
+ولل	P00006	diac:وَلِل# caphi:w_a_l_i_l- gloss:and+for/to+the bw:وَ/CONJ+لِ/PREP+ال/DET prc3:0 prc2:wa_conj prc1:li_prep prc0:Al_det source:lex d3seg:وَ+_لِ+_ل+_# atbseg:وَ+_لِ+_ل# d3tok:وَ+_لِ+_ٱل+_ atbtok:وَ+_لِ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:8+[PREP]:14+[ART]:19
+ولل	P00006	diac:وَلِل# caphi:w_a_l_i_l- gloss:while+for/to+the bw:وَ/SUB_CONJ+لِ/PREP+ال/DET prc3:0 prc2:wa_sub prc1:li_prep prc0:Al_det source:lex d3seg:وَ+_لِ+_ل+_# atbseg:وَ+_لِ+_ل# d3tok:وَ+_لِ+_ٱل+_ atbtok:وَ+_لِ+_ٱل# cm_pref_ids:[QUES]:1+[CONJ]:9+[PREP]:14+[ART]:19
+الل	P00006	diac:أَلِل# caphi:2_a_l_i_l- gloss:is/are+for/to+the bw:أَ/INTERROG_PART+لِ/PREP+ال/DET prc3:>a_ques prc2:0 prc1:li_prep prc0:Al_det source:lex d3seg:أَ+_لِ+_ل+_# atbseg:أَ+_لِ+_ل# d3tok:أَ+_لِ+_ٱل+_ atbtok:أَ+_لِ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:3+[PREP]:14+[ART]:19
+افلل	P00006	diac:أَفَلِل# caphi:2_a_f_a_l_i_l- gloss:is/are+so/and+for/to+the bw:أَ/INTERROG_PART+فَ/CONJ+لِ/PREP+ال/DET prc3:>a_ques prc2:fa_conj prc1:li_prep prc0:Al_det source:lex d3seg:أَ+_فَ+_لِ+_ل+_# atbseg:أَ+_فَ+_لِ+_ل# d3tok:أَ+_فَ+_لِ+_ٱل+_ atbtok:أَ+_فَ+_لِ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:4+[PREP]:14+[ART]:19
+افلل	P00006	diac:أَفَلِل# caphi:2_a_f_a_l_i_l- gloss:is/are+so/then+for/to+the bw:أَ/INTERROG_PART+فَ/CONNEC_PART+لِ/PREP+ال/DET prc3:>a_ques prc2:fa_conn prc1:li_prep prc0:Al_det source:lex d3seg:أَ+_فَ+_لِ+_ل+_# atbseg:أَ+_فَ+_لِ+_ل# d3tok:أَ+_فَ+_لِ+_ٱل+_ atbtok:أَ+_فَ+_لِ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:5+[PREP]:14+[ART]:19
+افلل	P00006	diac:أَفَلِل# caphi:2_a_f_a_l_i_l- gloss:is/are+so/then+for/to+the bw:أَ/INTERROG_PART+فَ/RC_PART+لِ/PREP+ال/DET prc3:>a_ques prc2:fa_rc prc1:li_prep prc0:Al_det source:lex d3seg:أَ+_فَ+_لِ+_ل+_# atbseg:أَ+_فَ+_لِ+_ل# d3tok:أَ+_فَ+_لِ+_ٱل+_ atbtok:أَ+_فَ+_لِ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:6+[PREP]:14+[ART]:19
+افلل	P00006	diac:أَفَلِل# caphi:2_a_f_a_l_i_l- gloss:is/are+because/therefore/as_a_result+for/to+the bw:أَ/INTERROG_PART+فَ/SUB_CONJ+لِ/PREP+ال/DET prc3:>a_ques prc2:fa_sub prc1:li_prep prc0:Al_det source:lex d3seg:أَ+_فَ+_لِ+_ل+_# atbseg:أَ+_فَ+_لِ+_ل# d3tok:أَ+_فَ+_لِ+_ٱل+_ atbtok:أَ+_فَ+_لِ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:7+[PREP]:14+[ART]:19
+اولل	P00006	diac:أَوَلِل# caphi:2_a_w_a_l_i_l- gloss:is/are+and+for/to+the bw:أَ/INTERROG_PART+وَ/CONJ+لِ/PREP+ال/DET prc3:>a_ques prc2:wa_conj prc1:li_prep prc0:Al_det source:lex d3seg:أَ+_وَ+_لِ+_ل+_# atbseg:أَ+_وَ+_لِ+_ل# d3tok:أَ+_وَ+_لِ+_ٱل+_ atbtok:أَ+_وَ+_لِ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:8+[PREP]:14+[ART]:19
+اولل	P00006	diac:أَوَلِل# caphi:2_a_w_a_l_i_l- gloss:is/are+while+for/to+the bw:أَ/INTERROG_PART+وَ/SUB_CONJ+لِ/PREP+ال/DET prc3:>a_ques prc2:wa_sub prc1:li_prep prc0:Al_det source:lex d3seg:أَ+_وَ+_لِ+_ل+_# atbseg:أَ+_وَ+_لِ+_ل# d3tok:أَ+_وَ+_لِ+_ٱل+_ atbtok:أَ+_وَ+_لِ+_ٱل# cm_pref_ids:[QUES]:2+[CONJ]:9+[PREP]:14+[ART]:19
+ل	P00007	diac:لَ caphi:l_a gloss:indeed/truly bw:لَ/EMPHATIC_PART prc1:la_emph source:lex d3seg:لَ+_ atbseg:لَ+_ d3tok:لَ+_ atbtok:لَ+_ cm_pref_ids:[EMPH]:17
+و	P00008	diac:وَ caphi:w_a gloss:[part.] bw:وَ/PART prc2:wa_part source:lex d3seg:وَ+_ atbseg:وَ+_ d3tok:وَ+_ atbtok:وَ+_ cm_pref_ids:[CONJ-ACC]:10
+وال	P00009	diac:وَٱل# caphi:w_a_l- gloss:[part.]+the bw:وَ/PART+ال/DET prc2:wa_part prc0:Al_det source:lex d3seg:وَ+_ٱل+_# atbseg:وَ+_ٱل# d3tok:وَ+_ٱل+_ atbtok:وَ+_ٱل# cm_pref_ids:[CONJ-ACC]:10+[ART]:18
+###SUFFIXES###
+	S00001	diac:ٌ caphi:u_n gloss: bw:ٌ/CASE_INDEF_NOM form_gen:m form_num:s stt:i cas:n source:lex d3seg:ٌ atbseg:ٌ d3tok:ٌ atbtok:ٌ cm_suff_ids:[NSuff.XXIN]:118
+ان	S00002	diac:َانِ caphi:aa_n_i gloss: bw:انِ/NSUFF_MASC_DU_NOM form_gen:m form_num:d stt:i cas:n source:lex d3seg:َانِ atbseg:َانِ d3tok:َانِ atbtok:َانِ cm_suff_ids:[NSuff.XXIN]:166
+ه	S00003	diac:َةٌ caphi:a_t_u_n gloss: bw:َة/NSUFF_FEM_SG+ٌ/CASE_INDEF_NOM form_gen:f form_num:s stt:i cas:n source:lex d3seg:َةٌ atbseg:َةٌ d3tok:َةٌ atbtok:َةٌ cm_suff_ids:[NSuff.XXIN]:218
+تان	S00004	diac:َتَانِ caphi:a_t_aa_n_i gloss: bw:َتانِ/NSUFF_FEM_DU_NOM form_gen:f form_num:d stt:i cas:n source:lex d3seg:َتَانِ atbseg:َتَانِ d3tok:َتَانِ atbtok:َتَانِ cm_suff_ids:[NSuff.XXIN]:248
+ات	S00005	diac:َاتٌ caphi:aa_t_u_n gloss: bw:ات/NSUFF_FEM_PL+ٌ/CASE_INDEF_NOM form_gen:f form_num:p stt:i cas:n source:lex d3seg:َاتٌ atbseg:َاتٌ d3tok:َاتٌ atbtok:َاتٌ cm_suff_ids:[NSuff.XXIN]:263
+	S00006	diac:ُ caphi:u gloss: bw:ُ/CASE_INDEF_NOM form_gen:m form_num:s stt:i cas:n source:lex d3seg:ُ atbseg:ُ d3tok:ُ atbtok:ُ cm_suff_ids:[NSuff.XXIN]:117
+ا	S00007	diac:اً caphi:a_n gloss: bw:اً/CASE_INDEF_ACC form_gen:m form_num:s stt:i cas:a source:lex d3seg:اً atbseg:اً d3tok:اً atbtok:اً cm_suff_ids:[NSuff.XXIA]:125
+ين	S00008	diac:َيْنِ caphi:a_y_n_i gloss: bw:َيْنِ/NSUFF_MASC_DU_ACC form_gen:m form_num:d stt:i cas:a source:lex d3seg:َيْنِ atbseg:َيْنِ d3tok:َيْنِ atbtok:َيْنِ cm_suff_ids:[NSuff.XXIA]:167
+ه	S00009	diac:َةً caphi:a_t_a_n gloss: bw:َة/NSUFF_FEM_SG+ً/CASE_INDEF_ACC form_gen:f form_num:s stt:i cas:a source:lex d3seg:َةً atbseg:َةً d3tok:َةً atbtok:َةً cm_suff_ids:[NSuff.XXIA]:221
+تين	S00010	diac:َتَيْنِ caphi:a_t_a_y_n_i gloss: bw:َتَيْنِ/NSUFF_FEM_DU_ACC form_gen:f form_num:d stt:i cas:a source:lex d3seg:َتَيْنِ atbseg:َتَيْنِ d3tok:َتَيْنِ atbtok:َتَيْنِ cm_suff_ids:[NSuff.XXIA]:249
+ات	S00011	diac:َاتٍ caphi:aa_t_i_n gloss: bw:ات/NSUFF_FEM_PL+ٍ/CASE_INDEF_ACC form_gen:f form_num:p stt:i cas:a source:lex d3seg:َاتٍ atbseg:َاتٍ d3tok:َاتٍ atbtok:َاتٍ cm_suff_ids:[NSuff.XXIA]:265
+	S00012	diac:َ caphi:a gloss: bw:(null)/CASE_INDEF_ACC form_gen:m form_num:s stt:i cas:a source:lex d3seg:َ atbseg:َ d3tok:َ atbtok:َ cm_suff_ids:[NSuff.XXIA]:123
+	S00013	diac:ٍ caphi:i_n gloss: bw:ٍ/CASE_INDEF_GEN form_gen:m form_num:s stt:i cas:g source:lex d3seg:ٍ atbseg:ٍ d3tok:ٍ atbtok:ٍ cm_suff_ids:[NSuff.XXIG]:132
+ين	S00014	diac:َيْنِ caphi:a_y_n_i gloss: bw:َيْنِ/NSUFF_MASC_DU_GEN form_gen:m form_num:d stt:i cas:g source:lex d3seg:َيْنِ atbseg:َيْنِ d3tok:َيْنِ atbtok:َيْنِ cm_suff_ids:[NSuff.XXIG]:168
+ه	S00015	diac:َةٍ caphi:a_t_i_n gloss: bw:َة/NSUFF_FEM_SG+ٍ/CASE_INDEF_GEN form_gen:f form_num:s stt:i cas:g source:lex d3seg:َةٍ atbseg:َةٍ d3tok:َةٍ atbtok:َةٍ cm_suff_ids:[NSuff.XXIG]:223
+تين	S00016	diac:َتَيْنِ caphi:a_t_a_y_n_i gloss: bw:َتَيْنِ/NSUFF_FEM_DU_GEN form_gen:f form_num:d stt:i cas:g source:lex d3seg:َتَيْنِ atbseg:َتَيْنِ d3tok:َتَيْنِ atbtok:َتَيْنِ cm_suff_ids:[NSuff.XXIG]:250
+ات	S00017	diac:َاتٍ caphi:aa_t_i_n gloss: bw:ات/NSUFF_FEM_PL+ٍ/CASE_INDEF_GEN form_gen:f form_num:p stt:i cas:g source:lex d3seg:َاتٍ atbseg:َاتٍ d3tok:َاتٍ atbtok:َاتٍ cm_suff_ids:[NSuff.XXIG]:267
+	S00018	diac:َ caphi:a gloss: bw:َ/CASE_INDEF_GEN form_gen:m form_num:s stt:i cas:g source:lex d3seg:َ atbseg:َ d3tok:َ atbtok:َ cm_suff_ids:[NSuff.XXIG]:131
+	S00019	diac:ُ caphi:u gloss: bw:ُ/CASE_DEF_NOM form_gen:m form_num:s stt:d cas:n source:lex d3seg:ُ atbseg:ُ d3tok:ُ atbtok:ُ cm_suff_ids:[NSuff.XXDN]:136
+ان	S00020	diac:َانِ caphi:aa_n_i gloss: bw:انِ/NSUFF_MASC_DU_NOM form_gen:m form_num:d stt:d cas:n source:lex d3seg:َانِ atbseg:َانِ d3tok:َانِ atbtok:َانِ cm_suff_ids:[NSuff.XXDN]:171
+ه	S00021	diac:َةُ caphi:a_t_u gloss: bw:َة/NSUFF_FEM_SG+ُ/CASE_DEF_NOM form_gen:f form_num:s stt:d cas:n source:lex d3seg:َةُ atbseg:َةُ d3tok:َةُ atbtok:َةُ cm_suff_ids:[NSuff.XXDN]:226
+تان	S00022	diac:َتَانِ caphi:a_t_aa_n_i gloss: bw:َتانِ/NSUFF_FEM_DU_NOM form_gen:f form_num:d stt:d cas:n source:lex d3seg:َتَانِ atbseg:َتَانِ d3tok:َتَانِ atbtok:َتَانِ cm_suff_ids:[NSuff.XXDN]:252
+ات	S00023	diac:َاتُ caphi:aa_t_u gloss: bw:ات/NSUFF_FEM_PL+ُ/CASE_DEF_NOM form_gen:f form_num:p stt:d cas:n source:lex d3seg:َاتُ atbseg:َاتُ d3tok:َاتُ atbtok:َاتُ cm_suff_ids:[NSuff.XXDN]:271
+	S00024	diac:َ caphi:a gloss: bw:َ/CASE_DEF_ACC form_gen:m form_num:s stt:d cas:a source:lex d3seg:َ atbseg:َ d3tok:َ atbtok:َ cm_suff_ids:[NSuff.XXDA]:138
+ين	S00025	diac:َيْنِ caphi:a_y_n_i gloss: bw:َيْنِ/NSUFF_MASC_DU_ACC form_gen:m form_num:d stt:d cas:a source:lex d3seg:َيْنِ atbseg:َيْنِ d3tok:َيْنِ atbtok:َيْنِ cm_suff_ids:[NSuff.XXDA]:172
+ه	S00026	diac:َةَ caphi:a_t_a gloss: bw:َة/NSUFF_FEM_SG+َ/CASE_DEF_ACC form_gen:f form_num:s stt:d cas:a source:lex d3seg:َةَ atbseg:َةَ d3tok:َةَ atbtok:َةَ cm_suff_ids:[NSuff.XXDA]:228
+تين	S00027	diac:َتَيْنِ caphi:a_t_a_y_n_i gloss: bw:َتَيْنِ/NSUFF_FEM_DU_ACC form_gen:f form_num:d stt:d cas:a source:lex d3seg:َتَيْنِ atbseg:َتَيْنِ d3tok:َتَيْنِ atbtok:َتَيْنِ cm_suff_ids:[NSuff.XXDA]:253
+ات	S00028	diac:َاتِ caphi:aa_t_i gloss: bw:ات/NSUFF_FEM_PL+ِ/CASE_DEF_ACC form_gen:f form_num:p stt:d cas:a source:lex d3seg:َاتِ atbseg:َاتِ d3tok:َاتِ atbtok:َاتِ cm_suff_ids:[NSuff.XXDA]:273
+	S00029	diac:ِ caphi:i gloss: bw:ِ/CASE_DEF_GEN form_gen:m form_num:s stt:d cas:g source:lex d3seg:ِ atbseg:ِ d3tok:ِ atbtok:ِ cm_suff_ids:[NSuff.XXDG]:141
+ين	S00030	diac:َيْنِ caphi:a_y_n_i gloss: bw:َيْنِ/NSUFF_MASC_DU_GEN form_gen:m form_num:d stt:d cas:g source:lex d3seg:َيْنِ atbseg:َيْنِ d3tok:َيْنِ atbtok:َيْنِ cm_suff_ids:[NSuff.XXDG]:173
+ه	S00031	diac:َةِ caphi:a_t_i gloss: bw:َة/NSUFF_FEM_SG+ِ/CASE_DEF_GEN form_gen:f form_num:s stt:d cas:g source:lex d3seg:َةِ atbseg:َةِ d3tok:َةِ atbtok:َةِ cm_suff_ids:[NSuff.XXDG]:229
+تين	S00032	diac:َتَيْنِ caphi:a_t_a_y_n_i gloss: bw:َتَيْنِ/NSUFF_FEM_DU_GEN form_gen:f form_num:d stt:d cas:g source:lex d3seg:َتَيْنِ atbseg:َتَيْنِ d3tok:َتَيْنِ atbtok:َتَيْنِ cm_suff_ids:[NSuff.XXDG]:254
+ات	S00033	diac:َاتِ caphi:aa_t_i gloss: bw:ات/NSUFF_FEM_PL+ِ/CASE_DEF_GEN form_gen:f form_num:p stt:d cas:g source:lex d3seg:َاتِ atbseg:َاتِ d3tok:َاتِ atbtok:َاتِ cm_suff_ids:[NSuff.XXDG]:275
+ي	S00034	diac:ِي caphi:ii gloss:my bw:(null)/CASE_DEF_NOM+ِي/POSS_PRON_1S form_gen:m form_num:s stt:c cas:n enc0:1s_poss source:lex d3seg:_+ِي atbseg:_+ِي d3tok:_+ِي atbtok:_+ِي cm_suff_ids:[NSuff.XXCN]:160+[PRON]:309
+	S00035	diac:ُ caphi:u gloss: bw:ُ/CASE_DEF_NOM form_gen:m form_num:s stt:c cas:n enc0:0 source:lex d3seg:ُ atbseg:ُ d3tok:ُ atbtok:ُ cm_suff_ids:[NSuff.XXCN]:161+[PRON]:292
+ه	S00036	diac:ُهُ caphi:u_h_u gloss:its/his bw:ُ/CASE_DEF_NOM+هُ/POSS_PRON_3MS form_gen:m form_num:s stt:c cas:n enc0:3ms_poss source:lex d3seg:ُ_+هُ atbseg:ُ_+هُ d3tok:ُ_+هُ atbtok:ُ_+هُ cm_suff_ids:[NSuff.XXCN]:161+[PRON]:294
+هما	S00036	diac:ُهُمَا caphi:u_h_u_m_aa gloss:their bw:ُ/CASE_DEF_NOM+هُما/POSS_PRON_3D form_gen:m form_num:s stt:c cas:n enc0:3d_poss source:lex d3seg:ُ_+هُمَا atbseg:ُ_+هُمَا d3tok:ُ_+هُمَا atbtok:ُ_+هُمَا cm_suff_ids:[NSuff.XXCN]:161+[PRON]:297
+هن	S00036	diac:ُهُنَّ caphi:u_h_u_n_n_a gloss:their bw:ُ/CASE_DEF_NOM+هُنَّ/POSS_PRON_3FP form_gen:m form_num:s stt:c cas:n enc0:3fp_poss source:lex d3seg:ُ_+هُنَّ atbseg:ُ_+هُنَّ d3tok:ُ_+هُنَّ atbtok:ُ_+هُنَّ cm_suff_ids:[NSuff.XXCN]:161+[PRON]:299
+هم	S00036	diac:ُهُم caphi:u_h_u_m gloss:their bw:ُ/CASE_DEF_NOM+هُم/POSS_PRON_3MP form_gen:m form_num:s stt:c cas:n enc0:3mp_poss source:lex d3seg:ُ_+هُم atbseg:ُ_+هُم d3tok:ُ_+هُم atbtok:ُ_+هُم cm_suff_ids:[NSuff.XXCN]:161+[PRON]:301
+ها	S00037	diac:ُهَا caphi:u_h_aa gloss:its/their/her bw:ُ/CASE_DEF_NOM+ها/POSS_PRON_3FS form_gen:m form_num:s stt:c cas:n enc0:3fs_poss source:lex d3seg:ُ_+هَا atbseg:ُ_+هَا d3tok:ُ_+هَا atbtok:ُ_+هَا cm_suff_ids:[NSuff.XXCN]:161+[PRON]:295
+ك	S00037	diac:ُكَ caphi:u_k_a gloss:your_[masc.sg.] bw:ُ/CASE_DEF_NOM+كَ/POSS_PRON_2MS form_gen:m form_num:s stt:c cas:n enc0:2ms_poss source:lex d3seg:ُ_+كَ atbseg:ُ_+كَ d3tok:ُ_+كَ atbtok:ُ_+كَ cm_suff_ids:[NSuff.XXCN]:161+[PRON]:302
+ك	S00037	diac:ُكِ caphi:u_k_i gloss:your_[fem.sg.] bw:ُ/CASE_DEF_NOM+كِ/POSS_PRON_2FS form_gen:m form_num:s stt:c cas:n enc0:2fs_poss source:lex d3seg:ُ_+كِ atbseg:ُ_+كِ d3tok:ُ_+كِ atbtok:ُ_+كِ cm_suff_ids:[NSuff.XXCN]:161+[PRON]:303
+كما	S00037	diac:ُكُمَا caphi:u_k_u_m_aa gloss:your_[du.] bw:ُ/CASE_DEF_NOM+كُما/POSS_PRON_2D form_gen:m form_num:s stt:c cas:n enc0:2d_poss source:lex d3seg:ُ_+كُمَا atbseg:ُ_+كُمَا d3tok:ُ_+كُمَا atbtok:ُ_+كُمَا cm_suff_ids:[NSuff.XXCN]:161+[PRON]:304
+كم	S00037	diac:ُكُم caphi:u_k_u_m gloss:your_[masc.pl.] bw:ُ/CASE_DEF_NOM+كُم/POSS_PRON_2MP form_gen:m form_num:s stt:c cas:n enc0:2mp_poss source:lex d3seg:ُ_+كُم atbseg:ُ_+كُم d3tok:ُ_+كُم atbtok:ُ_+كُم cm_suff_ids:[NSuff.XXCN]:161+[PRON]:305
+كن	S00037	diac:ُكُنَّ caphi:u_k_u_n_n_a gloss:your_[fem.pl.] bw:ُ/CASE_DEF_NOM+كُنَّ/POSS_PRON_2FP form_gen:m form_num:s stt:c cas:n enc0:2fp_poss source:lex d3seg:ُ_+كُنَّ atbseg:ُ_+كُنَّ d3tok:ُ_+كُنَّ atbtok:ُ_+كُنَّ cm_suff_ids:[NSuff.XXCN]:161+[PRON]:306
+نا	S00037	diac:ُنَا caphi:u_n_aa gloss:our bw:ُ/CASE_DEF_NOM+نا/POSS_PRON_1P form_gen:m form_num:s stt:c cas:n enc0:1p_poss source:lex d3seg:ُ_+نَا atbseg:ُ_+نَا d3tok:ُ_+نَا atbtok:ُ_+نَا cm_suff_ids:[NSuff.XXCN]:161+[PRON]:310
+ا	S00038	diac:َا caphi:aa gloss: bw:ا/NSUFF_MASC_DU_NOM_POSS form_gen:m form_num:d stt:c cas:n enc0:0 source:lex d3seg:َا atbseg:َا d3tok:َا atbtok:َا cm_suff_ids:[NSuff.XXCN]:176+[PRON]:292
+اه	S00039	diac:َاهُ caphi:aa_h_u gloss:its/his bw:ا/NSUFF_MASC_DU_NOM_POSS+هُ/POSS_PRON_3MS form_gen:m form_num:d stt:c cas:n enc0:3ms_poss source:lex d3seg:َا_+هُ atbseg:َا_+هُ d3tok:َا_+هُ atbtok:َا_+هُ cm_suff_ids:[NSuff.XXCN]:176+[PRON]:294
+اهما	S00039	diac:َاهُمَا caphi:aa_h_u_m_aa gloss:their bw:ا/NSUFF_MASC_DU_NOM_POSS+هُما/POSS_PRON_3D form_gen:m form_num:d stt:c cas:n enc0:3d_poss source:lex d3seg:َا_+هُمَا atbseg:َا_+هُمَا d3tok:َا_+هُمَا atbtok:َا_+هُمَا cm_suff_ids:[NSuff.XXCN]:176+[PRON]:297
+اهن	S00039	diac:َاهُنَّ caphi:aa_h_u_n_n_a gloss:their bw:ا/NSUFF_MASC_DU_NOM_POSS+هُنَّ/POSS_PRON_3FP form_gen:m form_num:d stt:c cas:n enc0:3fp_poss source:lex d3seg:َا_+هُنَّ atbseg:َا_+هُنَّ d3tok:َا_+هُنَّ atbtok:َا_+هُنَّ cm_suff_ids:[NSuff.XXCN]:176+[PRON]:299
+اهم	S00039	diac:َاهُم caphi:aa_h_u_m gloss:their bw:ا/NSUFF_MASC_DU_NOM_POSS+هُم/POSS_PRON_3MP form_gen:m form_num:d stt:c cas:n enc0:3mp_poss source:lex d3seg:َا_+هُم atbseg:َا_+هُم d3tok:َا_+هُم atbtok:َا_+هُم cm_suff_ids:[NSuff.XXCN]:176+[PRON]:301
+اها	S00040	diac:َاهَا caphi:aa_h_aa gloss:its/their/her bw:ا/NSUFF_MASC_DU_NOM_POSS+ها/POSS_PRON_3FS form_gen:m form_num:d stt:c cas:n enc0:3fs_poss source:lex d3seg:َا_+هَا atbseg:َا_+هَا d3tok:َا_+هَا atbtok:َا_+هَا cm_suff_ids:[NSuff.XXCN]:176+[PRON]:295
+اك	S00040	diac:َاكَ caphi:aa_k_a gloss:your_[masc.sg.] bw:ا/NSUFF_MASC_DU_NOM_POSS+كَ/POSS_PRON_2MS form_gen:m form_num:d stt:c cas:n enc0:2ms_poss source:lex d3seg:َا_+كَ atbseg:َا_+كَ d3tok:َا_+كَ atbtok:َا_+كَ cm_suff_ids:[NSuff.XXCN]:176+[PRON]:302
+اك	S00040	diac:َاكِ caphi:aa_k_i gloss:your_[fem.sg.] bw:ا/NSUFF_MASC_DU_NOM_POSS+كِ/POSS_PRON_2FS form_gen:m form_num:d stt:c cas:n enc0:2fs_poss source:lex d3seg:َا_+كِ atbseg:َا_+كِ d3tok:َا_+كِ atbtok:َا_+كِ cm_suff_ids:[NSuff.XXCN]:176+[PRON]:303
+اكما	S00040	diac:َاكُمَا caphi:aa_k_u_m_aa gloss:your_[du.] bw:ا/NSUFF_MASC_DU_NOM_POSS+كُما/POSS_PRON_2D form_gen:m form_num:d stt:c cas:n enc0:2d_poss source:lex d3seg:َا_+كُمَا atbseg:َا_+كُمَا d3tok:َا_+كُمَا atbtok:َا_+كُمَا cm_suff_ids:[NSuff.XXCN]:176+[PRON]:304
+اكم	S00040	diac:َاكُم caphi:aa_k_u_m gloss:your_[masc.pl.] bw:ا/NSUFF_MASC_DU_NOM_POSS+كُم/POSS_PRON_2MP form_gen:m form_num:d stt:c cas:n enc0:2mp_poss source:lex d3seg:َا_+كُم atbseg:َا_+كُم d3tok:َا_+كُم atbtok:َا_+كُم cm_suff_ids:[NSuff.XXCN]:176+[PRON]:305
+اكن	S00040	diac:َاكُنَّ caphi:aa_k_u_n_n_a gloss:your_[fem.pl.] bw:ا/NSUFF_MASC_DU_NOM_POSS+كُنَّ/POSS_PRON_2FP form_gen:m form_num:d stt:c cas:n enc0:2fp_poss source:lex d3seg:َا_+كُنَّ atbseg:َا_+كُنَّ d3tok:َا_+كُنَّ atbtok:َا_+كُنَّ cm_suff_ids:[NSuff.XXCN]:176+[PRON]:306
+انا	S00040	diac:َانَا caphi:aa_n_aa gloss:our bw:ا/NSUFF_MASC_DU_NOM_POSS+نا/POSS_PRON_1P form_gen:m form_num:d stt:c cas:n enc0:1p_poss source:lex d3seg:َا_+نَا atbseg:َا_+نَا d3tok:َا_+نَا atbtok:َا_+نَا cm_suff_ids:[NSuff.XXCN]:176+[PRON]:310
+اي	S00041	diac:َايَ caphi:aa_y_a gloss:my bw:ا/NSUFF_MASC_DU_NOM_POSS+ِي/POSS_PRON_1S form_gen:m form_num:d stt:c cas:n enc0:1s_poss source:lex d3seg:َا_+يَ atbseg:َا_+يَ d3tok:َا_+ِي atbtok:َا_+ِي cm_suff_ids:[NSuff.XXCN]:176+[PRON]:307
+تي	S00042	diac:َتِي caphi:a_t_ii gloss:my bw:َة/NSUFF_FEM_SG+ِي/POSS_PRON_1S form_gen:f form_num:s stt:c cas:n enc0:1s_poss source:lex d3seg:َت_+ِي atbseg:َت_+ِي d3tok:َة_+ِي atbtok:َة_+ِي cm_suff_ids:[NSuff.XXCN]:234+[PRON]:309
+ته	S00043	diac:َتُهُ caphi:a_t_u_h_u gloss:its/his bw:َة/NSUFF_FEM_SG+ُ/CASE_DEF_NOM+هُ/POSS_PRON_3MS form_gen:f form_num:s stt:c cas:n enc0:3ms_poss source:lex d3seg:َتُ_+هُ atbseg:َتُ_+هُ d3tok:َةُ_+هُ atbtok:َةُ_+هُ cm_suff_ids:[NSuff.XXCN]:235+[PRON]:294
+تهما	S00043	diac:َتُهُمَا caphi:a_t_u_h_u_m_aa gloss:their bw:َة/NSUFF_FEM_SG+ُ/CASE_DEF_NOM+هُما/POSS_PRON_3D form_gen:f form_num:s stt:c cas:n enc0:3d_poss source:lex d3seg:َتُ_+هُمَا atbseg:َتُ_+هُمَا d3tok:َةُ_+هُمَا atbtok:َةُ_+هُمَا cm_suff_ids:[NSuff.XXCN]:235+[PRON]:297
+تهن	S00043	diac:َتُهُنَّ caphi:a_t_u_h_u_n_n_a gloss:their bw:َة/NSUFF_FEM_SG+ُ/CASE_DEF_NOM+هُنَّ/POSS_PRON_3FP form_gen:f form_num:s stt:c cas:n enc0:3fp_poss source:lex d3seg:َتُ_+هُنَّ atbseg:َتُ_+هُنَّ d3tok:َةُ_+هُنَّ atbtok:َةُ_+هُنَّ cm_suff_ids:[NSuff.XXCN]:235+[PRON]:299
+تهم	S00043	diac:َتُهُم caphi:a_t_u_h_u_m gloss:their bw:َة/NSUFF_FEM_SG+ُ/CASE_DEF_NOM+هُم/POSS_PRON_3MP form_gen:f form_num:s stt:c cas:n enc0:3mp_poss source:lex d3seg:َتُ_+هُم atbseg:َتُ_+هُم d3tok:َةُ_+هُم atbtok:َةُ_+هُم cm_suff_ids:[NSuff.XXCN]:235+[PRON]:301
+تها	S00044	diac:َتُهَا caphi:a_t_u_h_aa gloss:its/their/her bw:َة/NSUFF_FEM_SG+ُ/CASE_DEF_NOM+ها/POSS_PRON_3FS form_gen:f form_num:s stt:c cas:n enc0:3fs_poss source:lex d3seg:َتُ_+هَا atbseg:َتُ_+هَا d3tok:َةُ_+هَا atbtok:َةُ_+هَا cm_suff_ids:[NSuff.XXCN]:235+[PRON]:295
+تك	S00044	diac:َتُكَ caphi:a_t_u_k_a gloss:your_[masc.sg.] bw:َة/NSUFF_FEM_SG+ُ/CASE_DEF_NOM+كَ/POSS_PRON_2MS form_gen:f form_num:s stt:c cas:n enc0:2ms_poss source:lex d3seg:َتُ_+كَ atbseg:َتُ_+كَ d3tok:َةُ_+كَ atbtok:َةُ_+كَ cm_suff_ids:[NSuff.XXCN]:235+[PRON]:302
+تك	S00044	diac:َتُكِ caphi:a_t_u_k_i gloss:your_[fem.sg.] bw:َة/NSUFF_FEM_SG+ُ/CASE_DEF_NOM+كِ/POSS_PRON_2FS form_gen:f form_num:s stt:c cas:n enc0:2fs_poss source:lex d3seg:َتُ_+كِ atbseg:َتُ_+كِ d3tok:َةُ_+كِ atbtok:َةُ_+كِ cm_suff_ids:[NSuff.XXCN]:235+[PRON]:303
+تكما	S00044	diac:َتُكُمَا caphi:a_t_u_k_u_m_aa gloss:your_[du.] bw:َة/NSUFF_FEM_SG+ُ/CASE_DEF_NOM+كُما/POSS_PRON_2D form_gen:f form_num:s stt:c cas:n enc0:2d_poss source:lex d3seg:َتُ_+كُمَا atbseg:َتُ_+كُمَا d3tok:َةُ_+كُمَا atbtok:َةُ_+كُمَا cm_suff_ids:[NSuff.XXCN]:235+[PRON]:304
+تكم	S00044	diac:َتُكُم caphi:a_t_u_k_u_m gloss:your_[masc.pl.] bw:َة/NSUFF_FEM_SG+ُ/CASE_DEF_NOM+كُم/POSS_PRON_2MP form_gen:f form_num:s stt:c cas:n enc0:2mp_poss source:lex d3seg:َتُ_+كُم atbseg:َتُ_+كُم d3tok:َةُ_+كُم atbtok:َةُ_+كُم cm_suff_ids:[NSuff.XXCN]:235+[PRON]:305
+تكن	S00044	diac:َتُكُنَّ caphi:a_t_u_k_u_n_n_a gloss:your_[fem.pl.] bw:َة/NSUFF_FEM_SG+ُ/CASE_DEF_NOM+كُنَّ/POSS_PRON_2FP form_gen:f form_num:s stt:c cas:n enc0:2fp_poss source:lex d3seg:َتُ_+كُنَّ atbseg:َتُ_+كُنَّ d3tok:َةُ_+كُنَّ atbtok:َةُ_+كُنَّ cm_suff_ids:[NSuff.XXCN]:235+[PRON]:306
+تنا	S00044	diac:َتُنَا caphi:a_t_u_n_aa gloss:our bw:َة/NSUFF_FEM_SG+ُ/CASE_DEF_NOM+نا/POSS_PRON_1P form_gen:f form_num:s stt:c cas:n enc0:1p_poss source:lex d3seg:َتُ_+نَا atbseg:َتُ_+نَا d3tok:َةُ_+نَا atbtok:َةُ_+نَا cm_suff_ids:[NSuff.XXCN]:235+[PRON]:310
+ه	S00045	diac:َةُ caphi:a_t_u gloss: bw:َة/NSUFF_FEM_SG+ُ/CASE_DEF_NOM form_gen:f form_num:s stt:c cas:n enc0:0 source:lex d3seg:َةُ atbseg:َةُ d3tok:َةُ atbtok:َةُ cm_suff_ids:[NSuff.XXCN]:236+[PRON]:292
+تا	S00046	diac:َتَا caphi:a_t_aa gloss: bw:َتا/NSUFF_FEM_DU_NOM_POSS form_gen:f form_num:d stt:c cas:n enc0:0 source:lex d3seg:َتَا atbseg:َتَا d3tok:َتَا atbtok:َتَا cm_suff_ids:[NSuff.XXCN]:256+[PRON]:292
+تاه	S00047	diac:َتَاهُ caphi:a_t_aa_h_u gloss:its/his bw:َتا/NSUFF_FEM_DU_NOM_POSS+هُ/POSS_PRON_3MS form_gen:f form_num:d stt:c cas:n enc0:3ms_poss source:lex d3seg:َتَا_+هُ atbseg:َتَا_+هُ d3tok:َتَا_+هُ atbtok:َتَا_+هُ cm_suff_ids:[NSuff.XXCN]:256+[PRON]:294
+تاهما	S00047	diac:َتَاهُمَا caphi:a_t_aa_h_u_m_aa gloss:their bw:َتا/NSUFF_FEM_DU_NOM_POSS+هُما/POSS_PRON_3D form_gen:f form_num:d stt:c cas:n enc0:3d_poss source:lex d3seg:َتَا_+هُمَا atbseg:َتَا_+هُمَا d3tok:َتَا_+هُمَا atbtok:َتَا_+هُمَا cm_suff_ids:[NSuff.XXCN]:256+[PRON]:297
+تاهن	S00047	diac:َتَاهُنَّ caphi:a_t_aa_h_u_n_n_a gloss:their bw:َتا/NSUFF_FEM_DU_NOM_POSS+هُنَّ/POSS_PRON_3FP form_gen:f form_num:d stt:c cas:n enc0:3fp_poss source:lex d3seg:َتَا_+هُنَّ atbseg:َتَا_+هُنَّ d3tok:َتَا_+هُنَّ atbtok:َتَا_+هُنَّ cm_suff_ids:[NSuff.XXCN]:256+[PRON]:299
+تاهم	S00047	diac:َتَاهُم caphi:a_t_aa_h_u_m gloss:their bw:َتا/NSUFF_FEM_DU_NOM_POSS+هُم/POSS_PRON_3MP form_gen:f form_num:d stt:c cas:n enc0:3mp_poss source:lex d3seg:َتَا_+هُم atbseg:َتَا_+هُم d3tok:َتَا_+هُم atbtok:َتَا_+هُم cm_suff_ids:[NSuff.XXCN]:256+[PRON]:301
+تاها	S00048	diac:َتَاهَا caphi:a_t_aa_h_aa gloss:its/their/her bw:َتا/NSUFF_FEM_DU_NOM_POSS+ها/POSS_PRON_3FS form_gen:f form_num:d stt:c cas:n enc0:3fs_poss source:lex d3seg:َتَا_+هَا atbseg:َتَا_+هَا d3tok:َتَا_+هَا atbtok:َتَا_+هَا cm_suff_ids:[NSuff.XXCN]:256+[PRON]:295
+تاك	S00048	diac:َتَاكَ caphi:a_t_aa_k_a gloss:your_[masc.sg.] bw:َتا/NSUFF_FEM_DU_NOM_POSS+كَ/POSS_PRON_2MS form_gen:f form_num:d stt:c cas:n enc0:2ms_poss source:lex d3seg:َتَا_+كَ atbseg:َتَا_+كَ d3tok:َتَا_+كَ atbtok:َتَا_+كَ cm_suff_ids:[NSuff.XXCN]:256+[PRON]:302
+تاك	S00048	diac:َتَاكِ caphi:a_t_aa_k_i gloss:your_[fem.sg.] bw:َتا/NSUFF_FEM_DU_NOM_POSS+كِ/POSS_PRON_2FS form_gen:f form_num:d stt:c cas:n enc0:2fs_poss source:lex d3seg:َتَا_+كِ atbseg:َتَا_+كِ d3tok:َتَا_+كِ atbtok:َتَا_+كِ cm_suff_ids:[NSuff.XXCN]:256+[PRON]:303
+تاكما	S00048	diac:َتَاكُمَا caphi:a_t_aa_k_u_m_aa gloss:your_[du.] bw:َتا/NSUFF_FEM_DU_NOM_POSS+كُما/POSS_PRON_2D form_gen:f form_num:d stt:c cas:n enc0:2d_poss source:lex d3seg:َتَا_+كُمَا atbseg:َتَا_+كُمَا d3tok:َتَا_+كُمَا atbtok:َتَا_+كُمَا cm_suff_ids:[NSuff.XXCN]:256+[PRON]:304
+تاكم	S00048	diac:َتَاكُم caphi:a_t_aa_k_u_m gloss:your_[masc.pl.] bw:َتا/NSUFF_FEM_DU_NOM_POSS+كُم/POSS_PRON_2MP form_gen:f form_num:d stt:c cas:n enc0:2mp_poss source:lex d3seg:َتَا_+كُم atbseg:َتَا_+كُم d3tok:َتَا_+كُم atbtok:َتَا_+كُم cm_suff_ids:[NSuff.XXCN]:256+[PRON]:305
+تاكن	S00048	diac:َتَاكُنَّ caphi:a_t_aa_k_u_n_n_a gloss:your_[fem.pl.] bw:َتا/NSUFF_FEM_DU_NOM_POSS+كُنَّ/POSS_PRON_2FP form_gen:f form_num:d stt:c cas:n enc0:2fp_poss source:lex d3seg:َتَا_+كُنَّ atbseg:َتَا_+كُنَّ d3tok:َتَا_+كُنَّ atbtok:َتَا_+كُنَّ cm_suff_ids:[NSuff.XXCN]:256+[PRON]:306
+تانا	S00048	diac:َتَانَا caphi:a_t_aa_n_aa gloss:our bw:َتا/NSUFF_FEM_DU_NOM_POSS+نا/POSS_PRON_1P form_gen:f form_num:d stt:c cas:n enc0:1p_poss source:lex d3seg:َتَا_+نَا atbseg:َتَا_+نَا d3tok:َتَا_+نَا atbtok:َتَا_+نَا cm_suff_ids:[NSuff.XXCN]:256+[PRON]:310
+تاي	S00049	diac:َتَايَ caphi:a_t_aa_y_a gloss:my bw:َتا/NSUFF_FEM_DU_NOM_POSS+ِي/POSS_PRON_1S form_gen:f form_num:d stt:c cas:n enc0:1s_poss source:lex d3seg:َتَا_+يَ atbseg:َتَا_+يَ d3tok:َتَا_+ِي atbtok:َتَا_+ِي cm_suff_ids:[NSuff.XXCN]:256+[PRON]:307
+اتي	S00050	diac:َاتِي caphi:aa_t_ii gloss:my bw:ات/NSUFF_FEM_PL+(null)/CASE_DEF_NOM+ِي/POSS_PRON_1S form_gen:f form_num:p stt:c cas:n enc0:1s_poss source:lex d3seg:َات_+ِي atbseg:َات_+ِي d3tok:َات_+ِي atbtok:َات_+ِي cm_suff_ids:[NSuff.XXCN]:280+[PRON]:309
+ات	S00051	diac:َاتُ caphi:aa_t_u gloss: bw:ات/NSUFF_FEM_PL+ُ/CASE_DEF_NOM form_gen:f form_num:p stt:c cas:n enc0:0 source:lex d3seg:َاتُ atbseg:َاتُ d3tok:َاتُ atbtok:َاتُ cm_suff_ids:[NSuff.XXCN]:281+[PRON]:292
+اته	S00052	diac:َاتُهُ caphi:aa_t_u_h_u gloss:its/his bw:ات/NSUFF_FEM_PL+ُ/CASE_DEF_NOM+هُ/POSS_PRON_3MS form_gen:f form_num:p stt:c cas:n enc0:3ms_poss source:lex d3seg:َاتُ_+هُ atbseg:َاتُ_+هُ d3tok:َاتُ_+هُ atbtok:َاتُ_+هُ cm_suff_ids:[NSuff.XXCN]:281+[PRON]:294
+اتهما	S00052	diac:َاتُهُمَا caphi:aa_t_u_h_u_m_aa gloss:their bw:ات/NSUFF_FEM_PL+ُ/CASE_DEF_NOM+هُما/POSS_PRON_3D form_gen:f form_num:p stt:c cas:n enc0:3d_poss source:lex d3seg:َاتُ_+هُمَا atbseg:َاتُ_+هُمَا d3tok:َاتُ_+هُمَا atbtok:َاتُ_+هُمَا cm_suff_ids:[NSuff.XXCN]:281+[PRON]:297
+اتهن	S00052	diac:َاتُهُنَّ caphi:aa_t_u_h_u_n_n_a gloss:their bw:ات/NSUFF_FEM_PL+ُ/CASE_DEF_NOM+هُنَّ/POSS_PRON_3FP form_gen:f form_num:p stt:c cas:n enc0:3fp_poss source:lex d3seg:َاتُ_+هُنَّ atbseg:َاتُ_+هُنَّ d3tok:َاتُ_+هُنَّ atbtok:َاتُ_+هُنَّ cm_suff_ids:[NSuff.XXCN]:281+[PRON]:299
+اتهم	S00052	diac:َاتُهُم caphi:aa_t_u_h_u_m gloss:their bw:ات/NSUFF_FEM_PL+ُ/CASE_DEF_NOM+هُم/POSS_PRON_3MP form_gen:f form_num:p stt:c cas:n enc0:3mp_poss source:lex d3seg:َاتُ_+هُم atbseg:َاتُ_+هُم d3tok:َاتُ_+هُم atbtok:َاتُ_+هُم cm_suff_ids:[NSuff.XXCN]:281+[PRON]:301
+اتها	S00053	diac:َاتُهَا caphi:aa_t_u_h_aa gloss:its/their/her bw:ات/NSUFF_FEM_PL+ُ/CASE_DEF_NOM+ها/POSS_PRON_3FS form_gen:f form_num:p stt:c cas:n enc0:3fs_poss source:lex d3seg:َاتُ_+هَا atbseg:َاتُ_+هَا d3tok:َاتُ_+هَا atbtok:َاتُ_+هَا cm_suff_ids:[NSuff.XXCN]:281+[PRON]:295
+اتك	S00053	diac:َاتُكَ caphi:aa_t_u_k_a gloss:your_[masc.sg.] bw:ات/NSUFF_FEM_PL+ُ/CASE_DEF_NOM+كَ/POSS_PRON_2MS form_gen:f form_num:p stt:c cas:n enc0:2ms_poss source:lex d3seg:َاتُ_+كَ atbseg:َاتُ_+كَ d3tok:َاتُ_+كَ atbtok:َاتُ_+كَ cm_suff_ids:[NSuff.XXCN]:281+[PRON]:302
+اتك	S00053	diac:َاتُكِ caphi:aa_t_u_k_i gloss:your_[fem.sg.] bw:ات/NSUFF_FEM_PL+ُ/CASE_DEF_NOM+كِ/POSS_PRON_2FS form_gen:f form_num:p stt:c cas:n enc0:2fs_poss source:lex d3seg:َاتُ_+كِ atbseg:َاتُ_+كِ d3tok:َاتُ_+كِ atbtok:َاتُ_+كِ cm_suff_ids:[NSuff.XXCN]:281+[PRON]:303
+اتكما	S00053	diac:َاتُكُمَا caphi:aa_t_u_k_u_m_aa gloss:your_[du.] bw:ات/NSUFF_FEM_PL+ُ/CASE_DEF_NOM+كُما/POSS_PRON_2D form_gen:f form_num:p stt:c cas:n enc0:2d_poss source:lex d3seg:َاتُ_+كُمَا atbseg:َاتُ_+كُمَا d3tok:َاتُ_+كُمَا atbtok:َاتُ_+كُمَا cm_suff_ids:[NSuff.XXCN]:281+[PRON]:304
+اتكم	S00053	diac:َاتُكُم caphi:aa_t_u_k_u_m gloss:your_[masc.pl.] bw:ات/NSUFF_FEM_PL+ُ/CASE_DEF_NOM+كُم/POSS_PRON_2MP form_gen:f form_num:p stt:c cas:n enc0:2mp_poss source:lex d3seg:َاتُ_+كُم atbseg:َاتُ_+كُم d3tok:َاتُ_+كُم atbtok:َاتُ_+كُم cm_suff_ids:[NSuff.XXCN]:281+[PRON]:305
+اتكن	S00053	diac:َاتُكُنَّ caphi:aa_t_u_k_u_n_n_a gloss:your_[fem.pl.] bw:ات/NSUFF_FEM_PL+ُ/CASE_DEF_NOM+كُنَّ/POSS_PRON_2FP form_gen:f form_num:p stt:c cas:n enc0:2fp_poss source:lex d3seg:َاتُ_+كُنَّ atbseg:َاتُ_+كُنَّ d3tok:َاتُ_+كُنَّ atbtok:َاتُ_+كُنَّ cm_suff_ids:[NSuff.XXCN]:281+[PRON]:306
+اتنا	S00053	diac:َاتُنَا caphi:aa_t_u_n_aa gloss:our bw:ات/NSUFF_FEM_PL+ُ/CASE_DEF_NOM+نا/POSS_PRON_1P form_gen:f form_num:p stt:c cas:n enc0:1p_poss source:lex d3seg:َاتُ_+نَا atbseg:َاتُ_+نَا d3tok:َاتُ_+نَا atbtok:َاتُ_+نَا cm_suff_ids:[NSuff.XXCN]:281+[PRON]:310
+ي	S00054	diac:ِي caphi:ii gloss:my bw:(null)/CASE_DEF_ACC+ِي/POSS_PRON_1S form_gen:m form_num:s stt:c cas:a enc0:1s_poss source:lex d3seg:_+ِي atbseg:_+ِي d3tok:_+ِي atbtok:_+ِي cm_suff_ids:[NSuff.XXCA]:148+[PRON]:309
+	S00055	diac:َ caphi:a gloss: bw:َ/CASE_DEF_ACC form_gen:m form_num:s stt:c cas:a enc0:0 source:lex d3seg:َ atbseg:َ d3tok:َ atbtok:َ cm_suff_ids:[NSuff.XXCA]:149+[PRON]:292
+ه	S00056	diac:َهُ caphi:a_h_u gloss:its/his bw:َ/CASE_DEF_ACC+هُ/POSS_PRON_3MS form_gen:m form_num:s stt:c cas:a enc0:3ms_poss source:lex d3seg:َ_+هُ atbseg:َ_+هُ d3tok:َ_+هُ atbtok:َ_+هُ cm_suff_ids:[NSuff.XXCA]:149+[PRON]:294
+هما	S00056	diac:َهُمَا caphi:a_h_u_m_aa gloss:their bw:َ/CASE_DEF_ACC+هُما/POSS_PRON_3D form_gen:m form_num:s stt:c cas:a enc0:3d_poss source:lex d3seg:َ_+هُمَا atbseg:َ_+هُمَا d3tok:َ_+هُمَا atbtok:َ_+هُمَا cm_suff_ids:[NSuff.XXCA]:149+[PRON]:297
+هن	S00056	diac:َهُنَّ caphi:a_h_u_n_n_a gloss:their bw:َ/CASE_DEF_ACC+هُنَّ/POSS_PRON_3FP form_gen:m form_num:s stt:c cas:a enc0:3fp_poss source:lex d3seg:َ_+هُنَّ atbseg:َ_+هُنَّ d3tok:َ_+هُنَّ atbtok:َ_+هُنَّ cm_suff_ids:[NSuff.XXCA]:149+[PRON]:299
+هم	S00056	diac:َهُم caphi:a_h_u_m gloss:their bw:َ/CASE_DEF_ACC+هُم/POSS_PRON_3MP form_gen:m form_num:s stt:c cas:a enc0:3mp_poss source:lex d3seg:َ_+هُم atbseg:َ_+هُم d3tok:َ_+هُم atbtok:َ_+هُم cm_suff_ids:[NSuff.XXCA]:149+[PRON]:301
+ها	S00057	diac:َهَا caphi:a_h_aa gloss:its/their/her bw:َ/CASE_DEF_ACC+ها/POSS_PRON_3FS form_gen:m form_num:s stt:c cas:a enc0:3fs_poss source:lex d3seg:َ_+هَا atbseg:َ_+هَا d3tok:َ_+هَا atbtok:َ_+هَا cm_suff_ids:[NSuff.XXCA]:149+[PRON]:295
+ك	S00057	diac:َكَ caphi:a_k_a gloss:your_[masc.sg.] bw:َ/CASE_DEF_ACC+كَ/POSS_PRON_2MS form_gen:m form_num:s stt:c cas:a enc0:2ms_poss source:lex d3seg:َ_+كَ atbseg:َ_+كَ d3tok:َ_+كَ atbtok:َ_+كَ cm_suff_ids:[NSuff.XXCA]:149+[PRON]:302
+ك	S00057	diac:َكِ caphi:a_k_i gloss:your_[fem.sg.] bw:َ/CASE_DEF_ACC+كِ/POSS_PRON_2FS form_gen:m form_num:s stt:c cas:a enc0:2fs_poss source:lex d3seg:َ_+كِ atbseg:َ_+كِ d3tok:َ_+كِ atbtok:َ_+كِ cm_suff_ids:[NSuff.XXCA]:149+[PRON]:303
+كما	S00057	diac:َكُمَا caphi:a_k_u_m_aa gloss:your_[du.] bw:َ/CASE_DEF_ACC+كُما/POSS_PRON_2D form_gen:m form_num:s stt:c cas:a enc0:2d_poss source:lex d3seg:َ_+كُمَا atbseg:َ_+كُمَا d3tok:َ_+كُمَا atbtok:َ_+كُمَا cm_suff_ids:[NSuff.XXCA]:149+[PRON]:304
+كم	S00057	diac:َكُم caphi:a_k_u_m gloss:your_[masc.pl.] bw:َ/CASE_DEF_ACC+كُم/POSS_PRON_2MP form_gen:m form_num:s stt:c cas:a enc0:2mp_poss source:lex d3seg:َ_+كُم atbseg:َ_+كُم d3tok:َ_+كُم atbtok:َ_+كُم cm_suff_ids:[NSuff.XXCA]:149+[PRON]:305
+كن	S00057	diac:َكُنَّ caphi:a_k_u_n_n_a gloss:your_[fem.pl.] bw:َ/CASE_DEF_ACC+كُنَّ/POSS_PRON_2FP form_gen:m form_num:s stt:c cas:a enc0:2fp_poss source:lex d3seg:َ_+كُنَّ atbseg:َ_+كُنَّ d3tok:َ_+كُنَّ atbtok:َ_+كُنَّ cm_suff_ids:[NSuff.XXCA]:149+[PRON]:306
+نا	S00057	diac:َنَا caphi:a_n_aa gloss:our bw:َ/CASE_DEF_ACC+نا/POSS_PRON_1P form_gen:m form_num:s stt:c cas:a enc0:1p_poss source:lex d3seg:َ_+نَا atbseg:َ_+نَا d3tok:َ_+نَا atbtok:َ_+نَا cm_suff_ids:[NSuff.XXCA]:149+[PRON]:310
+ي	S00058	diac:َيَّ caphi:a_y_y_a gloss:my bw:َيْ/NSUFF_MASC_DU_ACC_POSS+ِي/POSS_PRON_1S form_gen:m form_num:d stt:c cas:a enc0:1s_poss source:lex d3seg:َي_+َّ atbseg:َي_+َّ d3tok:َي_+ِي atbtok:َي_+ِي cm_suff_ids:[NSuff.XXCA]:177+[PRON]:308
+ي	S00059	diac:َيْ caphi:a_y gloss: bw:َيْ/NSUFF_MASC_DU_ACC_POSS form_gen:m form_num:d stt:c cas:a enc0:0 source:lex d3seg:َيْ atbseg:َيْ d3tok:َيْ atbtok:َيْ cm_suff_ids:[NSuff.XXCA]:178+[PRON]:292
+يه	S00060	diac:َيْهِ caphi:a_y_h_i gloss:its/his bw:َيْ/NSUFF_MASC_DU_ACC_POSS+هُ/POSS_PRON_3MS form_gen:m form_num:d stt:c cas:a enc0:3ms_poss source:lex d3seg:َيْ_+هِ atbseg:َيْ_+هِ d3tok:َيْ_+هُ atbtok:َيْ_+هُ cm_suff_ids:[NSuff.XXCA]:178+[PRON]:293
+يهما	S00060	diac:َيْهِمَا caphi:a_y_h_i_m_aa gloss:their bw:َيْ/NSUFF_MASC_DU_ACC_POSS+هُما/POSS_PRON_3D form_gen:m form_num:d stt:c cas:a enc0:3d_poss source:lex d3seg:َيْ_+هِمَا atbseg:َيْ_+هِمَا d3tok:َيْ_+هُمَا atbtok:َيْ_+هُمَا cm_suff_ids:[NSuff.XXCA]:178+[PRON]:296
+يهن	S00060	diac:َيْهِنَّ caphi:a_y_h_i_n_n_a gloss:their bw:َيْ/NSUFF_MASC_DU_ACC_POSS+هُنَّ/POSS_PRON_3FP form_gen:m form_num:d stt:c cas:a enc0:3fp_poss source:lex d3seg:َيْ_+هِنَّ atbseg:َيْ_+هِنَّ d3tok:َيْ_+هُنَّ atbtok:َيْ_+هُنَّ cm_suff_ids:[NSuff.XXCA]:178+[PRON]:298
+يهم	S00060	diac:َيْهِم caphi:a_y_h_i_m gloss:their bw:َيْ/NSUFF_MASC_DU_ACC_POSS+هُم/POSS_PRON_3MP form_gen:m form_num:d stt:c cas:a enc0:3mp_poss source:lex d3seg:َيْ_+هِم atbseg:َيْ_+هِم d3tok:َيْ_+هُم atbtok:َيْ_+هُم cm_suff_ids:[NSuff.XXCA]:178+[PRON]:300
+يها	S00061	diac:َيْهَا caphi:a_y_h_aa gloss:its/their/her bw:َيْ/NSUFF_MASC_DU_ACC_POSS+ها/POSS_PRON_3FS form_gen:m form_num:d stt:c cas:a enc0:3fs_poss source:lex d3seg:َيْ_+هَا atbseg:َيْ_+هَا d3tok:َيْ_+هَا atbtok:َيْ_+هَا cm_suff_ids:[NSuff.XXCA]:178+[PRON]:295
+يك	S00061	diac:َيْكَ caphi:a_y_k_a gloss:your_[masc.sg.] bw:َيْ/NSUFF_MASC_DU_ACC_POSS+كَ/POSS_PRON_2MS form_gen:m form_num:d stt:c cas:a enc0:2ms_poss source:lex d3seg:َيْ_+كَ atbseg:َيْ_+كَ d3tok:َيْ_+كَ atbtok:َيْ_+كَ cm_suff_ids:[NSuff.XXCA]:178+[PRON]:302
+يك	S00061	diac:َيْكِ caphi:a_y_k_i gloss:your_[fem.sg.] bw:َيْ/NSUFF_MASC_DU_ACC_POSS+كِ/POSS_PRON_2FS form_gen:m form_num:d stt:c cas:a enc0:2fs_poss source:lex d3seg:َيْ_+كِ atbseg:َيْ_+كِ d3tok:َيْ_+كِ atbtok:َيْ_+كِ cm_suff_ids:[NSuff.XXCA]:178+[PRON]:303
+يكما	S00061	diac:َيْكُمَا caphi:a_y_k_u_m_aa gloss:your_[du.] bw:َيْ/NSUFF_MASC_DU_ACC_POSS+كُما/POSS_PRON_2D form_gen:m form_num:d stt:c cas:a enc0:2d_poss source:lex d3seg:َيْ_+كُمَا atbseg:َيْ_+كُمَا d3tok:َيْ_+كُمَا atbtok:َيْ_+كُمَا cm_suff_ids:[NSuff.XXCA]:178+[PRON]:304
+يكم	S00061	diac:َيْكُم caphi:a_y_k_u_m gloss:your_[masc.pl.] bw:َيْ/NSUFF_MASC_DU_ACC_POSS+كُم/POSS_PRON_2MP form_gen:m form_num:d stt:c cas:a enc0:2mp_poss source:lex d3seg:َيْ_+كُم atbseg:َيْ_+كُم d3tok:َيْ_+كُم atbtok:َيْ_+كُم cm_suff_ids:[NSuff.XXCA]:178+[PRON]:305
+يكن	S00061	diac:َيْكُنَّ caphi:a_y_k_u_n_n_a gloss:your_[fem.pl.] bw:َيْ/NSUFF_MASC_DU_ACC_POSS+كُنَّ/POSS_PRON_2FP form_gen:m form_num:d stt:c cas:a enc0:2fp_poss source:lex d3seg:َيْ_+كُنَّ atbseg:َيْ_+كُنَّ d3tok:َيْ_+كُنَّ atbtok:َيْ_+كُنَّ cm_suff_ids:[NSuff.XXCA]:178+[PRON]:306
+ينا	S00061	diac:َيْنَا caphi:a_y_n_aa gloss:our bw:َيْ/NSUFF_MASC_DU_ACC_POSS+نا/POSS_PRON_1P form_gen:m form_num:d stt:c cas:a enc0:1p_poss source:lex d3seg:َيْ_+نَا atbseg:َيْ_+نَا d3tok:َيْ_+نَا atbtok:َيْ_+نَا cm_suff_ids:[NSuff.XXCA]:178+[PRON]:310
+تي	S00062	diac:َتِي caphi:a_t_ii gloss:my bw:َة/NSUFF_FEM_SG+ِي/POSS_PRON_1S form_gen:f form_num:s stt:c cas:a enc0:1s_poss source:lex d3seg:َت_+ِي atbseg:َت_+ِي d3tok:َة_+ِي atbtok:َة_+ِي cm_suff_ids:[NSuff.XXCA]:240+[PRON]:309
+ته	S00063	diac:َتَهُ caphi:a_t_a_h_u gloss:its/his bw:َة/NSUFF_FEM_SG+َ/CASE_DEF_ACC+هُ/POSS_PRON_3MS form_gen:f form_num:s stt:c cas:a enc0:3ms_poss source:lex d3seg:َتَ_+هُ atbseg:َتَ_+هُ d3tok:َةَ_+هُ atbtok:َةَ_+هُ cm_suff_ids:[NSuff.XXCA]:241+[PRON]:294
+تهما	S00063	diac:َتَهُمَا caphi:a_t_a_h_u_m_aa gloss:their bw:َة/NSUFF_FEM_SG+َ/CASE_DEF_ACC+هُما/POSS_PRON_3D form_gen:f form_num:s stt:c cas:a enc0:3d_poss source:lex d3seg:َتَ_+هُمَا atbseg:َتَ_+هُمَا d3tok:َةَ_+هُمَا atbtok:َةَ_+هُمَا cm_suff_ids:[NSuff.XXCA]:241+[PRON]:297
+تهن	S00063	diac:َتَهُنَّ caphi:a_t_a_h_u_n_n_a gloss:their bw:َة/NSUFF_FEM_SG+َ/CASE_DEF_ACC+هُنَّ/POSS_PRON_3FP form_gen:f form_num:s stt:c cas:a enc0:3fp_poss source:lex d3seg:َتَ_+هُنَّ atbseg:َتَ_+هُنَّ d3tok:َةَ_+هُنَّ atbtok:َةَ_+هُنَّ cm_suff_ids:[NSuff.XXCA]:241+[PRON]:299
+تهم	S00063	diac:َتَهُم caphi:a_t_a_h_u_m gloss:their bw:َة/NSUFF_FEM_SG+َ/CASE_DEF_ACC+هُم/POSS_PRON_3MP form_gen:f form_num:s stt:c cas:a enc0:3mp_poss source:lex d3seg:َتَ_+هُم atbseg:َتَ_+هُم d3tok:َةَ_+هُم atbtok:َةَ_+هُم cm_suff_ids:[NSuff.XXCA]:241+[PRON]:301
+تها	S00064	diac:َتَهَا caphi:a_t_a_h_aa gloss:its/their/her bw:َة/NSUFF_FEM_SG+َ/CASE_DEF_ACC+ها/POSS_PRON_3FS form_gen:f form_num:s stt:c cas:a enc0:3fs_poss source:lex d3seg:َتَ_+هَا atbseg:َتَ_+هَا d3tok:َةَ_+هَا atbtok:َةَ_+هَا cm_suff_ids:[NSuff.XXCA]:241+[PRON]:295
+تك	S00064	diac:َتَكَ caphi:a_t_a_k_a gloss:your_[masc.sg.] bw:َة/NSUFF_FEM_SG+َ/CASE_DEF_ACC+كَ/POSS_PRON_2MS form_gen:f form_num:s stt:c cas:a enc0:2ms_poss source:lex d3seg:َتَ_+كَ atbseg:َتَ_+كَ d3tok:َةَ_+كَ atbtok:َةَ_+كَ cm_suff_ids:[NSuff.XXCA]:241+[PRON]:302
+تك	S00064	diac:َتَكِ caphi:a_t_a_k_i gloss:your_[fem.sg.] bw:َة/NSUFF_FEM_SG+َ/CASE_DEF_ACC+كِ/POSS_PRON_2FS form_gen:f form_num:s stt:c cas:a enc0:2fs_poss source:lex d3seg:َتَ_+كِ atbseg:َتَ_+كِ d3tok:َةَ_+كِ atbtok:َةَ_+كِ cm_suff_ids:[NSuff.XXCA]:241+[PRON]:303
+تكما	S00064	diac:َتَكُمَا caphi:a_t_a_k_u_m_aa gloss:your_[du.] bw:َة/NSUFF_FEM_SG+َ/CASE_DEF_ACC+كُما/POSS_PRON_2D form_gen:f form_num:s stt:c cas:a enc0:2d_poss source:lex d3seg:َتَ_+كُمَا atbseg:َتَ_+كُمَا d3tok:َةَ_+كُمَا atbtok:َةَ_+كُمَا cm_suff_ids:[NSuff.XXCA]:241+[PRON]:304
+تكم	S00064	diac:َتَكُم caphi:a_t_a_k_u_m gloss:your_[masc.pl.] bw:َة/NSUFF_FEM_SG+َ/CASE_DEF_ACC+كُم/POSS_PRON_2MP form_gen:f form_num:s stt:c cas:a enc0:2mp_poss source:lex d3seg:َتَ_+كُم atbseg:َتَ_+كُم d3tok:َةَ_+كُم atbtok:َةَ_+كُم cm_suff_ids:[NSuff.XXCA]:241+[PRON]:305
+تكن	S00064	diac:َتَكُنَّ caphi:a_t_a_k_u_n_n_a gloss:your_[fem.pl.] bw:َة/NSUFF_FEM_SG+َ/CASE_DEF_ACC+كُنَّ/POSS_PRON_2FP form_gen:f form_num:s stt:c cas:a enc0:2fp_poss source:lex d3seg:َتَ_+كُنَّ atbseg:َتَ_+كُنَّ d3tok:َةَ_+كُنَّ atbtok:َةَ_+كُنَّ cm_suff_ids:[NSuff.XXCA]:241+[PRON]:306
+تنا	S00064	diac:َتَنَا caphi:a_t_a_n_aa gloss:our bw:َة/NSUFF_FEM_SG+َ/CASE_DEF_ACC+نا/POSS_PRON_1P form_gen:f form_num:s stt:c cas:a enc0:1p_poss source:lex d3seg:َتَ_+نَا atbseg:َتَ_+نَا d3tok:َةَ_+نَا atbtok:َةَ_+نَا cm_suff_ids:[NSuff.XXCA]:241+[PRON]:310
+ه	S00065	diac:َةَ caphi:a_t_a gloss: bw:َة/NSUFF_FEM_SG+َ/CASE_DEF_ACC form_gen:f form_num:s stt:c cas:a enc0:0 source:lex d3seg:َةَ atbseg:َةَ d3tok:َةَ atbtok:َةَ cm_suff_ids:[NSuff.XXCA]:242+[PRON]:292
+تي	S00066	diac:َتَيَّ caphi:a_t_a_y_y_a gloss:my bw:َتَيْ/NSUFF_FEM_DU_ACC_POSS+ِي/POSS_PRON_1S form_gen:f form_num:d stt:c cas:a enc0:1s_poss source:lex d3seg:َتَي_+َّ atbseg:َتَي_+َّ d3tok:َتَي_+ِي atbtok:َتَي_+ِي cm_suff_ids:[NSuff.XXCA]:257+[PRON]:308
+تي	S00067	diac:َتَيْ caphi:a_t_a_y gloss: bw:َتَيْ/NSUFF_FEM_DU_ACC_POSS form_gen:f form_num:d stt:c cas:a enc0:0 source:lex d3seg:َتَيْ atbseg:َتَيْ d3tok:َتَيْ atbtok:َتَيْ cm_suff_ids:[NSuff.XXCA]:258+[PRON]:292
+تيه	S00068	diac:َتَيْهِ caphi:a_t_a_y_h_i gloss:its/his bw:َتَيْ/NSUFF_FEM_DU_ACC_POSS+هُ/POSS_PRON_3MS form_gen:f form_num:d stt:c cas:a enc0:3ms_poss source:lex d3seg:َتَيْ_+هِ atbseg:َتَيْ_+هِ d3tok:َتَيْ_+هُ atbtok:َتَيْ_+هُ cm_suff_ids:[NSuff.XXCA]:258+[PRON]:293
+تيهما	S00068	diac:َتَيْهِمَا caphi:a_t_a_y_h_i_m_aa gloss:their bw:َتَيْ/NSUFF_FEM_DU_ACC_POSS+هُما/POSS_PRON_3D form_gen:f form_num:d stt:c cas:a enc0:3d_poss source:lex d3seg:َتَيْ_+هِمَا atbseg:َتَيْ_+هِمَا d3tok:َتَيْ_+هُمَا atbtok:َتَيْ_+هُمَا cm_suff_ids:[NSuff.XXCA]:258+[PRON]:296
+تيهن	S00068	diac:َتَيْهِنَّ caphi:a_t_a_y_h_i_n_n_a gloss:their bw:َتَيْ/NSUFF_FEM_DU_ACC_POSS+هُنَّ/POSS_PRON_3FP form_gen:f form_num:d stt:c cas:a enc0:3fp_poss source:lex d3seg:َتَيْ_+هِنَّ atbseg:َتَيْ_+هِنَّ d3tok:َتَيْ_+هُنَّ atbtok:َتَيْ_+هُنَّ cm_suff_ids:[NSuff.XXCA]:258+[PRON]:298
+تيهم	S00068	diac:َتَيْهِم caphi:a_t_a_y_h_i_m gloss:their bw:َتَيْ/NSUFF_FEM_DU_ACC_POSS+هُم/POSS_PRON_3MP form_gen:f form_num:d stt:c cas:a enc0:3mp_poss source:lex d3seg:َتَيْ_+هِم atbseg:َتَيْ_+هِم d3tok:َتَيْ_+هُم atbtok:َتَيْ_+هُم cm_suff_ids:[NSuff.XXCA]:258+[PRON]:300
+تيها	S00069	diac:َتَيْهَا caphi:a_t_a_y_h_aa gloss:its/their/her bw:َتَيْ/NSUFF_FEM_DU_ACC_POSS+ها/POSS_PRON_3FS form_gen:f form_num:d stt:c cas:a enc0:3fs_poss source:lex d3seg:َتَيْ_+هَا atbseg:َتَيْ_+هَا d3tok:َتَيْ_+هَا atbtok:َتَيْ_+هَا cm_suff_ids:[NSuff.XXCA]:258+[PRON]:295
+تيك	S00069	diac:َتَيْكَ caphi:a_t_a_y_k_a gloss:your_[masc.sg.] bw:َتَيْ/NSUFF_FEM_DU_ACC_POSS+كَ/POSS_PRON_2MS form_gen:f form_num:d stt:c cas:a enc0:2ms_poss source:lex d3seg:َتَيْ_+كَ atbseg:َتَيْ_+كَ d3tok:َتَيْ_+كَ atbtok:َتَيْ_+كَ cm_suff_ids:[NSuff.XXCA]:258+[PRON]:302
+تيك	S00069	diac:َتَيْكِ caphi:a_t_a_y_k_i gloss:your_[fem.sg.] bw:َتَيْ/NSUFF_FEM_DU_ACC_POSS+كِ/POSS_PRON_2FS form_gen:f form_num:d stt:c cas:a enc0:2fs_poss source:lex d3seg:َتَيْ_+كِ atbseg:َتَيْ_+كِ d3tok:َتَيْ_+كِ atbtok:َتَيْ_+كِ cm_suff_ids:[NSuff.XXCA]:258+[PRON]:303
+تيكما	S00069	diac:َتَيْكُمَا caphi:a_t_a_y_k_u_m_aa gloss:your_[du.] bw:َتَيْ/NSUFF_FEM_DU_ACC_POSS+كُما/POSS_PRON_2D form_gen:f form_num:d stt:c cas:a enc0:2d_poss source:lex d3seg:َتَيْ_+كُمَا atbseg:َتَيْ_+كُمَا d3tok:َتَيْ_+كُمَا atbtok:َتَيْ_+كُمَا cm_suff_ids:[NSuff.XXCA]:258+[PRON]:304
+تيكم	S00069	diac:َتَيْكُم caphi:a_t_a_y_k_u_m gloss:your_[masc.pl.] bw:َتَيْ/NSUFF_FEM_DU_ACC_POSS+كُم/POSS_PRON_2MP form_gen:f form_num:d stt:c cas:a enc0:2mp_poss source:lex d3seg:َتَيْ_+كُم atbseg:َتَيْ_+كُم d3tok:َتَيْ_+كُم atbtok:َتَيْ_+كُم cm_suff_ids:[NSuff.XXCA]:258+[PRON]:305
+تيكن	S00069	diac:َتَيْكُنَّ caphi:a_t_a_y_k_u_n_n_a gloss:your_[fem.pl.] bw:َتَيْ/NSUFF_FEM_DU_ACC_POSS+كُنَّ/POSS_PRON_2FP form_gen:f form_num:d stt:c cas:a enc0:2fp_poss source:lex d3seg:َتَيْ_+كُنَّ atbseg:َتَيْ_+كُنَّ d3tok:َتَيْ_+كُنَّ atbtok:َتَيْ_+كُنَّ cm_suff_ids:[NSuff.XXCA]:258+[PRON]:306
+تينا	S00069	diac:َتَيْنَا caphi:a_t_a_y_n_aa gloss:our bw:َتَيْ/NSUFF_FEM_DU_ACC_POSS+نا/POSS_PRON_1P form_gen:f form_num:d stt:c cas:a enc0:1p_poss source:lex d3seg:َتَيْ_+نَا atbseg:َتَيْ_+نَا d3tok:َتَيْ_+نَا atbtok:َتَيْ_+نَا cm_suff_ids:[NSuff.XXCA]:258+[PRON]:310
+اتي	S00070	diac:َاتِي caphi:aa_t_ii gloss:my bw:ات/NSUFF_FEM_PL+(null)/CASE_DEF_ACC+ِي/POSS_PRON_1S form_gen:f form_num:p stt:c cas:a enc0:1s_poss source:lex d3seg:َات_+ِي atbseg:َات_+ِي d3tok:َات_+ِي atbtok:َات_+ِي cm_suff_ids:[NSuff.XXCA]:284+[PRON]:309
+ات	S00071	diac:َاتِ caphi:aa_t_i gloss: bw:ات/NSUFF_FEM_PL+ِ/CASE_DEF_ACC form_gen:f form_num:p stt:c cas:a enc0:0 source:lex d3seg:َاتِ atbseg:َاتِ d3tok:َاتِ atbtok:َاتِ cm_suff_ids:[NSuff.XXCA]:285+[PRON]:292
+اته	S00072	diac:َاتِهِ caphi:aa_t_i_h_i gloss:its/his bw:ات/NSUFF_FEM_PL+ِ/CASE_DEF_ACC+هُ/POSS_PRON_3MS form_gen:f form_num:p stt:c cas:a enc0:3ms_poss source:lex d3seg:َاتِ_+هِ atbseg:َاتِ_+هِ d3tok:َاتِ_+هُ atbtok:َاتِ_+هُ cm_suff_ids:[NSuff.XXCA]:285+[PRON]:293
+اتهما	S00072	diac:َاتِهِمَا caphi:aa_t_i_h_i_m_aa gloss:their bw:ات/NSUFF_FEM_PL+ِ/CASE_DEF_ACC+هُما/POSS_PRON_3D form_gen:f form_num:p stt:c cas:a enc0:3d_poss source:lex d3seg:َاتِ_+هِمَا atbseg:َاتِ_+هِمَا d3tok:َاتِ_+هُمَا atbtok:َاتِ_+هُمَا cm_suff_ids:[NSuff.XXCA]:285+[PRON]:296
+اتهن	S00072	diac:َاتِهِنَّ caphi:aa_t_i_h_i_n_n_a gloss:their bw:ات/NSUFF_FEM_PL+ِ/CASE_DEF_ACC+هُنَّ/POSS_PRON_3FP form_gen:f form_num:p stt:c cas:a enc0:3fp_poss source:lex d3seg:َاتِ_+هِنَّ atbseg:َاتِ_+هِنَّ d3tok:َاتِ_+هُنَّ atbtok:َاتِ_+هُنَّ cm_suff_ids:[NSuff.XXCA]:285+[PRON]:298
+اتهم	S00072	diac:َاتِهِم caphi:aa_t_i_h_i_m gloss:their bw:ات/NSUFF_FEM_PL+ِ/CASE_DEF_ACC+هُم/POSS_PRON_3MP form_gen:f form_num:p stt:c cas:a enc0:3mp_poss source:lex d3seg:َاتِ_+هِم atbseg:َاتِ_+هِم d3tok:َاتِ_+هُم atbtok:َاتِ_+هُم cm_suff_ids:[NSuff.XXCA]:285+[PRON]:300
+اتها	S00073	diac:َاتِهَا caphi:aa_t_i_h_aa gloss:its/their/her bw:ات/NSUFF_FEM_PL+ِ/CASE_DEF_ACC+ها/POSS_PRON_3FS form_gen:f form_num:p stt:c cas:a enc0:3fs_poss source:lex d3seg:َاتِ_+هَا atbseg:َاتِ_+هَا d3tok:َاتِ_+هَا atbtok:َاتِ_+هَا cm_suff_ids:[NSuff.XXCA]:285+[PRON]:295
+اتك	S00073	diac:َاتِكَ caphi:aa_t_i_k_a gloss:your_[masc.sg.] bw:ات/NSUFF_FEM_PL+ِ/CASE_DEF_ACC+كَ/POSS_PRON_2MS form_gen:f form_num:p stt:c cas:a enc0:2ms_poss source:lex d3seg:َاتِ_+كَ atbseg:َاتِ_+كَ d3tok:َاتِ_+كَ atbtok:َاتِ_+كَ cm_suff_ids:[NSuff.XXCA]:285+[PRON]:302
+اتك	S00073	diac:َاتِكِ caphi:aa_t_i_k_i gloss:your_[fem.sg.] bw:ات/NSUFF_FEM_PL+ِ/CASE_DEF_ACC+كِ/POSS_PRON_2FS form_gen:f form_num:p stt:c cas:a enc0:2fs_poss source:lex d3seg:َاتِ_+كِ atbseg:َاتِ_+كِ d3tok:َاتِ_+كِ atbtok:َاتِ_+كِ cm_suff_ids:[NSuff.XXCA]:285+[PRON]:303
+اتكما	S00073	diac:َاتِكُمَا caphi:aa_t_i_k_u_m_aa gloss:your_[du.] bw:ات/NSUFF_FEM_PL+ِ/CASE_DEF_ACC+كُما/POSS_PRON_2D form_gen:f form_num:p stt:c cas:a enc0:2d_poss source:lex d3seg:َاتِ_+كُمَا atbseg:َاتِ_+كُمَا d3tok:َاتِ_+كُمَا atbtok:َاتِ_+كُمَا cm_suff_ids:[NSuff.XXCA]:285+[PRON]:304
+اتكم	S00073	diac:َاتِكُم caphi:aa_t_i_k_u_m gloss:your_[masc.pl.] bw:ات/NSUFF_FEM_PL+ِ/CASE_DEF_ACC+كُم/POSS_PRON_2MP form_gen:f form_num:p stt:c cas:a enc0:2mp_poss source:lex d3seg:َاتِ_+كُم atbseg:َاتِ_+كُم d3tok:َاتِ_+كُم atbtok:َاتِ_+كُم cm_suff_ids:[NSuff.XXCA]:285+[PRON]:305
+اتكن	S00073	diac:َاتِكُنَّ caphi:aa_t_i_k_u_n_n_a gloss:your_[fem.pl.] bw:ات/NSUFF_FEM_PL+ِ/CASE_DEF_ACC+كُنَّ/POSS_PRON_2FP form_gen:f form_num:p stt:c cas:a enc0:2fp_poss source:lex d3seg:َاتِ_+كُنَّ atbseg:َاتِ_+كُنَّ d3tok:َاتِ_+كُنَّ atbtok:َاتِ_+كُنَّ cm_suff_ids:[NSuff.XXCA]:285+[PRON]:306
+اتنا	S00073	diac:َاتِنَا caphi:aa_t_i_n_aa gloss:our bw:ات/NSUFF_FEM_PL+ِ/CASE_DEF_ACC+نا/POSS_PRON_1P form_gen:f form_num:p stt:c cas:a enc0:1p_poss source:lex d3seg:َاتِ_+نَا atbseg:َاتِ_+نَا d3tok:َاتِ_+نَا atbtok:َاتِ_+نَا cm_suff_ids:[NSuff.XXCA]:285+[PRON]:310
+ي	S00074	diac:ِي caphi:ii gloss:my bw:(null)/CASE_DEF_GEN+ِي/POSS_PRON_1S form_gen:m form_num:s stt:c cas:g enc0:1s_poss source:lex d3seg:_+ِي atbseg:_+ِي d3tok:_+ِي atbtok:_+ِي cm_suff_ids:[NSuff.XXCG]:154+[PRON]:309
+	S00075	diac:ِ caphi:i gloss: bw:ِ/CASE_DEF_GEN form_gen:m form_num:s stt:c cas:g enc0:0 source:lex d3seg:ِ atbseg:ِ d3tok:ِ atbtok:ِ cm_suff_ids:[NSuff.XXCG]:155+[PRON]:292
+ه	S00076	diac:ِهِ caphi:i_h_i gloss:its/his bw:ِ/CASE_DEF_GEN+هُ/POSS_PRON_3MS form_gen:m form_num:s stt:c cas:g enc0:3ms_poss source:lex d3seg:ِ_+هِ atbseg:ِ_+هِ d3tok:ِ_+هُ atbtok:ِ_+هُ cm_suff_ids:[NSuff.XXCG]:155+[PRON]:293
+هما	S00076	diac:ِهِمَا caphi:i_h_i_m_aa gloss:their bw:ِ/CASE_DEF_GEN+هُما/POSS_PRON_3D form_gen:m form_num:s stt:c cas:g enc0:3d_poss source:lex d3seg:ِ_+هِمَا atbseg:ِ_+هِمَا d3tok:ِ_+هُمَا atbtok:ِ_+هُمَا cm_suff_ids:[NSuff.XXCG]:155+[PRON]:296
+هن	S00076	diac:ِهِنَّ caphi:i_h_i_n_n_a gloss:their bw:ِ/CASE_DEF_GEN+هُنَّ/POSS_PRON_3FP form_gen:m form_num:s stt:c cas:g enc0:3fp_poss source:lex d3seg:ِ_+هِنَّ atbseg:ِ_+هِنَّ d3tok:ِ_+هُنَّ atbtok:ِ_+هُنَّ cm_suff_ids:[NSuff.XXCG]:155+[PRON]:298
+هم	S00076	diac:ِهِم caphi:i_h_i_m gloss:their bw:ِ/CASE_DEF_GEN+هُم/POSS_PRON_3MP form_gen:m form_num:s stt:c cas:g enc0:3mp_poss source:lex d3seg:ِ_+هِم atbseg:ِ_+هِم d3tok:ِ_+هُم atbtok:ِ_+هُم cm_suff_ids:[NSuff.XXCG]:155+[PRON]:300
+ها	S00077	diac:ِهَا caphi:i_h_aa gloss:its/their/her bw:ِ/CASE_DEF_GEN+ها/POSS_PRON_3FS form_gen:m form_num:s stt:c cas:g enc0:3fs_poss source:lex d3seg:ِ_+هَا atbseg:ِ_+هَا d3tok:ِ_+هَا atbtok:ِ_+هَا cm_suff_ids:[NSuff.XXCG]:155+[PRON]:295
+ك	S00077	diac:ِكَ caphi:i_k_a gloss:your_[masc.sg.] bw:ِ/CASE_DEF_GEN+كَ/POSS_PRON_2MS form_gen:m form_num:s stt:c cas:g enc0:2ms_poss source:lex d3seg:ِ_+كَ atbseg:ِ_+كَ d3tok:ِ_+كَ atbtok:ِ_+كَ cm_suff_ids:[NSuff.XXCG]:155+[PRON]:302
+ك	S00077	diac:ِكِ caphi:i_k_i gloss:your_[fem.sg.] bw:ِ/CASE_DEF_GEN+كِ/POSS_PRON_2FS form_gen:m form_num:s stt:c cas:g enc0:2fs_poss source:lex d3seg:ِ_+كِ atbseg:ِ_+كِ d3tok:ِ_+كِ atbtok:ِ_+كِ cm_suff_ids:[NSuff.XXCG]:155+[PRON]:303
+كما	S00077	diac:ِكُمَا caphi:i_k_u_m_aa gloss:your_[du.] bw:ِ/CASE_DEF_GEN+كُما/POSS_PRON_2D form_gen:m form_num:s stt:c cas:g enc0:2d_poss source:lex d3seg:ِ_+كُمَا atbseg:ِ_+كُمَا d3tok:ِ_+كُمَا atbtok:ِ_+كُمَا cm_suff_ids:[NSuff.XXCG]:155+[PRON]:304
+كم	S00077	diac:ِكُم caphi:i_k_u_m gloss:your_[masc.pl.] bw:ِ/CASE_DEF_GEN+كُم/POSS_PRON_2MP form_gen:m form_num:s stt:c cas:g enc0:2mp_poss source:lex d3seg:ِ_+كُم atbseg:ِ_+كُم d3tok:ِ_+كُم atbtok:ِ_+كُم cm_suff_ids:[NSuff.XXCG]:155+[PRON]:305
+كن	S00077	diac:ِكُنَّ caphi:i_k_u_n_n_a gloss:your_[fem.pl.] bw:ِ/CASE_DEF_GEN+كُنَّ/POSS_PRON_2FP form_gen:m form_num:s stt:c cas:g enc0:2fp_poss source:lex d3seg:ِ_+كُنَّ atbseg:ِ_+كُنَّ d3tok:ِ_+كُنَّ atbtok:ِ_+كُنَّ cm_suff_ids:[NSuff.XXCG]:155+[PRON]:306
+نا	S00077	diac:ِنَا caphi:i_n_aa gloss:our bw:ِ/CASE_DEF_GEN+نا/POSS_PRON_1P form_gen:m form_num:s stt:c cas:g enc0:1p_poss source:lex d3seg:ِ_+نَا atbseg:ِ_+نَا d3tok:ِ_+نَا atbtok:ِ_+نَا cm_suff_ids:[NSuff.XXCG]:155+[PRON]:310
+ي	S00078	diac:َيَّ caphi:a_y_y_a gloss:my bw:َيْ/NSUFF_MASC_DU_GEN_POSS+ِي/POSS_PRON_1S form_gen:m form_num:d stt:c cas:g enc0:1s_poss source:lex d3seg:َي_+َّ atbseg:َي_+َّ d3tok:َي_+ِي atbtok:َي_+ِي cm_suff_ids:[NSuff.XXCG]:179+[PRON]:308
+ي	S00079	diac:َيْ caphi:a_y gloss: bw:َيْ/NSUFF_MASC_DU_GEN_POSS form_gen:m form_num:d stt:c cas:g enc0:0 source:lex d3seg:َيْ atbseg:َيْ d3tok:َيْ atbtok:َيْ cm_suff_ids:[NSuff.XXCG]:180+[PRON]:292
+يه	S00080	diac:َيْهِ caphi:a_y_h_i gloss:its/his bw:َيْ/NSUFF_MASC_DU_GEN_POSS+هُ/POSS_PRON_3MS form_gen:m form_num:d stt:c cas:g enc0:3ms_poss source:lex d3seg:َيْ_+هِ atbseg:َيْ_+هِ d3tok:َيْ_+هُ atbtok:َيْ_+هُ cm_suff_ids:[NSuff.XXCG]:180+[PRON]:293
+يهما	S00080	diac:َيْهِمَا caphi:a_y_h_i_m_aa gloss:their bw:َيْ/NSUFF_MASC_DU_GEN_POSS+هُما/POSS_PRON_3D form_gen:m form_num:d stt:c cas:g enc0:3d_poss source:lex d3seg:َيْ_+هِمَا atbseg:َيْ_+هِمَا d3tok:َيْ_+هُمَا atbtok:َيْ_+هُمَا cm_suff_ids:[NSuff.XXCG]:180+[PRON]:296
+يهن	S00080	diac:َيْهِنَّ caphi:a_y_h_i_n_n_a gloss:their bw:َيْ/NSUFF_MASC_DU_GEN_POSS+هُنَّ/POSS_PRON_3FP form_gen:m form_num:d stt:c cas:g enc0:3fp_poss source:lex d3seg:َيْ_+هِنَّ atbseg:َيْ_+هِنَّ d3tok:َيْ_+هُنَّ atbtok:َيْ_+هُنَّ cm_suff_ids:[NSuff.XXCG]:180+[PRON]:298
+يهم	S00080	diac:َيْهِم caphi:a_y_h_i_m gloss:their bw:َيْ/NSUFF_MASC_DU_GEN_POSS+هُم/POSS_PRON_3MP form_gen:m form_num:d stt:c cas:g enc0:3mp_poss source:lex d3seg:َيْ_+هِم atbseg:َيْ_+هِم d3tok:َيْ_+هُم atbtok:َيْ_+هُم cm_suff_ids:[NSuff.XXCG]:180+[PRON]:300
+يها	S00081	diac:َيْهَا caphi:a_y_h_aa gloss:its/their/her bw:َيْ/NSUFF_MASC_DU_GEN_POSS+ها/POSS_PRON_3FS form_gen:m form_num:d stt:c cas:g enc0:3fs_poss source:lex d3seg:َيْ_+هَا atbseg:َيْ_+هَا d3tok:َيْ_+هَا atbtok:َيْ_+هَا cm_suff_ids:[NSuff.XXCG]:180+[PRON]:295
+يك	S00081	diac:َيْكَ caphi:a_y_k_a gloss:your_[masc.sg.] bw:َيْ/NSUFF_MASC_DU_GEN_POSS+كَ/POSS_PRON_2MS form_gen:m form_num:d stt:c cas:g enc0:2ms_poss source:lex d3seg:َيْ_+كَ atbseg:َيْ_+كَ d3tok:َيْ_+كَ atbtok:َيْ_+كَ cm_suff_ids:[NSuff.XXCG]:180+[PRON]:302
+يك	S00081	diac:َيْكِ caphi:a_y_k_i gloss:your_[fem.sg.] bw:َيْ/NSUFF_MASC_DU_GEN_POSS+كِ/POSS_PRON_2FS form_gen:m form_num:d stt:c cas:g enc0:2fs_poss source:lex d3seg:َيْ_+كِ atbseg:َيْ_+كِ d3tok:َيْ_+كِ atbtok:َيْ_+كِ cm_suff_ids:[NSuff.XXCG]:180+[PRON]:303
+يكما	S00081	diac:َيْكُمَا caphi:a_y_k_u_m_aa gloss:your_[du.] bw:َيْ/NSUFF_MASC_DU_GEN_POSS+كُما/POSS_PRON_2D form_gen:m form_num:d stt:c cas:g enc0:2d_poss source:lex d3seg:َيْ_+كُمَا atbseg:َيْ_+كُمَا d3tok:َيْ_+كُمَا atbtok:َيْ_+كُمَا cm_suff_ids:[NSuff.XXCG]:180+[PRON]:304
+يكم	S00081	diac:َيْكُم caphi:a_y_k_u_m gloss:your_[masc.pl.] bw:َيْ/NSUFF_MASC_DU_GEN_POSS+كُم/POSS_PRON_2MP form_gen:m form_num:d stt:c cas:g enc0:2mp_poss source:lex d3seg:َيْ_+كُم atbseg:َيْ_+كُم d3tok:َيْ_+كُم atbtok:َيْ_+كُم cm_suff_ids:[NSuff.XXCG]:180+[PRON]:305
+يكن	S00081	diac:َيْكُنَّ caphi:a_y_k_u_n_n_a gloss:your_[fem.pl.] bw:َيْ/NSUFF_MASC_DU_GEN_POSS+كُنَّ/POSS_PRON_2FP form_gen:m form_num:d stt:c cas:g enc0:2fp_poss source:lex d3seg:َيْ_+كُنَّ atbseg:َيْ_+كُنَّ d3tok:َيْ_+كُنَّ atbtok:َيْ_+كُنَّ cm_suff_ids:[NSuff.XXCG]:180+[PRON]:306
+ينا	S00081	diac:َيْنَا caphi:a_y_n_aa gloss:our bw:َيْ/NSUFF_MASC_DU_GEN_POSS+نا/POSS_PRON_1P form_gen:m form_num:d stt:c cas:g enc0:1p_poss source:lex d3seg:َيْ_+نَا atbseg:َيْ_+نَا d3tok:َيْ_+نَا atbtok:َيْ_+نَا cm_suff_ids:[NSuff.XXCG]:180+[PRON]:310
+ته	S00082	diac:َتِهِ caphi:a_t_i_h_i gloss:its/his bw:َة/NSUFF_FEM_SG+ِ/CASE_DEF_GEN+هُ/POSS_PRON_3MS form_gen:f form_num:s stt:c cas:g enc0:3ms_poss source:lex d3seg:َتِ_+هِ atbseg:َتِ_+هِ d3tok:َةِ_+هُ atbtok:َةِ_+هُ cm_suff_ids:[NSuff.XXCG]:243+[PRON]:293
+تهما	S00082	diac:َتِهِمَا caphi:a_t_i_h_i_m_aa gloss:their bw:َة/NSUFF_FEM_SG+ِ/CASE_DEF_GEN+هُما/POSS_PRON_3D form_gen:f form_num:s stt:c cas:g enc0:3d_poss source:lex d3seg:َتِ_+هِمَا atbseg:َتِ_+هِمَا d3tok:َةِ_+هُمَا atbtok:َةِ_+هُمَا cm_suff_ids:[NSuff.XXCG]:243+[PRON]:296
+تهن	S00082	diac:َتِهِنَّ caphi:a_t_i_h_i_n_n_a gloss:their bw:َة/NSUFF_FEM_SG+ِ/CASE_DEF_GEN+هُنَّ/POSS_PRON_3FP form_gen:f form_num:s stt:c cas:g enc0:3fp_poss source:lex d3seg:َتِ_+هِنَّ atbseg:َتِ_+هِنَّ d3tok:َةِ_+هُنَّ atbtok:َةِ_+هُنَّ cm_suff_ids:[NSuff.XXCG]:243+[PRON]:298
+تهم	S00082	diac:َتِهِم caphi:a_t_i_h_i_m gloss:their bw:َة/NSUFF_FEM_SG+ِ/CASE_DEF_GEN+هُم/POSS_PRON_3MP form_gen:f form_num:s stt:c cas:g enc0:3mp_poss source:lex d3seg:َتِ_+هِم atbseg:َتِ_+هِم d3tok:َةِ_+هُم atbtok:َةِ_+هُم cm_suff_ids:[NSuff.XXCG]:243+[PRON]:300
+تها	S00083	diac:َتِهَا caphi:a_t_i_h_aa gloss:its/their/her bw:َة/NSUFF_FEM_SG+ِ/CASE_DEF_GEN+ها/POSS_PRON_3FS form_gen:f form_num:s stt:c cas:g enc0:3fs_poss source:lex d3seg:َتِ_+هَا atbseg:َتِ_+هَا d3tok:َةِ_+هَا atbtok:َةِ_+هَا cm_suff_ids:[NSuff.XXCG]:243+[PRON]:295
+تك	S00083	diac:َتِكَ caphi:a_t_i_k_a gloss:your_[masc.sg.] bw:َة/NSUFF_FEM_SG+ِ/CASE_DEF_GEN+كَ/POSS_PRON_2MS form_gen:f form_num:s stt:c cas:g enc0:2ms_poss source:lex d3seg:َتِ_+كَ atbseg:َتِ_+كَ d3tok:َةِ_+كَ atbtok:َةِ_+كَ cm_suff_ids:[NSuff.XXCG]:243+[PRON]:302
+تك	S00083	diac:َتِكِ caphi:a_t_i_k_i gloss:your_[fem.sg.] bw:َة/NSUFF_FEM_SG+ِ/CASE_DEF_GEN+كِ/POSS_PRON_2FS form_gen:f form_num:s stt:c cas:g enc0:2fs_poss source:lex d3seg:َتِ_+كِ atbseg:َتِ_+كِ d3tok:َةِ_+كِ atbtok:َةِ_+كِ cm_suff_ids:[NSuff.XXCG]:243+[PRON]:303
+تكما	S00083	diac:َتِكُمَا caphi:a_t_i_k_u_m_aa gloss:your_[du.] bw:َة/NSUFF_FEM_SG+ِ/CASE_DEF_GEN+كُما/POSS_PRON_2D form_gen:f form_num:s stt:c cas:g enc0:2d_poss source:lex d3seg:َتِ_+كُمَا atbseg:َتِ_+كُمَا d3tok:َةِ_+كُمَا atbtok:َةِ_+كُمَا cm_suff_ids:[NSuff.XXCG]:243+[PRON]:304
+تكم	S00083	diac:َتِكُم caphi:a_t_i_k_u_m gloss:your_[masc.pl.] bw:َة/NSUFF_FEM_SG+ِ/CASE_DEF_GEN+كُم/POSS_PRON_2MP form_gen:f form_num:s stt:c cas:g enc0:2mp_poss source:lex d3seg:َتِ_+كُم atbseg:َتِ_+كُم d3tok:َةِ_+كُم atbtok:َةِ_+كُم cm_suff_ids:[NSuff.XXCG]:243+[PRON]:305
+تكن	S00083	diac:َتِكُنَّ caphi:a_t_i_k_u_n_n_a gloss:your_[fem.pl.] bw:َة/NSUFF_FEM_SG+ِ/CASE_DEF_GEN+كُنَّ/POSS_PRON_2FP form_gen:f form_num:s stt:c cas:g enc0:2fp_poss source:lex d3seg:َتِ_+كُنَّ atbseg:َتِ_+كُنَّ d3tok:َةِ_+كُنَّ atbtok:َةِ_+كُنَّ cm_suff_ids:[NSuff.XXCG]:243+[PRON]:306
+تنا	S00083	diac:َتِنَا caphi:a_t_i_n_aa gloss:our bw:َة/NSUFF_FEM_SG+ِ/CASE_DEF_GEN+نا/POSS_PRON_1P form_gen:f form_num:s stt:c cas:g enc0:1p_poss source:lex d3seg:َتِ_+نَا atbseg:َتِ_+نَا d3tok:َةِ_+نَا atbtok:َةِ_+نَا cm_suff_ids:[NSuff.XXCG]:243+[PRON]:310
+تي	S00084	diac:َتِي caphi:a_t_ii gloss:my bw:َة/NSUFF_FEM_SG+ِي/POSS_PRON_1S form_gen:f form_num:s stt:c cas:g enc0:1s_poss source:lex d3seg:َت_+ِي atbseg:َت_+ِي d3tok:َة_+ِي atbtok:َة_+ِي cm_suff_ids:[NSuff.XXCG]:244+[PRON]:309
+ه	S00085	diac:َةِ caphi:a_t_i gloss: bw:َة/NSUFF_FEM_SG+ِ/CASE_DEF_GEN form_gen:f form_num:s stt:c cas:g enc0:0 source:lex d3seg:َةِ atbseg:َةِ d3tok:َةِ atbtok:َةِ cm_suff_ids:[NSuff.XXCG]:245+[PRON]:292
+تي	S00086	diac:َتَيَّ caphi:a_t_a_y_y_a gloss:my bw:َتَيْ/NSUFF_FEM_DU_GEN_POSS+ِي/POSS_PRON_1S form_gen:f form_num:d stt:c cas:g enc0:1s_poss source:lex d3seg:َتَي_+َّ atbseg:َتَي_+َّ d3tok:َتَي_+ِي atbtok:َتَي_+ِي cm_suff_ids:[NSuff.XXCG]:259+[PRON]:308
+تي	S00087	diac:َتَيْ caphi:a_t_a_y gloss: bw:َتَيْ/NSUFF_FEM_DU_GEN_POSS form_gen:f form_num:d stt:c cas:g enc0:0 source:lex d3seg:َتَيْ atbseg:َتَيْ d3tok:َتَيْ atbtok:َتَيْ cm_suff_ids:[NSuff.XXCG]:260+[PRON]:292
+تيه	S00088	diac:َتَيْهِ caphi:a_t_a_y_h_i gloss:its/his bw:َتَيْ/NSUFF_FEM_DU_GEN_POSS+هُ/POSS_PRON_3MS form_gen:f form_num:d stt:c cas:g enc0:3ms_poss source:lex d3seg:َتَيْ_+هِ atbseg:َتَيْ_+هِ d3tok:َتَيْ_+هُ atbtok:َتَيْ_+هُ cm_suff_ids:[NSuff.XXCG]:260+[PRON]:293
+تيهما	S00088	diac:َتَيْهِمَا caphi:a_t_a_y_h_i_m_aa gloss:their bw:َتَيْ/NSUFF_FEM_DU_GEN_POSS+هُما/POSS_PRON_3D form_gen:f form_num:d stt:c cas:g enc0:3d_poss source:lex d3seg:َتَيْ_+هِمَا atbseg:َتَيْ_+هِمَا d3tok:َتَيْ_+هُمَا atbtok:َتَيْ_+هُمَا cm_suff_ids:[NSuff.XXCG]:260+[PRON]:296
+تيهن	S00088	diac:َتَيْهِنَّ caphi:a_t_a_y_h_i_n_n_a gloss:their bw:َتَيْ/NSUFF_FEM_DU_GEN_POSS+هُنَّ/POSS_PRON_3FP form_gen:f form_num:d stt:c cas:g enc0:3fp_poss source:lex d3seg:َتَيْ_+هِنَّ atbseg:َتَيْ_+هِنَّ d3tok:َتَيْ_+هُنَّ atbtok:َتَيْ_+هُنَّ cm_suff_ids:[NSuff.XXCG]:260+[PRON]:298
+تيهم	S00088	diac:َتَيْهِم caphi:a_t_a_y_h_i_m gloss:their bw:َتَيْ/NSUFF_FEM_DU_GEN_POSS+هُم/POSS_PRON_3MP form_gen:f form_num:d stt:c cas:g enc0:3mp_poss source:lex d3seg:َتَيْ_+هِم atbseg:َتَيْ_+هِم d3tok:َتَيْ_+هُم atbtok:َتَيْ_+هُم cm_suff_ids:[NSuff.XXCG]:260+[PRON]:300
+تيها	S00089	diac:َتَيْهَا caphi:a_t_a_y_h_aa gloss:its/their/her bw:َتَيْ/NSUFF_FEM_DU_GEN_POSS+ها/POSS_PRON_3FS form_gen:f form_num:d stt:c cas:g enc0:3fs_poss source:lex d3seg:َتَيْ_+هَا atbseg:َتَيْ_+هَا d3tok:َتَيْ_+هَا atbtok:َتَيْ_+هَا cm_suff_ids:[NSuff.XXCG]:260+[PRON]:295
+تيك	S00089	diac:َتَيْكَ caphi:a_t_a_y_k_a gloss:your_[masc.sg.] bw:َتَيْ/NSUFF_FEM_DU_GEN_POSS+كَ/POSS_PRON_2MS form_gen:f form_num:d stt:c cas:g enc0:2ms_poss source:lex d3seg:َتَيْ_+كَ atbseg:َتَيْ_+كَ d3tok:َتَيْ_+كَ atbtok:َتَيْ_+كَ cm_suff_ids:[NSuff.XXCG]:260+[PRON]:302
+تيك	S00089	diac:َتَيْكِ caphi:a_t_a_y_k_i gloss:your_[fem.sg.] bw:َتَيْ/NSUFF_FEM_DU_GEN_POSS+كِ/POSS_PRON_2FS form_gen:f form_num:d stt:c cas:g enc0:2fs_poss source:lex d3seg:َتَيْ_+كِ atbseg:َتَيْ_+كِ d3tok:َتَيْ_+كِ atbtok:َتَيْ_+كِ cm_suff_ids:[NSuff.XXCG]:260+[PRON]:303
+تيكما	S00089	diac:َتَيْكُمَا caphi:a_t_a_y_k_u_m_aa gloss:your_[du.] bw:َتَيْ/NSUFF_FEM_DU_GEN_POSS+كُما/POSS_PRON_2D form_gen:f form_num:d stt:c cas:g enc0:2d_poss source:lex d3seg:َتَيْ_+كُمَا atbseg:َتَيْ_+كُمَا d3tok:َتَيْ_+كُمَا atbtok:َتَيْ_+كُمَا cm_suff_ids:[NSuff.XXCG]:260+[PRON]:304
+تيكم	S00089	diac:َتَيْكُم caphi:a_t_a_y_k_u_m gloss:your_[masc.pl.] bw:َتَيْ/NSUFF_FEM_DU_GEN_POSS+كُم/POSS_PRON_2MP form_gen:f form_num:d stt:c cas:g enc0:2mp_poss source:lex d3seg:َتَيْ_+كُم atbseg:َتَيْ_+كُم d3tok:َتَيْ_+كُم atbtok:َتَيْ_+كُم cm_suff_ids:[NSuff.XXCG]:260+[PRON]:305
+تيكن	S00089	diac:َتَيْكُنَّ caphi:a_t_a_y_k_u_n_n_a gloss:your_[fem.pl.] bw:َتَيْ/NSUFF_FEM_DU_GEN_POSS+كُنَّ/POSS_PRON_2FP form_gen:f form_num:d stt:c cas:g enc0:2fp_poss source:lex d3seg:َتَيْ_+كُنَّ atbseg:َتَيْ_+كُنَّ d3tok:َتَيْ_+كُنَّ atbtok:َتَيْ_+كُنَّ cm_suff_ids:[NSuff.XXCG]:260+[PRON]:306
+تينا	S00089	diac:َتَيْنَا caphi:a_t_a_y_n_aa gloss:our bw:َتَيْ/NSUFF_FEM_DU_GEN_POSS+نا/POSS_PRON_1P form_gen:f form_num:d stt:c cas:g enc0:1p_poss source:lex d3seg:َتَيْ_+نَا atbseg:َتَيْ_+نَا d3tok:َتَيْ_+نَا atbtok:َتَيْ_+نَا cm_suff_ids:[NSuff.XXCG]:260+[PRON]:310
+اتي	S00090	diac:َاتِي caphi:aa_t_ii gloss:my bw:ات/NSUFF_FEM_PL+(null)/CASE_DEF_GEN+ِي/POSS_PRON_1S form_gen:f form_num:p stt:c cas:g enc0:1s_poss source:lex d3seg:َات_+ِي atbseg:َات_+ِي d3tok:َات_+ِي atbtok:َات_+ِي cm_suff_ids:[NSuff.XXCG]:288+[PRON]:309
+ات	S00091	diac:َاتِ caphi:aa_t_i gloss: bw:ات/NSUFF_FEM_PL+ِ/CASE_DEF_GEN form_gen:f form_num:p stt:c cas:g enc0:0 source:lex d3seg:َاتِ atbseg:َاتِ d3tok:َاتِ atbtok:َاتِ cm_suff_ids:[NSuff.XXCG]:289+[PRON]:292
+اته	S00092	diac:َاتِهِ caphi:aa_t_i_h_i gloss:its/his bw:ات/NSUFF_FEM_PL+ِ/CASE_DEF_GEN+هُ/POSS_PRON_3MS form_gen:f form_num:p stt:c cas:g enc0:3ms_poss source:lex d3seg:َاتِ_+هِ atbseg:َاتِ_+هِ d3tok:َاتِ_+هُ atbtok:َاتِ_+هُ cm_suff_ids:[NSuff.XXCG]:289+[PRON]:293
+اتهما	S00092	diac:َاتِهِمَا caphi:aa_t_i_h_i_m_aa gloss:their bw:ات/NSUFF_FEM_PL+ِ/CASE_DEF_GEN+هُما/POSS_PRON_3D form_gen:f form_num:p stt:c cas:g enc0:3d_poss source:lex d3seg:َاتِ_+هِمَا atbseg:َاتِ_+هِمَا d3tok:َاتِ_+هُمَا atbtok:َاتِ_+هُمَا cm_suff_ids:[NSuff.XXCG]:289+[PRON]:296
+اتهن	S00092	diac:َاتِهِنَّ caphi:aa_t_i_h_i_n_n_a gloss:their bw:ات/NSUFF_FEM_PL+ِ/CASE_DEF_GEN+هُنَّ/POSS_PRON_3FP form_gen:f form_num:p stt:c cas:g enc0:3fp_poss source:lex d3seg:َاتِ_+هِنَّ atbseg:َاتِ_+هِنَّ d3tok:َاتِ_+هُنَّ atbtok:َاتِ_+هُنَّ cm_suff_ids:[NSuff.XXCG]:289+[PRON]:298
+اتهم	S00092	diac:َاتِهِم caphi:aa_t_i_h_i_m gloss:their bw:ات/NSUFF_FEM_PL+ِ/CASE_DEF_GEN+هُم/POSS_PRON_3MP form_gen:f form_num:p stt:c cas:g enc0:3mp_poss source:lex d3seg:َاتِ_+هِم atbseg:َاتِ_+هِم d3tok:َاتِ_+هُم atbtok:َاتِ_+هُم cm_suff_ids:[NSuff.XXCG]:289+[PRON]:300
+اتها	S00093	diac:َاتِهَا caphi:aa_t_i_h_aa gloss:its/their/her bw:ات/NSUFF_FEM_PL+ِ/CASE_DEF_GEN+ها/POSS_PRON_3FS form_gen:f form_num:p stt:c cas:g enc0:3fs_poss source:lex d3seg:َاتِ_+هَا atbseg:َاتِ_+هَا d3tok:َاتِ_+هَا atbtok:َاتِ_+هَا cm_suff_ids:[NSuff.XXCG]:289+[PRON]:295
+اتك	S00093	diac:َاتِكَ caphi:aa_t_i_k_a gloss:your_[masc.sg.] bw:ات/NSUFF_FEM_PL+ِ/CASE_DEF_GEN+كَ/POSS_PRON_2MS form_gen:f form_num:p stt:c cas:g enc0:2ms_poss source:lex d3seg:َاتِ_+كَ atbseg:َاتِ_+كَ d3tok:َاتِ_+كَ atbtok:َاتِ_+كَ cm_suff_ids:[NSuff.XXCG]:289+[PRON]:302
+اتك	S00093	diac:َاتِكِ caphi:aa_t_i_k_i gloss:your_[fem.sg.] bw:ات/NSUFF_FEM_PL+ِ/CASE_DEF_GEN+كِ/POSS_PRON_2FS form_gen:f form_num:p stt:c cas:g enc0:2fs_poss source:lex d3seg:َاتِ_+كِ atbseg:َاتِ_+كِ d3tok:َاتِ_+كِ atbtok:َاتِ_+كِ cm_suff_ids:[NSuff.XXCG]:289+[PRON]:303
+اتكما	S00093	diac:َاتِكُمَا caphi:aa_t_i_k_u_m_aa gloss:your_[du.] bw:ات/NSUFF_FEM_PL+ِ/CASE_DEF_GEN+كُما/POSS_PRON_2D form_gen:f form_num:p stt:c cas:g enc0:2d_poss source:lex d3seg:َاتِ_+كُمَا atbseg:َاتِ_+كُمَا d3tok:َاتِ_+كُمَا atbtok:َاتِ_+كُمَا cm_suff_ids:[NSuff.XXCG]:289+[PRON]:304
+اتكم	S00093	diac:َاتِكُم caphi:aa_t_i_k_u_m gloss:your_[masc.pl.] bw:ات/NSUFF_FEM_PL+ِ/CASE_DEF_GEN+كُم/POSS_PRON_2MP form_gen:f form_num:p stt:c cas:g enc0:2mp_poss source:lex d3seg:َاتِ_+كُم atbseg:َاتِ_+كُم d3tok:َاتِ_+كُم atbtok:َاتِ_+كُم cm_suff_ids:[NSuff.XXCG]:289+[PRON]:305
+اتكن	S00093	diac:َاتِكُنَّ caphi:aa_t_i_k_u_n_n_a gloss:your_[fem.pl.] bw:ات/NSUFF_FEM_PL+ِ/CASE_DEF_GEN+كُنَّ/POSS_PRON_2FP form_gen:f form_num:p stt:c cas:g enc0:2fp_poss source:lex d3seg:َاتِ_+كُنَّ atbseg:َاتِ_+كُنَّ d3tok:َاتِ_+كُنَّ atbtok:َاتِ_+كُنَّ cm_suff_ids:[NSuff.XXCG]:289+[PRON]:306
+اتنا	S00093	diac:َاتِنَا caphi:aa_t_i_n_aa gloss:our bw:ات/NSUFF_FEM_PL+ِ/CASE_DEF_GEN+نا/POSS_PRON_1P form_gen:f form_num:p stt:c cas:g enc0:1p_poss source:lex d3seg:َاتِ_+نَا atbseg:َاتِ_+نَا d3tok:َاتِ_+نَا atbtok:َاتِ_+نَا cm_suff_ids:[NSuff.XXCG]:289+[PRON]:310
+	S00094	diac: caphi: gloss: bw:(null)/CASE_INDEF_U form_gen:m form_num:s stt:i cas:u source:lex d3seg: atbseg: d3tok: atbtok: cm_suff_ids:[NSuff.XXIU]:133
+ين	S00095	diac:َيْن caphi:a_y_n gloss: bw:َيْن/NSUFF_MASC_DU form_gen:m form_num:d stt:i cas:u source:lex d3seg:َيْن atbseg:َيْن d3tok:َيْن atbtok:َيْن cm_suff_ids:[NSuff.XXIU]:169
+ه	S00096	diac:َة caphi:a gloss: bw:َة/NSUFF_FEM_SG form_gen:f form_num:s stt:i cas:u source:lex d3seg:َة atbseg:َة d3tok:َة atbtok:َة cm_suff_ids:[NSuff.XXIU]:224
+تين	S00097	diac:َتَيْن caphi:a_t_a_y_n gloss: bw:َتَيْن/NSUFF_FEM_DU form_gen:f form_num:d stt:i cas:u source:lex d3seg:َتَيْن atbseg:َتَيْن d3tok:َتَيْن atbtok:َتَيْن cm_suff_ids:[NSuff.XXIU]:251
+ات	S00098	diac:َات caphi:aa_t gloss: bw:ات/NSUFF_FEM_PL form_gen:f form_num:p stt:i cas:u source:lex d3seg:َات atbseg:َات d3tok:َات atbtok:َات cm_suff_ids:[NSuff.XXIU]:269
+	S00099	diac: caphi: gloss: bw:(null)/CASE_DEF_U form_gen:m form_num:s stt:d cas:u source:lex d3seg: atbseg: d3tok: atbtok: cm_suff_ids:[NSuff.XXDU]:142
+ين	S00100	diac:َيْن caphi:a_y_n gloss: bw:َيْن/NSUFF_MASC_DU form_gen:m form_num:d stt:d cas:u source:lex d3seg:َيْن atbseg:َيْن d3tok:َيْن atbtok:َيْن cm_suff_ids:[NSuff.XXDU]:174
+ه	S00101	diac:َة caphi:a gloss: bw:َة/NSUFF_FEM_SG form_gen:f form_num:s stt:d cas:u source:lex d3seg:َة atbseg:َة d3tok:َة atbtok:َة cm_suff_ids:[NSuff.XXDU]:230
+تين	S00102	diac:َتَيْن caphi:a_t_a_y_n gloss: bw:َتَيْن/NSUFF_FEM_DU form_gen:f form_num:d stt:d cas:u source:lex d3seg:َتَيْن atbseg:َتَيْن d3tok:َتَيْن atbtok:َتَيْن cm_suff_ids:[NSuff.XXDU]:255
+ات	S00103	diac:َات caphi:aa_t gloss: bw:ات/NSUFF_FEM_PL form_gen:f form_num:p stt:d cas:u source:lex d3seg:َات atbseg:َات d3tok:َات atbtok:َات cm_suff_ids:[NSuff.XXDU]:277
+	S00104	diac: caphi: gloss: bw:(null)/CASE_DEF_U form_gen:m form_num:s stt:c cas:u source:lex d3seg: atbseg: d3tok: atbtok: cm_suff_ids:[NSuff.XXCU]:164
+ين	S00105	diac:َيْن caphi:a_y_n gloss: bw:َيْن/NSUFF_MASC_DU form_gen:m form_num:d stt:c cas:u source:lex d3seg:َيْن atbseg:َيْن d3tok:َيْن atbtok:َيْن cm_suff_ids:[NSuff.XXCU]:181
+ه	S00106	diac:َة caphi:a gloss: bw:َة/NSUFF_FEM_SG form_gen:f form_num:s stt:c cas:u source:lex d3seg:َة atbseg:َة d3tok:َة atbtok:َة cm_suff_ids:[NSuff.XXCU]:247
+تين	S00107	diac:َتَيْن caphi:a_t_a_y_n gloss: bw:َتَيْن/NSUFF_FEM_DU form_gen:f form_num:d stt:c cas:u source:lex d3seg:َتَيْن atbseg:َتَيْن d3tok:َتَيْن atbtok:َتَيْن cm_suff_ids:[NSuff.XXCU]:261
+ات	S00108	diac:َات caphi:aa_t gloss: bw:ات/NSUFF_FEM_PL form_gen:f form_num:p stt:c cas:u source:lex d3seg:َات atbseg:َات d3tok:َات atbtok:َات cm_suff_ids:[NSuff.XXCU]:291
+###STEMS###
+سفير	X00001	diac:سَفِير lex:سَفِير caphi:s_a_f_ii_r gloss:ambassador bw:سَفِير/NOUN pos:noun root:س.ف.ر pattern:1َ2ِي3 pattern_abstract:1َ2ِي3 prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 vox:na form_gen:m gen:- form_num:s num:- stt:i cas:u enc0:0 enc1:0 enc2:0 rat:r source:lex cm_stem:سَفِير cm_stem_ids:[STEM-NOM]:19628+[NBuff]:111
+سفراء	X00002	diac:سُفَرَاء lex:سَفِير caphi:s_u_f_a_r_aa_2 gloss:ambassador bw:سُفَرَا/NOUN+ء/STEM pos:noun root:س.ف.ر pattern:1ُ2َ3َا pattern_abstract:1ُ2َ3اء prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 vox:na form_gen:m gen:m form_num:s num:p stt:i cas:u enc0:0 enc1:0 enc2:0 rat:r source:lex cm_stem:سُفَرَا cm_buffer:ء cm_stem_ids:[STEM-NOM]:19629+[NBuff]:42
+سفراؤ	X00003	diac:سُفَرَاؤ lex:سَفِير caphi:s_u_f_a_r_aa_2 gloss:ambassador bw:سُفَرَا/NOUN+ؤ/STEM pos:noun root:س.ف.ر pattern:1ُ2َ3َا pattern_abstract:1ُ2َ3اء prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 vox:na form_gen:m gen:m form_num:s num:p stt:i cas:u enc0:0 enc1:0 enc2:0 rat:r source:lex cm_stem:سُفَرَا cm_buffer:ؤ d3tok:سُفَرَاء atbtok:سُفَرَاء cm_stem_ids:[STEM-NOM]:19629+[NBuff]:44
+سفرائ	X00004	diac:سُفَرَائ lex:سَفِير caphi:s_u_f_a_r_aa_2 gloss:ambassador bw:سُفَرَا/NOUN+ئ/STEM pos:noun root:س.ف.ر pattern:1ُ2َ3َا pattern_abstract:1ُ2َ3اء prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 vox:na form_gen:m gen:m form_num:s num:p stt:i cas:u enc0:0 enc1:0 enc2:0 rat:r source:lex cm_stem:سُفَرَا cm_buffer:ئ d3tok:سُفَرَاء atbtok:سُفَرَاء cm_stem_ids:[STEM-NOM]:19629+[NBuff]:45
+سفراء	X00005	diac:سُفَرَاء lex:سَفِير caphi:s_u_f_a_r_aa_2 gloss:ambassador bw:سُفَرَا/NOUN+ء/STEM pos:noun root:س.ف.ر pattern:1ُ2َ3َا pattern_abstract:1ُ2َ3اء prc3:0 prc2:0 prc1:0 prc1.5:0 prc0:0 vox:na form_gen:m gen:m form_num:s num:p stt:i cas:u enc0:0 enc1:0 enc2:0 rat:r source:lex cm_stem:سُفَرَا cm_buffer:ء cm_stem_ids:[STEM-NOM]:19629+[NBuff]:43
+###TABLE AB###
+P00001 X00001
+P00001 X00002
+P00002 X00001
+P00003 X00001
+P00002 X00002
+P00003 X00002
+P00004 X00001
+P00004 X00002
+P00005 X00001
+P00006 X00001
+P00005 X00002
+P00006 X00002
+P00001 X00003
+P00001 X00004
+P00001 X00005
+P00002 X00004
+P00003 X00004
+P00007 X00001
+P00007 X00002
+P00007 X00003
+P00007 X00004
+P00008 X00001
+P00008 X00002
+P00009 X00001
+P00009 X00002
+P00008 X00005
+P00008 X00004
+###TABLE BC###
+X00001 S00001
+X00001 S00002
+X00001 S00003
+X00001 S00004
+X00001 S00005
+X00002 S00006
+X00001 S00007
+X00001 S00008
+X00001 S00009
+X00001 S00010
+X00001 S00011
+X00002 S00012
+X00001 S00013
+X00001 S00014
+X00001 S00015
+X00001 S00016
+X00001 S00017
+X00002 S00018
+X00001 S00019
+X00001 S00020
+X00001 S00021
+X00001 S00022
+X00001 S00023
+X00002 S00019
+X00001 S00024
+X00001 S00025
+X00001 S00026
+X00001 S00027
+X00001 S00028
+X00002 S00024
+X00001 S00029
+X00001 S00030
+X00001 S00031
+X00001 S00032
+X00001 S00033
+X00002 S00029
+X00001 S00034
+X00001 S00035
+X00001 S00036
+X00001 S00037
+X00001 S00038
+X00001 S00039
+X00001 S00040
+X00001 S00041
+X00001 S00042
+X00001 S00043
+X00001 S00044
+X00001 S00045
+X00001 S00046
+X00001 S00047
+X00001 S00048
+X00001 S00049
+X00001 S00050
+X00001 S00051
+X00001 S00052
+X00001 S00053
+X00002 S00035
+X00003 S00036
+X00003 S00037
+X00004 S00034
+X00001 S00054
+X00001 S00055
+X00001 S00056
+X00001 S00057
+X00001 S00058
+X00001 S00059
+X00001 S00060
+X00001 S00061
+X00001 S00062
+X00001 S00063
+X00001 S00064
+X00001 S00065
+X00001 S00066
+X00001 S00067
+X00001 S00068
+X00001 S00069
+X00001 S00070
+X00001 S00071
+X00001 S00072
+X00001 S00073
+X00002 S00055
+X00005 S00056
+X00005 S00057
+X00004 S00054
+X00001 S00074
+X00001 S00075
+X00001 S00076
+X00001 S00077
+X00001 S00078
+X00001 S00079
+X00001 S00080
+X00001 S00081
+X00001 S00082
+X00001 S00083
+X00001 S00084
+X00001 S00085
+X00001 S00086
+X00001 S00087
+X00001 S00088
+X00001 S00089
+X00001 S00090
+X00001 S00091
+X00001 S00092
+X00001 S00093
+X00002 S00075
+X00004 S00074
+X00004 S00076
+X00004 S00077
+X00001 S00094
+X00001 S00095
+X00001 S00096
+X00001 S00097
+X00001 S00098
+X00002 S00094
+X00001 S00099
+X00001 S00100
+X00001 S00101
+X00001 S00102
+X00001 S00103
+X00002 S00099
+X00001 S00104
+X00001 S00105
+X00001 S00106
+X00001 S00107
+X00001 S00108
+X00002 S00104
+###TABLE AC###
+P00001 S00001
+P00001 S00002
+P00001 S00003
+P00001 S00004
+P00001 S00005
+P00001 S00006
+P00001 S00007
+P00001 S00008
+P00001 S00009
+P00001 S00010
+P00001 S00011
+P00001 S00012
+P00002 S00013
+P00002 S00014
+P00002 S00015
+P00002 S00016
+P00002 S00017
+P00003 S00013
+P00003 S00014
+P00003 S00015
+P00003 S00016
+P00003 S00017
+P00002 S00018
+P00003 S00018
+P00004 S00019
+P00004 S00020
+P00004 S00021
+P00004 S00022
+P00004 S00023
+P00004 S00024
+P00004 S00025
+P00004 S00026
+P00004 S00027
+P00004 S00028
+P00005 S00029
+P00005 S00030
+P00005 S00031
+P00005 S00032
+P00005 S00033
+P00006 S00029
+P00006 S00030
+P00006 S00031
+P00006 S00032
+P00006 S00033
+P00001 S00034
+P00001 S00035
+P00001 S00036
+P00001 S00037
+P00001 S00038
+P00001 S00039
+P00001 S00040
+P00001 S00041
+P00001 S00042
+P00001 S00043
+P00001 S00044
+P00001 S00045
+P00001 S00046
+P00001 S00047
+P00001 S00048
+P00001 S00049
+P00001 S00050
+P00001 S00051
+P00001 S00052
+P00001 S00053
+P00001 S00054
+P00001 S00055
+P00001 S00056
+P00001 S00057
+P00001 S00058
+P00001 S00059
+P00001 S00060
+P00001 S00061
+P00001 S00062
+P00001 S00063
+P00001 S00064
+P00001 S00065
+P00001 S00066
+P00001 S00067
+P00001 S00068
+P00001 S00069
+P00001 S00070
+P00001 S00071
+P00001 S00072
+P00001 S00073
+P00002 S00074
+P00002 S00075
+P00002 S00076
+P00002 S00077
+P00002 S00078
+P00002 S00079
+P00002 S00080
+P00002 S00081
+P00002 S00082
+P00002 S00083
+P00002 S00084
+P00002 S00085
+P00002 S00086
+P00002 S00087
+P00002 S00088
+P00002 S00089
+P00002 S00090
+P00002 S00091
+P00002 S00092
+P00002 S00093
+P00003 S00074
+P00003 S00075
+P00003 S00076
+P00003 S00077
+P00003 S00078
+P00003 S00079
+P00003 S00080
+P00003 S00081
+P00003 S00082
+P00003 S00083
+P00003 S00084
+P00003 S00085
+P00003 S00086
+P00003 S00087
+P00003 S00088
+P00003 S00089
+P00003 S00090
+P00003 S00091
+P00003 S00092
+P00003 S00093
+P00002 S00094
+P00002 S00095
+P00002 S00096
+P00002 S00097
+P00002 S00098
+P00003 S00094
+P00003 S00095
+P00003 S00096
+P00003 S00097
+P00003 S00098
+P00005 S00099
+P00005 S00100
+P00005 S00101
+P00005 S00102
+P00005 S00103
+P00006 S00099
+P00006 S00100
+P00006 S00101
+P00006 S00102
+P00006 S00103
+P00002 S00104
+P00002 S00105
+P00002 S00106
+P00002 S00107
+P00002 S00108
+P00003 S00104
+P00003 S00105
+P00003 S00106
+P00003 S00107
+P00003 S00108
+P00001 S00019
+P00001 S00020
+P00001 S00021
+P00001 S00022
+P00001 S00023
+P00001 S00024
+P00001 S00025
+P00001 S00026
+P00001 S00027
+P00001 S00028
+P00002 S00029
+P00002 S00030
+P00002 S00031
+P00002 S00032
+P00002 S00033
+P00003 S00029
+P00003 S00030
+P00003 S00031
+P00003 S00032
+P00003 S00033
+P00002 S00099
+P00002 S00100
+P00002 S00101
+P00002 S00102
+P00002 S00103
+P00003 S00099
+P00003 S00100
+P00003 S00101
+P00003 S00102
+P00003 S00103
+P00007 S00001
+P00007 S00002
+P00007 S00003
+P00007 S00004
+P00007 S00005
+P00007 S00006
+P00007 S00034
+P00007 S00035
+P00007 S00036
+P00007 S00037
+P00007 S00038
+P00007 S00039
+P00007 S00040
+P00007 S00041
+P00007 S00042
+P00007 S00043
+P00007 S00044
+P00007 S00045
+P00007 S00046
+P00007 S00047
+P00007 S00048
+P00007 S00049
+P00007 S00050
+P00007 S00051
+P00007 S00052
+P00007 S00053
+P00008 S00007
+P00008 S00008
+P00008 S00009
+P00008 S00010
+P00008 S00011
+P00008 S00012
+P00009 S00024
+P00009 S00025
+P00009 S00026
+P00009 S00027
+P00009 S00028
+P00008 S00054
+P00008 S00055
+P00008 S00056
+P00008 S00057
+P00008 S00058
+P00008 S00059
+P00008 S00060
+P00008 S00061
+P00008 S00062
+P00008 S00063
+P00008 S00064
+P00008 S00065
+P00008 S00066
+P00008 S00067
+P00008 S00068
+P00008 S00069
+P00008 S00070
+P00008 S00071
+P00008 S00072
+P00008 S00073

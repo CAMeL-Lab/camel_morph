@@ -49,6 +49,10 @@ The following data is not accessile publicly from the Google Sheets interface bu
 
 - [MSA Nominal Specifications (Camera Ready)](https://docs.google.com/spreadsheets/d/1T5-tY_bfvCW579P-NY7nOxxlq4P2MQ7vmWg_IWn_35Q/edit#gid=1109514510)
 
+### LREC-COLING 2024 Data (frozen)
+
+The data is accessible from the following [folder](./official_releases/lrec-coling2024_release/data/).
+
 <!-- ### LREC-COLING 2024 Data (frozen)
 
 The following data is not accessile publicly from the Google Sheets interface but is available in `csv` format (the way it was at submission time) in the following [folder](./official_releases/lrec-coling2024_release/data/).
