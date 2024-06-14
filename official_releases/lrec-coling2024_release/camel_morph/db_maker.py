@@ -172,9 +172,10 @@ def make_db(config:Config, output_path:Optional[str]=None):
     print("\nLoading and processing sheets... [1/4]")
     SHEETS, cond2class = db_maker_utils.read_morph_specs(config)
 
-    if args.debug_lemma:
+    if args.debug_lemma or config.restrict_db_to_lemma:
+        lemma = args.debug_lemma if args.debug_lemma else config.restrict_db_to_lemma
         SHEETS['lexicon'] = SHEETS['lexicon'][
-            SHEETS['lexicon']['LEMMA'] == f'lex:{args.debug_lemma}']
+            SHEETS['lexicon']['LEMMA'] == f'lex:{lemma}']
     
     print("\nValidating combinations... [2/4]")
     cat2id: bool = config.cat2id if config.cat2id is not None else False
@@ -265,7 +266,7 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
     cat2id = {} if cat2id else None
     
     def construct_process(lexicon: pd.DataFrame,
-                          order: pd.DataFrame,
+                          order_sequence: pd.Series,
                           cmplx_stem_memoize: Dict[str, str],
                           stems_section_title: str):
         """ Process which is ran for each ORDER line, in which plausible complex morphemes
@@ -275,13 +276,13 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
         """
         # Complex morphemes generation (within the prefix/stem/suffix boundary)
         cmplx_prefix_classes = gen_cmplx_morph_combs(
-            order['PREFIX'], MORPH, lexicon, cond2class,
+            order_sequence['PREFIX'], MORPH, lexicon, cond2class,
             pruning_cond_s_f=pruning, pruning_same_class_incompat=pruning)
         cmplx_suffix_classes = gen_cmplx_morph_combs(
-            order['SUFFIX'], MORPH, lexicon, cond2class,
+            order_sequence['SUFFIX'], MORPH, lexicon, cond2class,
             pruning_cond_s_f=pruning, pruning_same_class_incompat=pruning)
         cmplx_stem_classes = gen_cmplx_morph_combs(
-            order['STEM'], MORPH, lexicon, cond2class,
+            order_sequence['STEM'], MORPH, lexicon, cond2class,
             cmplx_morph_memoize=cmplx_stem_memoize,
             pruning_cond_s_f=pruning, pruning_same_class_incompat=pruning)
         
@@ -291,19 +292,19 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
         if not cmplx_prefix_classes: cmplx_type_empty.add('Prefix')
         if cmplx_type_empty:
             cmplx_type_empty = '/'.join(cmplx_type_empty)
-            order_key = 'SUFFIX-SHORT' if 'SUFFIX-SHORT' in order.columns else 'SUFFIX'
-            tqdm.write((f"WARNING: {order['SUFFIX-SHORT']}: {cmplx_type_empty} class " 
+            order_key = 'SUFFIX-SHORT' if 'SUFFIX-SHORT' in ORDER.columns else 'SUFFIX'
+            tqdm.write((f"WARNING: {order_sequence[order_key]}: {cmplx_type_empty} class " 
                         'is empty; proceeding to process next order line.'))
             return db
         
         cmplx_morph_classes = dict(
-            cmplx_prefix_classes=(cmplx_prefix_classes, order['PREFIX'] if order['PREFIX'] else '[EMPTY]'),
-            cmplx_suffix_classes=(cmplx_suffix_classes, order['SUFFIX'] if order['SUFFIX'] else '[EMPTY]'),
-            cmplx_stem_classes=(cmplx_stem_classes, order['STEM']))
+            cmplx_prefix_classes=(cmplx_prefix_classes, order_sequence['PREFIX'] if order_sequence['PREFIX'] else '[EMPTY]'),
+            cmplx_suffix_classes=(cmplx_suffix_classes, order_sequence['SUFFIX'] if order_sequence['SUFFIX'] else '[EMPTY]'),
+            cmplx_stem_classes=(cmplx_stem_classes, order_sequence['STEM']))
         
         # Complex morphemes validation or word generation (across the prefix/stem/suffix boundary)
         db_ = cross_cmplx_morph_validation(
-            cmplx_morph_classes, order['CLASS'].lower(), short_cat_maps, defaults_,
+            cmplx_morph_classes, order_sequence['CLASS'].lower(), short_cat_maps, defaults_,
             stems_section_title, cat2id, morph2caphi, logprob)
         for section, contents in db_.items():
             # if 'BACKOFF' in stems_section_title and section != stems_section_title:
@@ -324,13 +325,13 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
             pbar = tqdm(total=len(list(ORDER.iterrows())))
             cmplx_stem_memoize = {}
             order_stem_prev = ''
-            for _, order in ORDER.iterrows():
+            for _, order_sequence in ORDER.iterrows():
                 col = 'SUFFIX-SHORT' if 'SUFFIX-SHORT' in ORDER.columns else 'SUFFIX'
-                pbar.set_description(order[col])
-                if order['STEM'] != order_stem_prev:
+                pbar.set_description(order_sequence[col])
+                if order_sequence['STEM'] != order_stem_prev:
                     cmplx_stem_memoize = {}
-                    order_stem_prev = order['STEM']
-                construct_process(SHEET, order, cmplx_stem_memoize,
+                    order_stem_prev = order_sequence['STEM']
+                construct_process(SHEET, order_sequence, cmplx_stem_memoize,
                                 stems_section_title='OUT:###STEMS###')
                 pbar.update(1)
             pbar.close()

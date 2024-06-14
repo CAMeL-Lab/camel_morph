@@ -24,6 +24,7 @@
         "full_system": {
             "pruning": true,
             "reindex": true,
+            "cat2id": true,
             "specs": {
                 "order": {
                     "camel-morph-msa-nom-other": {

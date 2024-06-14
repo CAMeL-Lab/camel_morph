@@ -29,6 +29,8 @@ parser.add_argument("-gen_output_dir", default='sandbox_files/db_map_diff',
                     type=str, help="Path of the directory to which the generation pickles should be output.")
 parser.add_argument("-pos", default='any',
                     type=str, help="Restrict diff to a certain POS.")
+parser.add_argument("-morph_type", required=True,
+                    type=str, help="Restrict diff to a certain complex morpheme type.")
 parser.add_argument("-diff_output_sheet", default='',
                     type=str, help="Spreadsheet and sheet to output the diff to.")
 parser.add_argument("-test_mode", default=False,
@@ -143,6 +145,7 @@ def diff_per_cmplx_morph_type(morph_type):
     diff = {}
     for name, feat_combs_ in feat_combs:
         for feat_comb in feat_combs_:
+            baseline_count, system_count = 0, 0
             if name != 'system_minus_baseline':
                 baseline_count = feats2attribution_baseline[feat_comb]
                 diff.setdefault(name, {}).setdefault(
@@ -152,7 +155,12 @@ def diff_per_cmplx_morph_type(morph_type):
                 diff.setdefault(name, {}).setdefault(
                     feat_comb, {}).setdefault('system', system_count)
             
-            delta = (system_count - baseline_count) / baseline_count
+            if system_count == 0 and baseline_count == 0:
+                delta = 0
+            elif system_count != 0 and baseline_count == 0:
+                delta = 'new'
+            else:
+                delta = (system_count - baseline_count) / baseline_count
             diff.setdefault(name, {}).setdefault(
                 feat_comb, {}).setdefault('delta', delta)
     
@@ -174,7 +182,7 @@ if __name__ == '__main__':
     augment_db_stem_cat_hash(db_baseline)
     augment_db_stem_cat_hash(db_system)
 
-    diff = diff_per_cmplx_morph_type('suffix')
+    diff = diff_per_cmplx_morph_type(args.morph_type)
 
     header = ['Diff', *essential_keys, 'Baseline counts',
               'System counts', 'Δ counts (%)']

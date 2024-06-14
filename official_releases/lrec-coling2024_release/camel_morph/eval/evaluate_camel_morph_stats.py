@@ -32,7 +32,9 @@ parser.add_argument("-no_download", default=False,
                     action='store_true', help="Do not download data.")
 parser.add_argument("-no_build_db", default=False,
                     action='store_true', help="Do not the DB.")
-parser.add_argument("-msa_baseline_db", default='eval_files/calima-msa-s31_0.4.2.utf8.db',
+parser.add_argument("-example_counts", default=False,
+                    action='store_true', help="Computes more information needed to extract counts for small dummy DBs. Only activate if computing counts for the dummy examples.")
+parser.add_argument("-msa_baseline_db", default='',
                     type=str, help="Path of the MSA baseline DB file we will be comparing against.")
 parser.add_argument("-lemma_paradigm_sheet", default='',
                     type=str, help="Google sheet containing basic lemma paradigm with a column called `ID` providing the basic lemma paradigm ID in the following format: BPxx.")
@@ -40,6 +42,8 @@ parser.add_argument("-lemma_paradigm_sheet_paper_asset", default='',
                     type=str, help="Same as -lemma_paradigm_sheet with an ID column called `ID`, and should reflect the IDs to retrieve from the latter.")
 parser.add_argument("-bp_print_range", default='',
                     type=str, help="Range in the paper asset sheet to print the BPs in.")
+parser.add_argument("-service_account", default='',
+                    type=str, help="Path of the JSON file containing the information about the service account used for the Google API.")
 parser.add_argument("-camel_tools", default='local', choices=['local', 'official'],
                         type=str, help="Path of the directory containing the camel_tools modules.")
 args, _ = parser.parse_known_args([] if "__file__" not in globals() else None)
@@ -257,8 +261,7 @@ def _get_lex_db_calima(db_calima, feats):
 def _aggregate_results(lex_specs, lex_db_camel, lex_db_calima,
                        index2feat):
     pos_index, source_index = index2feat.index('POS'), index2feat.index('SOURCE')
-    systems = [('specs', lex_specs), ('db_camel', lex_db_camel),
-               ('db_calima', lex_db_calima)]
+    systems = [('specs', lex_specs), ('db_camel', lex_db_camel), ('db_calima', lex_db_calima)]
     lex_counts = {}
     for system, lexs_ in systems:
         for pos_or_type_source in POS_DISPLAY:
@@ -280,7 +283,10 @@ def _aggregate_results(lex_specs, lex_db_camel, lex_db_calima,
 def get_number_of_lemmas(lexicon_specs, db_camel, db_calima):
     lemmas_specs = _get_lex_specs(lexicon_specs, ['LEMMA', 'POS', 'SOURCE'])
     lemmas_db_camel = _get_lex_db(db_camel, ['lex', 'pos', 'source'])
-    lemmas_db_calima = _get_lex_db_calima(db_calima, ['lex', 'pos', 'source'])
+    if db_calima is not None:
+        lemmas_db_calima = _get_lex_db_calima(db_calima, ['lex', 'pos', 'source'])
+    else:
+        lemmas_db_calima = []
     diff = abs(len([l for l in lemmas_specs if l[0] != 'NOAN']) - len(
         [l for l in lemmas_db_camel if l[0] != 'NOAN']))
     if diff:
@@ -296,7 +302,11 @@ def get_number_of_lemmas(lexicon_specs, db_camel, db_calima):
 def get_number_of_stems(lexicon_specs, db_camel, db_calima):
     stems_specs = _get_lex_specs(lexicon_specs, ['LEMMA', 'POS', 'FORM', 'SOURCE'])
     stems_db_camel = _get_lex_db(db_camel, ['lex', 'pos', 'diac', 'source'])
-    stems_db_calima = _get_lex_db_calima(db_calima, ['lex', 'pos', 'diac', 'source'])
+    if db_calima is not None:
+        stems_db_calima = _get_lex_db_calima(db_calima, ['lex', 'pos', 'diac', 'source'])
+    else:
+        stems_db_calima = []
+
     assert len(stems_specs) != len(stems_db_camel)
     stem_counts = _aggregate_results(
         stems_specs, stems_db_camel, stems_db_calima,
@@ -365,11 +375,20 @@ def get_specs_stats(morph_specs, lexicon_specs, order_specs):
     return specs_stats
 
 
-def get_db_stats(db_camel, db_calima, camel_pos, debug=False):
-    cmplx_morph_count, compat_count, analysis_counts = {}, {}, {}
+def get_db_stats(db_camel, db_calima, camel_pos, debug=False, example_counts=False):
+    if example_counts:
+        with open(config.class_map) as f:
+            CLASS_MAP = json.load(f)
+            class_map_rev = {class_: complx_morph_type
+                            for complx_morph_type, classes in CLASS_MAP.items()
+                            for class_ in classes}
+    
+    cmplx_morph_count, compat_count, analysis_counts, simple_counts = {}, {}, {}, {}
     unique_analyses_no_clitics_ = {}
     for system, db in [('calima', db_calima), ('camel', db_camel)]:
-        info = get_analysis_counts(db, camel_pos=camel_pos)
+        if db is None:
+            continue
+        info = get_analysis_counts(db, camel_pos=camel_pos, ids=example_counts)
         unique_analyses_no_clitics = info['unique_analyses_no_clitics']
         analysis_counts_ = info['analysis_counts']
         compat_entries = info['compat_entries']
@@ -386,12 +405,57 @@ def get_db_stats(db_camel, db_calima, camel_pos, debug=False):
         compat_count[system] = sum(len(compats) for compats in compat_entries.values())
 
         unique_analyses_no_clitics_[system] = unique_analyses_no_clitics
+        
+        if example_counts:
+            ids_class_map = {}
+            for info_ in info['ids'].values():
+                for allomorph in info_['split']:
+                    morph_class, id_ = allomorph.split(':')
+                    ids_class_map.setdefault(class_map_rev[morph_class], []).append(allomorph)
+            morph = SHEETS['morph']
+            morph.loc[morph['LINE'] == '', 'LINE'] = '-1'
+            morph['LINE'] = morph['LINE'].astype(float).astype(int)
+            conditions, morph_classes_restrict = set(), {}
+            for morph_type, info_ in info['ids'].items():
+                for allomorph in info_['split']:
+                    morph_classes_restrict.setdefault(morph_type, set()).add(
+                        allomorph.split(':')[0])
+                    morph_class, id_ = allomorph.split(':')
+                    if 'STEM' in morph_class:
+                        continue
+                    conditions_ = morph[(morph['LINE'] == int(id_)) &
+                                        (morph['CLASS'] == morph_class)][['COND-S', 'COND-T']].values.tolist()[0]
+                    for cond in conditions_:
+                        if cond != '_':
+                            for cond_or in cond.split():
+                                for cond_ in cond_or.split('||'):
+                                    conditions.add(cond_)
+            
+            order_seqs = []
+            for _, order_seq in SHEETS['order'].iterrows():
+                stem_class = [class_ for class_ in order_seq['STEM'].split()
+                              if 'STEM' in class_][0]
+                if stem_class in morph_classes_restrict['stem']:
+                    order_seqs.append(order_seq)
+
+            simple_counts.setdefault(system, dict(
+                proclitics=sum(1 for x in ids_class_map['DBPrefix'] if 'Pref' not in x),
+                prefixes=sum(1 for x in ids_class_map['DBPrefix'] if 'Pref' in x),
+                pre_buffers=sum(1 for x in ids_class_map['Buffer'] if 'Pre' in x) if 'Buffer' in ids_class_map else 0,
+                stems=len(ids_class_map['DBStem']),
+                pos_buffers=sum(1 for x in ids_class_map['Buffer'] if 'Pre' not in x) if 'Buffer' in ids_class_map else 0,
+                suffixes=sum(1 for x in ids_class_map['DBSuffix'] if 'Suff' in x),
+                enclitics=sum(1 for x in ids_class_map['DBSuffix'] if 'Suff' not in x),
+                condition_terms_restricted_to_lemma=len(conditions),
+                order_seqs_restricted_to_lemma=len(order_seqs)
+            ))
+            pass
     
     if debug:
         with open('unique_analyses_no_clitics.pkl', 'wb') as f:
             pickle.dump(unique_analyses_no_clitics_, f)
 
-    return cmplx_morph_count, compat_count, analysis_counts
+    return cmplx_morph_count, compat_count, analysis_counts, simple_counts
 
 
 def get_range(table, start_cell):
@@ -403,7 +467,8 @@ def get_range(table, start_cell):
 
 
 def create_stats_table(lemma_counts, stem_counts, specs_stats,
-                       cmplx_morph_count, compat_count, analyses_count):
+                       cmplx_morph_count, compat_count, analyses_count,
+                       simple_counts):
     table = []
     # (a) section
     row_total = []
@@ -429,16 +494,18 @@ def create_stats_table(lemma_counts, stem_counts, specs_stats,
     table.append([specs_stats['order_lines'], '', ''])
 
     # (c) section
-    table.append(['', compat_count['camel'], compat_count['calima']])
+    table.append(['', compat_count['camel'],
+                  compat_count['calima'] if 'calima' in compat_count else ''])
     for morph_type in ['prefix', 'suffix']:
         table.append(['', cmplx_morph_count['camel'][morph_type],
-                      cmplx_morph_count['calima'][morph_type]])
+                      cmplx_morph_count['calima'][morph_type]
+                      if 'calima' in cmplx_morph_count else ''])
         
     # (d) section
     for count_type in ['forms', 'analyses', 'no_clitics']:
         count_camel = analyses_count['camel'][count_type]
         count_no_wiki = analyses_count['camel'][count_type + '_no_wiki']
-        count_calima = analyses_count['calima'][count_type]
+        count_calima = analyses_count['calima'][count_type] if 'calima' in analyses_count else ''
         table.append(['', f'{count_camel} ({count_no_wiki})', count_calima])
     
     
@@ -452,9 +519,7 @@ def create_stats_table(lemma_counts, stem_counts, specs_stats,
     else:
         row_header = [
             'Lemmas (Stems)',
-            'Verbs',
-            'Nominals',
-            'Others',
+            *lemma_counts.keys(),
             'DBPrefix Morphemes (Allom.)',
             'DBSuffix Morphs (Allom.)',
             'Stem Buffers',
@@ -471,6 +536,14 @@ def create_stats_table(lemma_counts, stem_counts, specs_stats,
             row.insert(0, row_header[i])
         print(tabulate(table, tablefmt='fancy_grid',
                  headers=['Camel Specs', 'Camel DB', 'Calima DB']))
+        
+        table_simple_counts = []
+        if simple_counts:
+            print('\nCamel simple morpheme counts:')
+            for h, count in simple_counts['camel'].items():
+                table_simple_counts.append([h, count])
+            print(tabulate(table_simple_counts, tablefmt='fancy_grid',
+                           headers=['Morpheme type', 'Count']))
 
 
 
@@ -569,6 +642,8 @@ def get_basic_lemma_paradigms(lexicon_specs):
 if __name__ == "__main__":
     if config.service_account:
         sa = gspread.service_account(config.service_account)
+    elif args.service_account:
+        sa = args.service_account
     else:
         sa = None
 
@@ -596,8 +671,6 @@ if __name__ == "__main__":
     
     POS_DISPLAY = config.debugging.pos_display if config.debugging.pos_display \
         is not None else CAMEL_POS
-
-    db_camel = MorphologyDB(config.get_db_path(), 'dag')
     
     if not args.no_download:
         assert sa is not None, 'Provide a Google API key to run this utility'
@@ -611,6 +684,8 @@ if __name__ == "__main__":
     else:
         SHEETS, _ = db_maker_utils.read_morph_specs(config, lexicon_cond_f=False)
 
+    db_camel = MorphologyDB(config.get_db_path(), 'dag')
+
     lexicon_specs, morph_specs, order_specs = SHEETS['lexicon'], SHEETS['morph'], SHEETS['order']
     lexicon_specs = lexicon_specs.replace(nan, '', regex=True)
     morph_specs = morph_specs.replace(nan, '', regex=True)
@@ -619,10 +694,12 @@ if __name__ == "__main__":
         get_basic_lemma_paradigms(lexicon_specs)
         sys.exit()
 
-    try:
-        db_calima = MorphologyDB(args.msa_baseline_db, 'dag')
-    except:
+    if args.msa_baseline_db == 'calima-msa-s31':
         db_calima = MorphologyDB.builtin_db('calima-msa-s31', 'dag')
+    elif args.msa_baseline_db:
+        db_calima = MorphologyDB(args.msa_baseline_db, 'dag')
+    else:
+        db_calima = None
 
     lemma_counts = get_number_of_lemmas(
         lexicon_specs, db_camel, db_calima)
@@ -632,10 +709,11 @@ if __name__ == "__main__":
     
     specs_stats = get_specs_stats(morph_specs, lexicon_specs, order_specs)
 
-    cmplx_morph_count, compat_count, analyses_count = get_db_stats(
-        db_camel, db_calima, CAMEL_POS)
+    cmplx_morph_count, compat_count, analyses_count, simple_counts = get_db_stats(
+        db_camel, db_calima, CAMEL_POS, example_counts=args.example_counts)
 
     stats_table = create_stats_table(lemma_counts, stem_counts, specs_stats,
-                                     cmplx_morph_count, compat_count, analyses_count)
+                                     cmplx_morph_count, compat_count, analyses_count,
+                                     simple_counts)
     
     pass

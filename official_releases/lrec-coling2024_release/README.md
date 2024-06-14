@@ -11,7 +11,7 @@ To start working with the Camel Morph environment and compiling Mordern Standard
 1. Clone (download) this repository and unzip in a directory of your choice.
 2. Make sure that you are running **Python 3.8** or **Python 3.9** (this release was tested on these two versions, but it is likely that it will work on other versions).
 3. Run the following command to install all needed libraries: `pip install -r requirements.txt`.
-4. Run all commands/scripts from the `coling2024_release/` directory.
+4. Run all commands/scripts from the `lrec-coling2024_release/` directory.
 
 ### For Running Evaluation Scripts
 
@@ -56,9 +56,16 @@ To generate the pickle file containing the log probablities assigned to lemmas (
     >> cd lrec-coling2024_release
     >> python camel_morph/sandbox/get_logprob_atb.py -magold <msa_magold_path> -ext camel -output_dir_magold_calima <output_dir> -output_dir_magold_camel <output_dir>
 
-which will generate the logprob pickle file that should be specified in the configuration under the keyword argument `logprob` while building the DB. For this, you will need the ATB data synchronized with a version of SAMA/MADA for `<msa_magold_path>`, which is [here](https://drive.google.com/file/d/1Z8ZGB6Z6cQQoUQvj_2r8m1wWqd7BVWaL/view?usp=drive_link), but not publicly accessible. This will be used to synchronize between Camel lemmas and ATB lemmas, because we have changed the spelling of many lemmas to be more consistent, and we need this because we have changed the spelling of many lemmas for better consistency. Also `<output_dir>` should be the directory where the new synchronization (Camel-synchronized and Calima-synchronized ATB MAGOLD) files should be output. This two files will be used in the process by the above script to generate appropriate log probabilities.
+which will generate the logprob pickle file that should be specified in the configuration under the keyword argument `logprob` while building the DB. For this, you will need the ATB data synchronized with a version of SAMA/MADA for `<msa_magold_path>`, which is [here](https://drive.google.com/file/d/1Z8ZGB6Z6cQQoUQvj_2r8m1wWqd7BVWaL/view?usp=drive_link), but not publicly accessible. This will be used to synchronize between Camel lemmas and ATB lemmas, and we need this because we have changed the spelling of many lemmas for better consistency. Also `<output_dir>` should be the directory where the new synchronization (Camel-synchronized and Calima-synchronized ATB MAGOLD) files should be output. These two files will be used in the process by the above script to generate appropriate log probabilities.
 
 ### Generating the Paper Statistics
+
+To generate the statistics found in *Table 1* of the paper, run:
+
+    >> cd lrec-coling2024_release
+    >> python camel_morph/eval/evaluate_camel_morph_stats.py -config_file config_paper_example.json -config_name <config_name> -no_download -no_build -example_counts
+
+where `config_name` is `msa_EalaY`, `msa_ramaY`, or `msa_safiyr`. In addition to the complex morpheme count, you will get a table of simple morpheme counts.
 
 To generate the statistics found in *Table 2* of the paper, run:
 

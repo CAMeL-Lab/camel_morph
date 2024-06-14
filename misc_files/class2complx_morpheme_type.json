@@ -52,6 +52,7 @@
         "[IVPref.3FP-V]"
     ],
     "DBSuffix": [
+        "[PRON.V]",
         "[PRON]",
         "[NSuff.XXIU]",
         "[NSuff.XXCU]",
@@ -66,6 +67,7 @@
         "[NSuff.XXCN]",
         "[NSuff.XXDN]",
         "[PRON-N]",
+        "[PRON.V-N]",
         "[NSuff.XXIU-N]",
         "[NSuff.XXCU-N]",
         "[NSuff.XXDU-N]",

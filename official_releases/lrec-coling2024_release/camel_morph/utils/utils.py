@@ -585,7 +585,8 @@ class Config:
         # COND-T terms
         self.split_or = config_local.get('split_or')
         # Whether or not to transform categories from the debugging format
-        # to a generic ID format
+        # to a generic ID format. This should be be activated if short
+        # morpheme names are used, otherwise it will mess with category factorization
         self.cat2id = config_local.get('cat2id')
         # Whether or not to fill in some unspecified features with their default values
         self.defaults = config_local.get('defaults')
@@ -597,6 +598,8 @@ class Config:
         self.caphi = config_local.get('caphi')
         # Object containing log probabilities of lemmas (or lexpos)
         self.logprob = config_local.get('logprob')
+        # Kill all lexicon entries which do not have the specified lemma
+        self.restrict_db_to_lemma = config_local.get('restrict_db_to_lemma')
         # Path of class map object mapping morpheme classes to complex morpheme classes
         self.class_map = config_local.get('class_map')
         # Information for miscellaneous debugging utilities
