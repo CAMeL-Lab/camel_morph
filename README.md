@@ -31,7 +31,7 @@ The data throughout this project is being maintained through the Google Sheets i
 The data files accessed through the below links are licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/). For code license, see [License](#license).
 
 ### Continuously Updated Data
-
+- Latest MSA Camel Morph db [file](./official_releases/lrec-coling2024_release/databases/camel-morph-msa/camel_morph_msa_v1.0.db) (LREC-COLING 2024 release) 
 - [MSA Verbs Specifications](https://docs.google.com/spreadsheets/d/1thVU-IP-I-XnOmy5XfdUr39eNgDldZfMeTI75EH1TjQ/edit?usp=sharing)
 - [EGY Verbs Specifications](https://docs.google.com/spreadsheets/d/1NBK_UPl2799GRBkOrd9Eub_yLn2U2ccbJqYETKdCcbw/edit?usp=sharing)
 - [MSA Nominals and Others Specifications](https://docs.google.com/spreadsheets/d/1QsIZ8ToFovoltyfIrUtStxrB_G8jWbj01aHgQQ9IIwE/edit#gid=337793670)
