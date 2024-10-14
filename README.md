@@ -10,15 +10,30 @@ Camel Morph’s goal is to build large open-source morphological models for Arab
 
 <p align="center"> <img width="70%" height="70%" src="camel-morph-system.jpg"> </p>
 
-The following sections provide useful usage information about the repository. For pointers to the system used for the SIGMORPHON 2022 Camel Morph paper, check the [Camel Morph SIGMORPHON 2022](#camel-morph-sigmorphon-2022) section.
+The following sections provide useful usage information about the repository. 
 
-## Camel Morph SIGMORPHON 2022
+<!-- For pointers to the system used for the SIGMORPHON 2022 Camel Morph paper, check the [Camel Morph SIGMORPHON 2022](#camel-morph-sigmorphon-2022) section. -->
 
-For instructions related to inspecting, making use of, replicating the results obtained for the SIGMORPHON 2022 Camel Morph paper[^1], and the data, see the [official_releases/sigmorphon2022_release/](./official_releases/sigmorphon2022_release/) folder.
+## Official Camel Morph DB Releases
 
-## Camel Morph Nominals EACL 2024
+* camel_morph_msa_v1.0.db [file](./official_releases/lrec-coling2024_release/databases/camel-morph-msa/camel_morph_msa_v1.0.db) (LREC-COLING 2024 release).
+  To cite this release use Khairallah et al. (2024).[^1]
+  
 
-For instructions related to inspecting, making use of, replicating the results obtained for the EACL 2024 Camel Morph Nominals paper, and the data, see the [official_releases/eacl2024_release/](./official_releases/eacl2024_release/) folder.
+## Repositories of Published Efforts
+The work has been reported on in three papers (see below), but is continuously updtaed.
+
+### Camel Morph MSA LREC-COLING 2024
+
+For instructions related to inspecting, making use of, replicating the results obtained for the LREC-COLING  2024 Camel Morph MSA full database paper,[^1] and the data, see the [official_releases/lrec-coling2024_release/](./official_releases/lrec-coling2024_release/) folder.
+
+### Camel Morph Nominals EACL 2024
+
+For instructions related to inspecting, making use of, replicating the results obtained for the EACL 2024 Camel Morph Nominals paper,[^2] and the data, see the [official_releases/eacl2024_release/](./official_releases/eacl2024_release/) folder.
+
+### Camel Morph Verbs SIGMORPHON 2022
+
+For instructions related to inspecting, making use of, replicating the results obtained for the SIGMORPHON 2022 Camel Morph paper,[^3] and the data, see the [official_releases/sigmorphon2022_release/](./official_releases/sigmorphon2022_release/) folder.
 
 ## Data
 
@@ -36,18 +51,6 @@ The data files accessed through the below links are licensed under a [Creative C
 - [EGY Verbs Specifications](https://docs.google.com/spreadsheets/d/1NBK_UPl2799GRBkOrd9Eub_yLn2U2ccbJqYETKdCcbw/edit?usp=sharing)
 - [MSA Nominals and Others Specifications](https://docs.google.com/spreadsheets/d/1QsIZ8ToFovoltyfIrUtStxrB_G8jWbj01aHgQQ9IIwE/edit#gid=337793670)
 
-### SIGMORPHON 2022 Data (frozen)
-
-The following data is not accessile publicly from the Google Sheets interface but is available in `csv` format (the way it was at submission time) in the following [folder](/official_releases/sigmorphon2022_release/data/).
-
-- [MSA Verbs Specifications (Camera Ready)](https://docs.google.com/spreadsheets/d/1v9idxctnr6IsqG4c7bHs7lGx7GzbnTa2s4ghQCmLoPY/edit#gid=524706154)
-- [EGY Verbs Specifications (Camera Ready)](https://docs.google.com/spreadsheets/d/1OCqHIdeZpm9BNa-BiC7Xy6bAT_wkLnhuvKdo7X3-RtE/edit#gid=424095452)
-
-### EACL 2024 Data (frozen)
-
-The following data is not accessile publicly from the Google Sheets interface but is available in `csv` format (the way it was at submission time) in the following [folder](./official_releases/eacl2024_release/data/).
-
-- [MSA Nominal Specifications (Camera Ready)](https://docs.google.com/spreadsheets/d/1T5-tY_bfvCW579P-NY7nOxxlq4P2MQ7vmWg_IWn_35Q/edit#gid=1109514510)
 
 ### LREC-COLING 2024 Data (frozen)
 
@@ -61,6 +64,20 @@ The following data is not accessile publicly from the Google Sheets interface bu
 - [MSA Nominals and Others Specifications (Camera Ready)](https://docs.google.com/spreadsheets/d/1s3nocf4bAxOsXjcvSMulJr5N9Yq1yUWyy5M6XkJk2_s/edit#gid=898723826)
 - [MSA Annex - Wiki Proper Nouns (Camera Ready)](https://docs.google.com/spreadsheets/d/1U_V8wNo5gHokTdxG5HaEaqcgjArgecRLiXEi5kMIlX4/edit#gid=1328530526) -->
 
+### EACL 2024 Data (frozen)
+
+The following data is not accessile publicly from the Google Sheets interface but is available in `csv` format (the way it was at submission time) in the following [folder](./official_releases/eacl2024_release/data/).
+
+- [MSA Nominal Specifications (Camera Ready)](https://docs.google.com/spreadsheets/d/1T5-tY_bfvCW579P-NY7nOxxlq4P2MQ7vmWg_IWn_35Q/edit#gid=1109514510)
+
+### SIGMORPHON 2022 Data (frozen)
+
+The following data is not accessile publicly from the Google Sheets interface but is available in `csv` format (the way it was at submission time) in the following [folder](/official_releases/sigmorphon2022_release/data/).
+
+- [MSA Verbs Specifications (Camera Ready)](https://docs.google.com/spreadsheets/d/1v9idxctnr6IsqG4c7bHs7lGx7GzbnTa2s4ghQCmLoPY/edit#gid=524706154)
+- [EGY Verbs Specifications (Camera Ready)](https://docs.google.com/spreadsheets/d/1OCqHIdeZpm9BNa-BiC7Xy6bAT_wkLnhuvKdo7X3-RtE/edit#gid=424095452)
+
+
 ## Folder Hierarchy
 
 The following table describes the function of each directory contained in the repository.
@@ -72,7 +89,7 @@ The following table describes the function of each directory contained in the re
 | `./data` | Contains, for each different configuration, the set of morphological specification files necessary to run the different scripts. This directory is mandatorily (as per the data reader code) organized into project directories as described in [Configuration File Structure](#configuration-file-structure) section.
 | `./databases` | Contains the output DB files resulting from the DB Making process.
 | `./misc_files` | Contains miscellaneous files used by scripts inside `./camel_morph`.
-| `./official_releases/sigmorphon2022_release` | Standalone environment[^2] allowing users to run the DB Maker and Camel Tools engines without installing Camel Tools, in the same version used for the SIGMORPHON 2022 paper. Also contains the data that was used to get the results described in the paper[^1].
+| `./official_releases/sigmorphon2022_release` | Standalone environment[^4] allowing users to run the DB Maker and Camel Tools engines without installing Camel Tools, in the same version used for the SIGMORPHON 2022 paper. Also contains the data that was used to get the results described in the paper[^3].
 
 ## Instructions
 
@@ -208,5 +225,12 @@ All the code contained in this repository is available under the MIT license. Se
 - [Salam Khalifa](https://github.com/slkh)
 - [Nizar Habash](https://github.com/nizarhabash1)
 
-[^1]: Nizar Habash, Reham Marzouk, Christian Khairallah, and Salam Khalifa. 2022. [Morphotactic Modeling in an Open-source Multi-dialectal Arabic Morphological Analyzer and Generator](https://aclanthology.org/2022.sigmorphon-1.10/). In Proceedings of the 19th SIGMORPHON Workshop on Computational Research in Phonetics, Phonology, and Morphology, pages 92–102, Seattle, Washington. Association for Computational Linguistics.
-[^2]: Note that for the release directory, only the morphological components from Camel Tools were sourced from the actual library and were added to be imported locally.
+
+
+[^1]: Khairallah, Christian, Salam Khalifa, Reham Marzouk, Mayar Mohamadein Nassar and Nizar Habash. [Camel Morph MSA: A Large-Scale Open-Source Morphological Analyzer for Modern Standard Arabic](https://aclanthology.org/2024.lrec-main.240.pdf). In Proceedings of the LREC-COLING 2024 - The Joint International Conference on Computational Linguistics, Language Resources and Evaluation, Turin, Italy. 2024.
+
+[^2]: Khairallah, Christian, Reham Marzouk, Salam Khalifa, Mayar Nassar, and Nizar Habash. [Computational Morphology and Lexicography Modeling of Modern Standard Arabic Nominals](https://aclanthology.org/2024.findings-eacl.72.pdf). In Proceedings of the 18th Conference of the European Chapter of the Association for Computational Linguistics, Malta, 2024.
+
+[^3]: Nizar Habash, Reham Marzouk, Christian Khairallah, and Salam Khalifa. 2022. [Morphotactic Modeling in an Open-source Multi-dialectal Arabic Morphological Analyzer and Generator](https://aclanthology.org/2022.sigmorphon-1.10/). In Proceedings of the 19th SIGMORPHON Workshop on Computational Research in Phonetics, Phonology, and Morphology, pages 92–102, Seattle, Washington. Association for Computational Linguistics.
+
+[^4]: Note that for the release directory, only the morphological components from Camel Tools were sourced from the actual library and were added to be imported locally.
