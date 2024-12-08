@@ -223,7 +223,7 @@ All the code contained in this repository is available under the MIT license. Se
 - [Christian Khairallah (Cayralat)](https://github.com/christios)
 - [Muhammed AbuOdeh](https://github.com/muhammed-abuodeh)
 - [Salam Khalifa](https://github.com/slkh)
-- [Reham Marzouk](https://scholar.google.com.eg/citations?user=VGVUg3cAAAAJ&hl=en)
+- [Reham Marzouk](https://github.com/RMarzouk)
 - [Nizar Habash](https://github.com/nizarhabash1)
 
 
