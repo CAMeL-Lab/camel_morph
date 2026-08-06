@@ -411,7 +411,7 @@ def add_check_mark_online(rows,
                           mode=None,
                           write='append',
                           status_col_name='STATUS',
-                          service_account='/Users/chriscay/.config/gspread/service_account.json'):
+                          service_account=''):
     assert bool(error_cases) ^ bool(indexes) ^ bool(messages)
     if error_cases is not None:
         filtered = rows[rows['LEMMA'].isin(error_cases)]
@@ -569,6 +569,8 @@ class Config:
         self.specs = self._read_specs()
         # Name of the (output) DB associated with the configuration
         self.db = config_local.get('db')
+        # Name of the optional CM-schema JSON export associated with the configuration
+        self.db_json = config_local.get('db_json')
         # POS type (nominal, verbal, other, any) associated with the configuration
         self.pos_type = config_local.get('pos_type')
         # POS (CAPHI) associated with the configuration (if any)
@@ -602,6 +604,10 @@ class Config:
         self.restrict_db_to_lemma = config_local.get('restrict_db_to_lemma')
         # Path of class map object mapping morpheme classes to complex morpheme classes
         self.class_map = config_local.get('class_map')
+        # Optional override for ProcessPool workers in db_maker (1 = in-process).
+        # Prefer local, then fall back to global (configs often put n_workers there).
+        self.n_workers = config_local.get(
+            'n_workers', self._config_global.get('n_workers') if self._config_global else None)
         # Information for miscellaneous debugging utilities
         self.debugging = Debugging(config_local.get('debugging'), feats)
         return config_local
@@ -639,7 +645,8 @@ class Config:
         self.camel_tools = config_global.get('camel_tools')
         # Path to the JSON file containing the credentials to the Google Cloud
         # account used to perform sheet operations via the gspread API
-        self.service_account = config_global.get('service_account')
+        service_account = config_global.get('service_account') or ''
+        self.service_account = os.path.expanduser(service_account) if service_account else ''
         # Paradigm slots used as part of the morph_debugging process
         self.paradigms_config = config_global.get('paradigms_config')
         # Spreadsheet to which banks are uploaded
@@ -767,6 +774,13 @@ class Config:
     def get_db_path(self):
         db_name = self._config_local['db']
         return os.path.join(self.get_db_dir_path(), db_name)
+
+    def get_db_json_path(self):
+        db_json_name = self._config_local.get('db_json')
+        if not db_json_name:
+            # Default: same basename as the .db with a .json extension.
+            db_json_name = os.path.splitext(self._config_local['db'])[0] + '.json'
+        return os.path.join(self.get_db_dir_path(), db_json_name)
 
     def get_data_dir_path(self):
         return os.path.join(self.data_dir, self.get_dialect_project_dir_path(), self._config_name)
