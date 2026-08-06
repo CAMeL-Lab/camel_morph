@@ -19,11 +19,14 @@ ar2bw = CharMapper.builtin_mapper('ar2bw')
 
 
 def caphi_DBPrefix(bw_word):
-    Phon_word = re.sub(r'^(ka)[A{]l', r'\1 l', bw_word)  # NOTE: Christian addition
-    Phon_word = re.sub(r'^([fw]a)((?:ka)?)[A{]l', r'\1 \2 l', Phon_word)  # NOTE: Christian addition
+    # Optional 'a' after wasla/alif covers download forms like wa{al# / bi{al#
+    Phon_word = re.sub(r'^(ka)[A{]a?l', r'\1 l', bw_word)  # NOTE: Christian addition
+    Phon_word = re.sub(r'^([fw]a)((?:ka)?)[A{]a?l', r'\1 \2 l', Phon_word)  # NOTE: Christian addition
+    Phon_word = re.sub(r'^(bi)[A{]a?l', r'\1 l', Phon_word)  # bi+Al fused prefix
+    Phon_word = re.sub(r'([aiu])[A{]a?l', r'\1 l', Phon_word)
     Phon_word = re.sub(r'aA', 'A', Phon_word)
-    if Phon_word == 'Al#' or Phon_word == '{l#':  # NOTE: edited by Christian
-        Phon_word = '2 a l-'
+    if Phon_word in ('Al#', '{l#', '{al#', '{alo#'):  # NOTE: edited by Christian
+        Phon_word = '-2 a l-'  # leading '-' so analyzer rewrite can elide wasla after bi/wa/fa
     else:
         Phon_word = re.sub(r'o', ' ', Phon_word)  # NOTE: Christian addition
         Phon_word = re.sub(r'[><&\}\']', ' 2 ', Phon_word)  # turn all hamzas to glottal stop /2/
