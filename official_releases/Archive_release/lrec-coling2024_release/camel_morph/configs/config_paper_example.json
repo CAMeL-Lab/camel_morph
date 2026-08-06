@@ -1,0 +1,97 @@
+{
+    "global": {
+        "data_dir": "data",
+        "specs": {
+            "about": {
+                "camel-morph-common": "About"
+            },
+            "header": {
+                "camel-morph-common": "Header-v2"
+            }
+        },
+        "db_dir": "databases",
+        "debugging_dir": "debugging_output",
+        "repr_lemmas_dir": "repr_lemmas",
+        "tables_dir": "tables",
+        "paradigm_debugging_dir": "paradigm_debugging",
+        "banks_dir": "banks",
+        "camel_tools": "./camel_morph/camel_tools",
+        "service_account": "",
+        "paradigms_config": "misc_files/config_paradigms.json",
+        "banks_spreadsheet": "Paradigm-Banks"
+    },
+    "local": {
+        "msa_ramaY": {
+            "dialect": "msa",
+            "cat2id": true,
+            "pruning": true,
+            "class_map": "misc_files/class2complx_morpheme_type.json",
+            "specs": {
+                "order": {
+                    "camel-morph-msa-verbs-camera-ready": "MSA-Verb-ORDER"
+                },
+                "morph": {
+                    "camel-morph-msa-verbs-camera-ready": "MSA-Verb-MORPH"
+                },
+                "exclude": [],
+                "lexicon": {
+                    "camel-morph-msa-verbs-camera-ready": [
+                        "MSA-Verb-LEX-PV",
+                        "MSA-Verb-LEX-IV",
+                        "MSA-Verb-LEX-CV"
+                    ]
+                }
+            },
+            "restrict_db_to_lemma":"ramaY-i",
+            "db": "XYZ_msa_ramaY_v1.0.db",
+            "pos_type": "verbal"
+        },
+        "msa_safiyr": {
+            "dialect": "msa",
+            "cat2id": true,
+            "caphi": "camel_morph.sandbox.SBWtoPhon",
+            "pruning": true,
+            "class_map": "misc_files/class2complx_morpheme_type.json",
+            "specs": {
+                "order": {
+                    "camel-morph-msa-nom-other-camera-ready": "MSA-Nom-ORDER"
+                },
+                "morph": {
+                    "camel-morph-msa-nom-other-camera-ready": "MSA-Nom-MORPH"
+                },
+                "exclude": [],
+                "lexicon": {
+                    "camel-morph-msa-nom-other-camera-ready": [
+                        "MSA-Noun-LEX"
+                    ]
+                }
+            },
+            "restrict_db_to_lemma": "safiyr",
+            "db": "XYZ_msa_safiyr_v1.0.db",
+            "pos_type": "nominal"
+        },
+        "msa_EalaY": {
+            "dialect": "msa",
+            "cat2id": true,
+            "pruning": true,
+            "class_map": "misc_files/class2complx_morpheme_type.json",
+            "specs": {
+                "order": {
+                    "camel-morph-msa-nom-other-camera-ready": "MSA-Nom-ORDER"
+                },
+                "morph": {
+                    "camel-morph-msa-nom-other-camera-ready": "MSA-Nom-MORPH"
+                },
+                "exclude": [],
+                "lexicon": {
+                    "camel-morph-msa-nom-other-camera-ready": [
+                        "MSA-Other-LEX"
+                    ]
+                }
+            },
+            "restrict_db_to_lemma": "EalaY",
+            "db": "XYZ_msa_EalaY_v1.0.db",
+            "pos_type": "other"
+        }
+    }
+}

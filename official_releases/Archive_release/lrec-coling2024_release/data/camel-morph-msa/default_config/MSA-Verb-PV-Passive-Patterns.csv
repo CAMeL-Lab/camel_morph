@@ -1,0 +1,395 @@
+,PATTERN,COND-T,COND-S,#LEMMA,#FORM,MATCH,SUB,COND-T-PASS,COND-S-PASS,Test,Color,Comments,STATUS
+0,{i>o2a3~,c-suff,gem,{i}otam~,{i}otamam,{i(.).(.).(.).(.),{u&o$2u$3i$4,c-suff,gem,{u&otumim,0,,DONE
+1,{i>o2a3~,v-suff,gem,{i}otam~,{i}otam~,{i(.).(.).(.)~,{u&o$2u$3~,v-suff,gem,{u&otum~,0,,DONE
+2,{i>ota2a3,,#n,{i}otalaf,{i}otalaf,{i(.).(.).(.).(.),{u&o$2u$3i$4,,#n,{u&otulif,1,,DONE
+3,{i>ota2a3,,,{i}otalaf,{i}otalaf,{i(.).(.).(.).(.),{u&o$2u$3i$4,,,{u&otulif,1,,DONE
+4,{it~a>a3,,,{it~a>ad,{it~a>ad,{i(.)~.(.).(.),{u$1~u}i$3,,,{ut~u}id,0,,DONE
+5,{it~a2a>,,#-a>,{id~afa>,{id~af,{i(.)~.(.),{u$1~u$2i},,,{ud~ufi},1,,DONE
+6,{it~a2a3,,,{it~aEaZ,{it~aEaZ,{i(.)~.(.).(.),{u$1~u$2i$3,,,{ut~uEiZ,0,,DONE
+7,{it~a2aY,,#-ay,{im~aHaY,{im~aH,{i(.)~.(.),{u$1~u$2,,#-iy,{um~uH,1,,DONE
+8,{it~aAo3,c-suff,,{id~aAH,{id~aH,{i(.)~.(.),{u$1~i$2,c-suff,hollow,{ud~iH,0,,DONE
+9,{it~aAo3,v-suff,,{id~aAH,{id~aAH,{i(.)~aA(.),{u$1~iy$2,v-suff,hollow,{ud~iyH,0,,DONE
+10,{i1o2a>a4~,c-suff,,{iToma>an~,{iToma>onan,{i(.).(.).(.).(.).(.),{u$1o$2u&o$4i$5,c-suff,hollow,{uTomu&onin,1,,DONE
+11,{i1o2a>a4~,v-suff,,{iToma>an~,{iToma>an~,{i(.).(.).(.).(.)~,{u$1o$2u&i$4~,v-suff,hollow,{uTomu&in~,1,,DONE
+12,{i1o2a>a4~,c-suff,#n,{iToma>an~,{iToma>onan,{i(.).(.).(.).(.).(.),{u$1o$2u&o$4i$5,c-suff,#n hollow,{uTomu&onin,1,,DONE
+13,{i1o2a>a4~,v-suff,#n,{iToma>an~,{iToma>an~,{i(.).(.).(.).(.)~,{u$1o$2u&i$4~,v-suff,#n hollow,{uTomu&in~,1,,DONE
+14,{i1o2a3~,c-suff,gem,{izoraq~,{izoraqaq,{i(.).(.).(.).(.),{u$1o$2u$3i$4,c-suff,gem,{uzoruqiq,0,,DONE
+15,{i1o2a3~,v-suff,gem,{izoraq~,{izoraq~,{i(.).(.).(.)~,{u$1o$2u$3~,v-suff,gem,{uzoruq~,0,,DONE
+16,{i1o2a3a4~,c-suff,gem,{izomahar~,{izomahorar,{i(.).(.).(.).(.).(.),{u$1o$2u$3o$4i$5,c-suff,gem,{uzomuhorir,1,,DONE
+17,{i1o2a3a4~,v-suff,gem,{izomahar~,{izomahar~,{i(.).(.).(.).(.)~,{u$1o$2u$3i$4~,v-suff,gem,{uzomuhir~,1,,DONE
+18,{i1o2aAo4~,c-suff,gem,{iSohaAb~,{iSohaAbab,{i(.).(.)aA(.).(.),{u$1o$2uw$3i$4,c-suff,gem,{uSohuwbib,0,,DONE
+19,{i1o2aAo4~,v-suff,gem,{iSohaAb~,{iSohaAb~,{i(.).(.)aA(.)~,{u$1o$2uw$3~,v-suff,gem,{uSohuwb~,0,,DONE
+20,{i1o2ano3a4,,,{iqoEanosas,{iqoEanosas,{i(.).(.).(.).(.).(.),{u$1o$2u$3o$4i$5,,,{uqoEunosis,1,,DONE
+21,{i1o2awo2a3,,#n,{igoraworaq,{igoraworaq,{i(.).(.).(.).(.).(.),{u$1o$2u$3o$4i$5,,#n,{ugoruworiq,0,,DONE
+22,{i1o2awo2a3,,,{igoraworaq,{igoraworaq,{i(.).(.).(.).(.).(.),{u$1o$2u$3o$4i$5,,,{ugoruworiq,0,,DONE
+23,{i1ota>a3,,#t,{ilota>am,{ilota>am,{i(.).(.).(.).(.),{u$1o$2u}i$4,,#t,{ulotu}im,1,,DONE
+24,{i1ota>a3,,,{ilota>am,{ilota>am,{i(.).(.).(.).(.),{u$1o$2u}i$4,,,{ulotu}im,1,,DONE
+25,{i1ota>aY,,#->ay,{irota>aY,{irota,{i(.).(.).,{u$1o$2u,,#-}iy,{urotu,0,,DONE
+26,{i1ota2~,c-suff,gem,{ixotaz~,{ixotazaz,{i(.).(.).(.).(.),{u$1o$2u$3i$4,c-suff,gem,{uxotuziz,1,,DONE
+27,{i1ota2~,v-suff,gem,{ixotaz~,{ixotaz~,{i(.).(.).(.)~,{u$1o$2u$3~,v-suff,gem,{uxotuz~,1,,DONE
+28,{i1ota2~,c-suff,#n gem,{ixotaz~,{ixotazaz,{i(.).(.).(.).(.),{u$1o$2u$3i$4,c-suff,#n gem,{uxotuziz,1,,DONE
+29,{i1ota2~,v-suff,#n gem,{ixotaz~,{ixotaz~,{i(.).(.).(.)~,{u$1o$2u$3~,v-suff,#n gem,{uxotuz~,1,,DONE
+30,{i1ota2~,c-suff,#t gem,{ixotaz~,{ixotazaz,{i(.).(.).(.).(.),{u$1o$2u$3i$4,c-suff,#t gem,{uxotuziz,1,,DONE
+31,{i1ota2~,v-suff,#t gem,{ixotaz~,{ixotaz~,{i(.).(.).(.)~,{u$1o$2u$3~,v-suff,#t gem,{uxotuz~,1,,DONE
+32,{i1ota2a>,,#-a>,{ihotara>,{ihotar,{i(.).(.).(.),{u$1o$2u$3i},,,{uhoturi},0,,DONE
+33,{i1ota2a3,,#n,{ihotatak,{ihotatak,{i(.).(.).(.).(.),{u$1o$2u$3i$4,,#n,{uhotutik,1,,DONE
+34,{i1ota2a3,,#t,{ihotatak,{ihotatak,{i(.).(.).(.).(.),{u$1o$2u$3i$4,,#t,{uhotutik,1,,DONE
+35,{i1ota2a3,,,{ihotatak,{ihotatak,{i(.).(.).(.).(.),{u$1o$2u$3i$4,,,{uhotutik,1,,DONE
+36,{i1ota2aY,,#-ay,{ihotadaY,{ihotad,{i(.).(.).(.),{u$1o$2u$3,,#-iy,{uhotud,0,,DONE
+37,{i1otaAo>,,#-A',{isotaA',{isot,{i(.).(.),{u$1o$2,,#-iy',{usot,1,,DONE
+38,{i1otaAo3,c-suff,,{ixotaAr,{ixotar,{i(.).(.).(.),{u$1o$2i$3,c-suff,hollow,{uxotir,0,,DONE
+39,{i1otaAo3,v-suff,,{ixotaAr,{ixotaAr,{i(.).(.)aA(.),{u$1o$2iy$3,v-suff,hollow,{uxotiyr,0,,DONE
+40,{i1otaAo3,c-suff,#t,{ixotaAr,{ixotar,{i(.).(.).(.),{u$1o$2i$3,c-suff,#t hollow,{uxotir,0,,DONE
+41,{i1otaAo3,v-suff,#t,{ixotaAr,{ixotaAr,{i(.).(.)aA(.),{u$1o$2iy$3,v-suff,#t hollow,{uxotiyr,0,,DONE
+42,{i1otaAo3,c-suff,#n,{ixotaAr,{ixotar,{i(.).(.).(.),{u$1o$2i$3,c-suff,#n hollow,{uxotir,0,,DONE
+43,{i1otaAo3,v-suff,#n,{ixotaAr,{ixotaAr,{i(.).(.)aA(.),{u$1o$2iy$3,v-suff,#n hollow,{uxotiyr,0,,DONE
+44,{i1otawa3,,,{iEotawaS,{iEotawaS,{i(.).(.).(.).(.),{u$1o$2u$3i$4,,,{uEotuwiS,1,,DONE
+45,{i1otawaY,,#-ay,{ilotawaY,{ilotaw,{i(.).(.).(.),{u$1o$2u$3,,#-iy,{ulotuw,0,,DONE
+46,{i1owa3~,c-suff,,{izowar~,{izowarar,{i(.).(.).(.).(.),{u$1o$2u$3i$4,c-suff,hollow,{uzowurir,1,,DONE
+47,{i1owa3~,v-suff,,{izowar~,{izowar~,{i(.).(.).(.)~,{u$1o$2u$3~,v-suff,hollow,{uzowur~,1,,DONE
+48,{i1oya3~,c-suff,,{iboyaD~,{iboyaDaD,{i(.).(.).(.).(.),{u$1o$2u$3i$4,c-suff,hollow,{uboyuDiD,0,,DONE
+49,{i1oya3~,v-suff,,{iboyaD~,{iboyaD~,{i(.).(.).(.)~,{u$1o$2u$3~,v-suff,hollow,{uboyuD~,0,,DONE
+50,{ino1a>aY,,#-ay,{inota>aY,{inota,{ino(.).,{ino$1u,,#-}iy,{inotu,1,,DONE
+51,{ino1a2~,c-suff,gem,{inoval~,{inovalal,{i(.).(.).(.).(.),{u$1o$2u$3i$4,c-suff,gem,{unovulil,0,,DONE
+52,{ino1a2~,v-suff,gem,{inoval~,{inoval~,{i(.).(.).(.)~,{u$1o$2u$3~,v-suff,gem,{unovul~,0,,DONE
+53,{ino1a2~,c-suff,#t gem,{inoval~,{inovalal,{i(.).(.).(.).(.),{u$1o$2u$3i$4,c-suff,#t gem,{unovulil,0,,DONE
+54,{ino1a2~,v-suff,#t gem,{inoval~,{inoval~,{i(.).(.).(.)~,{u$1o$2u$3~,v-suff,#t gem,{unovul~,0,,DONE
+55,{ino1a2a>,,#-a>,{inofaqa>,{inofaq,{i(.).(.).(.),{u$1o$2u$3i},,,{unofuqi},1,,DONE
+56,{ino1a2a3,,#n,{inohamak,{inohamak,{i(.).(.).(.).(.),{u$1o$2u$3i$4,,#n,{unohumik,0,,DONE
+57,{ino1a2a3,,#t,{inohamak,{inohamak,{i(.).(.).(.).(.),{u$1o$2u$3i$4,,#t,{unohumik,0,,DONE
+58,{ino1a2a3,,,{inohamak,{inohamak,{i(.).(.).(.).(.),{u$1o$2u$3i$4,,,{unohumik,0,,DONE
+59,{ino1a2aY,,#-ay,{inotahaY,{inotah,{i(.).(.).(.),{u$1o$2u$3,,#-iy,{unotuh,1,,DONE
+60,{ino1aAo3,c-suff,,{inozaAH,{inozaH,{i(.).(.).(.),{u$1o$2i$3,c-suff,hollow,{unoziH,0,,DONE
+61,{ino1aAo3,v-suff,,{inozaAH,{inozaAH,{i(.).(.)aA(.),{u$1o$2iy$3,v-suff,hollow,{unoziyH,0,,DONE
+62,{ino1awa3,,,{inohawas,{inohawas,{i(.).(.).(.).(.),{u$1o$2u$3i$4,,,{unohuwis,1,,DONE
+63,{ino1awaY,,#-ay,{inohawaY,{inohaw,{i(.).(.).(.),{u$1o$2u$3,,#-iy,{unohuw,0,,DONE
+64,{isota>o2a3,,#n,{isota>onas,{isota>onas,{i(.).(.).(.).(.).(.),{u$1o$2u&o$4i$5,,#n,{usotu&onis,1,,DONE
+65,{isota>o2a3,,,{isota>onas,{isota>onas,{i(.).(.).(.).(.).(.),{u$1o$2u&o$4i$5,,,{usotu&onis,1,,DONE
+66,{isota>o2aY,,#-ay,{isota>onaY,{isota>on,{iso(.).(.).(.),{uso$1u&o$3,,#-iy,{usotu&on,0,,DONE
+67,{isota1a2~,c-suff,gem,{isotaZal~,{isotaZolal,{i(.).(.).(.).(.).(.),{u$1o$2u$3o$4i$5,c-suff,gem,{usotuZolil,1,,DONE
+68,{isota1a2~,v-suff,gem,{isotaZal~,{isotaZal~,{i(.).(.).(.).(.)~,{u$1o$2u$3i$4~,v-suff,gem,{usotuZil~,1,,DONE
+69,{isota1a2~,c-suff,#n gem,{isotaZal~,{isotaZolal,{i(.).(.).(.).(.).(.),{u$1o$2u$3o$4i$5,c-suff,#n gem,{usotuZolil,1,,DONE
+70,{isota1a2~,v-suff,#n gem,{isotaZal~,{isotaZal~,{i(.).(.).(.).(.)~,{u$1o$2u$3i$4~,v-suff,#n gem,{usotuZil~,1,,DONE
+71,{isota1aAo>,,#-A',{isotaDaA',{isotaD,{i(.).(.).(.),{u$1o$2u$3,,#-iy',{usotuD,0,,DONE
+72,{isota1aAo3,c-suff,,{isotazaAr,{isotazar,{i(.).(.).(.).(.),{u$1o$2u$3i$4,c-suff,hollow,{usotuzir,1,,DONE
+73,{isota1aAo3,v-suff,,{isotazaAr,{isotazaAr,{i(.).(.).(.)aA(.),{u$1o$2u$3iy$4,v-suff,hollow,{usotuziyr,1,,DONE
+74,{isota1aAo3,c-suff,#n,{isotazaAr,{isotazar,{i(.).(.).(.).(.),{u$1o$2u$3i$4,c-suff,#n hollow,{usotuzir,1,,DONE
+75,{isota1aAo3,v-suff,#n,{isotazaAr,{isotazaAr,{i(.).(.).(.)aA(.),{u$1o$2u$3iy$4,v-suff,#n hollow,{usotuziyr,1,,DONE
+76,{isota1aAo3,c-suff,gem,{isotazaAr,{isotazar,{i(.).(.).(.).(.),{u$1o$2u$3i$4,c-suff,gem,{usotuzir,1,,DONE
+77,{isota1aAo3,v-suff,gem,{isotazaAr,{isotazaAr,{i(.).(.).(.)aA(.),{u$1o$2u$3iy$4,v-suff,gem,{usotuziyr,1,,DONE
+78,{isota1aAo3,c-suff,#t,{isotazaAr,{isotazar,{i(.).(.).(.).(.),{u$1o$2u$3i$4,c-suff,#t hollow,{usotuzir,1,,DONE
+79,{isota1aAo3,v-suff,#t,{isotazaAr,{isotazaAr,{i(.).(.).(.)aA(.),{u$1o$2u$3iy$4,v-suff,#t hollow,{usotuziyr,1,,DONE
+80,{isota1o>a3,,,{isota*o>ab,{isota*o>ab,{i(.).(.).(.).(.).(.),{u$1o$2u$3o}i$5,,,{usotu*o}ib,0,,DONE
+81,{isota1o2a>,,#-a>,{isotadofa>,{isotadof,{i(.).(.).(.).(.),{u$1o$2u$3o$4i},,,{usotudofi},1,,DONE
+82,{isota1o2a3,,#n,{isotahotar,{isotahotar,{i(.).(.).(.).(.).(.),{u$1o$2u$3o$4i$5,,#n,{usotuhotir,0,,DONE
+83,{isota1o2a3,,#t,{isotahotar,{isotahotar,{i(.).(.).(.).(.).(.),{u$1o$2u$3o$4i$5,,#t,{usotuhotir,0,,DONE
+84,{isota1o2a3,,,{isotahotar,{isotahotar,{i(.).(.).(.).(.).(.),{u$1o$2u$3o$4i$5,,,{usotuhotir,0,,DONE
+85,{isota1o2aY,,#-ay,{isotano$aY,{isotano$,{iso(.).(.).(.),{uso$1u$2o$3,,#-iy,{usotuno$,1,,DONE
+86,{isota1owa3,,#n,{isotanowaq,{isotanowaq,{i(.).(.).(.).(.).(.),{u$1o$2u$3o$4i$5,,#n,{usotunowiq,0,,DONE
+87,{isota1owa3,,,{isotanowaq,{isotanowaq,{i(.).(.).(.).(.).(.),{u$1o$2u$3o$4i$5,,,{usotunowiq,0,,DONE
+88,{isota1owaY,,#-ay,{isotaqowaY,{isotaqow,{iso(.).(.).(.),{uso$1u$2o$3,,#-iy,{usotuqow,1,,DONE
+89,{isota1oya3,,#n,{isotahoyam,{isotahoyam,{i(.).(.).(.).(.).(.),{u$1o$2u$3o$4i$5,,#n,{usotuhoyim,0,,DONE
+90,{isota1oya3,,,{isotahoyam,{isotahoyam,{i(.).(.).(.).(.).(.),{u$1o$2u$3o$4i$5,,,{usotuhoyim,0,,DONE
+91,{isota1oyaY,,#-ay,{isotaHoyaY,{isotaHoy,{iso(.).(.).(.),{uso$1u$2o$3,,#-iy,{usotuHoy,1,,DONE
+92,{isotawo>a3,,,{isotawo>ar,{isotawo>ar,{i(.).(.).(.).(.).(.),{u$1o$2u$3o}i$5,,,{usotuwo}ir,0,,DONE
+93,{isotawo2a3,,#n,{isotawofaz,{isotawofaz,{i(.).(.).(.).(.).(.),{u$1o$2u$3o$4i$5,,#n,{usotuwofiz,1,,DONE
+94,{isotawo2a3,,,{isotawofaz,{isotawofaz,{i(.).(.).(.).(.).(.),{u$1o$2u$3o$4i$5,,,{usotuwofiz,1,,DONE
+95,{isotawo2aY,,#-ay,{isotawolaY,{isotawol,{iso(.).(.).(.),{uso$1u$2o$3,,#-iy,{usotuwol,0,,DONE
+96,{isotayo>a3,,,{isotayo>as,{isotayo>as,{i(.).(.).(.).(.).(.),{u$1o$2u$3o}i$5,,,{usotuyo}is,1,,DONE
+97,{isotayo2a3,,#n,{isotayosar,{isotayosar,{i(.).(.).(.).(.).(.),{u$1o$2u$3o$4i$5,,#n,{usotuyosir,0,,DONE
+98,{isotayo2a3,,,{isotayosar,{isotayosar,{i(.).(.).(.).(.).(.),{u$1o$2u$3o$4i$5,,,{usotuyosir,0,,DONE
+99,>a1a2~,c-suff,gem,>aZal~,>aZolal,(.).(.).(.).(.),$1u$2o$3i$4,c-suff,gem,>uZolil,1,,DONE
+100,>a1a2~,v-suff,gem,>aZal~,>aZal~,(.).(.).(.)~,$1u$2i$3~,v-suff,gem,>uZil~,1,,DONE
+101,>a1a2~,c-suff,#n gem,>aZal~,>aZolal,(.).(.).(.).(.),$1u$2o$3i$4,c-suff,#n gem,>uZolil,1,,DONE
+102,>a1a2~,v-suff,#n gem,>aZal~,>aZal~,(.).(.).(.)~,$1u$2i$3~,v-suff,#n gem,>uZil~,1,,DONE
+103,>a1a2~,c-suff,#t gem,>aZal~,>aZolal,(.).(.).(.).(.),$1u$2o$3i$4,c-suff,#t gem,>uZolil,1,,DONE
+104,>a1a2~,v-suff,#t gem,>aZal~,>aZal~,(.).(.).(.)~,$1u$2i$3~,v-suff,#t gem,>uZil~,1,,DONE
+105,>a1aAo>,,#-A',>asaA',>as,(.).(.),$1u$2,,#-iy',>us,0,,DONE
+106,>a1aAo3,c-suff,,>azaAr,>azar,(.).(.).(.),$1u$2i$3,c-suff,hollow,>uzir,1,,DONE
+107,>a1aAo3,v-suff,,>azaAr,>azaAr,(.).(.)aA(.),$1u$2iy$3,v-suff,hollow,>uziyr,1,,DONE
+108,>a1aAo3,c-suff,#n,>azaAr,>azar,(.).(.).(.),$1u$2i$3,c-suff,#n hollow,>uzir,1,,DONE
+109,>a1aAo3,v-suff,#n,>azaAr,>azaAr,(.).(.)aA(.),$1u$2iy$3,v-suff,#n hollow,>uziyr,1,,DONE
+110,>a1aAo3,c-suff,#t,>azaAr,>azar,(.).(.).(.),$1u$2i$3,c-suff,#t hollow,>uzir,1,,DONE
+111,>a1aAo3,v-suff,#t,>azaAr,>azaAr,(.).(.)aA(.),$1u$2iy$3,v-suff,#t hollow,>uziyr,1,,DONE
+112,>a1o>a3,,,>alo>ak,>alo>ak,(.).(.).(.).(.),$1u$2o}i$4,,,>ulo}ik,0,,DONE
+113,>a1o>aY,,#->ay,>ano>aY,>ano,(.).(.).,$1u$2o,,#-}iy,>uno,1,,DONE
+114,>a1o2a>,,#-a>,>ahoda>,>ahod,(.).(.).(.),$1u$2o$3i},,,>uhodi},0,,DONE
+115,>a1o2a3,,#n,>ahoraE,>ahoraE,(.).(.).(.).(.),$1u$2o$3i$4,,#n,>uhoriE,1,,DONE
+116,>a1o2a3,,#t,>ahoraE,>ahoraE,(.).(.).(.).(.),$1u$2o$3i$4,,#t,>uhoriE,1,,DONE
+117,>a1o2a3,,,>ahoraE,>ahoraE,(.).(.).(.).(.),$1u$2o$3i$4,,,>uhoriE,1,,DONE
+118,>a1o2aY,,#-ay,>aDonaY,>aDon,(.).(.).(.),>u$2o$3,,#-iy,>uDon,0,,DONE
+119,>a1owa3,,,>aEowaz,>aEowaz,(.).(.).(.).(.),$1u$2o$3i$4,,,>uEowiz,1,,DONE
+120,>a1owaY,,#-ay,>aqowaY,>aqow,(.).(.).(.),>u$2o$3,,#-iy,>uqow,0,,DONE
+121,>a1oya3,,,>aEoyal,>aEoyal,(.).(.).(.).(.),$1u$2o$3i$4,,,>uEoyil,1,,DONE
+122,>a1oyaY,,#-ay,>aEoyaY,>aEoy,(.).(.).(.),>u$2o$3,,#-iy,>uEoy,0,,DONE
+123,>a2~,c-suff,,>az~,>azaz,(.).(.).(.),$1u$2i$3,c-suff,hollow,>uziz,1,,DONE
+124,>a2~,v-suff,,>az~,>az~,(.).(.)~,$1u$2~,v-suff,hollow,>uz~,1,,DONE
+125,>a2~,c-suff,#n gem,>az~,>azaz,(.).(.).(.),$1u$2i$3,c-suff,#n gem,>uziz,1,,DONE
+126,>a2~,v-suff,#n gem,>az~,>az~,(.).(.)~,$1u$2~,v-suff,#n gem,>uz~,1,,DONE
+127,>a2~,c-suff,gem,>az~,>azaz,(.).(.).(.),$1u$2i$3,c-suff,gem,>uziz,1,,DONE
+128,>a2~,v-suff,gem,>az~,>az~,(.).(.)~,$1u$2~,v-suff,gem,>uz~,1,,DONE
+129,>a2~a3,,#n,>ah~al,>ah~al,(.).(.)~.(.),$1u$2~i$3,,#n,>uh~il,0,,DONE
+130,>a2~a3,,#t,>ah~al,>ah~al,(.).(.)~.(.),$1u$2~i$3,,#t,>uh~il,0,,DONE
+131,>a2~a3,,,>ah~al,>ah~al,(.).(.)~.(.),$1u$2~i$3,,,>uh~il,0,,DONE
+132,>a2~aY,,#-ay,>as~aY,>as~,(.).(.)~,$1u$2~,,#-iy,>us~,1,,DONE
+133,>aA2a3,,#n,>aAnas,|nas,.(.).(.),>uw$1i$2,,#n,>uwnis,0,,DONE
+134,>aA2a3,,,>aAnas,|nas,.(.).(.),>uw$1i$2,,,>uwnis,0,,DONE
+135,>a2a3,,,>ahal,>ahal,(.).(.).(.),$1u$2i$3,,,>uhil,1,,DONE
+136,>a2aA,,#-aw,>asaA,>as,(.).(.),$1u$2,,#-iy,>us,0,,DONE
+137,>aA2aY,,#-ay,>aAzaY,|z,.(.),>uw$1,,#-iy,>uwz,1,,DONE
+138,>a2aY,,#-ay,>anaY,>an,(.).(.),$1u$2,,#-iy,>un,0,,DONE
+139,>a2i3,,#n,>ahil,>ahil,(.).(.).(.),$1u$2i$3,,#n,>uhil,1,,DONE
+140,>a2i3,,,>ahil,>ahil,(.).(.).(.),$1u$2i$3,,,>uhil,1,,DONE
+141,>a2iy,,#-iy,>a*iy,>a*,(.).(.),$1u$2iy,,#-iy,>u*iy,0,,DONE
+142,>a2u3,,#n,>anuv,>anuv,(.).(.).(.),$1u$2i$3,,#n,>univ,1,,DONE
+143,>a2u3,,,>anuv,>anuv,(.).(.).(.),$1u$2i$3,,,>univ,1,,DONE
+144,>aAo3,c-suff,,>aAq,>uq,(.).(.),<i$2,c-suff,hollow,<iq,0,,DONE
+145,>aAo3,v-suff,,>aAq,|q,.(.),<iy$1,v-suff,hollow,<iyq,0,,DONE
+146,>aw~a3,,,>aw~ah,>aw~ah,(.).(.)~.(.),$1u$2~i$3,,,>uw~ih,1,,DONE
+147,>aw~aY,,#-ay,>aw~aY,>aw~,(.).(.)~,$1u$2~,,#-iy,>uw~,0,,DONE
+148,>aAwaY,,#-ay,>aAwaY,|w,.(.),>uw$1,,#-iy,>uww,1,,DONE
+149,>awaY,,#-ay,>awaY,>aw,(.).(.),$1u$2,,#-iy,>uw,0,,DONE
+150,>awi3,,,>awid,>awid,(.).(.).(.),$1u$2i$3,,,>uwid,1,,DONE
+151,>awo2a>,,#-a>,>awoma>,>awom,(.).(.).(.),$1u$2o$3i},,,>uwomi},0,,DONE
+152,>awo2a3,,#n,>awo$ak,>awo$ak,(.).(.).(.).(.),$1u$2o$3i$4,,#n,>uwo$ik,1,,DONE
+153,>awo2a3,,,>awo$ak,>awo$ak,(.).(.).(.).(.),$1u$2o$3i$4,,,>uwo$ik,1,,DONE
+154,>awo2aY,,#-ay,>awoEaY,>awoE,(.).(.).(.),>u$2o$3,,#-iy,>uwoE,0,,DONE
+155,>ay~a3,,#n,>ay~aD,>ay~aD,(.).(.)~.(.),$1u$2~i$3,,#n,>uy~iD,1,,DONE
+156,>ay~a3,,,>ay~aD,>ay~aD,(.).(.)~.(.),$1u$2~i$3,,,>uy~iD,1,,DONE
+157,>ayi3,,,>ayis,>ayis,(.).(.).(.),$1u$2i$3,,,>uyis,0,,DONE
+158,>ayo>a3,,,>ayo>as,>ayo>as,(.).(.).(.).(.),$1u$2o}i$4,,,>uyo}is,1,,DONE
+159,>ayo2a3,,#n,>ayonaE,>ayonaE,(.).(.).(.).(.),$1u$2o$3i$4,,#n,>uyoniE,0,,DONE
+160,>ayo2a3,,,>ayonaE,>ayonaE,(.).(.).(.).(.),$1u$2o$3i$4,,,>uyoniE,0,,DONE
+161,1aA>a3,,,laA'am,laA'am,(.)aA(.).(.),$1uw}i$3,,,luw}im,1,,DONE
+162,1a>a3,,#n,ka>ad,ka>ad,(.).(.).(.),$1u}i$3,,#n,ku}id,0,,DONE
+163,1a>a3,,,ka>ad,ka>ad,(.).(.).(.),$1u}i$3,,,ku}id,0,,DONE
+164,1aA>aY,,#->ay,raA'aY,raA,(.)aA,$1uw,,#-}iy,ruw,1,,DONE
+165,1a>aY,,#->ay,ra>aY,ra,(.).,$1u,,#-}iy,ru,0,,DONE
+166,1a>i3,,,ka}ib,ka}ib,(.).(.).(.),$1u$2i$3,,,ku}ib,1,,DONE
+167,1a>o3a>,,#-a>,ha>oha>,ha>oh,(.).(.).(.),$1u&o$3i},,,hu&ohi},0,,DONE
+168,1a>o3a4,,#n,Ta>oman,Ta>oman,(.).(.).(.).(.),$1u&o$3i$4,,#n,Tu&omin,1,,DONE
+169,1a>u3,,,la&um,la&um,(.).(.).(.),$1u}i$3,,,lu}im,0,,DONE
+170,1aA2~,c-suff,gem,xaAl~,xaAlal,(.)aA(.).(.),$1uw$2i$3,c-suff,gem,xuwlil,1,,DONE
+171,1aA2~,v-suff,gem,xaAl~,xaAl~,(.)aA(.)~,$1uw$2~,v-suff,gem,xuwl~,1,,DONE
+172,1a2~,c-suff,gem,zar~,zarar,(.).(.).(.),$1u$2i$3,c-suff,gem,zurir,0,,DONE
+173,1a2~,v-suff,gem,zar~,zar~,(.).(.)~,$1u$2~,v-suff,gem,zur~,0,,DONE
+174,1a2~,c-suff,#n gem,zar~,zarar,(.).(.).(.),$1u$2i$3,c-suff,#n gem,zurir,0,,DONE
+175,1a2~,v-suff,#n gem,zar~,zar~,(.).(.)~,$1u$2~,v-suff,#n gem,zur~,0,,DONE
+176,1a2~,c-suff,#t gem,zar~,zarar,(.).(.).(.),$1u$2i$3,c-suff,#t gem,zurir,0,,DONE
+177,1a2~,v-suff,#t gem,zar~,zar~,(.).(.)~,$1u$2~,v-suff,#t gem,zur~,0,,DONE
+178,1a2~a>,,#-a>,har~a>,har~,(.).(.)~,$1u$2~i},,,hur~i},1,,DONE
+179,1a2~a3,,#n,har~aE,har~aE,(.).(.)~.(.),$1u$2~i$3,,#n,hur~iE,0,,DONE
+180,1a2~a3,,#t,har~aE,har~aE,(.).(.)~.(.),$1u$2~i$3,,#t,hur~iE,0,,DONE
+181,1a2~a3,,,har~aE,har~aE,(.).(.)~.(.),$1u$2~i$3,,,hur~iE,0,,DONE
+182,1a2~aY,,#-ay,mal~aY,mal~,(.).(.)~,$1u$2~,,#-iy,mul~,1,,DONE
+183,1aA2a>,,#-a>,maAla>,maAl,(.)aA(.),$1uw$2i},,,muwli},0,,DONE
+184,1a2a>,,#-a>,hana>,han,(.).(.),$1u$2i},,,huni},1,,DONE
+185,1aA2a3,,#n,naAkaH,naAkaH,(.)aA(.).(.),$1uw$2i$3,,#n,nuwkiH,0,,DONE
+186,1aA2a3,,#t,naAkaH,naAkaH,(.)aA(.).(.),$1uw$2i$3,,#t,nuwkiH,0,,DONE
+187,1aA2a3,,,naAkaH,naAkaH,(.)aA(.).(.),$1uw$2i$3,,,nuwkiH,0,,DONE
+188,1a2a3,,#n,hazal,hazal,(.).(.).(.),$1u$2i$3,,#n,huzil,1,,DONE
+189,1a2a3,,#t,hazal,hazal,(.).(.).(.),$1u$2i$3,,#t,huzil,1,,DONE
+190,1a2a3,,,hazal,hazal,(.).(.).(.),$1u$2i$3,,,huzil,1,,DONE
+191,1a2aA,,#-aw,kanaA,kan,(.).(.),$1u$2,,#-iy,kun,0,,DONE
+192,1aA2aY,,#-ay,kaAfaY,kaAf,(.)aA(.),$1uw$2,,#-iy,kuwf,1,,DONE
+193,1a2aY,,#-ay,*araY,*ar,(.).(.),$1u$2,,#-iy,*ur,0,,DONE
+194,1a2i>,,,hani},hani},(.).(.).(.),$1u$2i$3,,,huni},1,,DONE
+195,1a2i3,,#n,qaHiT,qaHiT,(.).(.).(.),$1u$2i$3,,#n,quHiT,0,,DONE
+196,1a2i3,,#t,qaHiT,qaHiT,(.).(.).(.),$1u$2i$3,,#t,quHiT,0,,DONE
+197,1a2i3,,,qaHiT,qaHiT,(.).(.).(.),$1u$2i$3,,,quHiT,0,,DONE
+198,1a2iy,,#-iy,laqiy,laq,(.).(.),$1u$2,,#-iy,luq,1,,DONE
+199,1a2o>a4,,#n,Tamo>an,Tamo>an,(.).(.).(.).(.),$1u$2o}i$4,,#n,Tumo}in,0,,DONE
+200,1a2o3a4,,#n,hafohaf,hafohaf,(.).(.).(.).(.),$1u$2o$3i$4,,#n,hufohif,1,,DONE
+201,1a2o3a4,,#t,hafohaf,hafohaf,(.).(.).(.).(.),$1u$2o$3i$4,,#t,hufohif,1,,DONE
+202,1a2o3a4,,,hafohaf,hafohaf,(.).(.).(.).(.),$1u$2o$3i$4,,,hufohif,1,,DONE
+203,1a2owa4,,#n,kalowar,kalowar,(.).(.).(.).(.),$1u$2o$3i$4,,#n,kulowir,0,,DONE
+204,1a2owa4,,,kalowar,kalowar,(.).(.).(.).(.),$1u$2o$3i$4,,,kulowir,0,,DONE
+205,1a2oya4,,#t,maEoyar,maEoyar,(.).(.).(.).(.),$1u$2o$3i$4,,#t,muEoyir,1,,DONE
+206,1a2oya4,,,maEoyar,maEoyar,(.).(.).(.).(.),$1u$2o$3i$4,,,muEoyir,1,,DONE
+207,1a2u>,,,maru&,maru&,(.).(.).(.),$1u$2i},,,muri},0,,DONE
+208,1a2u3,,#n,Tahur,Tahur,(.).(.).(.),$1u$2i$3,,#n,Tuhir,1,,DONE
+209,1a2u3,,#t,Tahur,Tahur,(.).(.).(.),$1u$2i$3,,#t,Tuhir,1,,DONE
+210,1a2u3,,,Tahur,Tahur,(.).(.).(.),$1u$2i$3,,,Tuhir,1,,DONE
+211,1a2uw,,,Taruw,Taruw,(.).(.).(.),$1u$2i$3,,,Turiw,0,,DONE
+212,1aAo>,c-suff,,saA',si},(.)(.)(.),$1$2$3,c-suff,,si},1,,DONE
+213,1aAo>,v-suff,#-A',saA',saA,(.)aA,$1,v-suff,#-iy',s,1,,DONE
+214,1aAo3,c-suff,,zaAr,zur,(.).(.),$1u$2,c-suff,hollow,zur,0,,DONE
+215,1aAo3,v-suff,,zaAr,zaAr,(.)aA(.),$1iy$2,v-suff,hollow,ziyr,0,,DONE
+216,1aAo3,c-suff,#n,zaAr,zur,(.).(.),$1u$2,c-suff,#n hollow,zur,0,,DONE
+217,1aAo3,v-suff,#n,zaAr,zaAr,(.)aA(.),$1iy$2,v-suff,#n hollow,ziyr,0,,DONE
+218,1aAo3,c-suff,#t,zaAr,zur,(.).(.),$1u$2,c-suff,#t hollow,zur,0,,DONE
+219,1aAo3,v-suff,#t,zaAr,zaAr,(.)aA(.),$1iy$2,v-suff,#t hollow,ziyr,0,,DONE
+220,1aw~a>,,#-a>,saw~a>,saw~,(.).(.)~,$1u$2~i},,,suw~i},1,,DONE
+221,1aw~a3,,#n,$aw~al,$aw~al,(.).(.)~.(.),$1u$2~i$3,,#n,$uw~il,0,,DONE
+222,1aw~a3,,#t,$aw~al,$aw~al,(.).(.)~.(.),$1u$2~i$3,,#t,$uw~il,0,,DONE
+223,1aw~a3,,,$aw~al,$aw~al,(.).(.)~.(.),$1u$2~i$3,,,$uw~il,0,,DONE
+224,1aw~aY,,#-ay,haw~aY,haw~,(.).(.)~,$1u$2~,,#-iy,huw~,1,,DONE
+225,1aAwa>,,#-a>,naAwa>,naAw,(.)aA(.),$1uw$2i},,,nuwwi},0,,DONE
+226,1aAwa3,,#n,haAwad,haAwad,(.)aA(.).(.),$1uw$2i$3,,#n,huwwid,1,,DONE
+227,1aAwa3,,,haAwad,haAwad,(.)aA(.).(.),$1uw$2i$3,,,huwwid,1,,DONE
+228,1awa3,,,dawa$,dawa$,(.).(.).(.),$1u$2i$3,,,duwi$,0,,DONE
+229,1awaY,,#-ay,EawaY,Eaw,(.).(.),$1u$2,,#-iy,Euw,1,,DONE
+230,1aAwaY,,#-iy,naAwaY,naAw,(.)aA(.),$1uw$2,,#-iy,nuww,0,,DONE
+231,1awi3,,,hawi$,hawi$,(.).(.).(.),$1u$2i$3,,,huwi$,1,,DONE
+232,1awiy,,#-iy,hawiy,haw,(.).(.),$1u$2iy,,#-iy,huwiy,0,,DONE
+233,1awo3a4,,#n,nawosar,nawosar,(.).(.).(.).(.),$1u$2o$3i$4,,#n,nuwosir,1,,DONE
+234,1awo3a4,,,nawosar,nawosar,(.).(.).(.).(.),$1u$2o$3i$4,,,nuwosir,1,,DONE
+235,1awo3aY,,#-ay,SawoSaY,SawoS,(.).(.).(.),$1u$2o$3,,#-iy,SuwoS,0,,DONE
+236,1ay~a>,,#-a>,qay~a>,qay~,(.).(.)~,$1u$2~i},,,quy~i},1,,DONE
+237,1ay~a3,,#n,gay~am,gay~am,(.).(.)~.(.),$1u$2~i$3,,#n,guy~im,0,,DONE
+238,1ay~a3,,#t,gay~am,gay~am,(.).(.)~.(.),$1u$2~i$3,,#t,guy~im,0,,DONE
+239,1ay~a3,,,gay~am,gay~am,(.).(.)~.(.),$1u$2~i$3,,,guy~im,0,,DONE
+240,1ay~aA,,#-ay-A,Hay~aA,Hay~,(.).(.)~,$1u$2~,,#-iy,Huy~,1,,DONE
+241,1ay~aY,,#-ay,zay~aY,zay~,(.).(.)~,$1u$2~,,#-iy,zuy~,0,,DONE
+242,1aAya>,,#-a>,haAya>,haAy,(.)aA(.),$1uw$2i},,,huwyi},1,,DONE
+243,1aAya3,,#n,gaAyar,gaAyar,(.)aA(.).(.),$1uw$2i$3,,#n,guwyir,0,,DONE
+244,1aAya3,,,gaAyar,gaAyar,(.)aA(.).(.),$1uw$2i$3,,,guwyir,0,,DONE
+245,1ayi3,,,hayif,hayif,(.).(.).(.),$1u$2i$3,,,huyif,1,,DONE
+246,1ayiy,,#-iy,Hayiy,Hay,(.).(.),$1u$2iy,,#-iy,Huyiy,0,,DONE
+247,1ayo3a,c-suff,,layosa,las,(.).(.),$1a$2,c-suff,hollow,las,1,,DONE
+248,1ayo3a,v-suff,,layosa,layos,(.).(.).(.),$1a$2o$3,v-suff,hollow,layos,1,,DONE
+249,1ayo3a4,,#n,hayonam,hayonam,(.).(.).(.).(.),$1u$2o$3i$4,,#n,huyonim,0,,DONE
+250,1ayo3a4,,,hayonam,hayonam,(.).(.).(.).(.),$1u$2o$3i$4,,,huyonim,0,,DONE
+251,1u2~,c-suff,gem,kuz~,kuziz,(.).(.).(.),$1u$2i$3,c-suff,gem,kuziz,1,,DONE
+252,1u2~,v-suff,gem,kuz~,kuz~,(.).(.)~,$1u$2~,v-suff,gem,kuz~,1,,DONE
+253,1u2i>,,,ruzi},ruzi},(.).(.).(.),$1u$2i$3,,,ruzi},0,,DONE
+254,ta>a2~a3,,#n,ta>ah~al,ta>ah~al,ta(.).(.)~.(.),tu&u$2~i$3,,#n,tu&uh~il,1,,DONE
+255,ta>a2~a3,,,ta>ah~al,ta>ah~al,ta(.).(.)~.(.),tu&u$2~i$3,,,tu&uh~il,1,,DONE
+256,ta>a2~aY,,#-ay,ta>al~aY,ta>al~,ta(.).(.)~,tu&u$2~,,#-iy,tu&ul~,0,,DONE
+257,ta>aA2a3,,,ta>aAmar,ta|mar,ta.(.).(.),tu&uw$1i$2,,,tu&uwmir,1,,DONE
+258,ta>aA2aY,,#-ay,ta>aAsaY,ta|s,ta.(.),tu&uw$1,,#-iy,tu&uws,0,,DONE
+259,ta>a2o3a4,,#n,ta>anojal,ta>anojal,ta(.).(.).(.).(.),tu&u$2o$3i$4,,#n,tu&unojil,1,,DONE
+260,ta>a2o3a4,,,ta>anojal,ta>anojal,ta(.).(.).(.).(.),tu&u$2o$3i$4,,,tu&unojil,1,,DONE
+261,ta>aw~a3,,,ta>aw~ad,ta>aw~ad,ta(.).(.)~.(.),tu&u$2~i$3,,,tu&uw~id,0,,DONE
+262,ta>awo3a4,,,ta>aworab,ta>aworab,ta(.).(.).(.).(.),tu&u$2o$3i$4,,,tu&uworib,1,,DONE
+263,ta>ay~a3,,#n,ta>ay~am,ta>ay~am,ta(.).(.)~.(.),tu&u$2~i$3,,#n,tu&uy~im,0,,DONE
+264,ta>ay~a3,,,ta>ay~am,ta>ay~am,ta(.).(.)~.(.),tu&u$2~i$3,,,tu&uy~im,0,,DONE
+265,ta1a>~a3,,,tasa>~al,tasa>~al,ta(.).(.)~.(.),tu$1u}~i$3,,,tusu}~il,1,,DONE
+266,ta1a>~aY,,#->~ay,tara>~aY,tara,ta(.).,tu$1u,,#-}~iy,turu,0,,DONE
+267,ta1aA>a3,,,talaA'am,talaA'am,ta(.)aA(.).(.),tu$1uw}i$3,,,tuluw}im,1,,DONE
+268,ta1aA>aY,,#-ay,taraA'aY,taraA',ta(.)aA(.),tu$1uw,,#-}iy,turuw,0,,DONE
+269,ta1a>o3a>,,#-a>,tala>ola>,tala>ol,ta(.).(.).(.),tu$1u$2o$3i},,,tulu>oli},1,,DONE
+270,ta1a>o3a4,,#n,tava>olal,tava>olal,ta(.).(.).(.).(.),tu$1u&o$3i$4,,#n,tuvu&olil,0,,DONE
+271,ta1a>o3a4,,,tava>olal,tava>olal,ta(.).(.).(.).(.),tu$1u$2o$3i$4,,,tuvu>olil,0,,DONE
+272,ta1aA2~,c-suff,gem,tasaAr~,tasaArar,ta(.)aA(.).(.),tu$1uw$2i$3,c-suff,gem,tusuwrir,1,,DONE
+273,ta1aA2~,v-suff,gem,tasaAr~,tasaAr~,ta(.)aA(.)~,tu$1uw$2~,v-suff,gem,tusuwr~,1,,DONE
+274,ta1aA2~,c-suff,#t gem,tasaAr~,tasaArar,ta(.)aA(.).(.),tu$1uw$2i$3,c-suff,#t,tusuwrir,1,,DONE
+275,ta1aA2~,v-suff,#t gem,tasaAr~,tasaAr~,ta(.)aA(.)~,tu$1uw$2~,v-suff,#t,tusuwr~,1,,DONE
+276,ta1a2~a>,,#-a>,tahar~a>,tahar~,ta(.).(.)~,tu$1u$2~i},,,tuhur~i},0,,DONE
+277,ta1a2~a3,,#n,tahal~al,tahal~al,ta(.).(.)~.(.),tu$1u$2~i$3,,#n,tuhul~il,1,,DONE
+278,ta1a2~a3,,#t,tahal~al,tahal~al,ta(.).(.)~.(.),tu$1u$2~i$3,,#t,tuhul~il,1,,DONE
+279,ta1a2~a3,,,tahal~al,tahal~al,ta(.).(.)~.(.),tu$1u$2~i$3,,,tuhul~il,1,,DONE
+280,ta1a2~aY,,#-ay,tanaz~aY,tanaz~,ta(.).(.)~,tu$1u$2~,,#-iy,tunuz~,0,,DONE
+281,ta1aA2a>,,#-a>,ta$aATa>,ta$aAT,ta(.)aA(.),tu$1uw$2i},,,tu$uwTi},1,,DONE
+282,ta1aA2a3,,#n,tahaAmal,tahaAmal,ta(.)aA(.).(.),tu$1uw$2i$3,,#n,tuhuwmil,0,,DONE
+283,ta1aA2a3,,#t,tahaAmal,tahaAmal,ta(.)aA(.).(.),tu$1uw$2i$3,,#t,tuhuwmil,0,,DONE
+284,ta1aA2a3,,,tahaAmal,tahaAmal,ta(.)aA(.).(.),tu$1uw$2i$3,,,tuhuwmil,0,,DONE
+285,ta1aA2aY,,#-ay,tanaAhaY,tanaAh,ta(.)aA(.),tu$1uw$2,,#-iy,tunuwh,1,,DONE
+286,ta1a2o>a4,,#n,taTamo>an,taTamo>an,ta(.).(.).(.).(.),tu$1u$2o}i$4,,#n,tuTumo}in,0,,DONE
+287,ta1a2o3a4,,#n,tahanodam,tahanodam,ta(.).(.).(.).(.),tu$1u$2o$3i$4,,#n,tuhunodim,1,,DONE
+288,ta1a2o3a4,,#t,tahanodam,tahanodam,ta(.).(.).(.).(.),tu$1u$2o$3i$4,,#t,tuhunodim,1,,DONE
+289,ta1a2o3a4,,,tahanodam,tahanodam,ta(.).(.).(.).(.),tu$1u$2o$3i$4,,,tuhunodim,1,,DONE
+290,ta1a2owa4,,#n,tabalowar,tabalowar,ta(.).(.).(.).(.),tu$1u$2o$3i$4,,#n,tubulowir,0,,DONE
+291,ta1a2owa4,,,tabalowar,tabalowar,ta(.).(.).(.).(.),tu$1u$2o$3i$4,,,tubulowir,0,,DONE
+292,ta1a2oya4,,#n,tamadoyan,tamadoyan,ta(.).(.).(.).(.),tu$1u$2o$3i$4,,#n,tumudoyin,1,,DONE
+293,ta1aw~a>,,#-a>,taDaw~a>,taDaw~,ta(.).(.)~,tu$1u$2~i},,,tuDuw~i},0,,DONE
+294,ta1aw~a3,,#n,tahaw~a$,tahaw~a$,ta(.).(.)~.(.),tu$1u$2~i$3,,#n,tuhuw~i$,1,,DONE
+295,ta1aw~a3,,#t,tahaw~a$,tahaw~a$,ta(.).(.)~.(.),tu$1u$2~i$3,,#t,tuhuw~i$,1,,DONE
+296,ta1aw~a3,,,tahaw~a$,tahaw~a$,ta(.).(.)~.(.),tu$1u$2~i$3,,,tuhuw~i$,1,,DONE
+297,ta1aw~aY,,#-ay,taraw~aY,taraw~,ta(.).(.)~,tu$1u$2~,,#-iy,turuw~,0,,DONE
+298,ta1aAwa3,,#n,taTaAwal,taTaAwal,ta(.)aA(.).(.),tu$1uw$2i$3,,#n,tuTuwwil,1,,DONE
+299,ta1aAwa3,,#t,taTaAwal,taTaAwal,ta(.)aA(.).(.),tu$1uw$2i$3,,#t,tuTuwwil,1,,DONE
+300,ta1aAwa3,,,taTaAwal,taTaAwal,ta(.)aA(.).(.),tu$1uw$2i$3,,,tuTuwwil,1,,DONE
+301,ta1aAwaY,,#-ay,tasaAwaY,tasaAw,ta(.)aA(.),tu$1uw$2,,#-iy,tusuww,0,,DONE
+302,ta1awo3a4,,#n,tamawoqaE,tamawoqaE,ta(.).(.).(.).(.),tu$1u$2o$3i$4,,#n,tumuwoqiE,1,,DONE
+303,ta1awo3a4,,,tamawoqaE,tamawoqaE,ta(.).(.).(.).(.),tu$1u$2o$3i$4,,,tumuwoqiE,1,,DONE
+304,ta1ay~a>,,#-a>,taqay~a>,taqay~,ta(.).(.)~,tu$1u$2~i},,,tuquy~i},0,,DONE
+305,ta1ay~a3,,#n,tahay~aj,tahay~aj,ta(.).(.)~.(.),tu$1u$2~i$3,,#n,tuhuy~ij,1,,DONE
+306,ta1ay~a3,,,tahay~aj,tahay~aj,ta(.).(.)~.(.),tu$1u$2~i$3,,,tuhuy~ij,1,,DONE
+307,ta1ay~aY,,#-ay,tazay~aY,tazay~,ta(.).(.)~,tu$1u$2~,,#-iy,tuzuy~,0,,DONE
+308,ta1aAya>,,#-a>,tahaAya>,tahaAy,ta(.)aA(.),tu$1uw$2i},,,tuhuwyi},1,,DONE
+309,ta1aAya3,,#n,tamaAyaz,tamaAyaz,ta(.)aA(.).(.),tu$1uw$2i$3,,#n,tumuwyiz,0,,DONE
+310,ta1aAya3,,,tamaAyaz,tamaAyaz,ta(.)aA(.).(.),tu$1uw$2i$3,,,tumuwyiz,0,,DONE
+311,ta1ayo3a4,,#n,tafayohaq,tafayohaq,ta(.).(.).(.).(.),tu$1u$2o$3i$4,,#n,tufuyohiq,1,,DONE
+312,ta1ayo3a4,,,tafayohaq,tafayohaq,ta(.).(.).(.).(.),tu$1u$2o$3i$4,,,tufuyohiq,1,,DONE
+313,ta1ayowa4,,,ta$ayowaE,ta$ayowaE,ta(.).(.).(.).(.),tu$1u$2o$3i$4,,,tu$uyowiE,0,,DONE
+314,tawa>~a3,,,tawa>~ad,tawa>~ad,ta(.).(.)~.(.),tu$1u}~i$3,,,tuwu}~id,1,,DONE
+315,tawaA>a3,,,tawaA'am,tawaA'am,ta(.)aA(.).(.),tu$1uw}i$3,,,tuwuw}im,0,,DONE
+316,tawaA2~,c-suff,gem,tawaAd~,tawaAdad,ta(.)aA(.).(.),tu$1uw$2i$3,c-suff,gem,tuwuwdid,1,,DONE
+317,tawaA2~,v-suff,gem,tawaAd~,tawaAd~,ta(.)aA(.)~,tu$1uw$2~,v-suff,gem,tuwuwd~,1,,DONE
+318,tawa2~a>,,#-a>,tawak~a>,tawak~,ta(.).(.)~,tu$1u$2~i},,,tuwuk~i},0,,DONE
+319,tawa2~a3,,#n,tawah~am,tawah~am,ta(.).(.)~.(.),tu$1u$2~i$3,,#n,tuwuh~im,1,,DONE
+320,tawa2~a3,,,tawah~am,tawah~am,ta(.).(.)~.(.),tu$1u$2~i$3,,,tuwuh~im,1,,DONE
+321,tawa2~aY,,#-ay,tawaE~aY,tawaE~,ta(.).(.)~,tu$1u$2~,,#-iy,tuwuE~,0,,DONE
+322,tawaA2a>,,#-a>,tawaATa>,tawaAT,ta(.)aA(.),tu$1uw$2i},,,tuwuwTi},1,,DONE
+323,tawaA2a3,,#n,tawaAqaH,tawaAqaH,ta(.)aA(.).(.),tu$1uw$2i$3,,#n,tuwuwqiH,0,,DONE
+324,tawaA2a3,,,tawaAqaH,tawaAqaH,ta(.)aA(.).(.),tu$1uw$2i$3,,,tuwuwqiH,0,,DONE
+325,tawaA2aY,,#-ay,tawaAfaY,tawaAf,ta(.)aA(.),tu$1uw$2,,#-iy,tuwuwf,1,,DONE
+326,tawa2owa4,,,tawasowas,tawasowas,ta(.).(.).(.).(.),tu$1u$2o$3i$4,,,tuwusowis,0,,DONE
+327,taya2~a3,,#n,tayaq~aZ,tayaq~aZ,ta(.).(.)~.(.),tu$1u$2~i$3,,#n,tuyuq~iZ,1,,DONE
+328,taya2~a3,,,tayaq~aZ,tayaq~aZ,ta(.).(.)~.(.),tu$1u$2~i$3,,,tuyuq~iZ,1,,DONE
+329,waA>a3,,,waA'am,waA'am,(.)aA(.).(.),$1uw}i$3,,,wuw}im,0,,DONE
+330,wa>a3,,,wa>ar,wa>ar,(.).(.).(.),$1u}i$3,,,wu}ir,1,,DONE
+331,waA2~,c-suff,,waAd~,waAdad,(.)aA(.).(.),$1uw$2i$3,c-suff,hollow,wuwdid,0,,DONE
+332,waA2~,v-suff,,waAd~,waAd~,(.)aA(.)~,$1uw$2~,v-suff,hollow,wuwd~,0,,DONE
+333,wa2~,c-suff,,waz~,wazaz,(.).(.).(.),$1u$2i$3,c-suff,hollow,wuziz,1,,DONE
+334,wa2~,v-suff,,waz~,waz~,(.).(.)~,$1u$2~,v-suff,hollow,wuz~,1,,DONE
+335,wa2~,c-suff,#n gem,waz~,wazaz,(.).(.).(.),$1u$2i$3,c-suff,#n gem,wuziz,1,,DONE
+336,wa2~,v-suff,#n gem,waz~,waz~,(.).(.)~,$1u$2~,v-suff,#n gem,wuz~,1,,DONE
+337,wa2~a>,,#-a>,waT~a>,waT~,(.).(.)~,$1u$2~i},,,wuT~i},0,,DONE
+338,wa2~a3,,#n,wah~al,wah~al,(.).(.)~.(.),$1u$2~i$3,,#n,wuh~il,1,,DONE
+339,wa2~a3,,#t,wah~al,wah~al,(.).(.)~.(.),$1u$2~i$3,,#t,wuh~il,1,,DONE
+340,wa2~a3,,,wah~al,wah~al,(.).(.)~.(.),$1u$2~i$3,,,wuh~il,1,,DONE
+341,wa2~aY,,#-ay,wan~aY,wan~,(.).(.)~,$1u$2~,,#-iy,wun~,0,,DONE
+342,waA2a>,,#-a>,waATa>,waAT,(.)aA(.),$1uw$2i},,,wuwTi},1,,DONE
+343,wa2a>,,#-a>,waTa>,waT,(.).(.),$1u$2i},,,wuTi},0,,DONE
+344,waA2a3,,#n,waAlaf,waAlaf,(.)aA(.).(.),$1uw$2i$3,,#n,wuwlif,1,,DONE
+345,waA2a3,,,waAlaf,waAlaf,(.)aA(.).(.),$1uw$2i$3,,,wuwlif,1,,DONE
+346,wa2a3,,#n,waqaH,waqaH,(.).(.).(.),$1u$2i$3,,#n,wuqiH,0,,DONE
+347,wa2a3,,,waqaH,waqaH,(.).(.).(.),$1u$2i$3,,,wuqiH,0,,DONE
+348,waA2aY,,#-ay,waAsaY,waAs,(.)aA(.),$1uw$2,,#-iy,wuws,1,,DONE
+349,wa2aY,,#-ay,wahaY,wah,(.).(.),$1u$2,,#-iy,wuh,0,,DONE
+350,wa2i>,,,waTi},waTi},(.).(.).(.),$1u$2i$3,,,wuTi},1,,DONE
+351,wa2i3,,#n,wahim,wahim,(.).(.).(.),$1u$2i$3,,#n,wuhim,0,,DONE
+352,wa2i3,,,wahim,wahim,(.).(.).(.),$1u$2i$3,,,wuhim,0,,DONE
+353,wa2iy,,#-iy,wahiy,wah,(.).(.),$1u$2iy,,#-iy,wuhiy,1,,DONE
+354,wa2o3a4,,,warona$,warona$,(.).(.).(.).(.),$1u$2o$3i$4,,,wuroni$,0,,DONE
+355,wa2owa4,,,walowal,walowal,(.).(.).(.).(.),$1u$2o$3i$4,,,wulowil,1,,DONE
+356,wa2u>,,,waDu&,waDu&,(.).(.).(.),$1u$2i},,,wuDi},0,,DONE
+357,wa2u3,,#n,wakuE,wakuE,(.).(.).(.),$1u$2i$3,,#n,wukiE,1,,DONE
+358,wa2u3,,,wakuE,wakuE,(.).(.).(.),$1u$2i$3,,,wukiE,1,,DONE
+359,ya>i3,,,ya}is,ya}is,(.).(.).(.),$1u$2i$3,,,yu}is,0,,DONE
+360,ya2~a3,,#n,yam~am,yam~am,(.).(.)~.(.),$1u$2~i$3,,#n,yum~im,1,,DONE
+361,ya2~a3,,,yam~am,yam~am,(.).(.)~.(.),$1u$2~i$3,,,yum~im,1,,DONE
+362,yaA2a3,,,yaAsar,yaAsar,(.)aA(.).(.),$1uw$2i$3,,,yuwsir,0,,DONE
+363,ya2a3,,#n,yatam,yatam,(.).(.).(.),$1u$2i$3,,#n,yutim,1,,DONE
+364,ya2a3,,,yatam,yatam,(.).(.).(.),$1u$2i$3,,,yutim,1,,DONE
+365,ya2i3,,#n,yaqiZ,yaqiZ,(.).(.).(.),$1u$2i$3,,#n,yuqiZ,0,,DONE
+366,ya2i3,,,yaqiZ,yaqiZ,(.).(.).(.),$1u$2i$3,,,yuqiZ,0,,DONE
+367,ya2u3,,#n,yaquZ,yaquZ,(.).(.).(.),$1u$2i$3,,#n,yuqiZ,1,,DONE
+368,ya2u3,,,yaquZ,yaquZ,(.).(.).(.),$1u$2i$3,,,yuqiZ,1,,DONE
+369,yaw~a3,,,yaw~ad,yaw~ad,(.).(.)~.(.),$1u$2~i$3,,,yuw~id,0,,DONE
+370,yaAwa3,,,yaAwam,yaAwam,(.)aA(.).(.),$1uw$2i$3,,,yuwwim,1,,DONE
+371,,,,,,,,,,,,,
+372,1a>aw,,,$a>aw,$a>aw,(.).(.).(.),$1u}i$3,,,$u}iw,1,,DONE
+373,1ay~,c-suff,gem,Hay~,Hayiy,(.).(.).(.),$1u$2i$3,c-suff,gem,Huyiy,0,,DONE
+374,1ay~,v-suff,gem,Hay~,Hay~,(.).(.)~,$1u$2~,v-suff,gem,Huy~,0,,DONE
+375,1aA2aY,,#-ay,kaAfaY,kaAf,(.)aA(.),$1uw$2,,#-iy defective,kuwf,1,,DONE
+376,{i1o2a3~,c-suff,#n gem,{izoraq~,{izoraqaq,{i(.).(.).(.).(.),{u$1o$2u$3i$4,c-suff,#n gem,{uzoruqiq,0,,DONE
+377,{i1o2a3~,v-suff,#n gem,{izoraq~,{izoraq~,{i(.).(.).(.)~,{u$1o$2u$3~,v-suff,#n gem,{uzoruq~,0,,DONE
+378,{i1o2a3~,c-suff,#t gem,{izoraq~,{izoraqaq,{i(.).(.).(.).(.),{u$1o$2u$3i$4,c-suff,#t gem,{uzoruqiq,0,,DONE
+379,{i1o2a3~,v-suff,#t gem,{izoraq~,{izoraq~,{i(.).(.).(.)~,{u$1o$2u$3~,v-suff,#t gem,{uzoruq~,0,,DONE
+380,1aAwaY,,#-ay,saAwaY,saAw,(.)aA(.),$1uw$2,,#-iy,suww,1,,DONE
+381,1u2iy,,#-iy,zuhiy,zuhiy,(.).(.).(.),$1u$2i$3,,#-iy,zuhiy,0,,DONE
+382,>a2o3o4a5,,,>anokolaz,>anokolaz,(.).(.).(.).(.).(.),$1u$2o$3o$4i$5,,,>unokoliz,1,,DONE
+383,ta>a2o3o4a5,,,ta>anokolaz,ta>anokolaz,ta(.).(.).(.).(.).(.),tu$1u$2o$3o$4i$5,,,tu>unokoliz,0,,DONE
+384,{i>ota2~,c-suff,gem,{i}otam~,{i}otamam,{i(.).(.).(.).(.),{u&o$2u$3i$4,c-suff,gem,{u&otumim,1,,DONE
+385,{i>ota2~,v-suff,gem,{i}otam~,{i}otam~,{i(.).(.).(.)~,{u&o$2u$3~,v-suff,gem,{u&otum~,1,,DONE
+386,>a2o3a4,,,>aforaq,>aforaq,(.).(.).(.).(.),$1u$2o$3i$4,,,>uforiq,0,,DONE
+387,>a2o3a4,,#n,>aloman,>aloman,(.).(.).(.).(.),$1u$2o$3i$4,,#n,>ulomin,0,,DONE
+388,>awo3a4,,,>aworab,>aworab,(.).(.).(.).(.),$1u$2o$3i$4,,,>uworib,1,,DONE
+389,{i1~a2a3,,,{it~abaE,{it~abaE,{i(.)~.(.).(.),{u$1~u$2i$3,,,{ut~ubiE,0,,DONE
+390,{i1~a2aY,,#-ay,{im~aHaY,{im~aH,{i(.)~.(.),{u$1~u$2,,#-iy,{um~uH,1,,DONE
+391,1aA>aY,,#-ay,naA'aY,naA',(.)aA(.),$1uw,,#-}iy,nuw,0,,DONE
+392,>aAo3,c-suff,#n hollow,|n,>un,(.).(.),<i$2,c-suff,#n hollow,<in,0,,DONE
+393,>aAo3,v-suff,#n hollow,|n,|n,.(.),<iy$1,v-suff,#n hollow,<iyn,0,,DONE

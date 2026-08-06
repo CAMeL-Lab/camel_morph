@@ -1,0 +1,15 @@
+,DEFINE,ORDER,FIELD,VARIANT,MATCH,REPLACE,Linguistic Rule,Example
+0,POSTREGEX,1,diac,MSA,%m,,strip WD masc-pl marker,hum%m >> hum
+1,POSTREGEX,2,diac,MSA,%n,,strip WD n marker,min%n >> min
+2,,,,,,,,
+3,,,,,,,,
+4,,,,,,,,
+5,DEFINE,ORDER,diac,MSA,Input,Reference,Status,Notes
+6,CHECK,1,diac,MSA,hum%m,hum,TRUE,PRON.3MP
+7,CHECK,2,diac,MSA,kum%m,kum,TRUE,PRON.2MP
+8,CHECK,3,diac,MSA,otum%m,otum,TRUE,PVSuff.2MP
+9,CHECK,4,diac,MSA,~um%m,~um,TRUE,PVSuff.2MP
+10,CHECK,5,diac,MSA,min%n,min,TRUE,PREP/PART
+11,CHECK,6,diac,MSA,*a`likum%m,*a`likum,TRUE,DEM_PRON_MP
+12,CHECK,7,diac,MSA,>anotum%m,>anotum,TRUE,PRON_2MP
+13,CHECK,8,diac,MSA,haAhum%m,haAhum,TRUE,DEM+PRON compound
