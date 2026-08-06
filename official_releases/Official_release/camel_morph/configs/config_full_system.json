@@ -1,6 +1,5 @@
 {
     "global": {
-        "data_dir": "data",
         "specs": {
             "about": {
                 "camel-morph-common": "About"
@@ -9,6 +8,8 @@
                 "camel-morph-common": "Header-v2"
             }
         },
+        "data_dir": "data",
+        "service_account": "",
         "db_dir": "databases",
         "debugging_dir": "debugging_output",
         "repr_lemmas_dir": "repr_lemmas",
@@ -16,35 +17,39 @@
         "paradigm_debugging_dir": "paradigm_debugging",
         "banks_dir": "banks",
         "camel_tools": "./camel_morph/camel_tools",
-        "service_account": "",
         "paradigms_config": "misc_files/config_paradigms.json",
-        "banks_spreadsheet": "Paradigm-Banks"
+        "banks_spreadsheet": "Paradigm-Banks",
+        "n_workers": 6
     },
     "local": {
-        "camel_morph_msa": {
+        "camel_morph_msa_download": {
             "pruning": true,
             "reindex": true,
             "cat2id": true,
+            "defaults": true,
             "specs": {
                 "order": {
-                    "camel-morph-msa-nom-other-camera-ready": {
+                    "camel-morph-msa-nom-other-1.2": {
                         "MSA-Nom-ORDER": "N"
                     },
-                    "camel-morph-msa-verbs-camera-ready": {
+                    "camel-morph-msa-verbs-1.2": {
                         "MSA-Verb-ORDER": "V"
                     }
                 },
                 "morph": {
-                    "camel-morph-msa-nom-other-camera-ready": {
+                    "camel-morph-msa-nom-other-1.2": {
                         "MSA-Nom-MORPH": "N"
                     },
-                    "camel-morph-msa-verbs-camera-ready": {
+                    "camel-morph-msa-verbs-1.2": {
                         "MSA-Verb-MORPH": "V"
                     }
                 },
                 "exclude": [],
+                "postregex": {
+                    "camel-morph-msa-verbs-1.2": "PostRegex"
+                },
                 "lexicon": {
-                    "camel-morph-msa-nom-other-camera-ready": {
+                    "camel-morph-msa-nom-other-1.2": {
                         "MSA-Noun-LEX": "N",
                         "MSA-Adj-LEX": "N",
                         "MSA-Adj-Comp-LEX": "N",
@@ -55,10 +60,10 @@
                         "MSA-Other-LEX": "N",
                         "MSA-Nom-LEX-Backoff": "N"
                     },
-                    "camel-morph-msa-annex-camera-ready": {
+                    "camel-morph-msa-annex-1.2": {
                         "MSA-Noun-Prop-Annex-LEX": "N"
                     },
-                    "camel-morph-msa-verbs-camera-ready": {
+                    "camel-morph-msa-verbs-1.2": {
                         "MSA-Verb-LEX-PV": "V",
                         "MSA-Verb-LEX-IV": "V",
                         "MSA-Verb-LEX-CV": "V",
@@ -66,7 +71,7 @@
                     }
                 },
                 "passive": {
-                    "camel-morph-msa-verbs-camera-ready": {
+                    "camel-morph-msa-verbs-1.2": {
                         "MSA-Verb-LEX-PV": "MSA-Verb-PV-Passive-Patterns",
                         "MSA-Verb-LEX-IV": "MSA-Verb-IV-Passive-Patterns"
                     }
@@ -81,8 +86,13 @@
                 ]
             },
             "dialect": "msa",
-            "db": "camel_morph_msa_v1.0.db",
+            "db": "camel_morph_msa_v1.2.3.db",
+            "db_json": "camel_morph_msa_download_v1.2.3.db.json",
             "pos_type": "any",
+            "extended_lemma_keys": [
+                "lemma",
+                "gloss"
+            ],
             "class_map": "misc_files/class2complx_morpheme_type.json",
             "caphi": "camel_morph.sandbox.SBWtoPhon",
             "logprob": "misc_files/logprob_atb_camel_v1.0.pkl"
