@@ -20,83 +20,152 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-
-import re
-import os
-from tqdm import tqdm
+# =============================================================================
+# Imports
+# =============================================================================
 import argparse
-import itertools
-from time import strftime, gmtime, process_time
-from functools import partial
-import cProfile, pstats
-import sys
-from typing import Dict, Tuple, List, Optional
+import cProfile
 import importlib
+import itertools
+import os
 import pickle
+import pstats
+import re
+import sys
+from concurrent.futures import ProcessPoolExecutor, as_completed
+from functools import partial
+from typing import Dict, List, Optional, Tuple
 
 import pandas as pd
-
-try:
-    # Needed for when db_maker() needs to be imported by another script
-    from . import db_maker_utils
-    from .utils.utils import essential_keys_form_feats, Config
-    from .debugging.download_sheets import download_sheets
-except:
-    # Needed for when db_maker() is ran from within this script
-    import db_maker_utils
-    from utils.utils import essential_keys_form_feats, Config
-    from debugging.download_sheets import download_sheets
-
-parser = argparse.ArgumentParser()
-parser.add_argument("-config_file", default='config_default.json',
-                    type=str, help="Config file specifying which sheets to use from `specs_sheets`.")
-parser.add_argument("-config_name", default='default_config',
-                    type=str, help="Name of the configuration to load from the config file.")
-parser.add_argument("-output_dir", default='',
-                    type=str, help="Path of the directory to output the DBs to.")
-parser.add_argument("-debug_lemma", default='',
-                    type=str, help="Only keep specified lemma in the lexicon (for debugging).")
-parser.add_argument("-download", default=False,
-                    action='store_true', help="Whether or not to download the data before doing anything. This should be done in case data was changed in Google Sheets since last time this script was ran.")
-parser.add_argument("-run_profiling", default=False,
-                    action='store_true', help="Run execution time profiling for the make_db().")
-parser.add_argument("-camel_tools", default='local', choices=['local', 'official'],
-                    type=str, help="Path of the directory containing the camel_tools modules.")
-args, _ = parser.parse_known_args()
-
-config = Config(args.config_file, args.config_name)
-
-if args.camel_tools == 'local':
-    sys.path.insert(0, config.camel_tools)
+from tqdm import tqdm
 
 from camel_tools.utils.normalize import normalize_alef_bw, normalize_alef_maksura_bw, normalize_teh_marbuta_bw
-from camel_tools.utils.charmap import CharMapper
 from camel_tools.utils.dediac import dediac_bw
 from camel_tools.morphology.utils import strip_lex
 
+from . import db_maker_utils
+from . import db_maker_runtime as runtime
+from .db_to_json import export_db_to_json
+from .almor_schema import (
+    BACKOFF_SMART, BACKOFF_VANILLA,
+    BW2AR_AFFIX_FIELDS, BW2AR_STEM_FIELDS, CAPHI_COLUMN,
+    CAPHI_MORPH_TYPES, CAT_TYPE_PREFIX, CAT_TYPE_STEM,
+    CAT_TYPE_SUFFIX, COL_CLASS, COL_CONTENT, COL_MATCH, COL_PREFIX,
+    COL_PREFIX_SHORT, COL_REPLACE, COL_STEM, COL_STEM_SHORT,
+    COL_SUFFIX, COL_SUFFIX_SHORT, COMPATIBILITY_SECTIONS,
+    DB_SECTION_ABOUT, DB_SECTION_HEADER, DB_SECTION_POSTREGEX,
+    DB_SECTION_PREFIXES, DB_SECTION_SMART_BACKOFF,
+    DB_SECTION_STEM_BACKOFF, DB_SECTION_STEMS, DB_SECTION_SUFFIXES,
+    DB_SECTION_TABLE_AB, DB_SECTION_TABLE_AC, DB_SECTION_TABLE_BC,
+    DROP_FORM, EMPTY_CONDITION, EMPTY_FIELD, EMPTY_MORPH_CLASS,
+    MORPHEME_SECTIONS, MORPH_TYPE_PREFIX, MORPH_TYPE_STEM,
+    MORPH_TYPE_SUFFIX, NO_ANALYSIS, NOT_WRITTEN, POS_TAG_SCHEMES,
+    POS_VERB, SEG_TOK_SCHEMES, SHORT_ORDER_COLUMNS, SOURCE_LEXICON,
+    STEM_METADATA_COLUMNS, almor_output_header,
+)
+from .debugging.download_sheets import download_sheets
+from .utils.utils import Config, essential_keys_form_feats
 
-normalize_map = CharMapper({
-    '<': 'A',
-    '>': 'A',
-    '|': 'A',
-    '{': 'A',
-    'Y': 'y'
-})
 
-bw2ar = CharMapper.builtin_mapper('bw2ar')
-ar2bw = CharMapper.builtin_mapper('ar2bw')
+def _make_export_metadata(config: Config) -> Dict[str, str]:
+    """Build top-level JSON ``meta`` from the active db-make configuration.
 
-_required_verb_stem_feats = ['pos', 'asp', 'per', 'gen', 'num', 'vox', 'mod']
-# vox needs to be added even for nominals, otherwise the generator would throw errors
-_required_nom_stem_feats = ['pos', 'form_gen', 'form_num', 'gen', 'num', 'stt', 'cas', 'vox']
-_clitic_feats = ['enc0', 'enc1', 'enc2', 'prc0', 'prc1', 'prc1.5', 'prc2', 'prc3']
+    Keys are emitted in alphabetical order: ``dbName``, ``dbVersion``,
+    ``description``, ``regexFormat``.
+    """
+    regex_format = 'python-re'
 
-PRE_POST_REGEX_SYMBOL = re.compile(r'[#@]')
-PRE_POST_REGEX_SYMBOL_SMARTBACKOFF = re.compile(r'^\^|\$$|[#@]')
-HAMZA_WASL_RE = re.compile(r'\{')
-CAPHI_UNDERSCORE_RE_1 = re.compile(r'_+')
-CAPHI_UNDERSCORE_RE_2 = re.compile(r'^_|_$')
-SEG_TOK_SCHEMES = ['D3SEG', 'D3TOK', 'ATBSEG', 'ATBTOK']
+    db_filename = os.path.basename(config.db)
+    db_base = os.path.splitext(db_filename)[0]
+    # Extract the human-friendly database name (strip the `_vX.Y.Z...` part).
+    db_name = db_base.split('_v', 1)[0] if '_v' in db_base else db_base
+
+    # Extract numeric DB version from something like "..._v1.2.2_annex.db".
+    m = re.search(r'_v([0-9]+(?:\.[0-9]+)*)', db_base)
+    db_version = m.group(1) if m else 'unknown'
+    if db_version != 'unknown' and '.' not in db_version:
+        # Normalize "1" -> "1.0" to match the naming convention in db filenames.
+        db_version = f'{db_version}.0'
+
+    # Same label used to filter POSTREGEX sheet rows by VARIANT.
+    dialect = (config.dialect or '').upper()
+    description = f'morph db of {dialect}' if dialect else 'morph db'
+
+    return {
+        'dbName': db_name,
+        'dbVersion': db_version,
+        'description': description,
+        'regexFormat': regex_format,
+    }
+
+
+# =============================================================================
+# Argument Parser
+# =============================================================================
+def parse_args(argv=None) -> argparse.Namespace:
+    """Parse CLI args. Accepts both hyphen and underscore flag spellings."""
+    parser = argparse.ArgumentParser(
+        description="Build a CAMeL Morph ALMOR database."
+    )
+
+    parser.add_argument(
+        "-config-file",
+        dest="config_file",
+        required=True,
+        help="Configuration file containing database configurations.",
+    )
+    parser.add_argument(
+        "-config-name",
+        dest="config_name",
+        required=True,
+        help="Configuration name inside the configuration file.",
+    )
+    parser.add_argument(
+        "-output-dir",
+        dest="output_dir",
+        default=None,
+        help="Directory where the generated database will be written.",
+    )
+    parser.add_argument(
+        "-debug-lemma", 
+        dest="debug_lemma",
+        default=None,
+        help="Restrict the lexicon to one lemma for debugging.",
+    )
+    parser.add_argument(
+        "-download",
+        action="store_true",
+        help="Download the specification sheets before building.",
+    )
+    parser.add_argument(
+        "-run-profiling", 
+        dest="run_profiling",
+        action="store_true",
+        help="Profile database construction.",
+    )
+    parser.add_argument(
+        "-camel-tools",
+        dest="camel_tools",
+        default=None,
+        choices=[runtime.CAMEL_TOOLS_LOCAL, runtime.CAMEL_TOOLS_OFFICIAL],
+        help="Override automatic selection of the local or official camel_tools installation.",
+    )
+
+    return parser.parse_args(argv)
+
+
+def _configured_bool(config: Config, name: str) -> bool:
+    value = getattr(config, name, None)
+    if not isinstance(value, bool):
+        raise ValueError(f'{name} must be configured as a boolean')
+    return value
+
+
+def _configured_positive_int(config: Config, name: str) -> int:
+    value = getattr(config, name, None)
+    if not isinstance(value, int) or isinstance(value, bool) or value < 1:
+        raise ValueError(f'{name} must be configured as a positive integer')
+    return value
 
 """
 Useful terms to know for a better understanding of the comments:
@@ -126,11 +195,19 @@ Useful terms to know for a better understanding of the comments:
     with other complex morphemes
 """
 
-def make_db(config:Config, output_path:Optional[str]=None):
+def make_db(
+    config: Config,
+    output_path: Optional[str] = None,
+    *,
+    download: bool = False,
+    debug_lemma: Optional[str] = None,
+    json_output_path: Optional[str] = None,
+) -> Dict[str, pd.DataFrame]:
     """
     Main function which takes in a set of specifications from `csv` files (downloadable
     from Google Sheets) and which, from the latter, prints out a `db` file in the ALMOR format,
     useable by the Camel Tools Analyzer and Generator engines to produce word analyses/generations.
+    Always also writes a CM-schema JSON export of that DB.
     The config file is any json object which at the highest level contains: (1) global
     specifications, i.e., that apply no matter what the present local configuration contains;
     (2) local specifications, from which we source all the details that are specific to the current
@@ -141,19 +218,23 @@ def make_db(config:Config, output_path:Optional[str]=None):
     Args:
         config (Config): dictionary containing all the necessary information to build the `db` file.
         output_path (str): path of the output DB. Defaults to None
+        json_output_path (str): path of the output JSON.
+            Defaults to ``config.get_db_json_path()``.
     """
-    if args.download:
+    if download:
         print()
         download_sheets(config=config)
     
     morph2caphi = None
     if config.caphi is not None:
         caphi_module = importlib.import_module(config.caphi)
-        morph2caphi = {morph_type: getattr(caphi_module, f'caphi_{morph_type}')
-                       for morph_type in ['DBPrefix', 'DBStem', 'DBSuffix']}
+        morph2caphi = {
+            morph_type: getattr(caphi_module, f'caphi_{morph_type}')
+            for morph_type in CAPHI_MORPH_TYPES
+        }
     
     logprob: Dict[str] = config.logprob
-    if logprob is not None and logprob != 'return_all':
+    if logprob is not None and logprob != runtime.LOGPROB_RETURN_ALL:
         with open(logprob, 'rb') as f:
             logprob = pickle.load(f)
         pos2lex2logprob = {}
@@ -164,40 +245,174 @@ def make_db(config:Config, output_path:Optional[str]=None):
             pos2lex2logprob[pos] = dict(sorted(
                 lex2logprob.items(), key=lambda x: x[1], reverse=True))
         logprob['pos2lex2logprob'] = pos2lex2logprob
-    elif logprob == 'return_all':
+    elif logprob == runtime.LOGPROB_RETURN_ALL:
         logprob = None
     
-    c0 = process_time()
     
-    print("\nLoading and processing sheets... [1/4]")
+    print("\nLoading and processing sheets... [1/5]")
     SHEETS, cond2class = db_maker_utils.read_morph_specs(config)
 
-    if args.debug_lemma or config.restrict_db_to_lemma:
-        lemma = args.debug_lemma if args.debug_lemma else config.restrict_db_to_lemma
+    if debug_lemma or config.restrict_db_to_lemma:
+        lemma = debug_lemma if debug_lemma else config.restrict_db_to_lemma
         SHEETS['lexicon'] = SHEETS['lexicon'][
             SHEETS['lexicon']['LEMMA'] == f'lex:{lemma}']
     
-    print("\nValidating combinations... [2/4]")
-    cat2id: bool = config.cat2id if config.cat2id is not None else False
-    defaults: bool = config.defaults if config.defaults is not None else True
+    print("\nValidating combinations... [2/5]")
+    cat2id = _configured_bool(config, 'cat2id')
+    defaults = _configured_bool(config, 'defaults')
+    pruning = _configured_bool(config, 'pruning')
     
-    db = construct_almor_db(SHEETS, config.pruning,
-        cond2class, cat2id, defaults, morph2caphi, logprob)
+    n_workers = _configured_positive_int(config, 'n_workers')
+    db = construct_almor_db(SHEETS, pruning,
+        cond2class, cat2id, defaults, morph2caphi, logprob, n_workers=n_workers)
 
-    print("\nCollapsing categories and reindexing... [3/4]")
-    reindex: bool = config.reindex if config.reindex is not None else False
+    print("\nCollapsing categories and reindexing... [3/5]")
+    reindex = _configured_bool(config, 'reindex')
     if reindex:
         db, _ = collapse_and_reindex_categories(db, collapse_morphemes=False)
     
-    print("\nGenerating DB file... [4/4]")
+    print("\nGenerating DB file... [4/5]")
     if output_path is None:
         output_path = config.get_db_path()
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
     print_almor_db(output_path, db)
-    
-    c1 = process_time()
-    print(f"\nTotal time required: {strftime('%M:%S', gmtime(c1 - c0))}")
+
+    print("\nExporting DB to JSON... [5/5]")
+    if json_output_path is None:
+        json_output_path = config.get_db_json_path()
+    metadata = _make_export_metadata(config)
+    export_db_to_json(
+        output_path,
+        json_output_path,
+        metadata=metadata,
+        dialect=(config.dialect or '').upper(),
+    )
+    print(f"Wrote JSON: {json_output_path}")
+
     return SHEETS
+
+
+def _merge_partial_db(db: Dict, db_: Dict) -> None:
+    """Merge one ORDER-line partial DB into the accumulating DB.
+    Same logic as the original construct_process merge.
+    """
+    for section, contents in db_.items():
+        if section != DB_SECTION_STEM_BACKOFF:
+            db.setdefault(section, {}).update(contents)
+        else:
+            for backoff_mode, cats in contents.items():
+                db.setdefault(section, {}).setdefault(backoff_mode, set()).update(cats)
+
+
+def _map_cat_to_id(cat: str, cat2id: Dict) -> str:
+    """Same ID assignment as in _generate_cat_field when cat2id is enabled."""
+    if ':' not in cat:
+        return cat
+    morph_type = cat.split(':', 1)[0]
+    cat2id_morph_type = cat2id.setdefault(morph_type, {})
+    if cat in cat2id_morph_type:
+        return cat2id_morph_type[cat]
+    cat_ = f'{morph_type}{str(len(cat2id_morph_type) + 1).zfill(5)}'
+    cat2id[morph_type][cat] = cat_
+    return cat_
+
+
+def _remap_partial_db_cats(db_partial: Dict, cat2id: Dict) -> Dict:
+    """Apply cat2id mapping to a worker partial DB (long category names → IDs)."""
+    remapped = {}
+    for section, contents in db_partial.items():
+        if section == DB_SECTION_STEM_BACKOFF:
+            remapped[section] = {
+                backoff_mode: {_map_cat_to_id(c, cat2id) for c in cats}
+                for backoff_mode, cats in contents.items()
+            }
+        elif section in COMPATIBILITY_SECTIONS:
+            remapped[section] = {
+                (_map_cat_to_id(a, cat2id), _map_cat_to_id(b, cat2id)): v
+                for (a, b), v in contents.items()
+            }
+        else:
+            remapped[section] = {
+                (match, _map_cat_to_id(cat, cat2id), analysis): v
+                for (match, cat, analysis), v in contents.items()
+            }
+    return remapped
+
+
+# Per-process state set once via ProcessPoolExecutor initializer (avoids re-pickling
+# MORPH/cond2class/etc. on every ORDER line).
+_WORKER_SHARED = {}
+
+
+def _init_construct_worker(lexicon, morph, cond2class, pruning, short_cat_maps, defaults_,
+                           morph2caphi, logprob, order_suffix_col):
+    _WORKER_SHARED['lexicon'] = lexicon
+    _WORKER_SHARED['morph'] = morph
+    _WORKER_SHARED['cond2class'] = cond2class
+    _WORKER_SHARED['pruning'] = pruning
+    _WORKER_SHARED['short_cat_maps'] = short_cat_maps
+    _WORKER_SHARED['defaults_'] = defaults_
+    _WORKER_SHARED['morph2caphi'] = morph2caphi
+    _WORKER_SHARED['logprob'] = logprob
+    _WORKER_SHARED['order_suffix_col'] = order_suffix_col
+
+
+def _construct_process_worker(args):
+    """Worker for one ORDER line. Returns (order_index, partial_db_or_None, warning_or_None).
+
+    Always builds with cat2id=None so category names are stable across processes.
+    The main process remaps to IDs after merge when cat2id is enabled.
+    """
+    order_index, order_sequence_dict, stems_section_title = args
+    order_sequence = pd.Series(order_sequence_dict)
+
+    lexicon = _WORKER_SHARED['lexicon']
+    morph = _WORKER_SHARED['morph']
+    cond2class = _WORKER_SHARED['cond2class']
+    pruning = _WORKER_SHARED['pruning']
+    short_cat_maps = _WORKER_SHARED['short_cat_maps']
+    defaults_ = _WORKER_SHARED['defaults_']
+    morph2caphi = _WORKER_SHARED['morph2caphi']
+    logprob = _WORKER_SHARED['logprob']
+    order_suffix_col = _WORKER_SHARED['order_suffix_col']
+
+    cmplx_prefix_classes = gen_cmplx_morph_combs(
+        order_sequence[COL_PREFIX], morph, lexicon, cond2class,
+        pruning_cond_s_f=pruning, pruning_same_class_incompat=pruning)
+    cmplx_suffix_classes = gen_cmplx_morph_combs(
+        order_sequence[COL_SUFFIX], morph, lexicon, cond2class,
+        pruning_cond_s_f=pruning, pruning_same_class_incompat=pruning)
+    cmplx_stem_classes = gen_cmplx_morph_combs(
+        order_sequence[COL_STEM], morph, lexicon, cond2class,
+        cmplx_morph_memoize={},
+        pruning_cond_s_f=pruning, pruning_same_class_incompat=pruning)
+
+    cmplx_type_empty = set()
+    if not cmplx_stem_classes: cmplx_type_empty.add('Stem')
+    if not cmplx_suffix_classes: cmplx_type_empty.add('Suffix')
+    if not cmplx_prefix_classes: cmplx_type_empty.add('Prefix')
+    if cmplx_type_empty:
+        cmplx_type_empty = '/'.join(cmplx_type_empty)
+        warning = (f"WARNING: {order_sequence[order_suffix_col]}: {cmplx_type_empty} class "
+                   'is empty; proceeding to process next order line.')
+        return order_index, None, warning
+
+    cmplx_morph_classes = dict(
+        cmplx_prefix_classes=(
+            cmplx_prefix_classes,
+            order_sequence[COL_PREFIX] if order_sequence[COL_PREFIX] else EMPTY_MORPH_CLASS,
+        ),
+        cmplx_suffix_classes=(
+            cmplx_suffix_classes,
+            order_sequence[COL_SUFFIX] if order_sequence[COL_SUFFIX] else EMPTY_MORPH_CLASS,
+        ),
+        cmplx_stem_classes=(cmplx_stem_classes, order_sequence[COL_STEM]),
+    )
+
+    db_ = cross_cmplx_morph_validation(
+        cmplx_morph_classes, order_sequence[COL_CLASS].lower(), short_cat_maps, defaults_,
+        stems_section_title, None, morph2caphi, logprob)
+    return order_index, db_, None
 
 
 def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
@@ -206,7 +421,8 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
                        cat2id:bool=False,
                        defaults:Optional[bool]=None,
                        morph2caphi:Optional[Dict]=None,
-                       logprob:Optional[Dict]=None) -> Dict:
+                       logprob:Optional[Dict]=None,
+                       n_workers:Optional[int]=None) -> Dict:
     """
     Function which takes care of the condition validation process, i.e., deciding which
     (complex) morphemes are compatible, and prints them and their computed categories in
@@ -227,10 +443,15 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
         on the complex morpheme type. Defaults to None.
         logprob (Dict): dictionary containing the log probablities of different features, extracted
         from a corpus. Defaults to None.
+        n_workers (Optional[int]): process count for ORDER-line validation. If <= 1, runs
+        in-process (needed for useful cProfile output). Must be configured explicitly.
 
     Returns:
         Dict: Database which contains entries (values) for each section (keys).
     """
+    if not isinstance(n_workers, int) or isinstance(n_workers, bool) or n_workers < 1:
+        raise ValueError('n_workers must be a positive integer')
+
     ORDER, MORPH, LEXICON = SHEETS['order'], SHEETS['morph'], SHEETS['lexicon']
     ABOUT, HEADER, POSTREGEX = SHEETS['about'], SHEETS['header'], SHEETS['postregex']
     BACKOFF, SMART_BACKOFF = SHEETS['backoff'], SHEETS['smart_backoff']
@@ -247,110 +468,105 @@ def construct_almor_db(SHEETS:Dict[str, pd.DataFrame],
     # for example if some order is changed in the class fields and forgetting to change the associated
     # short name.
     short_cat_maps = None
-    if {'PREFIX-SHORT', 'STEM-SHORT', 'SUFFIX-SHORT'} <= set(ORDER.columns):
+    if SHORT_ORDER_COLUMNS <= set(ORDER.columns):
         short_cat_maps = _get_short_cat_name_maps(ORDER) 
 
     # One-time filling of the About, Header, and PostRegex sections of the DB
     db = {}
-    db['OUT:###ABOUT###'] = list(ABOUT['CONTENT'])
+    db[DB_SECTION_ABOUT] = list(ABOUT[COL_CONTENT])
     if POSTREGEX is not None:
-        db['OUT:###POSTREGEX###'] = [
-            'MATCH\t' + '\t'.join([match for match in POSTREGEX['MATCH'].values.tolist()]),
-            'REPLACE\t' + '\t'.join([replace for replace in POSTREGEX['REPLACE'].values.tolist()])
+        db[DB_SECTION_POSTREGEX] = [
+            'MATCH\t' + '\t'.join(POSTREGEX[COL_MATCH].values.tolist()),
+            'REPLACE\t' + '\t'.join(POSTREGEX[COL_REPLACE].values.tolist()),
         ]
     
     header_, defaults_ = _read_header_file(HEADER)
-    db['OUT:###HEADER###'] = header_
+    db[DB_SECTION_HEADER] = header_
 
     defaults_ = defaults_ if defaults else None
     cat2id = {} if cat2id else None
-    
-    def construct_process(lexicon: pd.DataFrame,
-                          order_sequence: pd.Series,
-                          cmplx_stem_memoize: Dict[str, str],
-                          stems_section_title: str):
-        """ Process which is ran for each ORDER line, in which plausible complex morphemes
-        are generated and then tested (validated) against each other across the prefix/stem/suffix
-        boundary. Complex prefixes/stems/suffixes which are compatible with each other are added as
-        entries in the DB. 
-        """
-        # Complex morphemes generation (within the prefix/stem/suffix boundary)
-        cmplx_prefix_classes = gen_cmplx_morph_combs(
-            order_sequence['PREFIX'], MORPH, lexicon, cond2class,
-            pruning_cond_s_f=pruning, pruning_same_class_incompat=pruning)
-        cmplx_suffix_classes = gen_cmplx_morph_combs(
-            order_sequence['SUFFIX'], MORPH, lexicon, cond2class,
-            pruning_cond_s_f=pruning, pruning_same_class_incompat=pruning)
-        cmplx_stem_classes = gen_cmplx_morph_combs(
-            order_sequence['STEM'], MORPH, lexicon, cond2class,
-            cmplx_morph_memoize=cmplx_stem_memoize,
-            pruning_cond_s_f=pruning, pruning_same_class_incompat=pruning)
-        
-        cmplx_type_empty = set()
-        if not cmplx_stem_classes: cmplx_type_empty.add('Stem')
-        if not cmplx_suffix_classes: cmplx_type_empty.add('Suffix')
-        if not cmplx_prefix_classes: cmplx_type_empty.add('Prefix')
-        if cmplx_type_empty:
-            cmplx_type_empty = '/'.join(cmplx_type_empty)
-            order_key = 'SUFFIX-SHORT' if 'SUFFIX-SHORT' in ORDER.columns else 'SUFFIX'
-            tqdm.write((f"WARNING: {order_sequence[order_key]}: {cmplx_type_empty} class " 
-                        'is empty; proceeding to process next order line.'))
-            return db
-        
-        cmplx_morph_classes = dict(
-            cmplx_prefix_classes=(cmplx_prefix_classes, order_sequence['PREFIX'] if order_sequence['PREFIX'] else '[EMPTY]'),
-            cmplx_suffix_classes=(cmplx_suffix_classes, order_sequence['SUFFIX'] if order_sequence['SUFFIX'] else '[EMPTY]'),
-            cmplx_stem_classes=(cmplx_stem_classes, order_sequence['STEM']))
-        
-        # Complex morphemes validation or word generation (across the prefix/stem/suffix boundary)
-        db_ = cross_cmplx_morph_validation(
-            cmplx_morph_classes, order_sequence['CLASS'].lower(), short_cat_maps, defaults_,
-            stems_section_title, cat2id, morph2caphi, logprob)
-        for section, contents in db_.items():
-            # if 'BACKOFF' in stems_section_title and section != stems_section_title:
-            #     assert set(contents) <= set(db[section])
-            if section != 'OUT:###STEMBACKOFF###':
-                db.setdefault(section, {}).update(contents)
-            else:
-                for backoff_mode, cats in contents.items():
-                    db.setdefault(section, {}).setdefault(backoff_mode, set()).update(cats)
-    
+    order_suffix_col = (
+        COL_SUFFIX_SHORT if COL_SUFFIX_SHORT in ORDER.columns else COL_SUFFIX
+    )
+    order_rows = [(i, row.to_dict()) for i, (_, row) in enumerate(ORDER.iterrows())]
+
+    def _consume_order_result(order_index, db_, warning, pbar):
+        if warning:
+            tqdm.write(warning)
+        pbar.set_description(str(order_rows[order_index][1][order_suffix_col]))
+        pbar.update(1)
+        if db_ is None:
+            return
+        if cat2id is not None:
+            db_ = _remap_partial_db_cats(db_, cat2id)
+        _merge_partial_db(db, db_)
+
+    def _run_order_rows_parallel(lexicon, stems_section_title, pbar):
+        """Run ORDER lines with n_workers processes (or in-process if n_workers <= 1)."""
+        worker_args = [
+            (i, order_dict, stems_section_title)
+            for i, order_dict in order_rows
+        ]
+
+        # In-process path: required for useful main-process cProfile / single-line profiling.
+        if n_workers <= 1:
+            _init_construct_worker(
+                lexicon, MORPH, cond2class, pruning, short_cat_maps, defaults_,
+                morph2caphi, logprob, order_suffix_col)
+            for args in worker_args:
+                order_index, db_, warning = _construct_process_worker(args)
+                _consume_order_result(order_index, db_, warning, pbar)
+            return
+
+        results = [None] * len(worker_args)
+        with ProcessPoolExecutor(
+            max_workers=n_workers,
+            initializer=_init_construct_worker,
+            initargs=(lexicon, MORPH, cond2class, pruning, short_cat_maps, defaults_,
+                      morph2caphi, logprob, order_suffix_col),
+        ) as executor:
+            futures = {
+                executor.submit(_construct_process_worker, args): args[0]
+                for args in worker_args
+            }
+            for future in as_completed(futures):
+                order_index, db_, warning = future.result()
+                results[order_index] = (db_, warning)
+                if warning:
+                    tqdm.write(warning)
+                pbar.set_description(str(order_rows[order_index][1][order_suffix_col]))
+                pbar.update(1)
+        for db_, _warning in results:
+            if db_ is None:
+                continue
+            if cat2id is not None:
+                db_ = _remap_partial_db_cats(db_, cat2id)
+            _merge_partial_db(db, db_)
+
     # For memoization to work as intended, same-aspect order lines should be placed next
     # to each other in the ORDER file, and since the stem part of the order usually stays
     # the same at the aspect level, then it makes sense to avoid recomputing all the combinations
     # each time and same them in the memo. dict.
+    # NOTE: with parallel workers, per-STEM memoization across ORDER lines is not shared;
+    # each worker starts with an empty stem memo dict.
     for name, SHEET in [('Concrete', LEXICON), ('Backoff', BACKOFF)]:
         if SHEET is not None:
             print(f'\n{name} lexicon')
-            pbar = tqdm(total=len(list(ORDER.iterrows())))
-            cmplx_stem_memoize = {}
-            order_stem_prev = ''
-            for _, order_sequence in ORDER.iterrows():
-                col = 'SUFFIX-SHORT' if 'SUFFIX-SHORT' in ORDER.columns else 'SUFFIX'
-                pbar.set_description(order_sequence[col])
-                if order_sequence['STEM'] != order_stem_prev:
-                    cmplx_stem_memoize = {}
-                    order_stem_prev = order_sequence['STEM']
-                construct_process(SHEET, order_sequence, cmplx_stem_memoize,
-                                stems_section_title='OUT:###STEMS###')
-                pbar.update(1)
+            pbar = tqdm(total=len(order_rows))
+            _run_order_rows_parallel(SHEET, DB_SECTION_STEMS, pbar)
             pbar.close()
 
     stem_backoffs_ = {}
-    if 'OUT:###STEMBACKOFF###' in db:
-        for backoff_mode, cats in db['OUT:###STEMBACKOFF###'].items():
+    if DB_SECTION_STEM_BACKOFF in db:
+        for backoff_mode, cats in db[DB_SECTION_STEM_BACKOFF].items():
             stem_backoffs_[('STEMBACKOFF', backoff_mode, ' '.join(cats))] = 1
-    db['OUT:###STEMBACKOFF###'] = stem_backoffs_
+    db[DB_SECTION_STEM_BACKOFF] = stem_backoffs_
             
     #TODO: maybe this should also be included in the above loop, but more study is needed
     if SMART_BACKOFF is not None:
         print('Smart Backoff lexicon')
-        pbar = tqdm(total=len(list(ORDER.iterrows())))
-        for _, order in ORDER.iterrows():
-            pbar.set_description(order['SUFFIX-SHORT'])
-            construct_process(SMART_BACKOFF, order, {},
-                              stems_section_title='OUT:###SMARTBACKOFF###')
-            pbar.update(1)
+        pbar = tqdm(total=len(order_rows))
+        _run_order_rows_parallel(SMART_BACKOFF, DB_SECTION_SMART_BACKOFF, pbar)
         pbar.close()
 
     return db
@@ -359,7 +575,7 @@ def cross_cmplx_morph_validation(cmplx_morph_classes: Dict,
                                  pos_type: str,
                                  short_cat_maps: Optional[Dict]=None,
                                  defaults: Dict=None,
-                                 stems_section_title: str='OUT:###STEMS###',
+                                 stems_section_title: str=DB_SECTION_STEMS,
                                  cat2id:Optional[Dict]=None,
                                  morph2caphi:Optional[Dict]=None,
                                  logprob:Optional[Dict]=None) -> Dict:
@@ -378,7 +594,7 @@ def cross_cmplx_morph_validation(cmplx_morph_classes: Dict,
         STEM, or SUFFIX column or ORDER) to its short name (PREFIX-SHORT, STEM-SHORT, and
         SUFFIX-SHORT). Defaults to None.
         defaults (Dict, optional): default values of features for DB (from Header). Defaults to None.
-        stems_section_title (_type_, optional): title of the section that will appear in the DB. Defaults to 'OUT:###STEMS###'.
+        stems_section_title (_type_, optional): title of the section that will appear in the DB.
         morph2caphi (Dict): maps to the different methods to use to convert diac to CAPHI based
         on the complex morpheme type. Defaults to None.
         logprob (Dict): dictionary containing the log probablities of different features, extracted
@@ -388,28 +604,58 @@ def cross_cmplx_morph_validation(cmplx_morph_classes: Dict,
         Dict: Database in progress
     """
     db = {}
-    db['OUT:###STEMBACKOFF###'] = {}
-    db['OUT:###PREFIXES###'] = {}
-    db['OUT:###SUFFIXES###'] = {}
+    db[DB_SECTION_STEM_BACKOFF] = {}
+    db[DB_SECTION_PREFIXES] = {}
+    db[DB_SECTION_SUFFIXES] = {}
     db[stems_section_title] = {}
-    db['OUT:###TABLE AB###'] = {}
-    db['OUT:###TABLE BC###'] = {}
-    db['OUT:###TABLE AC###'] = {}
+    db[DB_SECTION_TABLE_AB] = {}
+    db[DB_SECTION_TABLE_BC] = {}
+    db[DB_SECTION_TABLE_AC] = {}
 
     cmplx_prefix_classes, cmplx_prefix_seq = cmplx_morph_classes['cmplx_prefix_classes']
     cmplx_suffix_classes, cmplx_suffix_seq = cmplx_morph_classes['cmplx_suffix_classes']
     cmplx_stem_classes, cmplx_stem_seq = cmplx_morph_classes['cmplx_stem_classes']
     
     cat_memoize = {'stem': {}, 'suffix': {}, 'prefix': {}}
-    compatibility_memoize = {}
+    # Reused COND-S buffer: almost all stem×prefix×suffix triples are unique, so a
+    # compatibility memo dict would only add allocation overhead on this hot path.
+    cs_buf = set()
+
+    # Pre-parse COND-S/T/F once per complex-morpheme class (avoids re-join/re-split
+    # on every stem×prefix×suffix triple — the old hot path in check_compatibility).
+    stem_cond_info = {}
     for cmplx_stem_cls, cmplx_stems in cmplx_stem_classes.items():
-        # `cmplx_stem_cls` = (cmplx_stem['COND-S'], cmplx_stem['COND-T'], cmplx_stem['COND-F'])
-        # All entries in `cmplx_stems` have the same cat
         stem_cond_s = ' '.join([f['COND-S'] for f in cmplx_stems[0]])
         stem_cond_t = ' '.join([f['COND-T'] for f in cmplx_stems[0]])
         stem_cond_f = ' '.join([f['COND-F'] for f in cmplx_stems[0]])
+        stem_cond_info[cmplx_stem_cls] = (
+            cmplx_stems, stem_cond_s, stem_cond_t, stem_cond_f,
+            _parse_condition_fingerprint(stem_cond_s, stem_cond_t, stem_cond_f))
 
-        for cmplx_prefix_cls, cmplx_prefixes in cmplx_prefix_classes.items():
+    prefix_cond_info = {}
+    for cmplx_prefix_cls, cmplx_prefixes in cmplx_prefix_classes.items():
+        prefix_cond_s = ' '.join([f['COND-S'] for f in cmplx_prefixes[0]])
+        prefix_cond_t = ' '.join([f['COND-T'] for f in cmplx_prefixes[0]])
+        prefix_cond_f = ' '.join([f['COND-F'] for f in cmplx_prefixes[0]])
+        prefix_cond_info[cmplx_prefix_cls] = (
+            cmplx_prefixes, prefix_cond_s, prefix_cond_t, prefix_cond_f,
+            _parse_condition_fingerprint(prefix_cond_s, prefix_cond_t, prefix_cond_f))
+
+    suffix_cond_info = {}
+    for cmplx_suffix_cls, cmplx_suffixes in cmplx_suffix_classes.items():
+        suffix_cond_s = ' '.join([f['COND-S'] for f in cmplx_suffixes[0]])
+        suffix_cond_t = ' '.join([f['COND-T'] for f in cmplx_suffixes[0]])
+        suffix_cond_f = ' '.join([f['COND-F'] for f in cmplx_suffixes[0]])
+        suffix_cond_info[cmplx_suffix_cls] = (
+            cmplx_suffixes, suffix_cond_s, suffix_cond_t, suffix_cond_f,
+            _parse_condition_fingerprint(suffix_cond_s, suffix_cond_t, suffix_cond_f))
+
+    for cmplx_stem_cls, (cmplx_stems, stem_cond_s, stem_cond_t, stem_cond_f,
+                         (stem_cs, stem_ct, stem_cf)) in stem_cond_info.items():
+        # `cmplx_stem_cls` = (cmplx_stem['COND-S'], cmplx_stem['COND-T'], cmplx_stem['COND-F'])
+        # All entries in `cmplx_stems` have the same cat
+        for cmplx_prefix_cls, (cmplx_prefixes, prefix_cond_s, prefix_cond_t, prefix_cond_f,
+                               (prefix_cs, prefix_ct, prefix_cf)) in prefix_cond_info.items():
             #TODO: should probably move this loop to be the outermost one (instead of stem) 
             # and should check if there are interactions between morpheme class/condition
             # pairs between prefix and the stem/suffix. If there are none, then there would
@@ -419,19 +665,14 @@ def cross_cmplx_morph_validation(cmplx_morph_classes: Dict,
             # in morpheme classes that appear in only one of complex prefix, suffix, or stem,
             # then this condition should not have interactions with the other two complex
             # morpheme categories.
-            prefix_cond_s = ' '.join([f['COND-S'] for f in cmplx_prefixes[0]])
-            prefix_cond_t = ' '.join([f['COND-T'] for f in cmplx_prefixes[0]])
-            prefix_cond_f = ' '.join([f['COND-F'] for f in cmplx_prefixes[0]])
-
-            for cmplx_suffix_cls, cmplx_suffixes in cmplx_suffix_classes.items():
-                suffix_cond_s = ' '.join([f['COND-S'] for f in cmplx_suffixes[0]])
-                suffix_cond_t = ' '.join([f['COND-T'] for f in cmplx_suffixes[0]])
-                suffix_cond_f = ' '.join([f['COND-F'] for f in cmplx_suffixes[0]])
-
-                valid = check_compatibility(' '.join([prefix_cond_s, stem_cond_s, suffix_cond_s]),
-                                            ' '.join([prefix_cond_t, stem_cond_t, suffix_cond_t]),
-                                            ' '.join([prefix_cond_f, stem_cond_f, suffix_cond_f]),
-                                            compatibility_memoize)
+            for cmplx_suffix_cls, (cmplx_suffixes, suffix_cond_s, suffix_cond_t, suffix_cond_f,
+                                   (suffix_cs, suffix_ct, suffix_cf)) in suffix_cond_info.items():
+                cs_buf.clear()
+                cs_buf.update(prefix_cs)
+                cs_buf.update(stem_cs)
+                cs_buf.update(suffix_cs)
+                valid = _check_compatibility_with_cs(
+                    cs_buf, prefix_ct, stem_ct, suffix_ct, prefix_cf, stem_cf, suffix_cf)
                 if valid:
                     stem_cat, prefix_cat, suffix_cat = None, None, None
                     update_info_stem = dict(pos_type=pos_type,
@@ -447,14 +688,14 @@ def cross_cmplx_morph_validation(cmplx_morph_classes: Dict,
                                               cmplx_morph_type='prefix',
                                               cmplx_morphs=cmplx_prefixes,
                                               conditions=(prefix_cond_s, prefix_cond_t, prefix_cond_f),
-                                              db_section='OUT:###PREFIXES###')
+                                              db_section=DB_SECTION_PREFIXES)
                     update_info_suffix = dict(pos_type=pos_type,
                                               cmplx_morph_seq=cmplx_suffix_seq,
                                               cmplx_morph_cls=cmplx_suffix_cls,
                                               cmplx_morph_type='suffix',
                                               cmplx_morphs=cmplx_suffixes,
                                               conditions=(suffix_cond_s, suffix_cond_t, suffix_cond_f),
-                                              db_section='OUT:###SUFFIXES###')
+                                              db_section=DB_SECTION_SUFFIXES)
                     
                     for update_info in [update_info_stem, update_info_prefix, update_info_suffix]:
                         update_db(db, update_info, cat_memoize, short_cat_maps, defaults, cat2id,
@@ -468,9 +709,9 @@ def cross_cmplx_morph_validation(cmplx_morph_classes: Dict,
                     prefix_cat = prefix_cat if prefix_cat else cat_memoize['prefix'][cmplx_prefix_cls]
                     suffix_cat = suffix_cat if suffix_cat else cat_memoize['suffix'][cmplx_suffix_cls]
 
-                    db['OUT:###TABLE AB###'][(prefix_cat, stem_cat)] = 1
-                    db['OUT:###TABLE BC###'][(stem_cat, suffix_cat)] = 1
-                    db['OUT:###TABLE AC###'][(prefix_cat, suffix_cat)] = 1
+                    db[DB_SECTION_TABLE_AB][(prefix_cat, stem_cat)] = 1
+                    db[DB_SECTION_TABLE_BC][(stem_cat, suffix_cat)] = 1
+                    db[DB_SECTION_TABLE_AC][(prefix_cat, suffix_cat)] = 1
     # Turn this on to make sure that every entry is only set once (can also be used to catch
     # double entries in the lexicon sheets)
     # assert [1 for items in db.values() for item in items if item != 1] == []
@@ -535,14 +776,13 @@ def update_db(db: Dict,
     else:
         raise NotImplementedError
 
-    required_feats = _choose_required_feats(update_info['pos_type'])
     # This if statement implements early stopping which entails that if we have already 
     # logged a specific prefix/stem/suffix entry, we do not need to do it again. Entry
     # generation (and more specifically `dediac()`) is costly.
     if cat_memoize[cmplx_morph_type].get(cmplx_morph_cls) is None:
         for cmplx_morph in cmplx_morphs:
             morph_entry = _generate(
-                cmplx_morph_seq, required_feats, cmplx_morph, cond_s, cond_t, cond_f,
+                cmplx_morph_seq, cmplx_morph, cond_s, cond_t, cond_f,
                 short_cat_map, defaults if defaults != False else None,
                 cat2id, morph2caphi, logprob)
             if defaults != False:
@@ -555,9 +795,11 @@ def update_db(db: Dict,
             db[db_section].setdefault(morph_entry_, 0)
             db[db_section][morph_entry_] += 1
 
-            if morph_entry['match'] == 'NOAN':
+            if morph_entry['match'] == NO_ANALYSIS:
                 for backoff_mode in morph_entry['analysis']['backoff_modes'].split():
-                    db['OUT:###STEMBACKOFF###'].setdefault(backoff_mode, set()).add(morph_entry['cat'])
+                    db[DB_SECTION_STEM_BACKOFF].setdefault(backoff_mode, set()).add(
+                        morph_entry['cat']
+                    )
         cat_memoize[cmplx_morph_type][cmplx_morph_cls] = morph_entry['cat']
 
 
@@ -569,14 +811,20 @@ def _generate_cat_field(cmplx_morph_type: str, cmplx_morph_class: str,
     if short_cat_map:
         cmplx_morph_class = short_cat_map[cmplx_morph_class]
     cmplx_morph_cond_s = '+'.join(
-        [cond for cond in sorted(cmplx_morph_cond_s.split()) if cond != '_'])
-    cmplx_morph_cond_s = cmplx_morph_cond_s if cmplx_morph_cond_s else '-'
+        [cond for cond in sorted(cmplx_morph_cond_s.split()) if cond != EMPTY_FIELD])
+    cmplx_morph_cond_s = (
+        cmplx_morph_cond_s if cmplx_morph_cond_s else EMPTY_CONDITION
+    )
     cmplx_morph_cond_t = '+'.join(
-        [cond for cond in sorted(cmplx_morph_cond_t.split()) if cond != '_'])
-    cmplx_morph_cond_t = cmplx_morph_cond_t if cmplx_morph_cond_t else '-'
+        [cond for cond in sorted(cmplx_morph_cond_t.split()) if cond != EMPTY_FIELD])
+    cmplx_morph_cond_t = (
+        cmplx_morph_cond_t if cmplx_morph_cond_t else EMPTY_CONDITION
+    )
     cmplx_morph_cond_f = '+'.join(
-        [cond for cond in sorted(cmplx_morph_cond_f.split()) if cond != '_'])
-    cmplx_morph_cond_f = cmplx_morph_cond_f if cmplx_morph_cond_f else '-'
+        [cond for cond in sorted(cmplx_morph_cond_f.split()) if cond != EMPTY_FIELD])
+    cmplx_morph_cond_f = (
+        cmplx_morph_cond_f if cmplx_morph_cond_f else EMPTY_CONDITION
+    )
     cat = f"{cmplx_morph_type}:{cmplx_morph_class}_[CS:{cmplx_morph_cond_s}]_[CT:{cmplx_morph_cond_t}]_[CF:{cmplx_morph_cond_f}]"
     if cat2id is not None:
         cat2id_morph_type = cat2id.setdefault(cmplx_morph_type, {})
@@ -599,15 +847,15 @@ def _convert_bw_tag(bw_tag:str, backoff:bool=False):
         if 'null' in parts[0]:
             bw_lex = parts[0]
         else:
-            bw_lex = parts[0] if backoff else bw2ar(parts[0])
+            bw_lex = parts[0] if backoff else runtime.BW2AR(parts[0])
         bw_pos = parts[1]
         utf8_bw_tag.append('/'.join([bw_lex, bw_pos]))
     return '+'.join(utf8_bw_tag)
 
 def _generate_match_field(diac):
-    #NOTE: For EGY nominals, postregex symbol is @ while for verbs it is #
-    #NOTE: Maybe this is unnecessary and EGY can use #; should look into this
-    diac_ = PRE_POST_REGEX_SYMBOL.sub('', diac)
+    # Strip postregex markers from the lookup key only; surface fields keep them
+    # for POSTREGEX (see runtime.PRE_POST_REGEX_SYMBOL).
+    diac_ = runtime.PRE_POST_REGEX_SYMBOL.sub('', diac)
     diac_ = diac_.replace('_', '')
     diac_ = dediac_bw(diac_)
     diac_ = normalize_teh_marbuta_bw(diac_)
@@ -617,7 +865,7 @@ def _generate_match_field(diac):
 
 
 def _generate_caphi(morpheme, caphi_list, caphi_copy, morph2caphi, cmplx_morpheme_type):
-    copy_list = [m[caphi_copy] if m[caphi_copy] != '_' else '' for m in morpheme]
+    copy_list = [m[caphi_copy] if m[caphi_copy] != EMPTY_FIELD else '' for m in morpheme]
     if len(set(caphi_list)) > 1 and '' in caphi_list:
         raise NotImplementedError
     value = []
@@ -625,23 +873,41 @@ def _generate_caphi(morpheme, caphi_list, caphi_copy, morph2caphi, cmplx_morphem
         value.append(morph2caphi[cmplx_morpheme_type](''.join(copy_list)))
     else:
         for i, v in enumerate(caphi_list):
-            if v == '_':
+            if v == EMPTY_FIELD:
                 continue
             elif v:
                 value.append(v)
             else:
-                if copy_list[i] and copy_list[i] != '_':
+                if copy_list[i] and copy_list[i] != EMPTY_FIELD:
                     if morph2caphi is not None:
                         value.append(morph2caphi[cmplx_morpheme_type](copy_list[i]))
     value = ' '.join(value).strip().replace(' ', '_')
-    value = CAPHI_UNDERSCORE_RE_1.sub('_', value)
-    value = CAPHI_UNDERSCORE_RE_2.sub('', value)
+    value = runtime.CAPHI_UNDERSCORE_RE_1.sub('_', value)
+    value = runtime.CAPHI_UNDERSCORE_RE_2.sub('', value)
     return value
+
+
+def _join_sheet_pos_tags(values) -> str:
+    """Join non-empty per-morpheme UD/CATIB6 sheet values with '+'."""
+    if isinstance(values, str):
+        return values
+    return '+'.join(v for v in values if v and v != EMPTY_FIELD)
+
+
+def _assign_ud_catib_from_sheets(analysis: Dict) -> None:
+    """Set analysis['ud'] / analysis['catib6'] from MORPH/LEX sheet columns.
+
+    Values are read per morpheme (like D3SEG/ATBTOK) and concatenated with '+'.
+    Empty sheet cells mean the morpheme contributes no POS tag (e.g. case/NSUFF).
+    No BW→POS fallback: UD/CATiB must come from the sheets.
+    """
+    # Always assign (including '') so inflectional affixes do not leak raw BW tags
+    analysis['ud'] = _join_sheet_pos_tags(analysis.get('ud', []))
+    analysis['catib6'] = _join_sheet_pos_tags(analysis.get('catib6', []))
 
 
 def _generate_affix(affix_type: str,
                     cmplx_morph_seq: str,
-                    required_feats: List[str],
                     affix: List[Dict],
                     affix_cond_s: str, affix_cond_t: str, affix_cond_f: str,
                     short_cat_map: Optional[Dict]=None,
@@ -659,7 +925,6 @@ def _generate_affix(affix_type: str,
         affix_type (str): 'prefix' or 'suffix'
         cmplx_morph_seq (str): space-separated sequence of classes that predefine the
         order of the morphemes to be assembled for the cartesian product.
-        required_feats (List[str]): features that should be included in the analysis. Not used here.
         affix (List[Dict]): individual analyses (dict) of the morphemes in the complex affix.
         affix_cond_s (str): COND-S of complex affix (concat of COND-S of individual morphemes)
         affix_cond_t (str): COND-T of complex affix (concat of COND-T of individual morphemes)
@@ -680,32 +945,41 @@ def _generate_affix(affix_type: str,
         Dict[str, str]: dict containing the 3 fields needed to store the complex affix as an entry in the DB.
     """
     affix_match, analysis = _read_affix(affix, affix_type)
-    affix_type = 'P' if affix_type == 'prefix' else 'S'
+    affix_type = CAT_TYPE_PREFIX if affix_type == 'prefix' else CAT_TYPE_SUFFIX
     acat = _generate_cat_field(affix_type, cmplx_morph_seq, affix_cond_s, affix_cond_t,
                        affix_cond_f, short_cat_map, cat2id)
     analysis['bw'] = _convert_bw_tag(analysis['bw'])
-    affix_type_ = 'DBPrefix' if affix_type == 'P' else 'DBSuffix'
+    _assign_ud_catib_from_sheets(analysis)
+    affix_type_ = (
+        MORPH_TYPE_PREFIX if affix_type == CAT_TYPE_PREFIX else MORPH_TYPE_SUFFIX
+    )
     
     for col in SEG_TOK_SCHEMES:
         col = col.lower()
         tok_copy = defaults['tokenization'][col]
         value = ''.join(
-            v if v else (affix[i][tok_copy] if affix[i][tok_copy] != '_' else '')
+            v if v else (
+                affix[i][tok_copy] if affix[i][tok_copy] != EMPTY_FIELD else ''
+            )
             for i, v in enumerate(analysis[col]))
         analysis[col] = value
     
     analysis['caphi'] = _generate_caphi(
         affix, analysis['caphi'], defaults['transcription']['caphi'], morph2caphi, affix_type_)
     
-    for f in ['diac', 'd3seg', 'd3tok', 'atbseg', 'atbtok']:
-        analysis[f] = bw2ar(analysis[f])
+    for f in BW2AR_AFFIX_FIELDS:
+        analysis[f] = runtime.BW2AR(analysis[f])
 
-    affix = {'match': bw2ar(affix_match), 'cat': acat, 'analysis': analysis}
+    affix = {
+        # affix_match already had postregex markers stripped in _generate_match_field.
+        'match': runtime.BW2AR(affix_match),
+        'cat': acat,
+        'analysis': analysis,
+    }
     return affix
 
 
 def _generate_stem(cmplx_morph_seq: str,
-                   required_feats: List[str],
                    stem: List[Dict],
                    stem_cond_s: str, stem_cond_t: str, stem_cond_f: str,
                    short_cat_map: Optional[Dict]=None,
@@ -718,7 +992,6 @@ def _generate_stem(cmplx_morph_seq: str,
     Args:
         cmplx_morph_seq (str): space-separated sequence of classes that predefines the
         order of the morphemes to be assembled for the cartesian product.
-        required_feats (List[str]): features that should be included in the analysis.
         stem (List[Dict]): individual analyses (dict) of the morphemes in the complex stem.
         stem_cond_s (str): COND-S of complex stem (concat of COND-S of individual morphemes)
         stem_cond_t (str): COND-T of complex stem (concat of COND-T of individual morphemes)
@@ -738,27 +1011,33 @@ def _generate_stem(cmplx_morph_seq: str,
     """
     stem_match, analysis, backoff = _read_stem(stem)
     analysis['bw'] = _convert_bw_tag(analysis['bw'], backoff)
-    
-    if defaults is not None:
-        for f in required_feats + _clitic_feats:
-            if f not in analysis or analysis[f] == '_':
-                analysis[f] = defaults['defaults'][analysis['pos']][f]
+    _assign_ud_catib_from_sheets(analysis)
 
-    if '-' in analysis['lex'] and analysis['pos'] == 'verb':
+    if defaults is not None:
+        pos_defaults = defaults['defaults'].get(analysis['pos'], {})
+
+        for f, default in pos_defaults.items():
+            if default in [None, '', '*']:
+                continue
+
+            if analysis.get(f) in [None, '', EMPTY_FIELD]:
+                analysis[f] = default
+
+    if '-' in analysis['lex'] and analysis['pos'] == POS_VERB:
         part2 = analysis['lex'].split('-')[1]
         mid_root_diac = part2.split('_')[0] if '_' in part2 else part2
         analysis['mid_root_diac'] = mid_root_diac
     
-    if backoff == 'smart':
-        match = db_maker_utils._bw2ar_regex(stem_match, bw2ar)
-    elif backoff == 'vanilla':
+    if backoff == BACKOFF_SMART:
+        match = db_maker_utils._bw2ar_regex(stem_match, runtime.BW2AR)
+    elif backoff == BACKOFF_VANILLA:
         match = stem_match
         analysis['backoff_modes'] = analysis['lex']
-        analysis['lex'] = 'NOAN'
+        analysis['lex'] = NO_ANALYSIS
     else:
-        match = bw2ar(stem_match)
+        match = runtime.BW2AR(stem_match)
 
-    xcat = _generate_cat_field('X', cmplx_morph_seq, stem_cond_s, stem_cond_t,
+    xcat = _generate_cat_field(CAT_TYPE_STEM, cmplx_morph_seq, stem_cond_s, stem_cond_t,
                                stem_cond_f, short_cat_map, cat2id)
     
     if not backoff:
@@ -766,7 +1045,9 @@ def _generate_stem(cmplx_morph_seq: str,
             col = col.lower()
             tok_copy = defaults['tokenization'][col]
             value = ''.join(
-                v if v else (stem[i][tok_copy] if stem[i][tok_copy] != '_' else '')
+                v if v else (
+                    stem[i][tok_copy] if stem[i][tok_copy] != EMPTY_FIELD else ''
+                )
                 for i, v in enumerate(analysis[col]))
             if value != analysis['diac']:
                 analysis[col] = value
@@ -774,24 +1055,29 @@ def _generate_stem(cmplx_morph_seq: str,
                 del analysis[col]
         
         analysis['caphi'] = _generate_caphi(
-            stem, analysis['caphi'], defaults['transcription']['caphi'], morph2caphi, 'DBStem')
+            stem,
+            analysis['caphi'],
+            defaults['transcription']['caphi'],
+            morph2caphi,
+            MORPH_TYPE_STEM,
+        )
         
         if logprob is not None:
-            for f in ['lex', 'pos_lex']:
+            for f in runtime.LOGPROB_FEATURES:
                 lex_ = tuple(analysis[f_]
                              if f_ != 'lex' else strip_lex(analysis[f_])
                              for f_ in f.split('_'))
-                logprob_ = f'{logprob[f][lex_]:.6f}' if lex_ in logprob[f] else '-99'
-                analysis[f'{f}_logprob'] = logprob_
+                analysis[f'{f}_logprob'] = (
+                    f'{logprob[f][lex_]:.6f}'
+                    if lex_ in logprob[f]
+                    else runtime.MISSING_LOGPROB
+                )
 
-        bw2ar_columns = ['lex', 'diac', 'cm_stem', 'cm_buffer', 'root',
-                         'd3seg', 'd3tok', 'atbseg', 'atbtok',
-                         'pattern', 'pattern_abstract']
-        for f in bw2ar_columns:
+        for f in BW2AR_STEM_FIELDS:
             if f in analysis:
-                if analysis[f] == 'NTWS' or analysis[f] is None:
+                if analysis[f] == NOT_WRITTEN or analysis[f] is None:
                     continue
-                analysis[f] = bw2ar(analysis[f])
+                analysis[f] = runtime.BW2AR(analysis[f])
 
     stem = {'match': match, 'cat': xcat, 'analysis': analysis}
     return stem
@@ -811,23 +1097,27 @@ def _read_affix(affix: List[Dict], affix_type: str) -> Tuple[str, Dict]:
         Tuple[str, Dict]: information to store in the DB.
     """
     analysis = {}
-    analysis['bw'] = '+'.join(m['BW'] for m in affix if m['BW'] != '_')
+    analysis['bw'] = '+'.join(
+        m['BW'] for m in affix if m['BW'] != EMPTY_FIELD
+    )
     analysis['gloss'] = '+'.join(m['GLOSS'] for m in affix
-                                 if m['GLOSS'] and m['GLOSS'] != '_')
+                                 if m['GLOSS'] and m['GLOSS'] != EMPTY_FIELD)
     affix_feat = {feat.split(':')[0]: feat.split(':')[1]
                   for m in affix for feat in m['FEAT'].split()}
     analysis = {**analysis, **affix_feat}
 
-    analysis['diac'] = ''.join(m['FORM'] for m in affix if m['FORM'] != '_')
+    analysis['diac'] = ''.join(
+        m['FORM'] for m in affix if m['FORM'] != EMPTY_FIELD
+    )
     
-    for col in SEG_TOK_SCHEMES + ['CAPHI']:
+    for col in (*SEG_TOK_SCHEMES, *POS_TAG_SCHEMES, CAPHI_COLUMN):
         analysis[col.lower()] = [m.get(col, '') for m in affix]
     
     source = [m['SOURCE'] for m in affix if m.get('SOURCE')]
     if source and any(source):
         analysis['source'] = source[0]
     else:
-        analysis['source'] = 'lex'
+        analysis['source'] = SOURCE_LEXICON
     affix_type = 'pref' if affix_type == 'prefix' else 'suff'
     analysis[f'cm_{affix_type}_ids'] = '+'.join(
         m['CLASS'] + ':' + str(int(float(m['LINE'] if m['LINE'] else -1))) for m in affix)
@@ -847,55 +1137,63 @@ def _read_stem(stem: List[Dict]) -> Tuple[str, Dict]:
         Tuple[str, Dict]: information to store in the DB
     """
     analysis = {}
-    analysis['bw'] = '+'.join(s['BW'] for s in stem if s['BW'] != '_')
+    analysis['bw'] = '+'.join(
+        s['BW'] for s in stem if s['BW'] != EMPTY_FIELD
+    )
     analysis['gloss'] = '+'.join(s['GLOSS'] for s in stem
-                                 if s['GLOSS'] and s['GLOSS'] != '_')
+                                 if s['GLOSS'] and s['GLOSS'] != EMPTY_FIELD)
     analysis['lex'] = '+'.join(
         s['LEMMA'].split(':')[1] for s in stem if 'LEMMA' in s)
     stem_feat = {feat.split(':')[0]: feat.split(':')[1]
                 for s in stem for feat in s['FEAT'].split()}
     analysis = {**analysis, **stem_feat}
 
-    analysis['diac'] = ''.join(s['FORM'] for s in stem if s['FORM'] != '_')
+    analysis['diac'] = ''.join(
+        s['FORM'] for s in stem if s['FORM'] != EMPTY_FIELD
+    )
     
-    for col in ['ROOT', 'PATTERN_ABSTRACT', 'PATTERN', 'SOURCE']:
+    for col in STEM_METADATA_COLUMNS:
         feat = [s[col] for s in stem if s.get(col)]
         if feat and any(feat):
             analysis[col.lower()] = feat[0]
         elif col == 'SOURCE':
-            analysis['source'] = 'lex'
+            analysis['source'] = SOURCE_LEXICON
         else:
-            analysis[col.lower()] = 'NTWS'
+            analysis[col.lower()] = NOT_WRITTEN
 
     analysis['cm_stem_ids'] = '+'.join(
         s['CLASS'] + ':' + str(int(float(s['LINE'] if s['LINE'] else -1)))
         for s in stem)
     analysis['cm_stem'], analysis['cm_buffer'] = stem[0]['FORM'], None
-    if len(stem) > 1 and len(stem) == 2 and stem[1]['FORM'] not in ['_', '']:
+    if len(stem) == 2 and stem[1]['FORM'] not in [EMPTY_FIELD, '']:
         analysis['cm_buffer'] = stem[1]['FORM']
 
     stem_defines = set(s['DEFINE'] for s in stem)
     if 'SMARTBACKOFF' in stem_defines:
         assert stem_defines <= {'MORPH', 'SMARTBACKOFF'}
-        backoff = 'smart'
+        backoff = BACKOFF_SMART
         stem_match = []
         for s in stem:
-            if s['FORM'] != '_':
+            if s['FORM'] != EMPTY_FIELD:
                 if s['DEFINE'] == 'SMARTBACKOFF':
                     stem_match.append(
-                        PRE_POST_REGEX_SYMBOL_SMARTBACKOFF.sub('', s['MATCH']))
+                        runtime.PRE_POST_REGEX_SYMBOL_SMARTBACKOFF.sub('', s['MATCH']))
                 else:
                     stem_match.append(_generate_match_field(s['FORM']))
         stem_match = f"^{''.join(stem_match)}$"
     elif 'BACKOFF' in  stem_defines:
-        backoff = 'vanilla'
+        backoff = BACKOFF_VANILLA
         assert stem_defines <= {'MORPH', 'BACKOFF'}
-        stem_match = 'NOAN'
+        stem_match = NO_ANALYSIS
     else:
         backoff = None
         stem_match = _generate_match_field(analysis['diac'])
-        for col in SEG_TOK_SCHEMES + ['CAPHI']:
+        for col in (*SEG_TOK_SCHEMES, CAPHI_COLUMN):
             analysis[col.lower()] = [s.get(col, '') for s in stem]
+
+    # UD/CATIB6 come from sheets for all stem types (concrete + backoff).
+    for col in POS_TAG_SCHEMES:
+        analysis[col.lower()] = [s.get(col, '') for s in stem]
 
     return stem_match, analysis, backoff
 
@@ -1084,14 +1382,14 @@ def _get_mapping_for_table_Z(entries, XY, YZ, XZ, name, max_cat_index):
 
 
 def collapse_and_reindex_categories(db, collapse_morphemes):
-    prefix_stem_compat_ = _read_compatibility_tables(db['OUT:###TABLE AB###'])
-    stem_suffix_compat_ = _read_compatibility_tables(db['OUT:###TABLE BC###'])
-    prefix_suffix_compat_ = _read_compatibility_tables(db['OUT:###TABLE AC###'])
+    prefix_stem_compat_ = _read_compatibility_tables(db[DB_SECTION_TABLE_AB])
+    stem_suffix_compat_ = _read_compatibility_tables(db[DB_SECTION_TABLE_BC])
+    prefix_suffix_compat_ = _read_compatibility_tables(db[DB_SECTION_TABLE_AC])
 
-    prefixes_ = db['OUT:###PREFIXES###']
-    stems_ = db['OUT:###STEMS###']
-    suffixes_ = db['OUT:###SUFFIXES###']
-    backoff_stems_ = db['OUT:###STEMBACKOFF###']
+    prefixes_ = db[DB_SECTION_PREFIXES]
+    stems_ = db[DB_SECTION_STEMS]
+    suffixes_ = db[DB_SECTION_SUFFIXES]
+    backoff_stems_ = db[DB_SECTION_STEM_BACKOFF]
 
     print('Factorization Round 1')
     equivalences = db_maker_utils.factorize_categories(
@@ -1132,13 +1430,13 @@ def collapse_and_reindex_categories(db, collapse_morphemes):
     stem_suffix_compat_ = _write_compatibility_tables(stem_suffix_compat_)
     prefix_suffix_compat_ = _write_compatibility_tables(prefix_suffix_compat_)
 
-    db['OUT:###PREFIXES###'] = prefixes_
-    db['OUT:###STEMS###'] = stems_
-    db['OUT:###SUFFIXES###'] = suffixes_
-    db['OUT:###TABLE AB###'] = prefix_stem_compat_
-    db['OUT:###TABLE BC###'] = stem_suffix_compat_
-    db['OUT:###TABLE AC###'] = prefix_suffix_compat_
-    db['OUT:###STEMBACKOFF###'] = backoff_stems_
+    db[DB_SECTION_PREFIXES] = prefixes_
+    db[DB_SECTION_STEMS] = stems_
+    db[DB_SECTION_SUFFIXES] = suffixes_
+    db[DB_SECTION_TABLE_AB] = prefix_stem_compat_
+    db[DB_SECTION_TABLE_BC] = stem_suffix_compat_
+    db[DB_SECTION_TABLE_AC] = prefix_suffix_compat_
+    db[DB_SECTION_STEM_BACKOFF] = backoff_stems_
 
     collapse_and_reindex_debug = dict(
         equivalences=equivalences if equivalences else None,
@@ -1155,54 +1453,56 @@ def print_almor_db(output_path, db):
     """Create output file in ALMOR DB format"""
 
     with open(output_path, 'w') as f:
-        for x in db['OUT:###HEADER###']:
+        for x in db[DB_SECTION_HEADER]:
             print(x, file=f)
 
-        print('###STEMBACKOFF###', file=f)
-        for x in db['OUT:###STEMBACKOFF###']:
+        print(almor_output_header(DB_SECTION_STEM_BACKOFF), file=f)
+        for x in db[DB_SECTION_STEM_BACKOFF]:
             print(*x, sep=' ', file=f)
         
-        postregex = db.get('OUT:###POSTREGEX###')
+        postregex = db.get(DB_SECTION_POSTREGEX)
         if postregex:
-            print('###POSTREGEX###', file=f)
+            print(almor_output_header(DB_SECTION_POSTREGEX), file=f)
             for x in postregex:
                 print(x, file=f)
 
-        for section in ['PREFIXES', 'STEMS', 'SUFFIXES']:
-            assert f'OUT:###{section}###' in db, (
-                f'Empty {section} section. Something might be wrong with the sheets.')     
+        for section_name, section_key in MORPHEME_SECTIONS:
+            if section_key not in db:
+                raise ValueError(
+                    f'Empty {section_name} section. Something might be wrong with the sheets.'
+                )
 
-        print('###PREFIXES###', file=f)
-        for x in db['OUT:###PREFIXES###']:
+        print(almor_output_header(DB_SECTION_PREFIXES), file=f)
+        for x in db[DB_SECTION_PREFIXES]:
             print(*x, sep='\t', file=f)
             
-        print('###SUFFIXES###', file=f)
-        for x in db['OUT:###SUFFIXES###']:
+        print(almor_output_header(DB_SECTION_SUFFIXES), file=f)
+        for x in db[DB_SECTION_SUFFIXES]:
             print(*x, sep='\t', file=f)
         
         underscore_ar = re.compile('ـ')
-        print('###STEMS###', file=f)
-        for x in db['OUT:###STEMS###']:
+        print(almor_output_header(DB_SECTION_STEMS), file=f)
+        for x in db[DB_SECTION_STEMS]:
             # Fixes weird underscore generated by bw2ar()
             x = (*x[:2], underscore_ar.sub('_', x[2]))
             print(*x, sep='\t', file=f)
 
-        smart_backoff = db.get('OUT:###SMARTBACKOFF###')
+        smart_backoff = db.get(DB_SECTION_SMART_BACKOFF)
         if smart_backoff:
-            print('###SMARTBACKOFF###', file=f)
-            for x in db['OUT:###SMARTBACKOFF###']:
+            print(almor_output_header(DB_SECTION_SMART_BACKOFF), file=f)
+            for x in db[DB_SECTION_SMART_BACKOFF]:
                 print(*x, sep='\t', file=f)
             
-        print('###TABLE AB###', file=f)
-        for x in db['OUT:###TABLE AB###']:
+        print(almor_output_header(DB_SECTION_TABLE_AB), file=f)
+        for x in db[DB_SECTION_TABLE_AB]:
             print(*x, sep=' ', file=f)
             
-        print('###TABLE BC###', file=f)
-        for x in db['OUT:###TABLE BC###']:
+        print(almor_output_header(DB_SECTION_TABLE_BC), file=f)
+        for x in db[DB_SECTION_TABLE_BC]:
             print(*x, sep=' ', file=f)
             
-        print('###TABLE AC###', file=f)
-        for x in db['OUT:###TABLE AC###']:
+        print(almor_output_header(DB_SECTION_TABLE_AC), file=f)
+        for x in db[DB_SECTION_TABLE_AC]:
             print(*x, sep=' ', file=f)
 
 
@@ -1222,12 +1522,14 @@ def _get_short_cat_name_maps(ORDER: pd.DataFrame) -> Dict:
     map_p, map_x, map_s = {}, {}, {}
     map_word = {}
     for _, row in ORDER.iterrows():
-        p, x, s = row['PREFIX'], row['STEM'], row['SUFFIX']
-        p = '[EMPTY]' if p == '' else p
-        s = '[EMPTY]' if s == '' else s
-        p_short, x_short, s_short = row['PREFIX-SHORT'], row['STEM-SHORT'], row['SUFFIX-SHORT']
-        p_short = '[EMPTY]' if p_short == '' else p_short
-        s_short = '[EMPTY]' if s_short == '' else s_short
+        p, x, s = row[COL_PREFIX], row[COL_STEM], row[COL_SUFFIX]
+        p = EMPTY_MORPH_CLASS if p == '' else p
+        s = EMPTY_MORPH_CLASS if s == '' else s
+        p_short = row[COL_PREFIX_SHORT]
+        x_short = row[COL_STEM_SHORT]
+        s_short = row[COL_SUFFIX_SHORT]
+        p_short = EMPTY_MORPH_CLASS if p_short == '' else p_short
+        s_short = EMPTY_MORPH_CLASS if s_short == '' else s_short
         def check_soundness(x, map_x, x_short):
             if x in map_x:
                 assert map_x[x] == x_short, 'Every complex morpheme class sequence should have a unique short cat name.'
@@ -1290,14 +1592,16 @@ def gen_cmplx_morph_combs(cmplx_morph_seq: str,
         return cmplx_morph_memoize
     
     if not cmplx_morph_seq:
-        cmplx_morph_seq = '[EMPTY]'
+        cmplx_morph_seq = EMPTY_MORPH_CLASS
 
     cmplx_morph_classes = []
     for cmplx_morph_cls in cmplx_morph_seq.split():
         sheet = LEXICON if 'STEM' in cmplx_morph_cls else MORPH
         instances = []
         for _, row in sheet[sheet.CLASS == cmplx_morph_cls].iterrows():
-            if 'STEM' in cmplx_morph_cls and (row['FORM'] == '' or row['FORM'] == "DROP"):
+            if 'STEM' in cmplx_morph_cls and (
+                row['FORM'] == '' or row['FORM'] == DROP_FORM
+            ):
                 continue
             instances.append(row.to_dict())
         if not instances:
@@ -1344,7 +1648,7 @@ def gen_cmplx_morph_combs(cmplx_morph_seq: str,
                 is_not_coherent = False
                 for cond in cond_t_seq:
                     # Disregard if default condition
-                    if cond == '_':
+                    if cond == EMPTY_FIELD:
                         continue
                     elif '||' in cond:
                         cond_s = cond.split('||')
@@ -1374,8 +1678,36 @@ def gen_cmplx_morph_combs(cmplx_morph_seq: str,
     return cmplx_morph_categorized
 
 
-def check_compatibility (cond_s: str, cond_t: str, cond_f: str,
-                         compatibility_memoize: Dict[str, bool]) -> bool:
+def _parse_condition_fingerprint(cond_s: str, cond_t: str, cond_f: str):
+    """Parse COND-S/T/F strings once into set / alt-tuples for fast checks."""
+    cs = frozenset(cond_s.split())
+    ct = tuple(tuple(t.split('||')) for t in cond_t.split())
+    cf = tuple(tuple(f.split('||')) for f in cond_f.split())
+    return cs, ct, cf
+
+
+def _check_compatibility_with_cs(cs, prefix_ct, stem_ct, suffix_ct,
+                                 prefix_cf, stem_cf, suffix_cf) -> bool:
+    """Compatibility check against an already-built COND-S set."""
+    # COND-T: each term must have at least one alternative present in COND-S
+    for terms in (prefix_ct, stem_ct, suffix_ct):
+        for alts in terms:
+            for ort in alts:
+                if ort in cs:
+                    break
+            else:
+                return False
+    # COND-F: no alternative may be present in COND-S
+    for terms in (prefix_cf, stem_cf, suffix_cf):
+        for alts in terms:
+            for orf in alts:
+                if orf in cs:
+                    return False
+    return True
+
+
+def check_compatibility(cond_s: str, cond_t: str, cond_f: str,
+                        compatibility_memoize: Dict) -> bool:
     """Method which, based on COND-S (conditions set by the morpheme), COND-T (conditions
     required to be set by the concatenating morpheme(s)), and COND-F (conditions required not
     to be set by the concatenating morpheme(s)), decides whether a combination of
@@ -1392,60 +1724,24 @@ def check_compatibility (cond_s: str, cond_t: str, cond_f: str,
         cond_s (str): concatenation of COND-S of complex prefix, complex stem, and complex suffix
         cond_t (str): concatenation of COND-T of complex prefix, complex stem, and complex suffix
         cond_f (str): concatenation of COND-F of complex prefix, complex stem, and complex suffix
-        compatibility_memoize (Dict[str, bool]): dictionary keeping track of combinations that were
+        compatibility_memoize (Dict): dictionary keeping track of combinations that were
         previously validated to avoid recomputing them a second time.
 
     Returns:
         bool: whether a combination of complex morphemes is valid or not. If it is valid, all the
         complex morphemes in it are secured a place in the DB.
     """
-    #TODO: inefficient, in future create a Conditions class and vectorize everything
-    # This method takes up about half of the runtime profile.
-    key = f'{cond_s}\t{cond_t}\t{cond_f}'
-    if key in compatibility_memoize:
-      return compatibility_memoize[key]
-    else:
-      compatibility_memoize[key] = ''
-    # Remove all nil items (indicated as "_")
-    cs = [cond for cond in cond_s.split()]
-    ct = [cond for cond in cond_t.split()]
-    cf = [cond for cond in cond_f.split()]
-
-    valid = True
-    # Conditions required to be set by the concatenating morpheme(s)
-    for t in ct:
-        # Supports cases where we have a disjunction of condition terms
-        validor = False
-        for ort in t.split('||'):
-            validor = validor or ort in cs
-        # If any of the conditions present in COND-T is not present in COND-S
-        # then the combination in invalid 
-        valid = valid and validor
-        if not valid:
-            compatibility_memoize[key] = valid
-            return valid
-    # Conditions required NOT to be set by the concatenating morpheme(s)
-    for f in cf:
-        for orf in f.split('||'):
-            valid = valid and orf not in cs
-        if not valid:
-            compatibility_memoize[key] = valid
-            return valid
-
+    key = (cond_s, cond_t, cond_f)
+    cached = compatibility_memoize.get(key)
+    if cached is not None:
+        return cached
+    cs = set(cond_s.split())
+    ct = tuple(tuple(t.split('||')) for t in cond_t.split())
+    cf = tuple(tuple(f.split('||')) for f in cond_f.split())
+    empty = ()
+    valid = _check_compatibility_with_cs(cs, ct, empty, empty, cf, empty, empty)
     compatibility_memoize[key] = valid
-    return valid                     
-
-
-def _choose_required_feats(pos_type):
-    if pos_type == 'verbal':
-        required_feats = _required_verb_stem_feats
-    elif pos_type == 'nominal':
-        required_feats = _required_nom_stem_feats
-    elif pos_type in ['other', 'any']:
-        required_feats = list(set(_required_nom_stem_feats + _required_verb_stem_feats))
-    else:
-        raise NotImplementedError
-    return required_feats
+    return valid
 
 
 def _read_header_file(header:pd.DataFrame):
@@ -1497,19 +1793,58 @@ def _read_header_file(header:pd.DataFrame):
     return header_, defaults
 
 
-if __name__ == "__main__":
-    if args.run_profiling:
-        profiler = cProfile.Profile()
-        profiler.enable()
-    
-    output_dir = args.output_dir if args.output_dir else config.get_db_dir_path()
-    if not os.path.exists(output_dir):
-        os.mkdir(output_dir)
-    output_path = os.path.join(output_dir, config.db)
+def run_profiled(
+    config: Config,
+    output_path: str,
+    *,
+    download: bool,
+    debug_lemma: Optional[str],
+    json_output_path: Optional[str],
+) -> None:
+    profiler = cProfile.Profile()
+    profiler.enable()
 
-    make_db(config, output_path)
-    
-    if args.run_profiling:
+    try:
+        make_db(
+            config,
+            output_path,
+            download=download,
+            debug_lemma=debug_lemma,
+            json_output_path=json_output_path,
+        )
+    finally:
         profiler.disable()
-        stats = pstats.Stats(profiler).sort_stats('cumtime')
+        stats = pstats.Stats(profiler).sort_stats("cumtime")
         stats.print_stats()
+
+
+def main() -> None:
+    args =  parse_args()
+    config = Config(args.config_file, args.config_name)
+
+    output_dir = args.output_dir or config.get_db_dir_path()
+    os.makedirs(output_dir, exist_ok=True)
+
+    output_path = os.path.join(output_dir, config.db)
+    json_output_path = os.path.join(output_dir, config.db_json) if config.db_json else None
+
+    if args.run_profiling:
+        run_profiled(
+            config=config,
+            output_path=output_path,
+            download=args.download,
+            debug_lemma=args.debug_lemma,
+            json_output_path=json_output_path,
+        )
+    else:
+        make_db(
+            config,
+            output_path,
+            download=args.download,
+            debug_lemma=args.debug_lemma,
+            json_output_path=json_output_path,
+        )
+
+
+if __name__ == "__main__":
+    main()

@@ -1,5 +1,5 @@
 numpy>=1.19.0
-pandas==1.4.4
+pandas
 tqdm
 emoji
 gspread==5.1.1
