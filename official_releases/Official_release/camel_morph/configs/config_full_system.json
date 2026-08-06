@@ -22,7 +22,7 @@
         "n_workers": 6
     },
     "local": {
-        "camel_morph_msa_download": {
+        "camel_morph_msa": {
             "pruning": true,
             "reindex": true,
             "cat2id": true,
