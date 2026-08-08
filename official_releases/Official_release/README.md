@@ -87,21 +87,173 @@ Without `-download`, no Google authentication is needed; the DB Maker uses the l
 
 #### JSON output and schema
 
-Every successful DB Maker run automatically exports the completed ALMOR `.db` to JSON. The output filename comes from the local configuration's `db_json` value. If that value is omitted, the exporter uses the `.db` basename with a `.json` extension.
+Every successful DB Maker run automatically exports the completed ALMOR `.db` through [`camel_morph.db_to_json`](./camel_morph/db_to_json.py). Values are taken from the ALMOR database as-is; the JSON representation adds structure, data types, metadata, and rewrite recipes. The output filename comes from the local configuration's `db_json` value. If that value is omitted, the exporter uses the `.db` basename with a `.json` extension.
 
-The JSON is UTF-8, uses schema version `1`, and keeps the database content in these main sections:
+##### Format requirements
 
-| Key | Content |
-| --- | --- |
-| `schemaVersion` | JSON schema version. |
-| `meta` | Database name, version, description, and regex format. |
-| `definitions` | Feature types, allowed values, defaults, and any post-regex rewrite rules. |
-| `defaults`, `order`, `tokenizations` | Default feature maps and feature/tokenization order. |
-| `stemBackoffs` | Stem category lists grouped by backoff mode. |
-| `prefixes`, `suffixes`, `stems`, `smartBackoffs` | Morpheme records with orthography, category, and feature maps. |
-| `prefixStemCompat`, `stemSuffixCompat`, `prefixSuffixCompat` | Compatible category pairs for the three ALMOR compatibility tables. |
+- Pure JSON, not JSON5 or JSONC.
+- UTF-8 encoding and Unix line endings (`\n`).
+- Tab indentation rather than spaces.
+- Top-level keys follow this order: `schemaVersion`, `meta`, then the ALMOR `.db` section order.
+- Feature names under `definitions`, and keys under `defaults`, `stemBackoffs`, `meta`, and `feats`, are sorted alphabetically.
+- Each feature definition uses this field order: `required`, `nullable`, `dtype`, `values`, `default`, `postregex`. Optional fields are omitted when they do not apply.
+- Enum `values` are sorted and deduplicated.
+- Feature dictionaries and default rows are written on one line.
 
-Post-regex rules are stored under the affected `definitions.<feature>.postregex`; there is no separate top-level `postregex` object.
+##### Top-level schema
+
+| Key | Required | ALMOR `.db` section | Description |
+| --- | --- | --- | --- |
+| `schemaVersion` | yes | — | Schema version, currently `1`; always the first key. |
+| `meta` | yes when built by DB Maker | — | Build identity derived from the active configuration and DB filename. |
+| `definitions` | yes | `DEFINES` | Per-feature types, values, defaults, and optional rewrite rules. |
+| `defaults` | yes | `DEFAULTS` | Default feature maps keyed by POS; `*` is the catch-all entry. |
+| `order` | yes | `ORDER` | Feature display and merge order. |
+| `tokenizations` | yes | `TOKENIZATIONS` | Tokenization and segmentation scheme names. |
+| `stemBackoffs` | yes | `STEMBACKOFF` | Backoff stem-category lists grouped by mode. |
+| `prefixes` | yes | `PREFIXES` | Prefix morpheme records. |
+| `suffixes` | yes | `SUFFIXES` | Suffix morpheme records. |
+| `stems` | yes | `STEMS` | Stem morpheme records. |
+| `smartBackoffs` | yes | `SMARTBACKOFF` | Smart-backoff morpheme records. |
+| `prefixStemCompat` | yes | `TABLE AB` | `[prefixCat, stemCat]` compatibility pairs. |
+| `stemSuffixCompat` | yes | `TABLE BC` | `[stemCat, suffixCat]` compatibility pairs. |
+| `prefixSuffixCompat` | yes | `TABLE AC` | `[prefixCat, suffixCat]` compatibility pairs. |
+
+There is no top-level `postregex` object. Rewrite rules appear only under `definitions.<feature>.postregex` for affected features.
+
+##### Metadata
+
+The DB Maker writes the following shape under `meta`:
+
+```json
+{
+	"dbName": "camel_morph_msa",
+	"dbVersion": "1.2.3",
+	"description": "morph db of MSA",
+	"regexFormat": "python-re"
+}
+```
+
+- `dbName` and `dbVersion` are parsed from a filename such as `camel_morph_msa_v1.2.3.db`.
+- `description` uses the configured dialect in uppercase.
+- `regexFormat` is `python-re`.
+
+##### Feature definitions
+
+Feature names under `definitions` are sorted alphabetically. Each definition can contain:
+
+| Field | Included when | Meaning |
+| --- | --- | --- |
+| `required` | always | `true` for the required `diac`, `lex`, `pos`, and `pattern` features. |
+| `nullable` | always | `false` when the feature is required; otherwise `true`. |
+| `dtype` | always | `str` for open strings, `str-enum` for closed values, or `float` for `*_logprob`. |
+| `values` | `dtype` is `str-enum` | Sorted, unique allowed values. |
+| `default` | a concrete catch-all default exists | Omitted for `*` and `*open*`. |
+| `postregex` | the feature is rewritten | Ordered `{pattern, replacement}` rewrite rules. |
+
+##### Abbreviated example
+
+The following illustrative example uses `.....` to mark omitted content after each section. It shows the main record shapes but is not directly parseable until those placeholders are replaced or removed. A complete export contains the full feature inventory and morpheme arrays.
+
+```json
+{
+	"schemaVersion": 1,
+	"meta": {
+		"dbName": "camel_morph_msa",
+		"dbVersion": "1.2.3",
+		"description": "morph db of MSA",
+		"regexFormat": "python-re"
+	},
+	"definitions": {
+		"asp": {
+			"required": false,
+			"nullable": true,
+			"dtype": "str-enum",
+			"values": ["c", "i", "na", "p"],
+			"default": "na"
+		},
+		"diac": {
+			"required": true,
+			"nullable": false,
+			"dtype": "str",
+			"postregex": [
+				{"pattern": "#\\+*", "replacement": ""}
+			]
+		},
+		"pos_logprob": {
+			"required": false,
+			"nullable": true,
+			"dtype": "float"
+		},
+		.....
+	},
+	"defaults": {
+		"*": {"asp": "na", "diac": "*", "lex": "*", "pos": "*"},
+		.....
+	},
+	"order": [
+		"diac",
+		"lex",
+		"pos",
+		"asp",
+		"pattern",
+		.....
+	],
+	"tokenizations": [
+		"d1seg",
+		"d1tok",
+		"bwtok",
+		.....
+	],
+	"stemBackoffs": {
+		"ALL": [
+			"X00417",
+			.....
+		],
+		.....
+	},
+	"prefixes": [
+		{
+			"ortho": "ف",
+			"cat": "P00001",
+			"feats": {"bw": "فَ/CONJ", "diac": "فَ", "source": "lex"}
+		},
+		.....
+	],
+	"suffixes": [
+		{
+			"ortho": "",
+			"cat": "S00001",
+			"feats": {"diac": "", "form_gen": "m", "form_num": "s"}
+		},
+		.....
+	],
+	"stems": [
+		{
+			"ortho": "كتب",
+			"cat": "X00001",
+			"feats": {"diac": "كَتَب", "lex": "كَتَب", "pos": "verb", "source": "lex"}
+		},
+		.....
+	],
+	"smartBackoffs": [
+		.....
+	],
+	"prefixStemCompat": [
+		["P00001", "X00001"],
+		.....
+	],
+	"stemSuffixCompat": [
+		["X00001", "S00001"],
+		.....
+	],
+	"prefixSuffixCompat": [
+		["P00001", "S00001"],
+		.....
+	],
+	.....
+}
+```
 
 To export an existing ALMOR database without rebuilding it, run:
 
