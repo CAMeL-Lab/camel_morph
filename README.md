@@ -16,24 +16,25 @@ The following sections provide useful usage information about the repository.
 
 ## Official Camel Morph DB Releases
 
-* camel_morph_msa_v1.0.db [file](./official_releases/lrec-coling2024_release/databases/camel-morph-msa/camel_morph_msa_v1.0.db) (LREC-COLING 2024 release).
-  To cite this release use Khairallah et al. (2024).[^1]
-  
+- [camel_morph_msa_v1.2.3.db](./official_releases/Official_release/databases/camel-morph-msa/camel_morph_msa_v1.2.3.db): ALMOR database for use with Camel Tools.
+- [camel_morph_msa_download_v1.2.3.db.json](./official_releases/Official_release/databases/camel-morph-msa/camel_morph_msa_download_v1.2.3.db.json): the same database exported as structured JSON.
+
+See the [current official release guide](./official_releases/Official_release/README.md) for installation, building, Google Sheets download access, parallel worker configuration, and JSON export instructions.
 
 ## Repositories of Published Efforts
-The work has been reported on in three papers (see below), but is continuously updtaed.
+The work has been reported on in three papers (see below), but is continuously updated.
 
 ### Camel Morph MSA LREC-COLING 2024
 
-For instructions related to inspecting, making use of, replicating the results obtained for the LREC-COLING  2024 Camel Morph MSA full database paper,[^1] and the data, see the [official_releases/lrec-coling2024_release/](./official_releases/lrec-coling2024_release/) folder.
+For instructions related to inspecting, making use of, and replicating the LREC-COLING 2024 Camel Morph MSA paper results,[^1] see the [archived LREC-COLING 2024 release](./official_releases/Archive_release/lrec-coling2024_release/).
 
 ### Camel Morph Nominals EACL 2024
 
-For instructions related to inspecting, making use of, replicating the results obtained for the EACL 2024 Camel Morph Nominals paper,[^2] and the data, see the [official_releases/eacl2024_release/](./official_releases/eacl2024_release/) folder.
+For instructions related to inspecting, making use of, and replicating the EACL 2024 Camel Morph Nominals paper results,[^2] see the [archived EACL 2024 release](./official_releases/Archive_release/eacl2024_release/).
 
 ### Camel Morph Verbs SIGMORPHON 2022
 
-For instructions related to inspecting, making use of, replicating the results obtained for the SIGMORPHON 2022 Camel Morph paper,[^3] and the data, see the [official_releases/sigmorphon2022_release/](./official_releases/sigmorphon2022_release/) folder.
+For instructions related to inspecting, making use of, and replicating the SIGMORPHON 2022 Camel Morph paper results,[^3] see the [archived SIGMORPHON 2022 release](./official_releases/Archive_release/sigmorphon2022_release/).
 
 ## Data
 
@@ -46,7 +47,7 @@ The data throughout this project is being maintained through the Google Sheets i
 The data files accessed through the below links are licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/). For code license, see [License](#license).
 
 ### Continuously Updated Data
-- Latest MSA Camel Morph db [file](./official_releases/lrec-coling2024_release/databases/camel-morph-msa/camel_morph_msa_v1.0.db) (LREC-COLING 2024 release) 
+- Latest MSA Camel Morph databases: [ALMOR `.db`](./official_releases/Official_release/databases/camel-morph-msa/camel_morph_msa_v1.2.3.db) and [JSON](./official_releases/Official_release/databases/camel-morph-msa/camel_morph_msa_download_v1.2.3.db.json)
 - [MSA Verbs Specifications](https://docs.google.com/spreadsheets/d/1thVU-IP-I-XnOmy5XfdUr39eNgDldZfMeTI75EH1TjQ/edit?usp=sharing)
 - [EGY Verbs Specifications](https://docs.google.com/spreadsheets/d/1NBK_UPl2799GRBkOrd9Eub_yLn2U2ccbJqYETKdCcbw/edit?usp=sharing)
 - [MSA Nominals and Others Specifications](https://docs.google.com/spreadsheets/d/1QsIZ8ToFovoltyfIrUtStxrB_G8jWbj01aHgQQ9IIwE/edit#gid=337793670)
@@ -54,7 +55,7 @@ The data files accessed through the below links are licensed under a [Creative C
 
 ### LREC-COLING 2024 Data (frozen)
 
-The data is accessible from the following [folder](./official_releases/lrec-coling2024_release/data/).
+The data is accessible from the following [folder](./official_releases/Archive_release/lrec-coling2024_release/data/).
 
 <!-- ### LREC-COLING 2024 Data (frozen)
 
@@ -66,13 +67,13 @@ The following data is not accessile publicly from the Google Sheets interface bu
 
 ### EACL 2024 Data (frozen)
 
-The following data is not accessile publicly from the Google Sheets interface but is available in `csv` format (the way it was at submission time) in the following [folder](./official_releases/eacl2024_release/data/).
+The following data is not accessible publicly from the Google Sheets interface but is available in `csv` format (the way it was at submission time) in the following [folder](./official_releases/Archive_release/eacl2024_release/data/).
 
 - [MSA Nominal Specifications (Camera Ready)](https://docs.google.com/spreadsheets/d/1T5-tY_bfvCW579P-NY7nOxxlq4P2MQ7vmWg_IWn_35Q/edit#gid=1109514510)
 
 ### SIGMORPHON 2022 Data (frozen)
 
-The following data is not accessile publicly from the Google Sheets interface but is available in `csv` format (the way it was at submission time) in the following [folder](/official_releases/sigmorphon2022_release/data/).
+The following data is not accessible publicly from the Google Sheets interface but is available in `csv` format (the way it was at submission time) in the following [folder](./official_releases/Archive_release/sigmorphon2022_release/data/).
 
 - [MSA Verbs Specifications (Camera Ready)](https://docs.google.com/spreadsheets/d/1v9idxctnr6IsqG4c7bHs7lGx7GzbnTa2s4ghQCmLoPY/edit#gid=524706154)
 - [EGY Verbs Specifications (Camera Ready)](https://docs.google.com/spreadsheets/d/1OCqHIdeZpm9BNa-BiC7Xy6bAT_wkLnhuvKdo7X3-RtE/edit#gid=424095452)
@@ -100,7 +101,7 @@ To compile databases, paradigm-specific inflection (conjugation/declension) tabl
 To start working with the Camel Morph environment and compiling Mordern Standard Arabic (MSA) databases:
 
 1. Clone (download) this repository and unzip in a directory of your choice.
-2. Make sure that you are running **Python 3.8** or **Python 3.9** (this release was tested on these two versions, but it is likely that it will work on other versions).
+2. Use **Python 3.8 through Python 3.14**. The project has been tested successfully and compiles correctly on every Python version in this range.
 3. Run the following command to install all needed libraries: `pip install -r requirements.txt`.
 4. Run all commands/scripts from the outer `camel_morph` directory.
 
@@ -109,9 +110,23 @@ To start working with the Camel Morph environment and compiling Mordern Standard
 To debug and evaluate databases (MSA or Dialectal Arabic), and for other utilities:
 
 1. Clone (download) a [fork](https://github.com/christios/camel_tools) of the Camel Tools repository. The Camel Morph databases will currently only function using the latter instance of Camel Tools. The changes in this fork will eventually be integrated to the main Camel Tools library. Unzip in a directory of your choice.
-2. Set the `$CAMEL_TOOLS_PATH` value to the path of the Camel Tools fork repository in the configuration file that you will be using (default configuration file `./camel_morph/configs/config_default.json` provided; see [Configuration File Structure](#configuration-file-structure) section).
+2. Set the `$CAMEL_TOOLS_PATH` value to the path of the Camel Tools fork repository in the configuration file that you will be using (default configuration file `./camel_morph/configs/config_full_system.json` provided; see [Configuration File Structure](#configuration-file-structure) section).
 
 For instructions on how to run the different scripts, see the below sections.
+
+### Current Optimized MSA Release
+
+The actively packaged MSA release is in [`official_releases/Official_release`](./official_releases/Official_release/). Its DB Maker validates independent ORDER lines in parallel and uses the `n_workers` setting from `camel_morph/configs/config_full_system.json` (currently `6`). The value must be a positive integer; use `1` for in-process execution or adjust it to suit the available CPU and memory.
+
+From `official_releases/Official_release/`, build with:
+
+```bash
+python -m camel_morph.db_maker \
+  -config-file config_full_system.json \
+  -config-name camel_morph_msa
+```
+
+The optimized full MSA build typically takes about **1.5–2 minutes**, depending on the machine. It writes both the ALMOR `.db` file and a structured `.db.json` export. Add `-download` to refresh the configured specification sheets from Google Sheets before building; this requires a Google service-account credential file and sheet access. Full setup, output-schema, and standalone export instructions are in the [official release guide](./official_releases/Official_release/README.md).
 
 ### Compiling a Database (DB Maker)
 
