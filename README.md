@@ -177,7 +177,8 @@ In its most basic format, the configuration file should look like the example be
                 }
             },
             "db_dir": $DB_OUTPUT_DIR,
-            "camel_tools": $CAMEL_TOOLS_PATH
+            "camel_tools": $CAMEL_TOOLS_PATH,
+            "n_workers": $N_WORKERS
         },
         "local": {
             $CONFIG_NAME: {
@@ -203,6 +204,7 @@ In its most basic format, the configuration file should look like the example be
                     }
                 },
                 "db": $DB_NAME,
+                "db_json": $DB_JSON_NAME,
                 "pos_type": $POS_TYPE,
                 "class_map": $CLASS_MAP
             }
@@ -217,6 +219,7 @@ where:
 - `$HEADER_SHEET`: same as `$ABOUT_SHEET` (e.g., `Header`)
 - `$DB_OUTPUT_DIR`: name of the directory to which the compiled DBs will be output.
 - `$CAMEL_TOOLS_PATH`: path of the Camel Tools repository fork that should be cloned/downloaded as described in [Installation](#installation) section.
+- `$N_WORKERS`: positive integer controlling the number of worker processes used to validate independent ORDER lines. Use `1` for in-process execution. The current full-system configuration uses `6`.
 - `$CONFIG_NAME`: name of the configuration in the `local` section of the config file, to choose between a number of different configurations (e.g., `default_config`). This is also the name of the folder which contains the sheets that are specified for that configuration and the global section.
 - `$DIALECT`: dialect being worked with (i.e., `msa` or `egy`). This is specified to further organize the configuration-specific data into high-level projects (i.e., `./data/camel-morph-msa` or `./data/camel-morph-egy`).
 - `$CAT2ID`: boolean (`true` or `false`). Specifies the format in which to output the ALMOR morpheme category names. If set to true, then category names are IDs, otherwise, they contain condition information.
@@ -226,6 +229,7 @@ where:
 - `$MORPH_SHEET`: same as `$ABOUT_SHEET` (e.g., `MSA-Verb-MORPH`).
 - `$LEX_SHEET_1`: same as `$ABOUT_SHEET` (e.g., `MSA-Verb-LEX-PV`). At least one lexicon sheet can be specified; the latter will be concatenated in pre-processing.
 - `$DB_NAME`: name of the output DB.
+- `$DB_JSON_NAME`: name of the structured JSON output. If omitted, the DB Maker uses the `.db` basename with a `.json` extension.
 - `$POS_TYPE`: type of the POS for which we are building the DB. Can either be `verbal`, `nominal` or `any`. As far as the DB Maker is concerned this controls what MADA features are output to the DB file in each line.
 - `$CLASS_MAP`: dictionary containing the morpheme classes and which complex morpheme type they map to.
 
