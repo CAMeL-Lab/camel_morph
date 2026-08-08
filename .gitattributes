@@ -1,0 +1,2 @@
+official_releases/Official_release/databases/camel-morph-msa/camel_morph_msa_v1.2.3.db filter=lfs diff=lfs merge=lfs -text
+official_releases/Official_release/databases/camel-morph-msa/camel_morph_msa_download_v1.2.3.db.json filter=lfs diff=lfs merge=lfs -text
