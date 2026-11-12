@@ -18,6 +18,10 @@ The following sections provide useful usage information about the repository.
 
 * camel_morph_msa_v1.0.db [file](./official_releases/lrec-coling2024_release/databases/camel-morph-msa/camel_morph_msa_v1.0.db) (LREC-COLING 2024 release).
   To cite this release use Khairallah et al. (2024).[^1]
+
+  If you use this database in an application please provide the following notice or similar to include the linked webpages:
+
+  > [Camel Morph MSA v1.0](https://github.com/CAMeL-Lab/camel_morph) © 2024 by [New York University Abu Dhabi](https://nyuad.nyu.edu) is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
   
 
 ## Repositories of Published Efforts
